@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v45.8</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v45.9</div>
 </section>
 
 <section id="team" class="scr">
@@ -8557,7 +8557,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'45.8',t:'Megaincursiones más difíciles',s:'cur',l:[
+ {v:'45.9',t:'Carteles de megaincursión sin tapar el daño',s:'cur',l:[
+  'Megaincursiones: los carteles de ¡Perfecto! (y su racha), ¡Crítico!, ¡Aturdido!, ¡Escudo roto! y ¡Nuevo récord! salen ahora en una franja pequeña abajo del campo, apilados, sin tapar los números de daño sobre el jefe'
+]},
+{v:'45.8',t:'Megaincursiones más difíciles',s:'prev',l:[
   'Megaincursiones y megaincursiones simples rebalanceadas para que se pueda perder: el jefe aguanta bastante más daño y hace falta atacar sin parar, aprovechar los golpes perfectos, el combo y los tipos para ganar',
   'Con más jugadores el jefe ataca más a menudo (hasta casi el doble con 4) y lanza más ataques contra todo el equipo',
   'Ánimos: 3 por jugador en cada asalto (antes 5) y «¡A por todas!» sube el ataque un 30% (antes 50%)'
@@ -20154,6 +20157,13 @@ body.lowfx #mrd .mrj-pop,body.lowfx .mrj-phase,body.lowfx .mrj-phase>div{animati
 #updb{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));translate:-50% 0;z-index:200;display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:2px solid #fde68a;background:linear-gradient(135deg,#7c3aed,#4c1d95);color:#fff;font:inherit;box-shadow:0 8px 24px #000a;cursor:pointer;animation:updIn .4s cubic-bezier(.2,1.4,.4,1)}
 #updb span{font-size:18px}#updb b{font-size:13px}#updb small{font-size:11px;opacity:.85}
 @keyframes updIn{from{opacity:0;transform:translateY(20px)}}
+/* v45.9: carteles de perfecto, crítico, récord… en una franja inferior que no tapa el daño */
+#mrd .mrj-lane{position:absolute;left:50%;bottom:6px;translate:-50% 0;z-index:7;display:flex;flex-direction:column;align-items:center;gap:3px;pointer-events:none;width:max-content;max-width:96%}
+#mrd .mrj-lane .mrj-pop{position:static;translate:none;top:auto;left:auto;flex-direction:row;align-items:baseline;gap:6px;padding:3px 10px;border-radius:999px;background:#0009;border:1px solid color-mix(in srgb,var(--pc,#fde047) 60%,transparent);animation:mrjLane 1.1s ease forwards}
+#mrd .mrj-lane .mrj-pop b{font-size:15px;-webkit-text-stroke:0;text-shadow:0 1px 2px #000,0 0 8px var(--pc,#fde047)}
+#mrd .mrj-lane .mrj-pop small{margin:0;font-size:11px}
+#mrd .mrj-lane .mrj-pop.rec{animation-duration:2s}
+@keyframes mrjLane{0%{opacity:0;transform:translateY(10px) scale(.8)}15%{opacity:1;transform:scale(1.08)}28%{transform:none}80%{opacity:1}100%{opacity:0;transform:translateY(-4px)}}
 </style>
 <script id="v37js">
 (()=>{
@@ -22745,7 +22755,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  const meId=()=>{try{return window.__mraid.NETR.id}catch(e){return null}};
  const fmtN=n=>{try{return nf(n)}catch(e){return String(n)}};
  const tone=(f,d,w)=>{try{beep(f,d,w||'triangle')}catch(e){}};
- const pop=(host,html,cls,ms)=>{if(!host)return;const el=D.createElement('div');el.className='mrj-pop '+(cls||'');el.innerHTML=html;host.append(el);setTimeout(()=>el.remove(),ms||1100);return el};
+ const pop=(host,html,cls,ms)=>{if(!host)return;let ln=host.querySelector(':scope>.mrj-lane');if(!ln){ln=D.createElement('div');ln.className='mrj-lane';host.append(ln)}while(ln.children.length>=4)ln.firstChild.remove();const el=D.createElement('div');el.className='mrj-pop '+(cls||'');el.innerHTML=html;ln.append(el);setTimeout(()=>el.remove(),ms||1100);return el};/* v45.9: los carteles van en una franja abajo, sin tapar los números de daño */
  const shake=(el,str)=>{if(!el||D.body.classList.contains('lowfx'))return;try{el.animate([{transform:'translate(0,0)'},{transform:`translate(${-str}px,${str/2}px)`},{transform:`translate(${str}px,${-str/2}px)`},{transform:`translate(${-str/2}px,${str/3}px)`},{transform:'translate(0,0)'}],{duration:260,easing:'ease-out'})}catch(e){}};
  function combo(ar,n){if(!ar)return;let c=ar.querySelector('.mrj-cmb');if(!c){c=D.createElement('div');c.className='mrj-cmb';c.innerHTML='<b></b><small></small>';ar.append(c)}
   const tier=n>=50?'t4':n>=25?'t3':n>=10?'t2':n>=5?'t1':'t0';c.className='mrj-cmb on '+tier;c.querySelector('b').textContent='COMBO ×'+n;
