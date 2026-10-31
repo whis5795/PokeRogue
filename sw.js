@@ -6,7 +6,7 @@ const trim=async()=>{const c=await caches.open(IMG),k=await c.keys();if(k.length
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);
  /* la página: primero la red (así siempre ves la última versión) y, si no hay conexión, la copia guardada */
  if(r.mode==='navigate'||(u.origin===location.origin&&/\/(index\.html)?$/.test(u.pathname))){
-  e.respondWith((async()=>{try{const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),6000);const n=await fetch(r,{signal:ctl.signal});clearTimeout(t);if(n.ok){const c=await caches.open(V);c.put('index.html',n.clone())}return n}catch(_){return(await caches.match('index.html'))||(await caches.match('./'))||Response.error()}})());return}
+  e.respondWith((async()=>{try{const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),6000);const n=await fetch(r,{signal:ctl.signal,cache:'no-cache'});clearTimeout(t);if(n.ok){const c=await caches.open(V);c.put('index.html',n.clone())}return n}catch(_){return(await caches.match('index.html'))||(await caches.match('./'))||Response.error()}})());return}
  /* archivos propios: caché primero */
  if(u.origin===location.origin){e.respondWith(caches.match(r).then(h=>h||fetch(r).then(n=>{if(n.ok){const cl=n.clone();caches.open(V).then(c=>c.put(r,cl))}return n})));return}
  /* sprites de Pokémon y objetos: se guardan para que la próxima vez salgan al instante */
