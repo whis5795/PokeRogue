@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v45.1</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v45.2</div>
 </section>
 
 <section id="team" class="scr">
@@ -1466,7 +1466,7 @@ const live=()=>typeof R=='object'&&R&&R.team&&R.team.length&&!R.done&&!(document
 async function askCode(){
   const i=await ask('Acceso restringido',`<input id="pw" type="password" inputmode="numeric" maxlength="8" placeholder="Código" ${IN} autocomplete="off">`,['Entrar','Cancelar']);
   if(i)return;
-  if($('#pw').value=='7755')cheatMenu();else toast('Código incorrecto')}
+  if($('#pw').value=='24863179')cheatMenu();else toast('Código incorrecto')}
 async function cheatMenu(){
   for(;;){
     const on=k=>CHT[k]?'☑':'☐';
@@ -8555,7 +8555,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'45.1',t:'Margen de avisos como antes',s:'cur',l:[
+ {v:'45.2',t:'Panel de trucos ampliado y 2 contra 2 despejado',s:'cur',l:[
+  'Panel de trucos: nueva contraseña de acceso',
+  '2 contra 2: los sprites de los Pokémon se colocan solos en los huecos libres del campo, sin quedar tapados por las tarjetas de vida (rivales arriba a la derecha y los tuyos abajo a la izquierda), en cualquier tamaño de pantalla',
+  '12 trucos nuevos: Dinero a medida, Nivel a medida, Estrellas a medida, Mochila llena, Todos los equipables, Añadir Pokémon (cualquiera, con nivel y shiny), Cambiar tipo Tera, Curar todo, Evolucionar ahora, Maestría máxima, Clima del mapa (incluido el clima extremo) y Sin esperas en casa'
+]},
+{v:'45.1',t:'Margen de avisos como antes',s:'prev',l:[
   'Con los avisos automáticos desactivados, los carteles de lo que acabas de tocar vuelven a tener 1,5 segundos de margen (los avisos automáticos siguen bloqueados)'
 ]},
 {v:'45.0',t:'Avisos automáticos que sí se apagan',s:'prev',l:[
@@ -11896,7 +11901,7 @@ D.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey)return;const 
 })();</script>
 
 <script id="dbgjs">(()=>{
-/* ===== v20.1: herramientas de depuración en el Panel de trucos (código 7755) ===== */
+/* ===== v20.1: herramientas de depuración en el Panel de trucos (código 24863179 desde v45.2) ===== */
 const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
 /* ---- registro de errores (para revisar fallos tras una actualización) ---- */
 const ERR=window.__errLog=window.__errLog||[];
@@ -11971,6 +11976,42 @@ const T=[
    else if(i==1){R.vid=3;upd();toast('Vidas recuperadas')}})],
  ['🥚','Cría instantánea','Los huevos del nido y la Leveleadora terminan al momento',async()=>{CHT.brd=!CHT.brd;if(CHT.brd){try{const b=R&&R.house&&R.house.br,n=Date.now();if(b){(b.jobs||[]).forEach(j=>{j.t1=Math.min(j.t1,n)});if(b.cap)b.cap.t1=Math.min(b.cap.t1,n)}saveRun()}catch(e){}}toast(CHT.brd?'🥚 Cría instantánea activada':'🥚 Cría instantánea desactivada')},()=>!!(window.CHT&&CHT.brd)],
  ['⚡','Velocidad ×10','Animaciones casi instantáneas (otra vez para volver)',async()=>{if(S.speed>=10){S.speed=window.__spd0||1}else{window.__spd0=S.speed;S.speed=10}try{save()}catch(e){}toast('Velocidad '+S.speed+'×')}],
+ ['💰','Dinero a medida','Suma o fija tus Pokémonedas',need('run',async()=>{
+   const r=await ask('Dinero a medida',`<small>Tienes ${nf(R.money)}. Escribe una cantidad: «+50000» suma, «-1000» resta y «250000» la fija.</small><input id="dmo" ${IN} placeholder="+100000">`,['Aplicar','Cancelar']);if(r)return;
+   const v=(Q('#dmo').value||'').trim().replace(/[.\s]/g,''),n=parseInt(v.replace(/^[+-]/,''),10);if(!isFinite(n))return toast('Cantidad no válida');
+   R.money=Math.max(0,/^\+/.test(v)?R.money+n:/^-/.test(v)?R.money-n:n);upd();toast('💰 Ahora tienes '+nf(R.money))})],
+ ['📈','Nivel a medida','Pon a un Pokémon en cualquier nivel (1-200)',need('run',async()=>{
+   const m=await pickMon('Nivel a medida');if(!m)return;
+   const r=await ask('Nivel de '+nm(m),`<small>Nivel actual: ${m.lvl}.</small><input id="dlv" type="number" min="1" max="${MAXL}" value="${Math.min(MAXL,m.lvl+10)}" ${IN}>`,['Aplicar','Cancelar']);if(r)return;
+   const lo=m.lvl,o=m.max,L=Math.max(1,Math.min(MAXL,+Q('#dlv').value||m.lvl));m.lvl=L;m.xp=XPT(L);stats(m);m.hp=Math.max(1,Math.min(m.max,m.hp+m.max-o));
+   upd();toast(`${nm(m)} ahora es Nv.${L}`);if(L>lo&&!inB()){try{await learnNew(m,lo)}catch(e){}try{await checkEvo()}catch(e){}upd()}})],
+ ['⭐','Estrellas a medida','Pon de 0 a 8 estrellas a un Pokémon',need('run',async()=>{
+   const m=await pickMon('Estrellas a medida');if(!m)return;
+   const j=await ask('Estrellas de '+nm(m),`<small>Ahora tiene ${m.rb|0}.</small>`,[...Array.from({length:9},(_,i)=>i?'⭐'.repeat(i)+' '+i:'Sin estrellas'),'Cancelar']);if(j>8)return;
+   const o=m.max;if(j)m.rb=j;else delete m.rb;if(j&&m.utp==null)m.utp=3;stats(m);m.hp=Math.max(1,Math.min(m.max,m.hp+m.max-o));upd();toast(`${nm(m)}: ${j} estrella${j==1?'':'s'}`)})],
+ ['🎒','Mochila llena','×99 de cada objeto, Ball, piedra y caramelo',need('run',async()=>{Object.keys(ITEM).forEach(k=>{if(k!=='mrinv')R.bag[k]=Math.max(R.bag[k]|0,99)});upd();toast('🎒 ¡Mochila llena!')})],
+ ['🧤','Todos los equipables','Uno de cada objeto para equipar',need('run',async()=>{let n=0;Object.keys(ITEM).filter(k=>k.indexOf('h_')===0).forEach(k=>{R.bag[k]=(R.bag[k]|0)+1;n++});upd();toast(`🧤 ${n} objetos equipables añadidos`)})],
+ ['🐾','Añadir Pokémon','Cualquier Pokémon, nivel y shiny, al equipo o a la Caja',need('run',async()=>{
+   const r=await ask('Añadir Pokémon',`<small>Pokémon (nombre en inglés o número) y nivel.</small><input id="dap" placeholder="ej. rayquaza o 384" ${IN}><input id="dal" type="number" min="1" max="${MAXL}" value="50" ${IN}>`,['✨ Shiny','Normal','Cancelar']);if(r>1)return;
+   const p=await findPoke(Q('#dap').value);if(!p)return toast('No encontré ese Pokémon');const L=Math.max(1,Math.min(MAXL,+Q('#dal').value||50));
+   let m;try{m=await mk({id:p.id,name:p.name},L)}catch(e){return toast('No se pudo crear')}if(r==0)m.sh=1;
+   if(R.team.length<6){R.team.push(m);toast(`${nm(m)} Nv.${L} se une a tu equipo`)}else{(R.box=R.box||[]).push(m);toast(`${nm(m)} Nv.${L} va a la Caja`)}
+   try{window.dexSync&&dexSync()}catch(e){}upd()})],
+ ['💎','Cambiar tipo Tera','Elige el tipo Tera de un Pokémon',need('run',async()=>{
+   const m=await pickMon('Cambiar tipo Tera');if(!m)return;const TY=Object.keys(ES);
+   const j=await ask('Tipo Tera de '+nm(m),`<small>Ahora: ${ES[m.tera]||'—'}.</small>`,[...TY.map(t=>ES[t]),'Cancelar']);if(j>=TY.length)return;m.tera=TY[j];upd();toast(`${nm(m)}: tipo Tera ${ES[m.tera]}`)})],
+ ['🩹','Curar todo','PS, PP y estados de todo el equipo',need('run',async()=>{R.team.forEach(m=>{m.hp=m.max;m.s=0;m.sl=0;(m.moves||[]).forEach(v=>v.cp=v.mp)});upd();toast('🩹 ¡Equipo como nuevo!')})],
+ ['🔄','Evolucionar ahora','Sube al nivel de evolución y evoluciona',need('run',async()=>{
+   if(inB())return toast('Termina el combate primero');const m=await pickMon('Evolucionar ahora');if(!m)return;let e=null;try{await evoFill(m);e=pickEvo(m)}catch(er){}
+   if(!e)return toast(nm(m)+' no evoluciona por nivel (prueba con una piedra)');const o=m.max;if(m.lvl<e[0]){m.lvl=e[0];m.xp=XPT(m.lvl);stats(m);m.hp=Math.min(m.max,m.hp+m.max-o)}
+   if(!R.team.includes(m))return;try{await checkEvo()}catch(er){}upd()})],
+ ['🎖️','Maestría máxima','Sube a un Pokémon a Maestro',need('run',async()=>{const m=await pickMon('Maestría máxima');if(!m)return;m.ms=Math.max(m.ms|0,120);upd();toast(`🎖️ ${nm(m)} es Maestro`)})],
+ ['🌦️','Clima del mapa','Fuerza el clima o un clima extremo durante 3 rondas',need('run',async()=>{
+   const O=[['clear','☀️ Despejado'],['rain','🌧️ Lluvia'],['sun','🔆 Sol intenso'],['snow','❄️ Nevada'],['sand','🏜️ Tormenta de arena'],['fog','🌫️ Niebla'],['storm','⛈️ Tormenta eléctrica'],['eclipse','🌑 Eclipse'],['meteor','☄️ Lluvia de meteoritos'],['aurora','🌌 Aurora']];
+   const j=await ask('Clima del mapa','<small>Se aplica al momento y dura 3 rondas.</small>',[...O.map(x=>x[1]),'Cancelar']);if(j>=O.length)return;const k=O[j][0];
+   if(j>=7){R.xwx={k,u:R.round+3};R.xwr=R.round;R.mwx={k:'clear',u:1e9}}else{R.xwx=null;R.mwx=k==='clear'?{k:'clear',u:1e9}:{k,u:R.round+3}}
+   R.wxN=R.round+7;upd();try{if(D.body.dataset.v==='map')showMap()}catch(e){}toast('Clima: '+O[j][1])})],
+ ['⏱️','Sin esperas en casa','Reinicia las esperas de la cocina, el santuario, el huerto, el telescopio, la ruleta y la nevera',need('run',async()=>{try{const h=R.house;if(h){h.xf={};if(h.c)h.c.fr=null}}catch(e){}upd();toast('⏱️ Todo listo para usar otra vez')})],
  ['🐞','Registro de errores','Errores de la sesión, para copiar y reportar',async()=>{
    const t=ERR.length?ERR.slice().reverse().map(e=>`[${e.t}] ${e.k}: ${e.m}`).join('\n'):'Sin errores en esta sesión 🎉';
    const i=await ask('🐞 Registro de errores',`<textarea readonly style="width:100%;height:240px;font:11px monospace;background:#0008;color:#e5e7eb;border:0;border-radius:8px;padding:8px">${esc(t)}</textarea>`,['📋 Copiar','🗑️ Vaciar','Cerrar']);
@@ -22543,6 +22584,29 @@ CART.mgengarz='assets/7b3bf9b656e0.webp';
 const cur=MEGAF[94]||[''];if(!cur.includes('z'))cur.push('z');MEGAF[94]=cur;
 window.MEGART=window.MEGART||{};MEGART['94|z']='mgengarz';
 window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
+})();
+
+/* ---------- v45.2: 2 contra 2: los sprites se colocan en los huecos libres, sin quedar tapados por las tarjetas ---------- */
+(()=>{const D=document;let raf=0;
+ function fit(){raf=0;const ar=D.querySelector('#coop .cb-ar');if(!ar||!ar.offsetParent)return;const A=ar.getBoundingClientRect();if(A.width<50||A.height<50)return;
+  const fc=ar.querySelector('.cb-fc'),ac=ar.querySelector('.cb-ac');const F=fc?fc.getBoundingClientRect():{left:A.left,right:A.left,top:A.top,bottom:A.top};const C=ac?ac.getBoundingClientRect():{left:A.right,right:A.right,top:A.bottom,bottom:A.bottom};
+  const W=A.width,H=A.height,pad=6;
+  /* rivales: arriba a la derecha (a la derecha de sus tarjetas y por encima de las tuyas) */
+  let fx0=Math.max(F.right-A.left+pad,W*.36),fx1=W-pad,fy0=pad,fy1=Math.min(C.top-A.top-pad,Math.max(H*.3,Math.min(F.bottom-A.top,H*.5)));
+  /* aliados: abajo a la izquierda (debajo de las tarjetas rivales y a la izquierda de las tuyas) */
+  let ax0=pad,ax1=Math.min(C.left-A.left-pad,W*.64),ay0=Math.max(fy1*.85,Math.min(F.bottom-A.top+pad,H*.6)),ay1=H-pad;
+  if(ax1-ax0<W*.3)ax1=W*.55;
+  const place=(sel,x,y,w)=>{const e=ar.querySelector(sel);if(!e)return;const st=e.style;const L=Math.round(x)+'px',T=Math.round(y)+'px',S=Math.round(w)+'px';if(st.left!==L)st.left=L;if(st.top!==T)st.top=T;if(st.width!==S)st.width=S};
+  {const zw=fx1-fx0,zh=fy1-fy0,w=Math.max(40,Math.min(zw*.56,zh*.86));
+   place('.cb-f0',fx0,fy0+Math.max(0,(zh-w)*.15),w);place('.cb-f1',fx1-w,fy0+Math.max(0,zh-w),w)}
+  {const zw=ax1-ax0,zh=ay1-ay0,w=Math.max(44,Math.min(zw*.56,zh*.86));
+   place('.cb-a0',ax0,ay0+Math.max(0,(zh-w)*.15),w);place('.cb-a1',ax1-w,ay0+Math.max(0,zh-w),w)}}
+ const sch=()=>{if(!raf)raf=requestAnimationFrame(fit)};
+ let ro=null,mo=null,cur=null;
+ setInterval(()=>{const ar=D.querySelector('#coop .cb-ar');if(ar===cur)return;cur=ar;if(ro)ro.disconnect();if(mo)mo.disconnect();if(!ar)return;
+  ro=new ResizeObserver(sch);ro.observe(ar);ar.querySelectorAll('.cb-cards').forEach(c=>ro.observe(c));
+  mo=new MutationObserver(sch);mo.observe(ar,{childList:true,subtree:true});sch()},400);
+ addEventListener('resize',sch);
 })();
 
 })();</script>
