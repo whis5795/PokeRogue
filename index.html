@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v46.2</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v46.3</div>
 </section>
 
 <section id="team" class="scr">
@@ -1586,7 +1586,7 @@ let pv=B.dataset.v;new MutationObserver(()=>{const v=B.dataset.v;if(v===pv)retur
 const cv=B.appendChild(Object.assign(mk('canvas'),{id:'fxbg'})),cx=cv.getContext('2d');let w,h;const rs=()=>{w=cv.width=innerWidth;h=cv.height=innerHeight};addEventListener('resize',rs);rs();
 const P=Array.from({length:28},()=>({x:R(0,w),y:R(0,h),r:R(1,3.2),v:R(.15,.6),s:R(0,6.28),a:R(.2,.7)}));
 const GSP={},gsp=c=>GSP[c]||(GSP[c]=(()=>{const k=D.createElement('canvas');k.width=k.height=64;const g=k.getContext('2d'),q=g.createRadialGradient(32,32,0,32,32,32);q.addColorStop(0,c);q.addColorStop(.3,c);q.addColorStop(.45,c+'66');q.addColorStop(1,c+'00');g.fillStyle=q;g.fillRect(0,0,64,64);return k})());
-let lpT=0;const lpC=matchMedia('(pointer:coarse)');(function lp(t){requestAnimationFrame(lp);if(lpC.matches&&t-lpT<31)return;lpT=t;const v=B.dataset.v;if(!on()||v==='battle'||D.hidden||B.matches('.lowfx,.gfx-medio')||(document.getElementById('mod')||{style:{}}).style.display==='flex'){cv.style.opacity=0;return}cv.style.opacity=1;cx.clearRect(0,0,w,h);const warm=v==='map'||v==='run'||v==='cards';
+let lpT=0;const lpC=matchMedia('(pointer:coarse)');(function lp(t){requestAnimationFrame(lp);if(lpC.matches&&t-lpT<31)return;lpT=t;const v=B.dataset.v;const mp=document.getElementById('mpa');if(!on()||v==='battle'||D.hidden||B.matches('.lowfx,.gfx-medio,.ovl')||(mp&&mp.classList.contains('on'))||(document.getElementById('mod')||{style:{}}).style.display==='flex'){if(cv.style.opacity!=='0')cv.style.opacity=0;return}if(cv.style.opacity!=='1')cv.style.opacity=1;cx.clearRect(0,0,w,h);const warm=v==='map'||v==='run'||v==='cards';
  P.forEach(p=>{p.y-=p.v;p.s+=.02;p.x+=Math.sin(p.s)*.4;if(p.y<-8){p.y=h+8;p.x=R(0,w)}cx.globalAlpha=p.a*(.6+.4*Math.sin(p.s*2));{const z=p.r*2+16;cx.drawImage(gsp(warm?'#fbbf24':p.r>2.2?'#22d3ee':'#c4b5fd'),p.x-z/2,p.y-z/2,z,z)}})})();
 /* combate */
 const A=Q('#arena');
@@ -8558,7 +8558,14 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'46.2',t:'Aventura Multiplayer: bendiciones y dificultades',s:'cur',l:[
+ {v:'46.3',t:'Aventura Multiplayer: eventos, jefes y arreglos',s:'cur',l:[
+  '❓ 7 eventos nuevos: Nido abandonado, Campamento, Estatua antigua (da una bendición extra… o una maldición), Panal gigante, Casa encantada (combate contra fantasmas), Feria ambulante y más. Ya no se repite el mismo evento seguido',
+  '👑 8 jefes finales con nombre, equipo temático y ventaja propia: Reina Dragón Draconia, Coloso de Acero Ferrum, Sombra Nocturna Umbra, Señor del Volcán Ígneo, Sirena Abisal Marea, Hechicera Psíquica Aura, Titán del Bosque Silvano y Tormenta Viviente Voltio',
+  '🐞 Arreglado: un combate podía quedarse atascado varios minutos si nadie podía hacer daño por las inmunidades (por ejemplo, Gastly contra un Pokémon Normal). Ahora, tras 3 rondas sin daño, los rivales huyen',
+  '⚡ Más fluido: las partículas del fondo del juego ya no se siguen dibujando detrás de la Aventura Multiplayer',
+  'Revisión completa: partidas enteras hasta el jefe final con varias clases sin errores'
+]},
+{v:'46.2',t:'Aventura Multiplayer: bendiciones y dificultades',s:'prev',l:[
   '✨ Bendiciones del equipo: al empezar la aventura y tras vencer a cada guardián elegís una de 3 bendiciones que se acumulan (Furia +15% de daño, Escudo −12% de daño recibido, Vitalidad cura un 5% cada turno, Rapidez +15% de velocidad, Fortuna +30% de monedas o Sabiduría +25% de experiencia). Se ven junto a las monedas',
   '🔥 Dificultades: al ganar una aventura se desbloquea la siguiente (hasta la 10). El anfitrión la elige en la sala: rivales con más vida, defensa y daño, pero más medallas del gremio (+25% por nivel) y más monedas (+10% por nivel)'
 ]},
@@ -16138,14 +16145,20 @@ const EVS=[
  {t:'🧳 Mercader errante',x:'Un Meowth con sombrero arrastra un carro lleno de cajas.',o:[['🎁 Caja sorpresa (60)','Pagáis 60 Pokémonedas y cada jugador recibe un objeto.'],['👋 Seguir el camino','No pasa nada.']]},
  {t:'🌟 Pokémon alfa',x:'Un Pokémon enorme y brillante os cierra el paso. Parece muy fuerte…',o:[['⚔️ Luchar','Combate difícil contra un Pokémon alfa: si ganáis, el doble de experiencia y un objeto para cada uno.'],['🌿 Rodearlo','Lo evitáis sin recompensa.']]},
  {t:'📚 Viejo maestro',x:'Un anciano os ofrece un entrenamiento intensivo.',o:[['💪 Entrenar','Todos los Pokémon en pie suben 1 nivel, pero pierden un 25% de PS.'],['🍵 Tomar té','Todo el equipo recupera un 30% de PS.']]},
- {t:'🎰 Ruleta del destino',x:'Una ruleta oxidada gira sola con un chirrido.',o:[['🎲 Girar','50%: +100 Pokémonedas · 25%: objeto para todos · 25%: todo el equipo pierde un 30% de PS.'],['🙅 No arriesgar','No pasa nada.']]}];
+ {t:'🎰 Ruleta del destino',x:'Una ruleta oxidada gira sola con un chirrido.',o:[['🎲 Girar','50%: +100 Pokémonedas · 25%: objeto para todos · 25%: todo el equipo pierde un 30% de PS.'],['🙅 No arriesgar','No pasa nada.']]},
+ {t:'🥚 Nido abandonado',x:'Un nido con un huevo enorme y caliente. Algo se mueve dentro…',o:[['🤲 Cuidarlo','El calor del huevo cura a todo el equipo un 40% y cada uno gana un caramelo.'],['🚶 Dejarlo','Seguís vuestro camino.']]},
+ {t:'⛺ Campamento',x:'Un campamento abandonado con la hoguera aún encendida.',o:[['🔥 Descansar','Todo el equipo recupera el 100% de PS, pero perdéis 30 Pokémonedas por las provisiones.'],['🎒 Rebuscar','Encontráis 60 Pokémonedas y una poción para cada uno.']]},
+ {t:'🗿 Estatua antigua',x:'Una estatua de un Pokémon legendario con una inscripción borrosa.',o:[['🙏 Rezar','Bendición: el equipo elige una bendición extra.'],['🔨 Romperla','50%: 150 Pokémonedas · 50%: una maldición, todo el equipo pierde un 40% de PS.']]},
+ {t:'🍯 Panal gigante',x:'Un panal de Combee rebosa miel dorada.',o:[['🍯 Coger miel','Todo el equipo sube 1 nivel… pero las Combee atacan: perdéis un 35% de PS.'],['🐝 Dejarlas en paz','Una Combee agradecida os regala un objeto a cada uno.']]},
+ {t:'👻 Casa encantada',x:'Una vieja mansión con luces que parpadean. Se oyen risas…',o:[['🕯️ Entrar','Combate contra una horda de fantasmas: si ganáis, objetos para todos y +80 Pokémonedas.'],['🏃 Huir','Salís corriendo sin recompensa.']]},
+ {t:'🎪 Feria ambulante',x:'Un Mr. Mime hace malabares frente a una caseta de premios.',o:[['🎯 Jugar (40)','Pagáis 40 Pokémonedas: cada jugador gana un objeto y 30% de llevarse un amuleto.'],['👏 Aplaudir','Mr. Mime os cura un 20% como agradecimiento.']]}];
 /* v46.2: bendiciones del equipo (se eligen tras cada guardián y al empezar) */
 const BLESS=[['fue','💪 Furia','+15% de daño de todo el equipo.'],['esc','🛡️ Escudo','Todo el equipo recibe un 12% menos de daño.'],['vit','❤️ Vitalidad','Cada Pokémon recupera un 5% de PS al empezar su turno.'],['rap','⚡ Rapidez','+15% de velocidad para todo el equipo.'],['oro','💰 Fortuna','+30% de Pokémonedas en cada victoria.'],['sab','📚 Sabiduría','+25% de experiencia para todo el equipo.']];
 async function bless(why){if(!G||ROLE!=='host')return;G.bl=G.bl||{};const op=BLESS.slice().sort(()=>R0()-.5).slice(0,3);
  V.ph='event';V.foes=[];V.turn=null;V.ev={t:'✨ Bendición del equipo',x:(why?why+' ':'')+'Elegid una bendición para todo el equipo (se acumulan durante la aventura).',opts:op.map(([k,l,d])=>({l:l+((G.bl[k]|0)?' ·'+'★'.repeat(G.bl[k]):''),d})),end:now()+20000};V.log='';banner('✨ ¡Bendición!');push();bp(988,.12);setTimeout(()=>bp(1319,.14),120);
  const v=await new Promise(res=>{EVW=res;setTimeout(()=>{if(EVW===res){EVW=null;res(0)}},20000)});EVW=null;if(!G||ROLE!=='host')return;const x=op[Math.max(0,Math.min(2,v|0))];G.bl[x[0]]=(G.bl[x[0]]|0)+1;
  V.ev=null;V.ph='reward';V.log=`✨ Bendición elegida: ${x[1]} — ${x[2]}`;push();[784,988,1175].forEach((f,i)=>setTimeout(()=>bp(f,.1),i*110));await sl(2200);save()}
-async function eventNode(nd){const E=pick(EVS);V.ph='event';V.foes=[];V.turn=null;V.ev={t:E.t,x:E.x,opts:E.o.map(([l,d])=>({l,d})),end:now()+20000};V.log='';banner(E.t);push();bp(660,.12);setTimeout(()=>bp(880,.12),120);
+async function eventNode(nd){G.evh=G.evh||[];const EP=EVS.filter(x=>!G.evh.includes(x.t));const E=pick(EP.length?EP:EVS);G.evh.push(E.t);if(G.evh.length>6)G.evh.shift();V.ph='event';V.foes=[];V.turn=null;V.ev={t:E.t,x:E.x,opts:E.o.map(([l,d])=>({l,d})),end:now()+20000};V.log='';banner(E.t);push();bp(660,.12);setTimeout(()=>bp(880,.12),120);
  const v=await new Promise(res=>{EVW=res;setTimeout(()=>{if(EVW===res){EVW=null;res(0)}},20000)});EVW=null;if(!G||ROLE!=='host')return true;
  const all=()=>G.seats.map((s,i)=>({s,i})).filter(x=>x.s.hero);const hp=(p,rev)=>all().forEach(({s,i})=>{const m=s.hero;if(m.hp<=0&&!rev)return;const h=Math.ceil(m.max*p);m.hp=Math.min(m.max,Math.max(0,m.hp)+h);fx({k:'fl',s:'h',i,txt:'+'+h,cls:'hl'})});
  const gift=async()=>{const got=[];for(let i=0;i<G.seats.length;i++){const it=await randItem();(G.bags[i]=G.bags[i]||[]).push(it);got.push({s:i,it})}V.rew=got;return'🎁 '+got.map(g=>`${G.seats[g.s].n}: ${itIc(g.it)} ${itName(g.it)}`).join(' · ')};
@@ -16154,6 +16167,12 @@ async function eventNode(nd){const E=pick(EVS);V.ph='event';V.foes=[];V.turn=nul
  else if(k.includes('Mercader')){if(v===0){if((G.gold|0)<60)L='🧳 «Vuelve cuando tengas 60 monedas, miau».';else{G.gold-=60;L='🧳 '+await gift()}}else L='👋 El mercader se despide con una reverencia.'}
  else if(k.includes('alfa')){if(v===0){V.ph='load';V.msg='¡El Pokémon alfa ataca!';push();const np=G.seats.length;const foes=await genFoes(avgLv()+2,[pick(FINALS)],true);if(foes.length){const f=foes[0];f.max=Math.round(f.max*(1.1+.35*np));f.hp=f.max;f.sh=R0()<.25?1:f.sh;const ok=await battle(foes,'🌟 ¡POKÉMON ALFA!');if(!ok)return false;await rewards(2,60+nd.c*14);V.ph='reward';L='🌟 ¡Habéis vencido al alfa! '+await gift()}}else L='🌿 Lo rodeáis con mucho cuidado…'}
  else if(k.includes('maestro')){if(v===0){for(const {s,i} of all()){const m=s.hero;if(m.hp<=0)continue;await lvUp(m,1,i,true);m.hp=Math.max(1,m.hp-Math.ceil(m.max*.25))}V.ph='reward';L='💪 ¡Entrenamiento completado! Todos suben de nivel.'}else{hp(.3);L='🍵 Un té calentito: todo el equipo recupera PS.'}}
+ else if(k.includes('Nido')){if(v===0){hp(.4);for(let i=0;i<G.seats.length;i++)(G.bags[i]=G.bags[i]||[]).push({k:'cdy',l:1});L='🥚 El huevo os reconforta: +40% de PS y un caramelo para cada uno.'}else L='🚶 Dejáis el huevo tranquilo.'}
+ else if(k.includes('Campamento')){if(v===0){hp(1,true);G.gold=Math.max(0,(G.gold|0)-30);L='🔥 Una noche de descanso: todo el equipo como nuevo (−30 '+COIN()+').'}else{G.gold=(G.gold|0)+60;for(let i=0;i<G.seats.length;i++)(G.bags[i]=G.bags[i]||[]).push({k:'pot',l:1});L='🎒 Encontráis 60 '+COIN()+' y una poción para cada uno.'}}
+ else if(k.includes('Estatua')){if(v===0){V.ev=null;push();await bless('🗿 La estatua brilla.');V.ph='reward';L='🙏 La estatua os ha bendecido.'}else{if(R0()<.5){G.gold=(G.gold|0)+150;L='🔨 ¡Dentro había un tesoro! +150 '+COIN()}else{all().forEach(({s,i})=>{const m=s.hero;if(m.hp>0){const d=Math.min(m.hp-1,Math.ceil(m.max*.4));m.hp-=d;fx({k:'fl',s:'h',i,txt:'-'+d,cls:'db'})}});L='🔨 ¡Una maldición! Todo el equipo pierde PS.'}}}
+ else if(k.includes('Panal')){if(v===0){for(const {s,i} of all()){const m=s.hero;if(m.hp<=0)continue;await lvUp(m,1,i,true);m.hp=Math.max(1,m.hp-Math.ceil(m.max*.35))}V.ph='reward';L='🍯 ¡Miel deliciosa! Todos suben de nivel, pero las Combee pican.'}else L='🐝 '+await gift()}
+ else if(k.includes('encantada')){if(v===0){V.ph='load';V.msg='¡Los fantasmas despiertan!';push();const np=G.seats.length,G1=[92,93,200,353,355,425,442,562,607,708,710,778];const foes=await genFoes(avgLv()+1,Array.from({length:Math.max(2,Math.min(4,np+1))},()=>pick(G1)));if(foes.length){const ok=await battle(foes,'👻 ¡CASA ENCANTADA!');if(!ok)return false;await rewards(2,80);V.ph='reward';G.gold=(G.gold|0)+80;L='👻 ¡Fantasmas espantados! '+await gift()}}else L='🏃 Salís corriendo… ¡por los pelos!'}
+ else if(k.includes('Feria')){if(v===0){if((G.gold|0)<40)L='🎪 «¡Hacen falta 40 monedas!»';else{G.gold-=40;const got=[];for(let i=0;i<G.seats.length;i++){const it=R0()<.3?{k:'amu',a:pick(Object.keys(AMU))}:await randItem();(G.bags[i]=G.bags[i]||[]).push(it);got.push({s:i,it})}V.rew=got;L='🎯 '+got.map(g=>`${G.seats[g.s].n}: ${itIc(g.it)} ${itName(g.it)}`).join(' · ')}}else{hp(.2);L='👏 Mr. Mime os cura con una reverencia.'}}
  else{if(v===0){const r=R0();if(r<.5){G.gold=(G.gold|0)+100;L='🎲 ¡Premio! +100 '+COIN()}else if(r<.75)L='🎲 ¡Objetos para todos! '+await gift();else{all().forEach(({s,i})=>{const m=s.hero;if(m.hp>0){const d=Math.min(m.hp-1,Math.ceil(m.max*.3));m.hp-=d;fx({k:'fl',s:'h',i,txt:'-'+d,cls:'db'})}});L='🎲 ¡Mala suerte! La ruleta os da un calambrazo.'}}else L='🙅 Mejor no tentar a la suerte.'}
  V.ev=null;V.log=L;push();[784,988].forEach((x,i)=>setTimeout(()=>bp(x,.1),i*120));await sl(2600);V.rew=null;save();return true}
 /* ---------- peticiones de los jugadores: centro, tienda y mochila ---------- */
@@ -16206,11 +16225,22 @@ async function level(nd){const np=G.seats.length;
   if(guard||V.elite){V.ph='reward';const got=[];const who=guard?G.seats.map((_,i)=>i):[ri(G.seats.length)];for(const i of who){const it=await randItem();(G.bags[i]=G.bags[i]||[]).push(it);got.push({s:i,it})}V.rew=got;V.log=(guard?'🛡️ ¡Guardián vencido! ':'⭐ ¡El élite suelta un objeto! ')+got.map(g=>`${G.seats[g.s].n}: ${itIc(g.it)} ${itName(g.it)}`).join(' · ');push();[784,988,1175].forEach((x,i)=>setTimeout(()=>bp(x,.12),i*120));await sl(2400);V.rew=null;V.elite=0}}
  G.seats.forEach(s=>{const m=s.hero;if(m&&m.hp<=0)m.hp=Math.ceil(m.max*.25)});
  V.ph='walk';V.foes=[];V.turn=null;banner('✅ ¡Nivel completado!');V.log='¡Nivel completado! Los Pokémon debilitados se recuperan un poco.';push();bp(880,.2);await sl(1800);return true}
+/* v46.3: jefes finales con nombre, equipo temático y ventaja propia */
+const BOSSES=[
+ {n:'Reina Dragón Draconia',e:'🐉',ids:[149,373,445,612,635,706,887,998],b:'Sus dragones pegan un 20% más.',fx:m=>{m.a=Math.round(m.a*1.2);m.sa=Math.round(m.sa*1.2)}},
+ {n:'Coloso de Acero Ferrum',e:'⚙️',ids:[208,212,227,306,376,385,448,530,598,625],b:'Su equipo de acero tiene un 25% más de defensa.',fx:m=>{m.d=Math.round(m.d*1.25);m.sd=Math.round(m.sd*1.25)}},
+ {n:'Sombra Nocturna Umbra',e:'🌙',ids:[94,197,229,248,359,461,491,571,717,861],b:'Sus Pokémon son un 20% más rápidos.',fx:m=>{m.sp=Math.round(m.sp*1.2)}},
+ {n:'Señor del Volcán Ígneo',e:'🌋',ids:[6,59,126,146,229,257,392,467,609,727,776],b:'Su equipo de fuego tiene un 20% más de vida.',fx:m=>{m.max=Math.round(m.max*1.2);m.hp=m.max}},
+ {n:'Sirena Abisal Marea',e:'🌊',ids:[9,130,131,134,230,260,350,382,503,658,730],b:'Sus Pokémon de agua tienen un 15% más de todo.',fx:m=>{['max','a','sa','d','sd'].forEach(k=>m[k]=Math.round(m[k]*1.15));m.hp=m.max}},
+ {n:'Hechicera Psíquica Aura',e:'🔮',ids:[65,80,121,196,282,376,475,576,579,866],b:'Sus ataques especiales son un 25% más fuertes.',fx:m=>{m.sa=Math.round(m.sa*1.25)}},
+ {n:'Titán del Bosque Silvano',e:'🌳',ids:[3,154,254,389,407,470,497,652,724,812],b:'Su equipo de planta tiene un 30% más de vida.',fx:m=>{m.max=Math.round(m.max*1.3);m.hp=m.max}},
+ {n:'Tormenta Viviente Voltio',e:'⚡',ids:[26,135,181,310,405,466,479,604,642,894],b:'Sus Pokémon eléctricos atacan un 20% más rápido y fuerte.',fx:m=>{m.sp=Math.round(m.sp*1.15);m.sa=Math.round(m.sa*1.1);m.a=Math.round(m.a*1.1)}}];
 async function bossFight(){const np=G.seats.length,n=np===1?2:Math.min(4,np+1),L=avgLv()+(np===1?0:1);
- V.ph='load';V.msg='El equipo del jefe final os cierra el paso…';push();
- const ids=[];while(ids.length<n){const x=pick(FINALS);if(!ids.includes(x))ids.push(x)}
- const foes=await genFoes(L,ids,true);if(!foes.length)return true;
- const ok=await battle(foes,'👑 ¡EQUIPO DEL JEFE!');if(ok)await rewards(3,300);return ok}
+ const BS=BOSSES[ri(BOSSES.length)];
+ V.ph='load';V.msg=`${BS.e} ${BS.n} os cierra el paso… ${BS.b}`;push();await sl(1800);if(!G||ROLE!=='host')return true;
+ const pool=BS.ids.slice().sort(()=>R0()-.5),ids=[];while(ids.length<n&&pool.length)ids.push(pool.shift());while(ids.length<n){const x=pick(FINALS);if(!ids.includes(x))ids.push(x)}
+ const foes=await genFoes(L,ids,true);if(!foes.length)return true;foes.forEach(m=>{try{BS.fx(m)}catch(e){}});
+ const ok=await battle(foes,`👑 ¡${BS.n.toUpperCase()}!`);if(ok)await rewards(3,300);return ok}
 const stg=s=>s>=0?(2+s)/2:2/(2-s);
 const amu=(seat,k)=>{const b=G&&G.bags&&G.bags[seat];return b?b.filter(x=>x.k==='amu'&&x.a===k).length:0};
 const spdOf=m=>m.sp*stg((m._st&&m._st.sp)||0)*(m.hero?1+.25*amu(m.seat,'spd'):1)*(m.cls==='duelista'?1.3:1)*(m.hero&&G&&G.bl?1+.15*(G.bl.rap|0):1);
@@ -16227,7 +16257,10 @@ const unitOf=t=>t&&(t.s==='h'?(G.seats[t.i]&&G.seats[t.i].hero):V.foes[t.i]);
 async function battle(foes,title){V.foes=foes;V.bclock=0;V.kr={};const tk=setInterval(()=>{if(V.ph!=='battle')return;const w=V.wait?now()-(V.waitT||0):0;if(!V.wait||w<3000)V.bclock+=100;else if(!V.wpush){V.wpush=1;push()}},100);try{return await battle0(title)}finally{clearInterval(tk)}}
 async function battle0(title){const foes=V.foes;[...G.seats.map(s=>s.hero),...foes].forEach(m=>{if(m){m._st={a:0,sa:0,d:0,sd:0,sp:0};m._b={};m._sts={}}});
  V.ph='battle';banner(title);V.log='¡Empieza el combate!';V.turn=null;V.order=[];push();bp(title.includes('JEFE')?160:300,.3,'sawtooth');await sl(1200);
+ let hpSig='',still=0;const sig=()=>[...G.seats.map(x=>x.hero?x.hero.hp:0),...V.foes.map(m=>m.hp)].join(',');
  for(let rnd=1;rnd<80;rnd++){
+  /* v46.3: si nadie puede hacerse daño (inmunidades), tras 3 rondas los rivales se rinden y huyen */
+  {const sg=sig();if(sg===hpSig){if(++still>=3){V.foes.forEach(m=>{if(m.hp>0)m.hp=0});V.turn=null;V.log='😮‍💨 Los rivales no pueden con vosotros y huyen del combate.';push();await sl(1200);return true}}else{still=0;hpSig=sg}}
   const U=[...G.seats.map((s,i)=>({s:'h',i,m:s.hero})),...V.foes.map((m,i)=>({s:'e',i,m}))].filter(u=>u.m&&u.m.hp>0).sort((a,b)=>spdOf(b.m)-spdOf(a.m)||R0()-.5);
   for(let k=0;k<U.length;k++){const u=U[k];if(u.m.hp<=0)continue;
    if(!V.foes.some(m=>m.hp>0)){V.turn=null;return true}
@@ -16240,7 +16273,7 @@ async function battle0(title){const foes=V.foes;[...G.seats.map(s=>s.hero),...fo
    if(u.s==='h'){V.wait=true;V.waitT=now();V.wpush=0;push();inp=await waitInput(u.i);V.wait=false;if(!G||ROLE!=='host')return false}
    else{push();await sl(650);inp=aim(u,foeAI(u))}
    await act(u,inp||{i:'def'});surrender();push();await sl(480)}}
- return alive()>0}
+ V.foes.forEach(m=>{if(m.hp>0)m.hp=0});return alive()>0}
 /* inicio de turno: efectos temporales y estados alterados. Devuelve true si la unidad pierde el turno */
 function heal(t,i,s,h,ic){h=Math.min(t.max-t.hp,h);if(h<=0)return 0;t.hp+=h;fx({k:'fl',s,i,txt:(ic||'+')+h,cls:'hl'});return h}
 function turnStart(u){const m=u.m,b=m._b||(m._b={}),L=[];
