@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v44.0</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v44.1</div>
 </section>
 
 <section id="team" class="scr">
@@ -8554,10 +8554,14 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'44.0',t:'Megas nuevas y mochila más fluida',s:'cur',l:[
+ {v:'44.1',t:'Megas originales conservadas',s:'cur',l:[
+  'Mega Delphox, Mega Chandelure y Mega Baxcalibur vuelven a ser las originales; las ilustraciones nuevas son ahora formas alternativas (Mega Delphox Z, Mega Chandelure Z y Mega Baxcalibur Z) que eliges al pulsar MEGA',
+  'En las Megaincursiones aparecen como jefes con su nombre de forma Z'
+]},
+{v:'44.0',t:'Megas nuevas y mochila más fluida',s:'prev',l:[
   '⚡ Megaevoluciones nuevas con ilustración propia: Mega Houndoom X, Mega Houndoom Y, Mega Tyranitar Z, Mega Ampharos Z, Mega Diancie Z y Mega Mimikyu',
-  'Mega Delphox, Mega Chandelure y Mega Baxcalibur estrenan su ilustración (antes se veía la del Pokémon normal)',
-  'Los Pokémon que ya tenían Megaevolución (Houndoom, Tyranitar, Ampharos y Diancie) te dejan elegir al pulsar MEGA entre la original y la nueva; la ventana muestra la ilustración de cada forma',
+  'Formas alternativas nuevas: Mega Delphox Z, Mega Chandelure Z y Mega Baxcalibur Z (sus Megas originales se mantienen)',
+  'Los Pokémon que ya tenían Megaevolución (Houndoom, Tyranitar, Ampharos, Diancie, Delphox, Chandelure y Baxcalibur) te dejan elegir al pulsar MEGA entre la original y la nueva; la ventana muestra la ilustración de cada forma',
   '🌋 Las 9 aparecen también como jefes de las Megaincursiones, y en las incursiones puedes elegir la forma de tu Mega',
   '🎒 Mochila mucho más fluida: al tocar un objeto o cambiar de pestaña ya no se recalcula el estilo de toda la pantalla (unas 10 veces menos trabajo), y los vigilantes que leían el tamaño de la ventana en cada cambio ya no fuerzan repintados',
   'Con la mochila (o cualquier ventana) abierta, el mapa de detrás deja de recolocarse cada pocos milisegundos y sus animaciones se pausan'
@@ -13375,7 +13379,7 @@ const clk=ms=>{ms=Math.max(0,ms);const m=Math.floor(ms/60000),s=Math.floor(ms%60
 /* ---------- jefes: megapokémon legendarios ---------- */
 const POOL=[{id:384,f:''},{id:150,f:'x'},{id:150,f:'y'},{id:380,f:''},{id:381,f:''},{id:719,f:''},{id:382,f:'primal',art:10077,n:'Kyogre Primigenio'},{id:383,f:'primal',art:10078,n:'Groudon Primigenio'},{id:718,f:''},{id:485,f:''},{id:491,f:''},{id:801,f:''},{id:807,f:''},
  {id:10239,art:'bzoroark',n:'Mega Zoroark de Hisui'},{id:130,art:'bgyarados',n:'Mega Gyarados Abisal'},{id:959,art:'btinkaton',n:'Mega Tinkaton'},{id:65,art:'balakazam',n:'Mega Alakazam Místico'},{id:302,art:'bsableye',n:'Mega Sableye Cristal'},{id:47,art:'mparasect',n:'Mega Parasect'},{id:199,art:'mslowking',n:'Mega Slowking'},
- {id:229,f:'x',art:'mhoundoomx',n:'Mega Houndoom X'},{id:229,f:'y',art:'mhoundoomy',n:'Mega Houndoom Y'},{id:248,f:'z',art:'mtyranitarz',n:'Mega Tyranitar Z'},{id:181,f:'z',art:'mampharosz',n:'Mega Ampharos Z'},{id:719,f:'z',art:'mdianciez',n:'Mega Diancie Z'},{id:778,art:'mmimikyu',n:'Mega Mimikyu'},{id:655,art:'mdelphox',n:'Mega Delphox'},{id:609,art:'mchandelure',n:'Mega Chandelure'},{id:998,art:'mbaxcalibur',n:'Mega Baxcalibur'}];
+ {id:229,f:'x',art:'mhoundoomx',n:'Mega Houndoom X'},{id:229,f:'y',art:'mhoundoomy',n:'Mega Houndoom Y'},{id:248,f:'z',art:'mtyranitarz',n:'Mega Tyranitar Z'},{id:181,f:'z',art:'mampharosz',n:'Mega Ampharos Z'},{id:719,f:'z',art:'mdianciez',n:'Mega Diancie Z'},{id:778,art:'mmimikyu',n:'Mega Mimikyu'},{id:655,f:'z',art:'mdelphox',n:'Mega Delphox Z'},{id:609,f:'z',art:'mchandelure',n:'Mega Chandelure Z'},{id:998,f:'z',art:'mbaxcalibur',n:'Mega Baxcalibur Z'}];
 const hsh=s=>{let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
 const SPOOL=(()=>{try{return Object.keys(TAGS).map(Number).filter(n=>n>0&&TAGS[n]!=='leg').sort((a,b)=>a-b).map(id=>({id,s:1}))}catch(e){return[{id:151,s:1},{id:251,s:1},{id:385,s:1},{id:793,s:1}]}})();
 const bossFor=wid=>{if(isS(wid))return SPOOL[hsh(wid||'x')%SPOOL.length];const F=forced();if(F&&F.wid===wid&&F.b!=null&&POOL[F.b])return POOL[F.b];return POOL[hsh(wid||'x')%POOL.length]};
@@ -22443,10 +22447,10 @@ CART.mmimikyu='assets/2f2eec24a3c7.webp';
 CART.mdelphox='assets/599ceb829119.webp';
 CART.mchandelure='assets/3fe9251479f2.webp';
 CART.mbaxcalibur='assets/8b21ce4b8cb6.webp';
-const ADD={229:['x','y'],248:['z'],181:['z'],719:['z']};
+const ADD={229:['x','y'],248:['z'],181:['z'],719:['z'],655:['z'],609:['z'],998:['z']};
 for(const id in ADD){const cur=MEGAF[id]||[''];ADD[id].forEach(f=>{if(!cur.includes(f))cur.push(f)});MEGAF[id]=cur}
 if(!MEGAF[778])MEGAF[778]=[''];
-window.MEGART={'229|x':'mhoundoomx','229|y':'mhoundoomy','248|z':'mtyranitarz','181|z':'mampharosz','719|z':'mdianciez','778|':'mmimikyu','655|':'mdelphox','609|':'mchandelure','998|':'mbaxcalibur'};
+window.MEGART={'229|x':'mhoundoomx','229|y':'mhoundoomy','248|z':'mtyranitarz','181|z':'mampharosz','719|z':'mdianciez','778|':'mmimikyu','655|z':'mdelphox','609|z':'mchandelure','998|z':'mbaxcalibur'};
 window.MEGABASE={778:'Mimikyu'};
 })();
 
