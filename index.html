@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v45.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v46.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -8557,7 +8557,16 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'45.9',t:'Carteles de megaincursión sin tapar el daño',s:'cur',l:[
+ {v:'46.0',t:'Amistad, premios diarios, Pokémon del día, Balls con efectos y ruinas nuevas',s:'cur',l:[
+  '💕 Amistad: cada Pokémon te coge cariño al ganar combates juntos y con tus mimos en casa (toca a tus compañeros, una vez por ronda). Con mucho cariño puede aguantar un golpe mortal con 1 PS (10%, 15% o 20% según el nivel de amistad, una vez por combate). Se ve con corazones en su ficha',
+  '📅 Premio diario: la semana de bienvenida trae premios grandes (Caramelos Raros, Ultra Balls, Revivir máximos y hasta 50.000 Pokémonedas el día 7) y después hay un premio pequeño cada día, con racha. Botón 📅 en el menú',
+  '🌟 Pokémon del día: uno distinto cada día que sale mucho más en su bioma, es 10 veces más probable que sea shiny y da un Caramelo Raro al capturarlo. Sale en el menú y en el mapa',
+  '✨ Cada Ball tiene su efecto: estela al lanzarla y explosión propia al capturar (corazones de la AmorBall, burbujas de la OceanoBall, rayos de la Ultra Ball, hojas de la Nidoball, telarañas de la Redball, el tipo de las Balls de tipo…)',
+  '🏛️ Ruinas: 12 puzles distintos (10 nuevos: la sombra en la pared, las piedras que cantan, el mural de la evolución, el sello inmune, las losas dormidas, el recuento de Unown, el sendero olvidado, el reloj de piedra, la inscripción rota y las tablillas gemelas). Cada visita son 3 salas al azar y el cofre final',
+  '🔣 Solo se consigue un Unown: cuando ya tienes uno, las ruinas superadas dan Caramelos Raros en su lugar',
+  'La ventana de partida guardada muestra tu equipo en dos filas de tres'
+]},
+{v:'45.9',t:'Carteles de megaincursión sin tapar el daño',s:'prev',l:[
   'Megaincursiones: los carteles de ¡Perfecto! (y su racha), ¡Crítico!, ¡Aturdido!, ¡Escudo roto! y ¡Nuevo récord! salen ahora en una franja pequeña abajo del campo, apilados, sin tapar los números de daño sobre el jefe'
 ]},
 {v:'45.8',t:'Megaincursiones más difíciles',s:'prev',l:[
@@ -20164,6 +20173,86 @@ body.lowfx #mrd .mrj-pop,body.lowfx .mrj-phase,body.lowfx .mrj-phase>div{animati
 #mrd .mrj-lane .mrj-pop small{margin:0;font-size:11px}
 #mrd .mrj-lane .mrj-pop.rec{animation-duration:2s}
 @keyframes mrjLane{0%{opacity:0;transform:translateY(10px) scale(.8)}15%{opacity:1;transform:scale(1.08)}28%{transform:none}80%{opacity:1}100%{opacity:0;transform:translateY(-4px)}}
+/* v46.0: puzles nuevos de las ruinas */
+.rnsil{display:grid;place-items:center;height:170px;margin:10px 0;border-radius:16px;background:linear-gradient(#57534e,#292524);border:2px solid #a8a29e66}
+.rnsil img{max-height:150px;max-width:80%;filter:brightness(0) drop-shadow(0 0 10px #fde04766);transition:filter .6s}
+.rnsil.rev img{filter:none}
+.rnsimon{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.rnsimon button{aspect-ratio:1;border-radius:18px;border:3px solid color-mix(in srgb,var(--c) 70%,#000);background:color-mix(in srgb,var(--c) 22%,#1c1917);color:#fde68a;font-size:34px;cursor:pointer;transition:transform .1s,background .1s,box-shadow .1s}
+.rnsimon button.lit{background:var(--c);color:#fff;box-shadow:0 0 24px var(--c);transform:scale(1.06)}
+.rnsimon button:disabled{cursor:default;opacity:1}
+.rnevo{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.rnevo button{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:14px;border:2px solid #a78bfa88;background:#ffffff10;color:#fff;cursor:pointer;font:700 11px system-ui}
+.rnevo img{width:64px;height:64px;object-fit:contain;image-rendering:pixelated}
+.rnevo em{position:absolute;top:4px;left:6px;font:900 16px system-ui;font-style:normal;color:#4ade80}
+.rnevo button:disabled{border-color:#4ade80;background:#14532d55}
+.rnlights,.rnpath{display:grid;gap:8px;margin:12px auto;width:min(300px,100%)}
+.rnlights{grid-template-columns:repeat(3,1fr)}.rnpath{grid-template-columns:repeat(4,1fr)}
+.rnlights button,.rnpath button{aspect-ratio:1;border-radius:12px;border:2px solid #78716c;background:linear-gradient(#44403c,#1c1917);color:#fde68a;font-size:26px;cursor:pointer;transition:background .15s,box-shadow .15s}
+.rnlights button.on{background:radial-gradient(circle,#fde68a,#d97706);box-shadow:0 0 16px #fbbf24aa;color:#78350f;border-color:#fde68a}
+.rnpath button{font-size:20px}.rnpath button.safe{background:radial-gradient(circle,#86efac,#15803d);border-color:#bbf7d0;box-shadow:0 0 12px #4ade8088}
+.rnpath button:disabled{cursor:default;opacity:1}
+.rngrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:12px 0;padding:12px;border-radius:16px;background:linear-gradient(#57534e,#292524);border:2px solid #a8a29e66}
+.rngrid b{display:grid;place-items:center;height:40px;font-size:26px;color:#fde68a;text-shadow:0 0 8px #fde04766}
+.rngrid.hid b{color:#78716c;text-shadow:none}
+.rnwait{text-align:center;opacity:.8}
+.rndial{display:flex;justify-content:center;gap:12px;margin:10px 0}
+.rndial.t b{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:#ffffff12;border:2px dashed #fde68a88;font-size:28px;color:#fde68a}
+.rndial button{display:flex;flex-direction:column;align-items:center;justify-content:center;width:76px;height:76px;border-radius:50%;border:4px solid #a8a29e;background:radial-gradient(circle,#57534e,#1c1917);color:#fde68a;cursor:pointer;transition:transform .2s}
+.rndial button b{font-size:30px}.rndial button small{font-size:11px;opacity:.6}
+.rndial button:active{transform:rotate(90deg)}
+.rnword b.gap{color:#f87171;animation:rnGap 1s ease-in-out infinite}
+@keyframes rnGap{50%{opacity:.4}}
+.rnpairs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.rnpairs button{aspect-ratio:3/4;border-radius:12px;border:2px solid #a78bfa88;background:linear-gradient(#4c1d95,#1e1036);color:#c4b5fd;font-size:26px;cursor:pointer;transition:transform .2s}
+.rnpairs button.up{background:#fef3c7;border-color:#fde68a}.rnpairs button.ok{background:#bbf7d0;border-color:#4ade80}
+.rnpairs img{width:90%;height:auto;image-rendering:pixelated}
+.rnpairs button:disabled{cursor:default;opacity:1}
+/* v46.0 amistad */
+.frln{display:flex;gap:8px;align-items:center;margin:6px 0;padding:6px 10px;border-radius:12px;background:#f472b61a;border:1px solid #f472b655;text-align:left}
+.frln .frl{font-size:13px;letter-spacing:-1px;white-space:nowrap}
+.frln b{font-size:12.5px;color:#f9a8d4}.frln small{font-size:11px;opacity:.85}.frln .frt{display:block;opacity:.65;font-size:10.5px}
+.frh{position:fixed;z-index:200;font-style:normal;font-size:22px;pointer-events:none;animation:frUp 1.3s ease-out forwards}
+@keyframes frUp{0%{opacity:0;transform:translateY(0) scale(.5)}20%{opacity:1;transform:translateY(-10px) scale(1.1)}100%{opacity:0;transform:translateY(-80px) scale(.9)}}
+/* v46.0 premio diario */
+#lgbtn{position:relative;display:grid;place-items:center;width:46px;height:46px;padding:0;border-radius:50%;border:2px solid #f472b6;background:linear-gradient(180deg,#831843ee,#500724ee);cursor:pointer;box-shadow:0 4px 12px #0008;font-size:20px}
+#lgbtn b{position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;border-radius:10px;background:#ef4444;color:#fff;font:900 12px/20px system-ui;display:none;box-shadow:0 0 0 2px #500724}
+#lgbtn.has b{display:block}#lgbtn.has span{animation:nxBeat 1.4s ease-in-out infinite}
+#lgov{position:fixed;inset:0;z-index:96;display:flex;align-items:center;justify-content:center;padding:14px;background:#000b;opacity:0;transition:opacity .18s}
+#lgov.on{opacity:1}
+#lgov .lgb{position:relative;width:min(440px,100%);max-height:calc(100dvh - 28px);overflow:auto;padding:16px 14px 14px;border-radius:20px;color:#fff;background:radial-gradient(120% 60% at 50% 0,#be185d66,transparent 70%),linear-gradient(180deg,#2e1065,#0f0a2e);border:2px solid #f472b6;box-shadow:0 14px 40px #000c;transform:scale(.95);transition:transform .2s}
+#lgov.on .lgb{transform:none}
+#lgov .lgx{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;border:1px solid #fff3;background:#0006;color:#fff;cursor:pointer}
+#lgov .lgh{display:flex;gap:12px;align-items:center;margin-bottom:12px;padding-right:30px}
+#lgov .lgh i{font-style:normal;font-size:40px}#lgov .lgh h3{margin:0;font-size:20px;color:#fbcfe8}#lgov .lgh p{margin:2px 0 0;font-size:12.5px;opacity:.85}
+#lgov .lgg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+#lgov .lgd{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;min-height:84px;padding:7px 4px;border-radius:14px;background:#ffffff10;border:2px solid #ffffff1f;text-align:center}
+#lgov .lgd small{font:800 10.5px system-ui;opacity:.8}
+#lgov .lgd .lgr{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 4px;font:800 11px system-ui}
+#lgov .lgd .lgr img,#lgov .lgd .lgr svg{width:16px;height:16px;vertical-align:-3px}
+#lgov .lgd.big{grid-column:span 2;background:linear-gradient(135deg,#f59e0b33,#be185d33);border-color:#fbbf24aa}
+#lgov .lgd.now{border-color:#fde047;box-shadow:0 0 0 1px #fde04788,0 0 16px #fde04755;animation:lgNow 1.4s ease-in-out infinite}
+#lgov .lgd.done{opacity:.5}#lgov .lgd em{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:28px;color:#4ade80;text-shadow:0 2px 4px #000}
+@keyframes lgNow{50%{transform:scale(1.04)}}
+#lgov .lgbt{margin-top:12px}#lgov .lggo{width:100%;margin:0;min-height:48px;background:linear-gradient(180deg,#ec4899,#9d174d)!important;color:#fff!important;border:1px solid #fbcfe8!important;font-weight:900}
+#lgov .lgn{text-align:center;font-size:13px;opacity:.85;margin:4px 0}
+body.lowfx #lgov .lgd.now{animation:none}
+/* v46.0 Pokémon del día */
+#potdm{position:fixed;left:14px;top:calc(68px + env(safe-area-inset-top));z-index:30;display:none;align-items:center;gap:6px;padding:4px 12px 4px 4px;border-radius:999px;border:2px solid #fde047;background:linear-gradient(135deg,#7c2d12ee,#4c1d95ee);color:#fff;cursor:pointer;box-shadow:0 4px 14px #0008,0 0 14px #fde04744;font:inherit}
+body[data-v=menu] #potdm{display:flex}
+#potdm img{width:40px;height:40px;object-fit:contain;image-rendering:pixelated;background:#ffffff22;border-radius:50%}
+#potdm span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15}#potdm small{font:800 10px system-ui;color:#fde68a}#potdm b{font:900 13px system-ui}
+#potdc{border-color:#fde047!important}
+/* v46.0 efectos de Balls */
+.bthr .bfx{position:absolute;z-index:6;pointer-events:none;font-style:normal;line-height:1;will-change:transform,opacity}
+.bthr .bfxr{position:absolute;z-index:5;width:90px;height:90px;border-radius:50%;border:4px solid;pointer-events:none}
+.bthr .bfxr.heart{border-radius:50% 50% 50% 50%/60% 60% 40% 40%}
+.bthr .bfxr.web{border-style:dashed}
+.bthr .bfxr.bolt{border-width:6px}
+.bthr .bfxn{position:absolute;left:50%;top:22%;z-index:7;translate:-50% 0;padding:4px 14px;border-radius:999px;background:#0009;border:2px solid var(--c);color:#fff;font:900 14px system-ui;box-shadow:0 0 16px var(--c);animation:bfxN 1.8s ease forwards;white-space:nowrap}
+@keyframes bfxN{0%{opacity:0;transform:scale(.5)}15%{opacity:1;transform:scale(1.1)}25%{transform:none}80%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+/* v46.0: partida guardada: equipo en 2 filas de 3 */
+#mod .box.dlx .pgteam{display:grid!important;grid-template-columns:repeat(3,auto);justify-content:center;gap:6px!important}
 </style>
 <script id="v37js">
 (()=>{
@@ -21635,24 +21724,70 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  function tickRuins(){if(!live())return;if(ruinsOpen())return;if(R.round>=4&&(!R.ruin||R.round-(R.ruin.r||0)>=5)&&rnd()<.12){R.ruin={r:R.round,u:R.round+2};setTimeout(()=>{try{toast('🏛️ ¡Unas ruinas misteriosas han aparecido en la región!')}catch(_){}},900);try{saveRun()}catch(_){}}}
  function paintRuinChip(){const ch=Q('#chips');let c=Q('#rnchip');if(!ch||!ruinsOpen()){if(c)c.remove();return}if(!c){c=D.createElement('button');c.type='button';c.id='rnchip';c.className='chip';c.onclick=e=>{e.stopPropagation();openRuins()}}if(!c.isConnected)ch.append(c);const n=R.ruin.u-R.round+1;c.textContent=`🏛️ Ruinas · ${n} r.`}
  let RW=null,RS=null;
- function rPaint(h){window.__morph?__morph(RW,`<div class="rnw"><div class="rnhd"><span class="rnlogo">🏛️</span><div><b>Ruinas Sinjoh</b><small>Sala ${Math.min(3,RS.st+1)} de 3</small></div><button type="button" data-r="x" class="rnx" aria-label="Salir">✕</button></div><div class="rnsteps">${[0,1,2].map(i=>`<i class="${i<RS.st?'ok':i===RS.st?'on':''}"></i>`).join('')}</div>${h}</div>`):(RW.innerHTML=h)}
- function room(){const st=RS.st;
-  if(st===0){const w=RS.w||(RS.w=pick(WORDS));if(!RS.op){const o=new Set([w]);while(o.size<4)o.add(pick(WORDS));RS.op=[...o].sort(()=>rnd()-.5)}
-   const key=[...new Set(w.split(''))].slice(0,3);
-   rPaint(`<p class="rnt">Una pared cubierta de símbolos antiguos de Unown. Algunos están traducidos al lado:</p><div class="rnkey">${key.map(c=>`<span><b>${glyph(c)}</b>= ${c}</span>`).join('')}</div><div class="rnword">${w.split('').map(c=>`<b>${glyph(c)}</b>`).join('')}</div><p class="rnt">¿Qué nombre de Pokémon está escrito?</p><div class="rnop">${RS.op.map(o=>`<button type="button" data-r="w:${o}">${o}</button>`).join('')}</div>`)}
-  else if(st===1){const q=RS.q||(RS.q=(()=>{const L=[];const pool=TYS.filter(t=>t!=='normal');for(let i=0;i<3;i++){const d=pick(pool),good=TYS.filter(a=>{try{return eff(a,[d])>1}catch(e){return false}});if(!good.length){i--;continue}const ans=pick(good),bad=TYS.filter(a=>{try{return eff(a,[d])<=1}catch(e){return true}}).sort(()=>rnd()-.5).slice(0,3);L.push({d,ans,op:[ans,...bad].sort(()=>rnd()-.5)})}return L})());
-   const i=RS.qi|0,x=q[i];rPaint(`<p class="rnt">Tres puertas de piedra. Cada una solo se abre con un ataque <b>muy eficaz</b> contra el tipo grabado. (Puerta ${i+1}/3${RS.err?` · ${RS.err} fallo${RS.err>1?'s':''}`:''})</p><div class="rndoor"><span>${typeof tyi=='function'?tyi(x.d):''}</span><b>${ES[x.d]}</b></div><div class="rnop t">${x.op.map(o=>`<button type="button" data-r="t:${o}" style="--c:${COL[o]}">${typeof tyi=='function'?tyi(o):''}${ES[o]}</button>`).join('')}</div>`)}
-  else if(st===2){rPaint(`<p class="rnt">En la cámara final hay tres cofres. Solo puedes abrir uno.</p><div class="rnch">${[0,1,2].map(i=>`<button type="button" data-r="c:${i}"><i>🧰</i><small>Cofre ${i+1}</small></button>`).join('')}</div>`)}
-  else{const L=RS.loot;rPaint(`<p class="rnt">${RS.ok?'¡Has superado las ruinas!':'Sales de las ruinas.'}</p>${RS.mon?`<div class="evmon"><img src="${art(RS.mon.id,RS.mon.sh)}" alt=""><b>${esc(nm(RS.mon))}</b><small>Nv.${RS.mon.lvl} · se une a ti</small></div>`:''}<div class="rnloot">${L.map(t=>`<span>${t}</span>`).join('')}</div><button type="button" class="rngo" data-r="x">Salir de las ruinas</button>`)}}
- async function onR(e){if(e.target===RW)return;const t=e.target.closest('[data-r]');if(!t||t.disabled)return;const a=t.dataset.r;
-  if(a==='x'){RW.remove();try{showMap()}catch(_){}return}
-  if(a.startsWith('w:')){const ok=a.slice(2)===RS.w;RS.ok1=ok;if(ok){try{beep(880,.12,'triangle')}catch(_){}RS.loot.push('🔤 Descifraste el muro: +1 Caramelo Raro');give({can:1});try{window.__rankAdd&&__rankAdd(30,'Ruinas descifradas')}catch(_){}}else{try{beep(220,.2,'sawtooth')}catch(_){}RS.loot.push(`🔤 El muro decía «${RS.w}»…`)}RS.st=1;return room()}
-  if(a.startsWith('t:')){const q=RS.q[RS.qi|0];if(a.slice(2)===q.ans){try{beep(780,.1,'triangle')}catch(_){}RS.qi=(RS.qi|0)+1}else{RS.err=(RS.err|0)+1;R.team.forEach(m=>{if(m.hp>0)m.hp=Math.max(1,m.hp-Math.ceil(m.max*.08))});try{beep(200,.2,'sawtooth')}catch(_){}toast(`💥 ¡Trampa! Los ataques de tipo ${ES[a.slice(2)]} no son muy eficaces contra ${ES[q.d]}. Tu equipo pierde un 8% de PS.`);RS.qi=(RS.qi|0)+1}
-   if((RS.qi|0)>=3){const g=3-(RS.err|0);RS.loot.push(`🚪 Puertas abiertas a la primera: ${g}/3`);if(g>=2)give({ub:g});RS.loot.push(g>=2?`🎁 ${g} Ultra Balls`:'Sin premio en las puertas');RS.st=2}return room()}
+ /* v46.0: cada visita son 3 salas con puzles al azar (de 12 distintos) y la cámara de los cofres. Solo se consigue 1 Unown en toda la cuenta */
+ const unownGot=()=>{try{if(localStorage.getItem('pa_unown1')==='1')return true}catch(e){}try{return[...(R.team||[]),...(R.box||[])].some(m=>m&&m.id===201)}catch(e){return false}};
+ const POKE=[[25,'PIKACHU'],[133,'EEVEE'],[150,'MEWTWO'],[94,'GENGAR'],[448,'LUCARIO'],[143,'SNORLAX'],[149,'DRAGONITE'],[6,'CHARIZARD'],[197,'UMBREON'],[445,'GARCHOMP'],[9,'BLASTOISE'],[175,'TOGEPI'],[131,'LAPRAS'],[359,'ABSOL'],[658,'GRENINJA'],[54,'PSYDUCK'],[39,'JIGGLYPUFF'],[129,'MAGIKARP'],[132,'DITTO'],[95,'ONIX'],[123,'SCYTHER'],[248,'TYRANITAR'],[376,'METAGROSS'],[282,'GARDEVOIR'],[405,'LUXRAY'],[778,'MIMIKYU'],[823,'CORVIKNIGHT'],[1,'BULBASAUR'],[7,'SQUIRTLE'],[4,'CHARMANDER'],[393,'PIPLUP'],[258,'MUDKIP'],[52,'MEOWTH'],[35,'CLEFAIRY'],[130,'GYARADOS'],[384,'RAYQUAZA']];
+ const EVOL=[[1,2,3],[4,5,6],[7,8,9],[10,11,12],[16,17,18],[147,148,149],[246,247,248],[371,372,373],[443,444,445],[63,64,65],[92,93,94],[74,75,76],[152,153,154],[155,156,157],[158,159,160],[252,253,254],[255,256,257],[258,259,260],[387,388,389],[390,391,392],[393,394,395],[650,651,652],[653,654,655],[656,657,658],[810,811,812],[813,814,815],[816,817,818],[906,907,908],[909,910,911],[912,913,914],[29,30,31],[32,33,34],[43,44,45],[60,61,62],[66,67,68],[69,70,71],[81,82,462],[111,112,464],[280,281,282]];
+ const IMM=[['normal','ghost'],['fighting','ghost'],['electric','ground'],['ground','flying'],['psychic','dark'],['ghost','normal'],['poison','steel'],['dragon','fairy']];
+ const nmId=id=>{try{return cap((typeof NAMES!=='undefined'&&NAMES[id])||('#'+id)).replace(/-/g,' ')}catch(e){return'#'+id}};
+ const shuf2=a=>a.map(x=>[rnd(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+ const PZ=['cipher','doors','sil','simon','evo','imm','lights','count','path','dials','miss','pairs'];
+ const PZN={cipher:'El muro de símbolos',doors:'Las puertas de tipos',sil:'La sombra en la pared',simon:'Las piedras que cantan',evo:'El mural de la evolución',imm:'El sello inmune',lights:'Las losas dormidas',count:'El recuento de Unown',path:'El sendero olvidado',dials:'El reloj de piedra',miss:'La inscripción rota',pairs:'Las tablillas gemelas'};
+ const NR=()=>RS.pz.length+1;
+ function rPaint(h){const n=NR(),st=Math.min(n,RS.st+1),title=RS.st<RS.pz.length?PZN[RS.pz[RS.st]]:RS.st===RS.pz.length?'La cámara del tesoro':'Salida';
+  window.__morph?__morph(RW,`<div class="rnw"><div class="rnhd"><span class="rnlogo">🏛️</span><div><b>Ruinas Sinjoh</b><small>Sala ${st} de ${n} · ${title}</small></div><button type="button" data-r="x" class="rnx" aria-label="Salir">✕</button></div><div class="rnsteps">${Array.from({length:n},(_,i)=>`<i class="${i<RS.st?'ok':i===RS.st?'on':''}"></i>`).join('')}</div>${h}</div>`):(RW.innerHTML=h)}
+ const solved=(ok,txt,rw)=>{RS.score+=ok?1:0;if(ok){try{beep(880,.1,'triangle');setTimeout(()=>beep(1175,.12,'triangle'),90)}catch(_){}}else{try{beep(200,.2,'sawtooth')}catch(_){}}
+  RS.loot.push((ok?'✅ ':'❌ ')+PZN[RS.pz[RS.st]]+(txt?' · '+txt:''));if(ok&&rw){give(rw);RS.loot.push('🎁 '+giveTxt(rw))}RS.st++;RS.d={};room()};
+ const trap=()=>{R.team.forEach(m=>{if(m.hp>0)m.hp=Math.max(1,m.hp-Math.ceil(m.max*.08))});toast('💥 ¡Trampa! Tu equipo pierde un 8% de PS')};
+ function room(){const st=RS.st,d=RS.d||(RS.d={});
+  if(st>RS.pz.length){const L=RS.loot;return rPaint(`<p class="rnt">${RS.ok?'¡Has superado las ruinas!':'Sales de las ruinas.'}</p>${RS.mon?`<div class="evmon"><img src="${art(RS.mon.id,RS.mon.sh)}" alt=""><b>${esc(nm(RS.mon))}</b><small>Nv.${RS.mon.lvl} · se une a ti</small></div>`:''}<div class="rnloot">${L.map(t=>`<span>${t}</span>`).join('')}</div><button type="button" class="rngo" data-r="x">Salir de las ruinas</button>`)}
+  if(st===RS.pz.length)return rPaint(`<p class="rnt">En la cámara final hay tres cofres. Solo puedes abrir uno.${RS.score?` <b>Puzles resueltos: ${RS.score}/${RS.pz.length}</b>`:''}</p><div class="rnch">${[0,1,2].map(i=>`<button type="button" data-r="c:${i}"><i>🧰</i><small>Cofre ${i+1}</small></button>`).join('')}</div>`);
+  const k=RS.pz[st];
+  if(k==='cipher'){const w=d.w||(d.w=pick(WORDS));if(!d.op){const o=new Set([w]);while(o.size<4)o.add(pick(WORDS));d.op=shuf2([...o])}const key=[...new Set(w.split(''))].slice(0,3);
+   return rPaint(`<p class="rnt">Una pared cubierta de símbolos de Unown. Algunos están traducidos al lado:</p><div class="rnkey">${key.map(c=>`<span><b>${glyph(c)}</b>= ${c}</span>`).join('')}</div><div class="rnword">${w.split('').map(c=>`<b>${glyph(c)}</b>`).join('')}</div><p class="rnt">¿Qué nombre de Pokémon está escrito?</p><div class="rnop">${d.op.map(o=>`<button type="button" data-r="a:${o}">${o}</button>`).join('')}</div>`)}
+  if(k==='doors'){const q=d.q||(d.q=(()=>{const L=[];const pool=TYS.filter(t=>t!=='normal');while(L.length<3){const x=pick(pool),good=TYS.filter(a=>{try{return eff(a,[x])>1}catch(e){return false}});if(!good.length)continue;const ans=pick(good),bad=shuf2(TYS.filter(a=>{try{return eff(a,[x])<=1}catch(e){return true}})).slice(0,3);L.push({d:x,ans,op:shuf2([ans,...bad])})}return L})());const i=d.i|0,x=q[i];
+   return rPaint(`<p class="rnt">Tres puertas de piedra. Cada una solo se abre con un ataque <b>muy eficaz</b> contra el tipo grabado. (Puerta ${i+1}/3${d.err?` · ${d.err} fallo${d.err>1?'s':''}`:''})</p><div class="rndoor"><span>${typeof tyi=='function'?tyi(x.d):''}</span><b>${ES[x.d]}</b></div><div class="rnop t">${x.op.map(o=>`<button type="button" data-r="t:${o}" style="--c:${COL[o]}">${typeof tyi=='function'?tyi(o):''}${ES[o]}</button>`).join('')}</div>`)}
+  if(k==='sil'){const P=d.p||(d.p=pick(POKE));if(!d.op){const o=new Set([P[1]]);while(o.size<4)o.add(pick(POKE)[1]);d.op=shuf2([...o])}
+   return rPaint(`<p class="rnt">Una sombra se proyecta en la pared de la cámara. ¿De qué Pokémon es?</p><div class="rnsil${d.rev?' rev':''}"><img src="${art(P[0])}" alt=""></div><div class="rnop">${d.op.map(o=>`<button type="button" data-r="a:${o}">${o}</button>`).join('')}</div>`)}
+  if(k==='simon'){const S=d.s||(d.s=Array.from({length:5},()=>rnd()*6|0));const G=['ᚠ','ᚱ','ᛟ','ᛉ','ᚦ','ᛗ'],C=['#f472b6','#60a5fa','#4ade80','#facc15','#fb923c','#c084fc'];
+   const h=`<p class="rnt">Seis piedras con símbolos se iluminan en orden. ${d.play?'Repite la secuencia tocándolas.':'Fíjate bien…'} <b>${(d.n|0)}/${S.length}</b></p><div class="rnsimon">${G.map((g,i)=>`<button type="button" data-r="s:${i}" style="--c:${C[i]}" ${d.play?'':'disabled'}>${g}</button>`).join('')}</div>`;rPaint(h);
+   if(!d.play&&!d.shown){d.shown=1;let j=0;const iv=setInterval(()=>{const bs=RW.querySelectorAll('.rnsimon button');bs.forEach(b=>b.classList.remove('lit'));if(j>=S.length){clearInterval(iv);d.play=1;room();return}const b=bs[S[j]];if(b){b.classList.add('lit');try{beep(392+S[j]*90,.18,'triangle')}catch(_){}setTimeout(()=>b.classList.remove('lit'),420)}j++},650)}return}
+  if(k==='evo'){const L=d.l||(d.l=pick(EVOL));const sh=d.sh||(d.sh=shuf2(L.slice()));const got=d.g||(d.g=[]);
+   return rPaint(`<p class="rnt">Un mural muestra una familia de Pokémon desordenada. Toca los tres <b>en orden de evolución</b>.</p><div class="rnevo">${sh.map(id=>{const i=got.indexOf(id);return`<button type="button" data-r="e:${id}" ${i>=0?'disabled':''}><img src="${mini(id)}" alt=""><small>${esc(nmId(id))}</small>${i>=0?`<em>${i+1}</em>`:''}</button>`}).join('')}</div>`)}
+  if(k==='imm'){const q=d.q||(d.q=(()=>{const [a,ans]=pick(IMM);const bad=shuf2(TYS.filter(t=>{try{return eff(a,[t])>0&&t!==ans}catch(e){return true}})).slice(0,3);return{a,ans,op:shuf2([ans,...bad])}})());
+   return rPaint(`<p class="rnt">Un sello protege la salida. Solo lo rompe un Pokémon de un tipo que sea <b>inmune</b> a los ataques grabados en él:</p><div class="rndoor"><span>${typeof tyi=='function'?tyi(q.a):''}</span><b>${ES[q.a]}</b></div><div class="rnop t">${q.op.map(o=>`<button type="button" data-r="i:${o}" style="--c:${COL[o]}">${typeof tyi=='function'?tyi(o):''}${ES[o]}</button>`).join('')}</div>`)}
+  if(k==='lights'){if(!d.b){d.b=Array(9).fill(1);for(let n=0;n<3+(rnd()*2|0);n++){const i=rnd()*9|0;[i,i-3,i+3,i%3?i-1:-1,i%3<2?i+1:-1].forEach(j=>{if(j>=0&&j<9)d.b[j]^=1})}if(d.b.every(x=>x))d.b[4]=0;d.mv=0}
+   return rPaint(`<p class="rnt">Nueve losas dormidas. Al pisar una, cambian ella y sus vecinas (arriba, abajo y a los lados). <b>Enciéndelas todas.</b> Pasos: ${d.mv}/12</p><div class="rnlights">${d.b.map((v,i)=>`<button type="button" data-r="l:${i}" class="${v?'on':''}">${v?'✦':''}</button>`).join('')}</div>`)}
+  if(k==='count'){if(!d.g){const G=['ᚠ','ᚱ','ᛟ','ᛉ'];d.t=pick(G);d.g=Array.from({length:20},()=>pick(G));d.ans=d.g.filter(x=>x===d.t).length;const o=new Set([d.ans]);while(o.size<4){const v=d.ans+((rnd()*7|0)-3);if(v>=0)o.add(v)}d.op=shuf2([...o])}
+   rPaint(`<p class="rnt">Los Unown se esconden en la pared unos segundos. <b>¿Cuántos ${d.t} había?</b></p><div class="rngrid${d.hid?' hid':''}">${d.g.map(x=>`<b>${d.hid?'?':x}</b>`).join('')}</div>${d.hid?`<div class="rnop">${d.op.map(o=>`<button type="button" data-r="n:${o}">${o}</button>`).join('')}</div>`:'<p class="rnt rnwait">⏳ Memoriza…</p>'}`);
+   if(!d.hid&&!d.tm){d.tm=setTimeout(()=>{d.hid=1;if(RS&&RS.d===d)room()},4500)}return}
+  if(k==='path'){if(!d.p){const p=[0];let c=0;while(c<15&&p.length<10){const r=c>>2,col=c&3,n=[];if(col<3)n.push(c+1);if(r<3)n.push(c+4);c=pick(n);p.push(c)}while(c!==15){c=(c&3)<3?c+1:c+4;p.push(c)}d.p=p;d.i=1}
+   rPaint(`<p class="rnt">Un sendero de losas seguras cruza la sala. ${d.go?'Recórrelo desde 🟢 hasta 🏁 pisando solo las seguras.':'Memoriza el camino…'}</p><div class="rnpath">${Array.from({length:16},(_,i)=>{const sh=!d.go&&d.p.includes(i),ok=d.go&&d.p.indexOf(i)>-1&&d.p.indexOf(i)<d.i;return`<button type="button" data-r="p:${i}" class="${sh||ok?'safe':''}${i===0?' st':''}${i===15?' en':''}" ${d.go?'':'disabled'}>${i===0?'🟢':i===15?'🏁':''}</button>`}).join('')}</div>`);
+   if(!d.go&&!d.tm){d.tm=setTimeout(()=>{d.go=1;if(RS&&RS.d===d)room()},3200)}return}
+  if(k==='dials'){if(!d.t){const G=['ᚠ','ᚱ','ᛟ','ᛉ'];d.G=G;d.t=[0,1,2].map(()=>rnd()*4|0);d.c=d.t.map(x=>(x+1+(rnd()*3|0))%4);d.mv=0}
+   return rPaint(`<p class="rnt">Un reloj de piedra con tres anillos. Gíralos (tócalos) hasta que coincidan con el grabado de arriba. Giros: ${d.mv}</p><div class="rndial t">${d.t.map(x=>`<b>${d.G[x]}</b>`).join('')}</div><div class="rndial">${d.c.map((x,i)=>`<button type="button" data-r="d:${i}"><b>${d.G[x]}</b><small>↻</small></button>`).join('')}</div>`)}
+  if(k==='miss'){if(!d.w){d.w=pick(WORDS);d.i=1+(rnd()*(d.w.length-2)|0);d.ans=d.w[d.i];const o=new Set([d.ans]);const AB='ABCDEFGHIJKLMNOPRSTUVYZ';while(o.size<4)o.add(AB[rnd()*AB.length|0]);d.op=shuf2([...o]);d.key=shuf2([...new Set(d.w.split(''))].filter(c=>c!==d.ans)).slice(0,4)}
+   return rPaint(`<p class="rnt">A esta inscripción le falta un símbolo. Con la clave, descubre <b>qué letra falta</b>.</p><div class="rnkey">${d.key.map(c=>`<span><b>${glyph(c)}</b>= ${c}</span>`).join('')}</div><div class="rnword">${d.w.split('').map((c,i)=>i===d.i?'<b class="gap">?</b>':`<b>${glyph(c)}</b>`).join('')}</div><div class="rnop">${d.op.map(o=>`<button type="button" data-r="m:${o}">${glyph(o)} = ${o}</button>`).join('')}</div>`)}
+  if(k==='pairs'){if(!d.c){const ids=shuf2(POKE.slice()).slice(0,4).map(x=>x[0]);d.c=shuf2([...ids,...ids]);d.o=[];d.f=[];d.mv=0}
+   return rPaint(`<p class="rnt">Tablillas boca abajo. Encuentra las 4 parejas con <b>10 intentos o menos</b>. Intentos: ${d.mv}</p><div class="rnpairs">${d.c.map((id,i)=>{const up=d.f.includes(i)||d.o.includes(i);return`<button type="button" data-r="q:${i}" class="${up?'up':''}${d.f.includes(i)?' ok':''}" ${up?'disabled':''}>${up?`<img src="${mini(id)}" alt="">`:'ᛟ'}</button>`}).join('')}</div>`)}}
+ async function onR(e){if(e.target===RW)return;const t=e.target.closest('[data-r]');if(!t||t.disabled)return;const a=t.dataset.r,d=RS.d||{},k=RS.pz[RS.st];
+  if(a==='x'){clearTimeout(d.tm);RW.remove();try{showMap()}catch(_){}return}
+  if(a.startsWith('a:')){const v=a.slice(2);if(k==='cipher')return solved(v===d.w,v===d.w?'':`decía «${d.w}»`,{can:1});if(k==='sil'){d.rev=1;room();const ok=v===d.p[1];setTimeout(()=>solved(ok,ok?'':`era ${d.p[1]}`,{ub:2}),900);return}}
+  if(a.startsWith('t:')){const q=d.q[d.i|0];if(a.slice(2)!==q.ans){d.err=(d.err|0)+1;trap()}else try{beep(780,.1,'triangle')}catch(_){}d.i=(d.i|0)+1;if(d.i>=3){const g=3-(d.err|0);return solved(g>=2,`${g}/3 a la primera`,{ub:g})}return room()}
+  if(a.startsWith('s:')){const i=+a.slice(2),S=d.s;try{beep(392+i*90,.12,'triangle')}catch(_){}t.classList.add('lit');setTimeout(()=>t.classList.remove('lit'),200);if(S[d.n|0]!==i)return solved(false,'te equivocaste en la secuencia');d.n=(d.n|0)+1;if(d.n>=S.length)return solved(true,'',{can:1});const b=RW.querySelector('.rnt b');if(b)b.textContent=`${d.n}/${S.length}`;return}
+  if(a.startsWith('e:')){const id=+a.slice(2);d.g.push(id);const i=d.g.length-1;if(d.l[i]!==id){room();return setTimeout(()=>solved(false,'el orden era '+d.l.map(nmId).join(' → ')),600)}if(d.g.length>=3){room();return setTimeout(()=>solved(true,'',{can:1}),500)}return room()}
+  if(a.startsWith('i:'))return solved(a.slice(2)===d.q.ans,a.slice(2)===d.q.ans?'':`era ${ES[d.q.ans]}`,{max:2});
+  if(a.startsWith('l:')){const i=+a.slice(2);[i,i-3,i+3,i%3?i-1:-1,i%3<2?i+1:-1].forEach(j=>{if(j>=0&&j<9)d.b[j]^=1});d.mv++;try{beep(500+d.b.filter(x=>x).length*60,.05,'triangle')}catch(_){}if(d.b.every(x=>x)){room();return setTimeout(()=>solved(true,`${d.mv} pasos`,{can:1,ub:1}),400)}if(d.mv>=12)return solved(false,'se acabaron los pasos');return room()}
+  if(a.startsWith('n:'))return solved(+a.slice(2)===d.ans,+a.slice(2)===d.ans?'':`había ${d.ans}`,{ub:2});
+  if(a.startsWith('p:')){const i=+a.slice(2);if(d.p[d.i]!==i){trap();return solved(false,'pisaste una losa trampa')}d.i++;if(d.i>=d.p.length){room();return setTimeout(()=>solved(true,'',{rvm:1}),400)}try{beep(600+d.i*30,.05,'triangle')}catch(_){}return room()}
+  if(a.startsWith('d:')){const i=+a.slice(2);d.c[i]=(d.c[i]+1)%4;d.mv++;try{beep(440,.04,'square')}catch(_){}if(d.c.every((x,j)=>x===d.t[j])){room();return setTimeout(()=>solved(true,`${d.mv} giros`,{can:1}),400)}if(d.mv>=14)return solved(false,'el mecanismo se atascó');return room()}
+  if(a.startsWith('m:'))return solved(a.slice(2)===d.ans,a.slice(2)===d.ans?'':`faltaba la ${d.ans} (${d.w})`,{max:1,can:1});
+  if(a.startsWith('q:')){if(d.lock)return;const i=+a.slice(2);d.o.push(i);room();if(d.o.length===2){d.mv++;const[x,y]=d.o;if(d.c[x]===d.c[y]){d.f.push(x,y);d.o=[];try{beep(880,.08,'triangle')}catch(_){}if(d.f.length===8){room();return setTimeout(()=>solved(true,`${d.mv} intentos`,{can:2}),500)}return room()}d.lock=1;setTimeout(()=>{d.o=[];d.lock=0;if(d.mv>=10&&d.f.length<8)return solved(false,'se acabaron los intentos');room()},700)}return}
   if(a.startsWith('c:')){const HK=window.HELD?Object.keys(HELD):['lefto'],hk=pick(HK);const P=[[{['h_'+hk]:1,can:1},`${(window.HELD&&HELD[hk]?HELD[hk].e+' '+HELD[hk].n:'Objeto')} y Caramelo Raro`],[{rvm:2,can:2},'Revivir máximo ×2 y Caramelo Raro ×2'],[{m:Math.round((1500+R.round*80)/10)*10},''],[{max:3,ub:3},'Poción máxima ×3 y Ultra Ball ×3']],x=pick(P);give(x[0]);RS.loot.push('🧰 '+(x[1]||giveTxt(x[0])));
-   RS.ok=!!RS.ok1&&(RS.err|0)<=1;if(RS.ok||rnd()<.35){try{const {m}=await addMon(201,Math.max(5,avgL()-3),rnd()<1/24);RS.mon=m;RS.loot.push('🔣 ¡Un Unown se une a tu equipo!')}catch(_){}}
-   R.ruin.done=1;try{saveRun()}catch(_){}try{[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,.1,'triangle'),i*110))}catch(_){}RS.st=3;return room()}}
- function openRuins(){if(!ruinsOpen())return toast('Las ruinas ya no están abiertas');RS={st:0,loot:[]};if(!RW){RW=D.createElement('div');RW.id='rnov';RW.addEventListener('click',onR)}D.body.append(RW);room()}
+   RS.ok=RS.score>=RS.pz.length-1;try{window.__rankAdd&&__rankAdd(10+RS.score*10,'Ruinas')}catch(_){}
+   if(RS.ok||rnd()<.25){if(!unownGot()){try{const {m}=await addMon(201,Math.max(5,avgL()-3),rnd()<1/24);RS.mon=m;try{localStorage.setItem('pa_unown1','1')}catch(_){}RS.loot.push('🔣 ¡Un Unown se une a tu equipo!')}catch(_){}}else if(RS.ok){give({can:2});RS.loot.push('🔣 Los Unown te dejan un tesoro: Caramelo Raro ×2')}}
+   R.ruin.done=1;try{saveRun()}catch(_){}try{[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,.1,'triangle'),i*110))}catch(_){}RS.st=RS.pz.length+1;return room()}}
+ function openRuins(force){if(!ruinsOpen())return toast('Las ruinas ya no están abiertas');RS={st:0,loot:[],score:0,d:{},pz:Array.isArray(force)?force:shuf2(PZ.slice()).slice(0,3)};if(!RW){RW=D.createElement('div');RW.id='rnov';RW.addEventListener('click',onR)}D.body.append(RW);room()}
  window.openRuins=openRuins;
  /* mapa */
  const _sm=window.showMap;window.showMap=function(){const r=_sm.apply(this,arguments);try{paintFest();paintChipM();tickRuins();paintRuinChip()}catch(e){console.error(e)}return r};
@@ -22815,6 +22950,142 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  function show(v){shown=true;const b=D.createElement('button');b.type='button';b.id='updb';b.innerHTML=`<span>🔄</span><b>Nueva versión ${v}</b><small>Toca para actualizar</small>`;
   b.onclick=async()=>{b.disabled=true;try{const rs=await navigator.serviceWorker?.getRegistrations?.();if(rs)for(const r of rs)try{await r.update()}catch(_){}}catch(_){}location.reload()};D.body.append(b)}
  setTimeout(check,8000);setInterval(check,5*60000);D.addEventListener('visibilitychange',()=>{if(!D.hidden)check()});
+})();
+
+/* ---------- v46.0: 💕 Amistad: tus Pokémon te cogen cariño y, con mucho, aguantan un golpe con 1 PS ---------- */
+(()=>{const D=document,rnd=()=>Math.random();
+ const live=()=>{try{return R&&R.team&&R.team.length&&R.ach&&!R.done}catch(e){return false}};
+ const nmS=m=>{try{return String(nm(m)).replace(/\s*⭐\d*$/,'')}catch(e){return(m&&m.name)||'Pokémon'}};
+ const fr=m=>m?(m.fr==null?70:m.fr):0;
+ const LV=[[255,4,'Mejores amigos'],[200,3,'Uña y carne'],[150,2,'Muy unidos'],[100,1,'Amigos'],[0,0,'Conocidos']];
+ const lvOf=m=>{const f=fr(m);return LV.find(x=>f>=x[0])};
+ const hearts=n=>'❤️'.repeat(n)+'🤍'.repeat(4-n);
+ function add(m,v,why){if(!m)return 0;const o=fr(m),n=Math.max(0,Math.min(255,o+v));m.fr=n;const a=lvOf({fr:o}),b=lvOf(m);
+  if(b[1]>a[1])setTimeout(()=>{try{toast(`💕 ¡${nmS(m)} y tú ahora sois «${b[2]}»! ${hearts(b[1])}`);beep(1047,.12,'triangle')}catch(_){}},400);return n-o}
+ window.__fr={get:fr,add,lvOf,hearts};
+ /* ganar combates sube la amistad de los que siguen en pie (más al que estaba en combate) */
+ const _ae=window.advEnd;if(_ae)window.advEnd=advEnd=async function(w){try{if(w&&live()&&B&&B.adv&&!B.prac){const L=R.team,cur=act('p');L.forEach(m=>{if(m&&m.hp>0)add(m,m===cur?3:1)})}}catch(e){}return _ae.apply(this,arguments)};
+ /* debilitarse baja un poco la amistad; con cariño alto aguanta con 1 PS (una vez por combate) */
+ const _hit=window.hit;window.hit=async function(s,r,mv){let t=null;try{t=act(s)}catch(e){}
+  try{if(s==='p'&&t&&live()&&R.team.includes(t)&&r&&t.hp>1){const d=r._fd!=null?r._fd:r.d,f=fr(t),ch=f>=255?.2:f>=200?.15:f>=150?.1:0;
+   if(d>=t.hp&&ch&&B&&(B._frE||(B._frE=new Set())).has(t)===false&&rnd()<ch){B._frE.add(t);const nd=t.hp-1;r.d=nd;if(r._fd!=null)r._fd=nd;
+    setTimeout(()=>{try{const T=window.__abt;const msg=`💕 ¡${nmS(t)} aguantó el golpe con 1 PS para que no te preocuparas!`;if(T&&T.popT)T.popT('p','💕 ¡Aguanta!','#f472b6');toast(msg)}catch(_){}},50)}}}catch(e){}
+  const h0=t?t.hp:0;const res=await _hit.apply(this,arguments);
+  try{if(s==='p'&&t&&h0>0&&t.hp<=0&&live()&&R.team.includes(t))add(t,-2)}catch(e){}return res};
+ /* caricias en la casa: una vez por ronda y Pokémon */
+ function pet(m,el){if(!m||!live())return;const r=R.round|0;if(m.frP===r){toast(`💕 ${nmS(m)} ya recibió mimos esta ronda`);return}m.frP=r;const g=add(m,4);try{saveRun()}catch(_){}
+  try{const rc=el.getBoundingClientRect();for(let i=0;i<5;i++){const h=D.createElement('i');h.className='frh';h.textContent='💕';h.style.left=(rc.left+rc.width/2+(rnd()*40-20))+'px';h.style.top=(rc.top+rc.height*.3)+'px';h.style.animationDelay=(i*.08)+'s';D.body.append(h);setTimeout(()=>h.remove(),1400)}beep(880,.06,'triangle');setTimeout(()=>beep(1175,.08,'triangle'),80)}catch(_){}
+  const L=lvOf(m);toast(`💕 ${nmS(m)} disfruta de tus mimos (+${g}) · ${hearts(L[1])} ${L[2]}`)}
+ D.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('#homeov .hroam,#homeov .hpet');if(!el||!live())return;
+  try{let m=null;if(el.classList.contains('hroam'))m=R.team[+el.dataset.r];else{const H=window.__HOME&&__HOME.H&&__HOME.H(),c=H&&H.c,pt=c&&c.pets&&c.pets[+String(el.dataset.a||'').slice(4)];if(pt){const P=[...(R.team||[]),...(R.box||[])];m=P[pt.i]&&P[pt.i].id===pt.id?P[pt.i]:P.find(x=>x.id===pt.id)}}
+   if(m)pet(m,el)}catch(_){}},true);
+ /* ficha del Pokémon */
+ window.__infoAdd&&__infoAdd('frln',m=>{if(!m||!R||!(R.team.includes(m)||(R.box||[]).includes(m)))return null;const L=lvOf(m),f=fr(m),d=D.createElement('div');
+  const eff=L[1]>=2?` · aguanta con 1 PS un ${L[1]>=4?20:L[1]>=3?15:10}% de las veces`:' · con más cariño aguantará golpes con 1 PS';
+  d.innerHTML=`<span class="frl">${hearts(L[1])}</span><span><b>Amistad: ${L[2]}</b> <small>${f}/255${eff}</small><small class="frt">Sube ganando combates juntos y con mimos en tu casa (tócalo allí).</small></span>`;return d});
+})();
+
+/* ---------- v46.0: 📅 Inicio de sesión diario (semana de bienvenida con premios grandes; después, premios pequeños cada día) ---------- */
+(()=>{const D=document,SK='pa_login';
+ const ld=()=>{try{return JSON.parse(localStorage.getItem(SK)||'null')||{}}catch(e){return{}}},sv=o=>{try{localStorage.setItem(SK,JSON.stringify(o))}catch(e){}};
+ const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+ const NEW=[{m:5000,pb:10},{m:8000,pot:5,sup:3},{can:3,gb:5},{m:15000,ub:5},{can:5,rev:3},{m:30000,ub:10,max:3},{m:50000,can:10,rvm:3}];
+ const OLD=[{m:1000},{pot:3},{m:2000},{gb:3},{m:3000},{ub:2},{m:5000,can:1}];
+ const isNew=st=>(st.total|0)<7;
+ const txt=o=>Object.entries(o).map(([k,v])=>k==='m'?`${IC.coin}${nf(v)}`:`${(IC&&IC[k])||'🎁'}×${v}`).join(' ');
+ const txtPlain=o=>Object.entries(o).map(([k,v])=>k==='m'?`${nf(v)} Pokémonedas`:`${v} ${(ITEM[k]||{}).n||k}`).join(', ');
+ const live=()=>{try{return typeof R==='object'&&R&&R.team&&R.team.length&&R.ach&&!R.done}catch(e){return false}};
+ function grant(o){if(live()){for(const k in o){if(k==='m')R.money=(R.money|0)+o.m;else{R.bag=R.bag||{};R.bag[k]=(R.bag[k]|0)+o[k]}}try{saveRun();if(D.getElementById('mn'))D.getElementById('mn').innerHTML=IC.coin+' '+nf(R.money)}catch(e){}return true}
+  try{const r=JSON.parse(localStorage.getItem('pa_run')||'null');if(r&&r.team&&r.team.length&&r.bag&&!r.done){for(const k in o){if(k==='m')r.money=(r.money|0)+o.m;else r.bag[k]=(r.bag[k]|0)+o[k]}localStorage.setItem('pa_run',JSON.stringify(r));return true}}catch(e){}
+  const st=ld();st.pend=st.pend||{};for(const k in o)st.pend[k]=(st.pend[k]|0)+o[k];sv(st);return false}
+ setInterval(()=>{try{const st=ld();if(st.pend&&Object.keys(st.pend).length&&live()){const p=st.pend;delete st.pend;sv(st);grant(p);toast('📅 Recibes los premios diarios pendientes: '+txtPlain(p))}}catch(e){}},3000);
+ const can=()=>ld().last!==today();
+ let ov=null;
+ function open(){const st=ld(),nw=isNew(st),L=nw?NEW:OLD,day=(st.day|0)%7,ready=st.last!==today();
+  if(!ov){ov=D.createElement('div');ov.id='lgov';ov.addEventListener('click',e=>{if(e.target===ov||e.target.closest('[data-x]'))close();else if(e.target.closest('.lggo'))claim()})}
+  ov.innerHTML=`<div class="lgb" role="dialog" aria-label="Premio diario"><button type="button" class="lgx" data-x aria-label="Cerrar">✕</button>
+   <div class="lgh"><i>📅</i><div><h3>${nw?'Semana de bienvenida':'Premio diario'}</h3><p>${nw?'¡Premios especiales para tus primeros 7 días!':'Vuelve cada día a por tu premio.'} ${st.streak>1?`🔥 Racha: ${st.streak} días`:''}</p></div></div>
+   <div class="lgg">${L.map((o,i)=>{const done=i<day,now=i===day&&ready;return`<div class="lgd${done?' done':''}${now?' now':''}${i===6?' big':''}"><small>Día ${i+1}</small><div class="lgr">${txt(o)}</div>${done?'<em>✔</em>':''}</div>`}).join('')}</div>
+   <div class="lgbt">${ready?`<button type="button" class="act lggo">🎁 Recoger premio del día ${day+1}</button>`:`<p class="lgn">✔ Ya recogiste el premio de hoy. ¡Vuelve mañana!</p>`}</div></div>`;
+  D.body.append(ov);requestAnimationFrame(()=>ov.classList.add('on'));try{beep(660,.06,'triangle')}catch(_){}}
+ function close(){if(!ov)return;ov.classList.remove('on');setTimeout(()=>{if(ov&&!ov.classList.contains('on'))ov.remove()},180);upBtn()}
+ function claim(){const st=ld();if(st.last===today())return;const nw=isNew(st),L=nw?NEW:OLD,day=(st.day|0)%7,o=L[day];
+  const y=new Date();y.setDate(y.getDate()-1);const yd=y.getFullYear()+'-'+(y.getMonth()+1)+'-'+y.getDate();st.streak=st.last===yd?(st.streak|0)+1:1;
+  st.last=today();st.day=day+1;st.total=(st.total|0)+1;if(!st.first)st.first=today();sv(st);const ok=grant(o);
+  try{[784,988,1175,1568].forEach((f,i)=>setTimeout(()=>beep(f,.1,'triangle'),i*90))}catch(_){}
+  toast(`🎁 ¡Premio del día ${day+1}!: ${txtPlain(o)}${ok?'':' (te llegará al empezar una aventura)'}`);open()}
+ window.__login={open,can};
+ let btn=null;function upBtn(){if(btn)btn.classList.toggle('has',can())}
+ function addBtn(){const row=D.getElementById('clrow');if(!row)return false;if(btn&&btn.parentNode===row)return true;if(!btn){btn=D.createElement('button');btn.type='button';btn.id='lgbtn';btn.setAttribute('aria-label','Premio diario');btn.title='Premio diario';btn.innerHTML='<span>📅</span><b>!</b>';btn.onclick=e=>{e.stopPropagation();open()}}row.append(btn);upBtn();return true}
+ if(!addBtn()){let n=0;const t=setInterval(()=>{if(addBtn()||++n>40)clearInterval(t)},500)}
+ new MutationObserver(()=>{const r=D.getElementById('clrow');if(r&&btn&&btn.parentNode!==r)addBtn()}).observe(D.getElementById('menu')||D.body,{childList:true,subtree:true});
+ /* se abre solo una vez al día en el menú (después del tutorial si está abierto) */
+ const auto=()=>{try{if(!can()||D.body.dataset.v!=='menu')return;const t=D.getElementById('tutov');if(t&&!t.hidden)return;const st=ld();if(st.autoD===today())return;st.autoD=today();sv(st);open()}catch(e){}};
+ setTimeout(auto,2600);setInterval(()=>{upBtn();auto()},5000);
+})();
+
+/* ---------- v46.0: 🌟 Pokémon del día (más frecuente en su bioma, shiny ×10 y Caramelo Raro al capturarlo) ---------- */
+(()=>{const D=document,Q=s=>D.querySelector(s);
+ const day=()=>{const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()};
+ const hsh=n=>{let h=2166136261;for(const c of String(n)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
+ const ok=id=>{try{return !(typeof TAGS!=='undefined'&&TAGS[id])&&id!==132&&id!==201}catch(e){return true}};
+ let cache=null;
+ function potd(){const k=day();if(cache&&cache.k===k)return cache;let h=hsh('potd'+k),id=0;for(let i=0;i<40;i++){const c=1+(h%1025);if(ok(c)){id=c;break}h=hsh(h+':'+i)}if(!id)id=25;
+  cache={k,id,name:(()=>{try{return(typeof NAMES!=='undefined'&&NAMES[id])||(DEX.find(x=>x.id===id)||{}).name||''}catch(e){return''}})(),bio:null};
+  (async()=>{try{if(!cache.name){try{await loadDex()}catch(e){}const e2=DEX.find(x=>x.id===id);if(e2)cache.name=e2.name;else{const d=await getD(id);if(d&&d.name)cache.name=d.name}}const d=await getD(id);cache.types=d.types;cache.bio=biomeOf(d.types);paint()}catch(e){}})();return cache}
+ window.__potd=potd;
+ const capn=s=>s?String(s).replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()):'…';
+ const bioName=k=>{try{const b=BIO.find(x=>x.k===k);return b?b.ic+' '+b.n:''}catch(e){return''}};
+ const live=()=>{try{return R&&R.team&&R.team.length&&R.ach&&!R.done}catch(e){return false}};
+ /* aparece más en su bioma */
+ const _pe=window.pickEnemies;if(typeof _pe==='function')window.pickEnemies=pickEnemies=async function(n,w,bio){const r=await _pe.apply(this,arguments);
+  try{const P=potd();if(bio&&Array.isArray(r)&&r.length&&P.bio===bio&&Math.random()<.22){r[0]={id:P.id,name:P.name}}}catch(e){}return r};
+ /* shiny ×10 */
+ const _mk=window.mk;window.mk=async function(e){const m=await _mk.apply(this,arguments);try{const P=potd();if(m&&m.id===P.id&&!m.sh&&Math.random()<1/50)m.sh=1}catch(er){}return m};
+ /* premio al capturarlo */
+ const _ch=window.capHook;window.capHook=function(m){try{const P=potd();if(m&&m.id===P.id&&live()){const k='potd'+P.k;R.potdC=R.potdC||{};if(!R.potdC[k]){R.potdC[k]=1;R.bag.can=(R.bag.can|0)+1;setTimeout(()=>{try{toast(`🌟 ¡Has capturado al Pokémon del día! +1 Caramelo Raro`)}catch(_){}},1200)}}}catch(e){}return _ch?_ch.apply(this,arguments):undefined};
+ /* carteles en el menú y en el mapa */
+ function info(){const P=potd();ask(`🌟 Pokémon del día`,`<div style="text-align:center"><img src="${art(P.id)}" alt="" style="width:150px;height:150px;object-fit:contain"><br><b style="font-size:18px">${capn(P.name)}</b><br><small>${P.bio?'Aparece más a menudo en '+bioName(P.bio):'Buscando su bioma…'}</small></div><small>Hoy:<br>• Sale mucho más en su bioma<br>• Es <b>10 veces más probable</b> que salga shiny<br>• Al capturarlo ganas <b>1 Caramelo Raro</b> (una vez al día)<br><br>Mañana habrá otro.</small>`,['¡A buscarlo!'])}
+ window.__potdInfo=info;
+ function paint(){const P=potd();
+  const mb=Q('#menu');if(mb){let c=Q('#potdm');if(!c){c=D.createElement('button');c.type='button';c.id='potdm';c.onclick=e=>{e.stopPropagation();info()};mb.append(c)}
+   const h=`<img src="${mini(P.id)}" alt=""><span><small>🌟 Pokémon del día</small><b>${capn(P.name)}</b></span>`;if(c.dataset.k!==String(P.k)+P.id+(P.bio||'')){c.dataset.k=String(P.k)+P.id+(P.bio||'');c.innerHTML=h}}
+  const ch=Q('#chips');if(ch&&live()){let c=Q('#potdc');if(!c){c=D.createElement('button');c.type='button';c.id='potdc';c.className='chip';c.onclick=e=>{e.stopPropagation();info()}}if(!c.isConnected)ch.append(c);const t=`🌟 ${capn(P.name)}`;if(c.textContent!==t)c.textContent=t}}
+ const _sm=window.showMap;window.showMap=function(){const r=_sm.apply(this,arguments);try{paint()}catch(e){}return r};
+ setTimeout(paint,1500);setInterval(paint,60000);
+})();
+
+/* ---------- v46.0: ✨ Balls con efectos propios al lanzarlas y al capturar ---------- */
+(()=>{const D=document;
+ const FX={
+  pb:{n:'Poké Ball',t:['✦'],c:['#ef4444','#fff'],cap:['⭐','✦','✨'],s:'spark'},
+  gb:{n:'Súper Ball',t:['❖','✦'],c:['#3b82f6','#93c5fd'],cap:['💠','✦','❖'],s:'spark'},
+  ub:{n:'Ultra Ball',t:['⚡','✦'],c:['#facc15','#1f2937'],cap:['⚡','🌟','✦'],s:'bolt'},
+  nb:{n:'Nidoball',t:['🍃','🌿'],c:['#a855f7','#86efac'],cap:['🍃','🌸','🌿'],s:'leaf'},
+  rb:{n:'Redball',t:['🕸️','·'],c:['#ef4444','#fde68a'],cap:['🐞','🕸️','✦'],s:'web'},
+  ob:{n:'OceanoBall',t:['🫧','💧'],c:['#0ea5e9','#bae6fd'],cap:['🫧','💧','🌊'],s:'bubble'},
+  ab:{n:'AmorBall',t:['💗','💕'],c:['#f472b6','#fbcfe8'],cap:['💖','💕','💗'],s:'heart'},
+  mrb:{n:'Megaball',t:['🌟','✦'],c:['#ec4899','#fde047'],cap:['🌟','💫','✨'],s:'cosmic'}};
+ const TYE={fire:'🔥',water:'💧',grass:'🍃',electric:'⚡',ice:'❄️',fighting:'👊',poison:'☠️',ground:'🪨',flying:'🪶',psychic:'🔮',bug:'🐛',rock:'🪨',ghost:'👻',dragon:'🐉',dark:'🌙',steel:'⚙️',fairy:'✨',normal:'⭐'};
+ const fxOf=k=>FX[k]||(String(k).startsWith('bt_')?(()=>{const t=String(k).slice(3),e=TYE[t]||'✦',c=(typeof COL!='undefined'&&COL[t])||'#fff';return{n:'Ball',t:[e,'✦'],c:[c,'#fff'],cap:[e,'✨',e],s:'type'}})():FX.pb);
+ const lite=()=>{try{return D.body.classList.contains('lowfx')||(typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'))}catch(e){return false}};
+ function emit(host,x,y,f,o){o=o||{};const n=o.n||1;for(let i=0;i<n;i++){const e=D.createElement('i');e.className='bfx';const em=o.list?o.list[Math.random()*o.list.length|0]:f.t[Math.random()*f.t.length|0];e.textContent=em;
+   const sz=(o.sz||16)*(.7+Math.random()*.6);e.style.cssText=`left:${x}px;top:${y}px;font-size:${sz}px;color:${f.c[Math.random()*f.c.length|0]};text-shadow:0 0 8px ${f.c[0]}`;host.append(e);
+   const a=o.up?(-Math.PI/2+(Math.random()-.5)*1.6):Math.random()*Math.PI*2,r=(o.r||30)*(.5+Math.random()*.8),dx=Math.cos(a)*r,dy=Math.sin(a)*r+(f.s==='bubble'?-30:f.s==='leaf'?20:0);
+   e.animate([{transform:'translate(-50%,-50%) scale(.3)',opacity:1},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(1) rotate(${(Math.random()-.5)*240}deg)`,opacity:0}],{duration:o.d||(700+Math.random()*400),easing:'ease-out',fill:'forwards'}).finished.then(()=>e.remove()).catch(()=>e.remove())}}
+ function ring(host,x,y,f){const e=D.createElement('i');e.className='bfxr '+f.s;e.style.cssText=`left:${x}px;top:${y}px;border-color:${f.c[0]};box-shadow:0 0 24px ${f.c[0]},inset 0 0 18px ${f.c[1]}`;host.append(e);
+  e.animate([{transform:'translate(-50%,-50%) scale(.2)',opacity:1},{transform:'translate(-50%,-50%) scale(2.4)',opacity:0}],{duration:900,easing:'ease-out',fill:'forwards'}).finished.then(()=>e.remove()).catch(()=>e.remove())}
+ function attach(k){const f=fxOf(k);let o=null,ball=null,t0=performance.now(),done=false,lastE=0,capd=false;
+  const find=()=>{o=D.querySelector('.bthr');ball=o&&o.querySelector('.bt-ball');if(o)o.dataset.bk=k};
+  const loop=now=>{if(done)return;if(!o||!o.isConnected){find();if(!o){if(now-t0<1500)requestAnimationFrame(loop);return}}
+   if(!o.isConnected){done=true;return}const H=o.getBoundingClientRect();
+   if(ball&&now-lastE>(lite()?160:55)&&now-t0<1700){lastE=now;const r=ball.getBoundingClientRect();if(r.width)emit(o,r.left+r.width/2-H.left,r.top+r.height/2-H.top,f,{n:1,r:18,sz:14,d:600})}
+   if(!capd){const m=o.querySelector('.bt-msg');if(m&&/Gotcha|capturado/i.test(m.textContent)){capd=true;const r=ball?ball.getBoundingClientRect():{left:H.width/2,top:H.height*.5,width:0,height:0},x=r.left+r.width/2-H.left,y=r.top+r.height/2-H.top;ring(o,x,y,f);emit(o,x,y,f,{n:lite()?8:22,r:110,sz:22,list:f.cap,d:1300,up:f.s==='bubble'||f.s==='cosmic'});
+     const b=D.createElement('div');b.className='bfxn';b.style.setProperty('--c',f.c[0]);b.textContent=`✨ ${f.n}`;o.append(b);setTimeout(()=>b.remove(),1800);try{beep(1320,.08,'triangle');setTimeout(()=>beep(1760,.1,'triangle'),90)}catch(_){}}}
+   requestAnimationFrame(loop)};
+  requestAnimationFrame(loop);return()=>{done=true}}
+ const wrap=()=>{if(typeof window.ballAnim!=='function'||window.ballAnim._bfx)return;const o=window.ballAnim;const w=async function(m,k){const stop=attach(k);try{return await o.apply(this,arguments)}finally{setTimeout(stop,400)}};w._bfx=1;window.ballAnim=w};
+ wrap();setTimeout(wrap,2000);
 })();
 
 })();</script>
