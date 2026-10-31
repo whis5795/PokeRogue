@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v45.2</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v45.3</div>
 </section>
 
 <section id="team" class="scr">
@@ -8555,7 +8555,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'45.2',t:'Panel de trucos ampliado y 2 contra 2 despejado',s:'cur',l:[
+ {v:'45.3',t:'Equipar objetos renovado y Velocidad en Megaincursiones',s:'cur',l:[
+  'Nueva ventana para equipar objetos: muestra el objeto con su descripción y a cada Pokémon con su foto, nivel, estrellas, vida y el objeto que lleva; eliges uno y confirmas con «Equipar» (avisa si su objeto actual vuelve a la mochila)',
+  'Megaincursiones y Megaincursiones simples: cada nivel de Velocidad que suba tu Pokémon (Agilidad, Danza Dragón…) recarga sus movimientos un 5% más rápido, hasta un 30% con +6. Se suma al Viento Afín'
+]},
+{v:'45.2',t:'Panel de trucos ampliado y 2 contra 2 despejado',s:'prev',l:[
   'Panel de trucos: nueva contraseña de acceso',
   '2 contra 2: los sprites de los Pokémon se colocan solos en los huecos libres del campo, sin quedar tapados por las tarjetas de vida (rivales arriba a la derecha y los tuyos abajo a la izquierda), en cualquier tamaño de pantalla',
   '12 trucos nuevos: Dinero a medida, Nivel a medida, Estrellas a medida, Mochila llena, Todos los equipables, Añadir Pokémon (cualquiera, con nivel y shiny), Cambiar tipo Tera, Curar todo, Evolucionar ahora, Maestría máxima, Clima del mapa (incluido el clima extremo) y Sin esperas en casa'
@@ -13606,7 +13610,7 @@ const H={st:null,loop:null,lobby:[],me:null,
    else if(o.c==='d'){s.team.def=t+60000;H.say(`📣 ${p.n}: «¡Aguantad!» El equipo recibe menos daño durante 1 minuto.`)}
    else{s.players.forEach(q=>{if(!q.ko){const h=Math.round(q.mon.max*.4);q.hp=Math.min(q.mon.max,q.hp+h);H.ev({k:'heal',to:q.pid,v:h})}else q.rev=Math.max(t+1000,q.rev-7500)});H.say(`📣 ${p.n}: «¡Curaos!» El equipo recupera PS.`)}
    H.ev({k:'cheer',pid,c:o.c});return}
-  const mv=p.mon.moves[o.i|0];if(!mv)return;const f=fxOf(mv),tw=s.team.tw>t?.7:1;p.ready=t+Math.round(p.cdms*tw);
+  const mv=p.mon.moves[o.i|0];if(!mv)return;const f=fxOf(mv),tw=s.team.tw>t?.7:1,spf=1-.05*Math.max(0,Math.min(6,(p.stg&&p.stg.sp)|0));p.ready=t+Math.round(p.cdms*tw*spf);/* v45.3: cada nivel de Velocidad recarga un 5% más rápido (+6 → 30%) */
   {let k=null;try{k=MX.slugOf(mv)}catch(_){}if(window.raidBan&&raidBan(k,{types:tys(p)})){H.say(`¡El aura de ${b.n} anula ${mv.n}! No funciona en las megaincursiones.`);H.ev({k:'miss',pid});return}}
   const ally=s.players.find(x=>x.pid===o.tg&&!x.ko)||p;const who=mName(p.mon);
   if(mv.p>0){/* ataque */
@@ -20039,6 +20043,40 @@ html.vm-mv #mod .box.bagb .spc>.chs>small{grid-column:1/-1}
 html.vm-mv #mod .box.bagb .spc>.rls{width:100%!important;max-width:none!important;box-sizing:border-box}
 html.vm-mv #mod .box.bagb .rls .rg{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important}
 html.vm-mv #mod .box.bagb .spc .sl{width:auto!important;min-width:0!important;aspect-ratio:1;height:auto!important}
+/* v45.3: ventana para equipar objetos */
+#eqov{position:fixed;inset:0;z-index:96;display:flex;align-items:center;justify-content:center;padding:12px;background:#000a;opacity:0;transition:opacity .18s}
+#eqov.on{opacity:1}
+#eqov .eqb{position:relative;width:min(460px,100%);max-height:calc(100dvh - 24px);display:flex;flex-direction:column;border-radius:20px;overflow:hidden;color:#f1f5f9;
+ background:radial-gradient(120% 50% at 50% 0,#7c3aed55,transparent 70%),linear-gradient(180deg,#1e1b4b,#0f0a2e);border:2px solid #a78bfa;box-shadow:0 14px 40px #000c;transform:translateY(10px) scale(.97);transition:transform .2s}
+#eqov.on .eqb{transform:none}
+#eqov .eqx{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;border:1px solid #fff3;background:#0006;color:#fff;font-size:15px;cursor:pointer;z-index:2}
+#eqov .eqh{display:flex;gap:12px;align-items:center;padding:16px 46px 10px 16px}
+#eqov .eqic{flex:none;width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:36px;background:radial-gradient(circle at 35% 30%,#c4b5fd,#6d28d9);box-shadow:0 6px 16px #0008,inset 0 -5px 0 #0003}
+#eqov .eqh small{font-size:11px;font-weight:700;color:#c4b5fd}
+#eqov .eqh h3{margin:2px 0 3px;font-size:19px;color:#fde68a}
+#eqov .eqh p{margin:0;font-size:13px;line-height:1.35;color:#e2e8f0}
+#eqov h4{margin:4px 16px 8px;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#a5b4fc}
+#eqov .eql{flex:1;overflow-y:auto;padding:0 12px 4px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;overscroll-behavior:contain}
+#eqov .eqc{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:6px;padding:8px;border-radius:14px;border:2px solid #ffffff1f;background:linear-gradient(180deg,#2e2668,#1e1b4b);color:#fff;font:inherit;text-align:left;cursor:pointer;transition:transform .12s,border-color .15s,box-shadow .15s}
+#eqov .eqc:active{transform:scale(.97)}
+#eqov .eqc.on{border-color:#fde047;box-shadow:0 0 0 1px #fde04788,0 0 14px #fde04755;background:linear-gradient(180deg,#4c1d95,#2e1065)}
+#eqov .eqc.same{opacity:.55;cursor:default}
+#eqov .eqc>.eqs{display:flex;align-items:center;gap:8px}
+#eqov .eqs{position:absolute;top:6px;right:6px;width:48px;height:48px}
+#eqov .eqs img{width:48px;height:48px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 2px 2px #0008)}
+#eqov .eqn{display:flex;flex-direction:column;min-width:0;padding-right:50px}
+#eqov .eqn b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#eqov .eqn small{font-size:11px;opacity:.8}#eqov .eqn em{font-style:normal;color:#fde047;font-weight:800}
+#eqov .eqhp{display:block;height:5px;border-radius:3px;background:#0007;margin-top:5px;overflow:hidden}
+#eqov .eqhp u{display:block;height:100%;border-radius:3px}
+#eqov .eqit{display:flex;align-items:center;gap:6px;min-height:28px;padding:4px 8px;border-radius:10px;background:#0006;font-size:12px;font-weight:700}
+#eqov .eqit i{font-style:normal;font-size:16px}#eqov .eqit span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#eqov .eqit.none{color:#94a3b8;font-weight:600;justify-content:center}
+#eqov .eqnote{margin:6px 16px 0;min-height:18px;font-size:12px;color:#fcd34d;text-align:center}
+#eqov .eqbt{display:flex;gap:8px;padding:10px 12px calc(12px + env(safe-area-inset-bottom));border-top:1px solid #ffffff14}
+#eqov .eqbt .act{flex:1;margin:0;min-height:44px}
+#eqov .eqgo{background:linear-gradient(180deg,#f59e0b,#b45309)!important;color:#fff!important;border:1px solid #fde68a!important;font-weight:800}
+#eqov .eqgo:disabled{opacity:.45;filter:saturate(.4)}
 </style>
 <script id="v37js">
 (()=>{
@@ -21732,9 +21770,25 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const T=window.__abt||{};const chg=(m,k,n)=>{try{return T.chg?T.chg(m,k,n,null):0}catch(e){return 0}};
  const ab=m=>{try{return T.abOf?T.abOf(m):null}catch(e){return null}};
  function consume(m,k){const s=sideOf(m);(m._used=m._used||[]).push(k);m.item=null;if(ab(m)==='unburden'){m._unb=1;try{T.banner&&T.banner(s,'unburden')}catch(e){}}if(BER.includes(k)&&ab(m)==='harvest')(B._harv=B._harv||[]).push([m,k])}
+ /* ---- v45.3: ventana para elegir quién lleva el objeto ---- */
+ function eqPick(key,L,have){return new Promise(res=>{const h=HELD[key],esc2=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const o=document.createElement('div');o.id='eqov';let sel=-1;
+  const card=(m,i)=>{const cur=m.item&&HELD[m.item]?HELD[m.item]:null,same=m.item===key,q=Math.max(0,Math.min(1,m.hp/m.max)),col=q>.5?'#4ade80':q>.2?'#facc15':'#f87171',base=String(nmS(m)).replace(/\s*⭐\d*$/,'');
+   return`<button type="button" class="eqc${same?' same':''}" data-i="${i}" ${same?'disabled':''}><span class="eqs"><img src="${mini(m.id,m.sh)}" alt="" loading="lazy"></span><span class="eqn"><b>${esc2(base)}</b><small>Nv.${m.lvl}${m.rb?` · <em>★${m.rb}</em>`:''}</small><i class="eqhp"><u style="width:${Math.round(q*100)}%;background:${col}"></u></i></span><span class="eqit ${cur?'':'none'}">${same?'✔ Ya lo lleva':cur?`<i>${cur.e}</i><span>${esc2(cur.n)}</span>`:'Sin objeto'}</span></button>`};
+  o.innerHTML=`<div class="eqb" role="dialog" aria-label="Equipar ${esc2(h.n)}"><button type="button" class="eqx" data-x aria-label="Cerrar">✕</button>
+   <div class="eqh"><div class="eqic">${h.e}</div><div><small>🧤 Objeto equipable · tienes ×${have}</small><h3>${esc2(h.n)}</h3><p>${esc2(h.d)}</p></div></div>
+   <h4>¿Quién lo llevará?</h4><div class="eql">${L.map(card).join('')}</div>
+   <p class="eqnote"></p><div class="eqbt"><button type="button" class="act" data-x>Cancelar</button><button type="button" class="act eqgo" disabled>Elige un Pokémon</button></div></div>`;
+  const go=o.querySelector('.eqgo'),note=o.querySelector('.eqnote');
+  const done=v=>{o.classList.remove('on');setTimeout(()=>o.remove(),180);res(v)};
+  o.addEventListener('click',e=>{const t=e.target;if(t===o||t.closest('[data-x]'))return done(-1);
+   const c=t.closest('.eqc');if(c&&!c.disabled){sel=+c.dataset.i;o.querySelectorAll('.eqc').forEach(x=>x.classList.toggle('on',x===c));const m=L[sel],base=String(nmS(m)).replace(/\s*⭐\d*$/,''),cur=m.item&&HELD[m.item]?HELD[m.item]:null;
+    go.disabled=false;go.textContent=`🧤 Equipar a ${base}`;note.innerHTML=cur?`${cur.e} <b>${esc2(cur.n)}</b> volverá a tu mochila.`:'';try{beep(700,.04,'triangle')}catch(_){}return}
+   if(t.closest('.eqgo')&&sel>=0)done(sel)});
+  document.body.append(o);requestAnimationFrame(()=>o.classList.add('on'))})}
  /* ---- equipar desde la mochila ---- */
  async function equip(k){const key=k.slice(2);if(inB()){toast('🧤 Equipa los objetos fuera del combate');return 0}if(!(R.bag[k]>0))return 0;const L=R.team;if(!L.length)return 0;
-  const i=await ask(`🧤 ${HELD[key].n}`,`<small>${HELD[key].d}</small><br><br><small>¿Quién lo llevará? Si ya lleva un objeto, volverá a tu mochila.</small>`,[...L.map(m=>`${nmS(m)}${m.item&&HELD[m.item]?` · lleva ${HELD[m.item].e} ${HELD[m.item].n}`:''}`),'Cancelar']);
+  const i=await eqPick(key,L,R.bag[k]|0);
   if(i<0||i>=L.length)return 0;const m=L[i];if(m.item&&HELD[m.item])R.bag['h_'+m.item]=(R.bag['h_'+m.item]|0)+1;m.item=key;R.bag[k]--;try{saveRun()}catch(e){}try{beep(760,.08,'triangle')}catch(e){}toast(`🧤 ${nmS(m)} lleva ${HELD[key].e} ${HELD[key].n}`);try{if(Q('#tm')&&typeof teamBar=='function')teamBar()}catch(e){}return 1}
  const _ui=window.useItem;window.useItem=useItem=async function(k){if(typeof k==='string'&&k.indexOf('h_')===0&&HELD[k.slice(2)])return equip(k);return _ui.apply(this,arguments)};
  /* ---- ficha del Pokémon: objeto que lleva ---- */
@@ -22301,7 +22355,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
 })();
 /* ---------- v42.7: el botón «atrás» del móvil cierra la ventana abierta (en vez de salir del juego) ---------- */
 (()=>{const D=document;if(!history.pushState)return;
- const OV=['#cookov','#mktov','#specov','#mgov','#cmpov','#rkov','#exov','#chov','#colov','#msov','#rnov','#ntf','#frp','#tcgov','#homeov','#pcas','#tutov','#stov','#shinf'];
+ const OV=['#eqov','#cookov','#mktov','#specov','#mgov','#cmpov','#rkov','#exov','#chov','#colov','#msov','#rnov','#ntf','#frp','#tcgov','#homeov','#pcas','#tutov','#stov','#shinf'];
  const shown=e=>{if(!e||!e.isConnected)return false;const cs=getComputedStyle(e);if(cs.display==='none'||cs.visibility==='hidden')return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};
  const open=()=>OV.map(s=>D.querySelector(s)).filter(shown);
  const closeBtn=e=>e.querySelector('[data-c="x"],[data-m="x"],[data-s="x"],[data-g="x"],[data-a="close"],[aria-label="Cerrar"],[aria-label="Salir"],.clx,.mgx');
