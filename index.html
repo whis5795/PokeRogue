@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v43.1</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v43.2</div>
 </section>
 
 <section id="team" class="scr">
@@ -8541,7 +8541,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'43.1',t:'Momia arreglada y botón de curar recolocado',s:'cur',l:[
+ {v:'43.2',t:'Objetos equipados más visibles',s:'cur',l:[
+  '🎒 Equipo: el objeto que lleva cada Pokémon ahora sale en la esquina superior derecha de su recuadro, dentro de una burbuja',
+ ]},
+ {v:'43.1',t:'Momia arreglada y botón de curar recolocado',s:'prev',l:[
   '🧟 Habilidades: Momia y Olor Persistente cambiaban para siempre la habilidad de tu Pokémon al tocarlo; ahora solo dura ese combate y luego vuelve la suya. Lo mismo con Rastro. Tampoco afectan a habilidades que no se pueden cambiar (Multitipo, Cambio Táctico, Disfraz…)',
   '💊 Mochila: el botón «Curar a todos» ahora está en la esquina superior derecha de la propia mochila, sin tapar nada',
  ]},
@@ -19230,7 +19233,7 @@ html.vm-pc #chips #chips2{max-width:420px}
 #mod .hiln{display:flex;align-items:center;gap:10px;margin:6px 0 10px;padding:9px 12px;border-radius:12px;background:#22d3ee14;border:1px solid #22d3ee55;text-align:left}
 #mod .hiln>span{font-size:26px;flex:none}#mod .hiln>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}#mod .hiln b{font:900 13px system-ui;color:#a5f3fc}#mod .hiln small{font:600 11px/1.35 system-ui;opacity:.85}
 #mod .hiln button{flex:none;padding:7px 12px;border-radius:10px;border:1px solid #ffffff44;background:#ffffff14;color:#fff;font:800 12px system-ui;cursor:pointer}
-#tm>div{position:relative}#tm .hib{position:absolute;right:6px;bottom:6px;font-style:normal;font-size:15px;filter:drop-shadow(0 1px 2px #000);pointer-events:none}
+#tm>div{position:relative}#tm .hib{position:absolute;right:6px;top:6px;bottom:auto;z-index:2;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#0b0720cc;box-shadow:0 0 0 1.5px #fde68a88;font-style:normal;font-size:14px;filter:drop-shadow(0 1px 2px #000);pointer-events:none}
 /* ===== Visitar casas ===== */
 #homeov.visit .hft,#homeov.visit #htab,#homeov.visit #hedbar,#homeov.visit #hlabb,#homeov.visit .hcolp,#homeov.visit [data-a=shop],#homeov.visit [data-a=deco],#homeov.visit [data-a=chest]{display:none!important}
 #homeov.visit .hscene{pointer-events:none}
