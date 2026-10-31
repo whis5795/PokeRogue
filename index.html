@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v42.6</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v42.7</div>
 </section>
 
 <section id="team" class="scr">
@@ -8539,7 +8539,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'42.6',t:'Optimización general',s:'cur',l:[
+ {v:'42.7',t:'Sin legendarios por el clima',s:'cur',l:[
+  '🌙 Arreglado: el ciclo de día y noche y el clima extremo podían hacer aparecer legendarios y singulares en los biomas normales (Darkrai y Zygarde de noche, Lunala y Necrozma en el eclipse, Articuno con la aurora). Ahora el día/noche, los climas y el clima extremo nunca traen Pokémon con etiqueta (legendarios, singulares, ultraentes ni paradójicos)',
+ ]},
+ {v:'42.6',t:'Optimización general',s:'prev',l:[
   '⚡ Combates mucho más fluidos en todas las calidades: la hierba del fondo ya no se mece (repintaba toda la escena en cada fotograma) y hay menos partículas en gráficos medios y bajos. En gráficos altos se gasta la mitad de procesador que antes',
   '⚡ Menú más ligero: los rayos del título quedan quietos y, en gráficos medios y bajos, las animaciones del título se hacen una sola vez. La lluvia de estrellas del menú se pausa mientras hay otra ventana encima (sobres, casa, aventura…)',
   '🧹 Arreglados los restos de estrellas que se quedaban dibujados en el menú al volver de abrir sobres: al cerrar cualquier ventana grande la pantalla se vuelve a dibujar limpia',
@@ -20948,7 +20951,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   if(w.k==='clear'){if(c)c.remove();return}if(!c.isConnected)ch.append(c);const n=Math.max(1,w.u-R.round);c.textContent=`${WX[w.k].e} ${WX[w.k].n} · ${n} r.`}
  /* apariciones según el clima (solo salvajes) */
  const _pe=window.pickEnemies;if(typeof _pe==='function')window.pickEnemies=pickEnemies=async function(n,w,bio){const r=await _pe.apply(this,arguments);
-  try{const x=cur();if(x&&WX[x.k].sp&&bio&&Array.isArray(r))return r.map(p=>rnd()<.45?{id:pick(WX[x.k].sp),name:''}:p).map(p=>p.name?p:{id:p.id,name:nameOf(p.id)})}catch(e){}return r};
+  try{const x=cur();if(x&&WX[x.k].sp&&bio&&Array.isArray(r))return r.map(p=>{if(rnd()>=.45)return p;const id=pick(WX[x.k].sp);return(typeof TAGS!=='undefined'&&TAGS[id])?p:{id,name:''}}).map(p=>p.name?p:{id:p.id,name:nameOf(p.id)})}catch(e){}return r};
  /* ===== COMBOS DE EQUIPO ===== */
  const PAR={};try{for(const k in EVO){const e=EVO[k];if(e)PAR[+e[1]]=+k}}catch(e){}
  const root=id=>{let r=+id,g=0;while(PAR[r]&&g++<5)r=PAR[r];return r};
@@ -21531,6 +21534,9 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const XW={eclipse:{n:'Eclipse',e:'🌑',d:'La noche cae de golpe: los ataques fantasma y siniestro pegan un 30% más y los Pokémon shiny son 3 veces más frecuentes.',sp:[337,338,92,93,197,198,355,429,622,708,710,800,792]},
   meteor:{n:'Lluvia de meteoritos',e:'☄️',d:'Caen estrellas fugaces: aparecen Minior, Clefairy, Lunatone y Solrock, y cada victoria puede dejarte un Caramelo Raro.',sp:[774,35,173,337,338,343,436,605,606,862,855]},
   aurora:{n:'Aurora',e:'🌌',d:'El cielo se ilumina: más Pokémon de tipo Hielo y Hada, +50% de experiencia y tu equipo recupera un 10% de PS tras cada combate.',sp:[124,131,144,220,225,361,459,471,478,582,613,700,712,872,874,875,35,175,209,280,303,684,686]}};
+ /* v42.7: nunca salen legendarios, singulares, ultraentes ni paradójicos por el día/noche o el clima extremo */
+ const okId=id=>{try{return !(typeof TAGS!=='undefined'&&TAGS[id])}catch(e){return true}};
+ [NIGHT,DAYS,...Object.values(XW).map(x=>x.sp)].forEach(L=>{for(let i=L.length-1;i>=0;i--)if(!okId(L[i]))L.splice(i,1)});
  const xw=()=>{if(!live())return null;const x=R.xwx;return x&&XW[x.k]&&R.round<x.u?x:null};
  function phase(){if(!live()||S.dn==='off')return null;const x=xw();if(x&&x.k==='eclipse')return'night';if(S.dn==='real'){const h=new Date().getHours();return h>=6&&h<9?'dawn':h>=9&&h<18?'day':h>=18&&h<21?'dusk':'night'}return ORD[Math.floor((R.round||1)/3)%4]}
  window.__dayPhase=phase;
