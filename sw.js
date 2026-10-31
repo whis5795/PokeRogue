@@ -1,5 +1,5 @@
-/* PokeRogue · service worker (build 9f00f9eb40, v43.4) */
-const V='pr-9f00f9eb40',PRE=["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png", "assets/00c5ea680bc3.webp", "assets/1280af6bc3f0.webp", "assets/193f71a0d3a2.jpg", "assets/3aa1a8624cee.webp", "assets/5ceccf7427f0.webp", "assets/6e173d3806c7.jpg", "assets/73e3cc0d87e7.jpg", "assets/7929b41621fd.webp", "assets/82f6c51364cd.webp", "assets/aeb49a547fa5.webp", "assets/c17af24a4066.webp"],IMG='pr-img-v1',MAXIMG=900;
+/* PokeRogue · service worker (build 45200fa8e3, v43.5) */
+const V='pr-45200fa8e3',PRE=["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png", "assets/00c5ea680bc3.webp", "assets/1280af6bc3f0.webp", "assets/193f71a0d3a2.jpg", "assets/3aa1a8624cee.webp", "assets/5ceccf7427f0.webp", "assets/6e173d3806c7.jpg", "assets/73e3cc0d87e7.jpg", "assets/7929b41621fd.webp", "assets/82f6c51364cd.webp", "assets/aeb49a547fa5.webp", "assets/c17af24a4066.webp"],IMG='pr-img-v1',MAXIMG=900;
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(PRE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V&&k!==IMG).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 const trim=async()=>{const c=await caches.open(IMG),k=await c.keys();if(k.length>MAXIMG)for(const r of k.slice(0,k.length-MAXIMG))await c.delete(r)};

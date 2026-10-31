@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v43.4</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v43.5</div>
 </section>
 
 <section id="team" class="scr">
@@ -8555,7 +8555,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'43.4',t:'Sin esperas en biomas y estructuras',s:'cur',l:[
+ {v:'43.5',t:'Esperas de vuelta en las estructuras que regalan',s:'cur',l:[
+  'El telescopio, el huerto, la nevera y la ruleta vuelven a tener su espera en rondas (dan objetos o dinero y se podían repetir sin límite)',
+  'Los biomas, la Tienda, la cocina y el santuario siguen sin esperas'
+]},
+{v:'43.4',t:'Sin esperas en biomas y estructuras',s:'prev',l:[
   'Los biomas ya no descansan tras visitarlos: puedes entrar en cualquiera desbloqueado todas las veces que quieras, en todo el juego (no solo en el modo ayuda)',
   'La Tienda está siempre abierta',
   'Las estructuras de la casa (cocina, nevera, huerto, santuario, telescopio, ruleta…) ya no tienen tiempo de espera'
@@ -12575,7 +12579,7 @@ ov.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)retur
   if(id==='tv'){const T=typeof TIPS!='undefined'?TIPS:[];toast('📺 '+(T.length?T[Math.random()*T.length|0]:'Hoy en el canal: ¡entrena duro!'))}
   else if(id==='bookcase')toast('📚 '+FACT[Math.random()*FACT.length|0]);
   else if(id==='pc'){if(window.openBox)openBox().then(()=>{try{HM.render()}catch(e){}});}
-  else if(id==='fridge'){const c=C(),r=R.round||0;if(false)toast(`🧊 La nevera está vacía. Vuelve en ${5-(r-c.fr)} ${5-(r-c.fr)==1?'ronda':'rondas'}.`);else{c.fr=r;R.bag=R.bag||{};R.bag.pot=(R.bag.pot||0)+1;try{saveRun()}catch(e){}toast('🧊 ¡Sacas una Poción de la nevera!')}}
+  else if(id==='fridge'){const c=C(),r=R.round||0;if(c.fr!=null&&r-c.fr<5)toast(`🧊 La nevera está vacía. Vuelve en ${5-(r-c.fr)} ${5-(r-c.fr)==1?'ronda':'rondas'}.`);else{c.fr=r;R.bag=R.bag||{};R.bag.pot=(R.bag.pot||0)+1;try{saveRun()}catch(e){}toast('🧊 ¡Sacas una Poción de la nevera!')}}
   else if(id==='piano'){[523,587,659,698,784,698,659,523].forEach((f,i)=>setTimeout(()=>{try{beep(f,.16,'triangle')}catch(e){}},i*170))}
   else if(id==='arcade'){[880,660,990,440,1320].forEach((f,i)=>setTimeout(()=>{try{beep(f,.07,'square')}catch(e){}},i*90));const s=(Math.random()*9000+1000)|0,c=C();c.hi=Math.max(c.hi||0,s);toast(`🕹️ Puntuación: ${s}${s>=c.hi?' · ¡récord!':' · récord '+c.hi}`)}
  }catch(err){console.error(err)}},30)});
@@ -17515,7 +17519,8 @@ const coin=()=>typeof IC=='object'&&IC.coin?IC.coin:'🪙';
 const pm=()=>{try{Q('#mn').innerHTML=coin()+' '+nf(R.money)}catch(e){}try{Q('#hmn').innerHTML=coin()+' '+nf(R.money)}catch(e){}};
 const X=()=>{const h=HM.H();return h?(h.xf=h.xf||{}):{}};
 const rnd=()=>(typeof R=='object'&&R&&R.round)||0;
-const left=(id,n)=>0;/* v43.4: sin tiempo de espera en las estructuras de la casa */
+const KEEPCD=new Set(['telescope','garden','wheel']);/* v43.5: las que dan objetos o dinero conservan su espera */
+const left=(id,n)=>{if(!KEEPCD.has(id))return 0;const l=X()[id];return l==null?0:Math.max(0,n-(rnd()-l))};
 const use=id=>{X()[id]=rnd()};
 const T=t=>{try{toast(t)}catch(e){}};
 const bag=(k,n)=>{R.bag=R.bag||{};R.bag[k]=(R.bag[k]||0)+(n||1)};
