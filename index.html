@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v42.8</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v42.9</div>
 </section>
 
 <section id="team" class="scr">
@@ -740,7 +740,7 @@ async function drainHeal(s,at,df,mv,dealt){
   if(S.fx)burst(x,y,'#4ade80');beep(740,.12,'triangle');
   await say(`¡${s=='e'?'El rival ':''}${nm(at)} absorbió vida de ${nm(df)}!`)}
 async function exec(s){
-  const o=s=='p'?'e':'p',at=act(s),df=act(o),mv=at.pick;
+  const o=s=='p'?'e':'p',at=act(s),df=act(o);if(!at)return;if(!at.pick){const al=(at.moves||[]).filter(v=>v&&v.cp>0);at.pick=al.length?al[Math.random()*al.length|0]:STR}const mv=at.pick;
   if(at.fl){at.fl=0;await say(`${s=='e'?'El rival ':''}${nm(at)} se amedrentó y no pudo moverse.`);return}
   if(!(await canMove(at,s)))return;
   if(s=='p'&&mv!==STR&&!CHT.pp)mv.cp--;
@@ -5190,6 +5190,7 @@ const DEF=[
   {k:'lives',t:'Vidas',d:'Infinitas: al caer, tu equipo se cura y sigues sin perder vidas',o:[[3,'3 vidas'],['inf','∞ Infinitas']]},
   {k:'speed',t:'Velocidad de combate',o:[[1,'1×'],[2,'2×'],[3,'3×'],[4,'4×']]},
   {k:'help',t:'Modo ayuda',d:'Flechas de ventaja de tipo',b:1},
+  {k:'ntf',t:'Notificaciones',d:'Campanita del menú y avisos de huevos, sobres, incursiones, expediciones…',b:1},
   {k:'gender',t:'Personaje',d:'Combates de gimnasio',o:[['m','Chico'],['f','Chica']]},
   {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
   {k:'dn',t:'Ciclo día y noche',d:'Por turnos: cambia cada pocas rondas · Hora real: sigue el reloj de tu dispositivo',o:[['turn','Por turnos'],['real','Hora real'],['off','Desactivado']]},
@@ -8539,7 +8540,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'42.8',t:'Pulido general',s:'cur',l:[
+ {v:'42.9',t:'Biomas respetados y avisos opcionales',s:'cur',l:[
+  '🌿 Arreglado: el clima del mapa, el día/noche, el clima extremo y los eventos festivos metían Pokémon de otros biomas (por ejemplo, Snivy en la costa con Sol intenso). Ahora solo hacen más frecuentes a los Pokémon que ya viven en ese bioma',
+  '📖 Guía de cada bioma: muestra la hora y el clima actuales, marca con 🌙/🌞 y el icono del clima a los Pokémon que salen más, y tiene filtros ⏰ Ahora, 🌞 Día y 🌙 Noche',
+  '🔔 Ajustes → Juego: nuevo interruptor «Notificaciones» para quitar la campanita del menú y todos los avisos',
+  '🔧 Arreglado un fallo poco frecuente que podía dejar un combate parado si un Pokémon entraba sin movimiento elegido',
+ ]},
+ {v:'42.8',t:'Pulido general',s:'prev',l:[
   '🎒 Menú: el rango de entrenador y los desafíos ahora están juntos encima de las Novedades',
   '📱 El botón «atrás» del móvil cierra la ventana que tengas abierta (casa, cocina, sobres, minijuegos, rango, colecciones, expediciones, mercado…) en vez de salir del juego',
   '🖼️ Megaincursiones: arreglada la imagen de Mega Alakazam, que tenía zonas blancas de fondo mal recortadas',
@@ -16541,15 +16548,21 @@ async function open(i){const b=BIO[i];if(!b)return;try{if(window.dexSync)dexSync
  let T;try{T=await types()}catch(e){o.querySelector('#bdgr').innerHTML='<div class="zqld">No se pudo cargar la guía. Necesitas conexión a internet la primera vez.</div>';return}
  const ids=Object.keys(T).map(Number).filter(id=>{const t=T[id].filter(Boolean);if(!t.length)return false;try{if(TAGS[id])return false}catch(e){}return biomeOf(t)===b.k}).sort((a,b)=>a-b);
  const nm=id=>{try{return cap((typeof NAMES!='undefined'&&NAMES[id])||((DEX||[]).find(x=>x.id==id)||{}).name||('#'+id))}catch(e){return'#'+id}};
+ /* v42.9: quién sale más según la hora y el clima */
+ const DN=window.__dn||null,WXS=window.__wxs||null,ph=DN&&DN.phase?DN.phase():null,wx=WXS&&WXS.cur?WXS.cur():null,wxd=wx&&WXS.WX[wx.k];
+ const NS=new Set(DN?DN.NIGHT:[]),DS=new Set(DN?DN.DAYS:[]),WS=new Set(wxd&&wxd.sp?wxd.sp:[]);
+ const boost=id=>(ph==='night'&&NS.has(id))||(ph==='day'&&DS.has(id))||((ph==='dusk'||ph==='dawn')&&(NS.has(id)||DS.has(id)))||WS.has(id);
+ const tags=id=>(NS.has(id)?'<em class="bdn" title="Sale más de noche">🌙</em>':'')+(DS.has(id)?'<em class="bdd" title="Sale más de día">🌞</em>':'')+(WS.has(id)?`<em class="bdw" title="Sale más con ${esc(wxd.n)}">${wxd.e}</em>`:'');
  const draw=()=>{const d=dex(),S=shs(),sh=id=>!!(S[id]||d.sh[id]);
   const cn=ids.filter(id=>d.c[id]).length,sn=ids.filter(id=>d.s[id]||d.c[id]).length,hn=ids.filter(sh).length;
-  o.querySelector('#bdst').innerHTML=`<span>Especies <b>${ids.length}</b></span><span>👁️ Vistos <b>${sn}</b></span><span>🔴 Capturados <b>${cn}</b></span><span>✨ Shinys vistos <b>${hn}</b></span>`;
-  const fl=[['all','Todos'],['s','Vistos'],['c','Capturados'],['u','Sin ver'],['sh','✨ Shiny']];
+  const nowL=[ph&&DN.PH?DN.PH[ph].e+' '+DN.PH[ph].n:'',wxd&&wx.k!=='clear'?wxd.e+' '+wxd.n:''].filter(Boolean).join(' · ');const nB=ids.filter(boost).length;
+  o.querySelector('#bdst').innerHTML=(nowL?`<span class="bdnow">Ahora: <b>${esc(nowL)}</b>${nB?` · ${nB} más frecuentes`:''}</span>`:'')+`<span>Especies <b>${ids.length}</b></span><span>👁️ Vistos <b>${sn}</b></span><span>🔴 Capturados <b>${cn}</b></span><span>✨ Shinys vistos <b>${hn}</b></span>`;
+  const fl=[['all','Todos'],['now','⏰ Ahora'],['day','🌞 Día'],['night','🌙 Noche'],['s','Vistos'],['c','Capturados'],['u','Sin ver'],['sh','✨ Shiny']];
   const bf=o.querySelector('#bdfl');if(!bf.firstChild){bf.innerHTML=fl.map(([k,l])=>`<button data-f="${k}">${l}</button>`).join('')+`<input id="bdq" placeholder="Buscar por nombre…" autocomplete="off">`;
    bf.onclick=e=>{const x=e.target.closest('[data-f]');if(!x)return;F=x.dataset.f;draw()};bf.querySelector('#bdq').oninput=e=>{QS=e.target.value.trim().toLowerCase();draw()};bf.querySelector('#bdq').value=QS}
   bf.querySelectorAll('[data-f]').forEach(x=>x.classList.toggle('on',x.dataset.f===F));
-  const list=ids.filter(id=>{const st=d.c[id]?'c':d.s[id]?'s':'u';if(F==='s'&&st==='u')return false;if(F==='c'&&st!=='c')return false;if(F==='u'&&st!=='u')return false;if(F==='sh'&&!sh(id))return false;if(QS&&!(st!=='u'&&nm(id).toLowerCase().includes(QS))&&!String(id).startsWith(QS))return false;return true});
-  o.querySelector('#bdgr').innerHTML=list.length?list.map(id=>{const st=d.c[id]?'c':d.s[id]?'s':'u',s1=sh(id);return`<div class="zqcd ${st}"><img src="${mini(id,s1?1:0)}" alt="" loading="lazy">${s1?'<em>✨</em>':st==='c'?'<em>🔴</em>':''}<b>${st==='u'?'???':esc(nm(id))}</b><small>#${String(id).padStart(4,'0')}</small><div class="ty">${st==='u'?'':T[id].filter(Boolean).map(t=>`<i style="--t:${COL[t]}" title="${ES[t]||t}"></i>`).join('')}</div></div>`}).join(''):'<div class="zqld">No hay Pokémon con este filtro.</div>'};
+  const list=ids.filter(id=>{const st=d.c[id]?'c':d.s[id]?'s':'u';if(F==='s'&&st==='u')return false;if(F==='c'&&st!=='c')return false;if(F==='u'&&st!=='u')return false;if(F==='sh'&&!sh(id))return false;if(F==='now'&&!boost(id))return false;if(F==='day'&&!DS.has(id))return false;if(F==='night'&&!NS.has(id))return false;if(QS&&!(st!=='u'&&nm(id).toLowerCase().includes(QS))&&!String(id).startsWith(QS))return false;return true});
+  o.querySelector('#bdgr').innerHTML=list.length?list.map(id=>{const st=d.c[id]?'c':d.s[id]?'s':'u',s1=sh(id);return`<div class="zqcd ${st}${boost(id)?' bst':''}"><img src="${mini(id,s1?1:0)}" alt="" loading="lazy">${s1?'<em>✨</em>':st==='c'?'<em>🔴</em>':''}<span class="bdtg">${tags(id)}</span><b>${st==='u'?'???':esc(nm(id))}</b><small>#${String(id).padStart(4,'0')}</small><div class="ty">${st==='u'?'':T[id].filter(Boolean).map(t=>`<i style="--t:${COL[t]}" title="${ES[t]||t}"></i>`).join('')}</div></div>`}).join(''):'<div class="zqld">No hay Pokémon con este filtro.</div>'};
  draw()}
 window.openBiomeDex=open;
 /* ---------- botones «i» en el mapa ilustrado y en el mapa simple ---------- */
@@ -19640,6 +19653,14 @@ body.ovl .scr.on *,body.ovl .scr.on *::before,body.ovl .scr.on *::after,body.ovl
 /* rango y desafíos encima de las Novedades */
 #clrow{display:flex;align-items:center;gap:8px}
 #clrow #rkb,#clrow #chalb{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important}
+/* notificaciones desactivadas en Ajustes */
+body.nontf #ntfb{display:none!important}
+/* guía de biomas: quién sale más según la hora y el clima */
+#bdx .bdnow{background:#fde04722!important;border-color:#fde04766!important}
+#bdx .zqcd{position:relative}
+#bdx .zqcd .bdtg{position:absolute;left:4px;top:4px;display:flex;gap:1px;font-size:12px;line-height:1;pointer-events:none}
+#bdx .zqcd .bdtg em{position:static!important;font-style:normal}
+#bdx .zqcd.bst{box-shadow:0 0 0 2px #fde047aa,0 0 12px #fde04755}
 </style>
 <script id="v37js">
 (()=>{
@@ -20199,6 +20220,15 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const U=window.__mraid&&__mraid.UI;if(U&&U.scH){const _h=U.scH;U.scH=function(noBox){return noBox?_h.call(this,noBox):`<div class="mr-row2 mr-sc"><button class="mr-bt mr-b" data-a="sbox">📦 Caja</button><button class="mr-bt mr-b" data-a="steam">📂 Equipos</button></div><div class="mr-row2 mr-sc" style="grid-template-columns:1fr"><button class="mr-bt mr-b" data-a="stypes">📊 Tabla de tipos</button></div>`};
   const _c=U.click;U.click=async function(a){if(a==='steam'){await openTeams('l');try{U.draw()}catch(e){}return}return _c.apply(this,arguments)}}
 })();
+/* ---------- v42.9: el clima, el día/noche y los eventos solo cambian Pokémon por otros del MISMO bioma ---------- */
+(()=>{const C=new Map();
+ window.__inBio=async(id,bio)=>{if(!bio)return false;try{if(typeof TAGS!=='undefined'&&TAGS[id])return false}catch(e){}const k=id+'|'+bio;if(C.has(k))return C.get(k);let ok=false;try{const d=await getD(id);ok=biomeOf(d.types)===bio}catch(e){ok=false}C.set(k,ok);return ok};
+ /* cambia algunos Pokémon de la lista por otros de L que vivan en el bioma (si no hay ninguno, se queda el original) */
+ window.__bioSwap=async(r,bio,L,prob,nameOf)=>{if(!bio||!Array.isArray(r)||!L||!L.length)return r;const out=[];
+  for(const p of r){if(Math.random()>=prob){out.push(p);continue}const c=L.slice().sort(()=>Math.random()-.5);let rep=null;
+   for(const id of c.slice(0,8)){if(id===p.id)continue;if(await window.__inBio(id,bio)){rep=id;break}}
+   out.push(rep?{id:rep,name:nameOf?nameOf(rep):''}:p)}return out};
+})();
 /* ---------- Mochila: «Curar a todo el equipo» con las pociones justas ---------- */
 (()=>{const HP={pot:20,sup:40,hyp:60,ptn:160},CURE={psn:'ant',tox:'ant',par:'apa',brn:'aqu',frz:'ahi',slp:'des'};
  const nmI=k=>(ITEM[k]||{}).n||k;
@@ -20288,7 +20318,8 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
 /* cada captura nueva vuelve a preseleccionar la Ball más apta */
 (()=>{if(typeof capture!=='function')return;const _c=capture;capture=async function(){window._svMan=0;window._svSel=null;return _c.apply(this,arguments)}})();
 /* ---------- Notificaciones: campanita en el menú, avisos en el juego y del sistema ---------- */
-(()=>{const D=document,Q=s=>D.querySelector(s),now=()=>Date.now(),KEY='pa_ntf';
+(()=>{const D=document,Q=s=>D.querySelector(s),now=()=>Date.now(),KEY='pa_ntf',B0=D.body;let S0=null;try{S0=S;if(S0.ntf==null){S0.ntf=true;localStorage.setItem('pa_s',JSON.stringify(S0))}}catch(e){}
+ setInterval(()=>{try{const off=S0&&S0.ntf===false;if(B0.classList.contains('nontf')!==off)B0.classList.toggle('nontf',off)}catch(e){}},1200);
  let ST;try{ST=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){ST={}}
  ST.on=Object.assign({egg:1,lvl:1,tcg:1,raid:1,col:1,exp:1,chal:1,fest:1,msn:1},ST.on||{});ST.n=ST.n||{};ST.seen=ST.seen||{};
  const sv=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}};
@@ -20353,7 +20384,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  function sysN(h,d,tag){if(!ST.sys||!sysOK()||Notification.permission!=='granted')return;try{const n=new Notification(h,{body:d,tag:tag||h,silent:false});n.onclick=()=>{try{window.focus()}catch(_){}n.close()}}catch(_){}}
  const ingame=()=>{const b=Q('#battle.on'),m=Q('#mod');return !(m&&getComputedStyle(m).display!=='none')||!b};
  let first=true;
- function poll(){const S=scan(),t=now();let fresh=[];
+ function poll(){B0.classList.toggle('nontf',typeof S0==='object'&&S0&&S0.ntf===false);if(S0&&S0.ntf===false){bell.classList.remove('has');return}const S=scan(),t=now();let fresh=[];
   S.ready.forEach(o=>{if(!ST.n[o.id]){ST.n[o.id]=t;if(!first)fresh.push(o)}});
   for(const k in ST.n)if(t-ST.n[k]>3*864e5)delete ST.n[k];for(const k in ST.seen)if(!ST.n[k])delete ST.seen[k];
   if(fresh.length){sv();const o=fresh[0];
@@ -20960,7 +20991,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   if(w.k==='clear'){if(c)c.remove();return}if(!c.isConnected)ch.append(c);const n=Math.max(1,w.u-R.round);c.textContent=`${WX[w.k].e} ${WX[w.k].n} · ${n} r.`}
  /* apariciones según el clima (solo salvajes) */
  const _pe=window.pickEnemies;if(typeof _pe==='function')window.pickEnemies=pickEnemies=async function(n,w,bio){const r=await _pe.apply(this,arguments);
-  try{const x=cur();if(x&&WX[x.k].sp&&bio&&Array.isArray(r))return r.map(p=>{if(rnd()>=.45)return p;const id=pick(WX[x.k].sp);return(typeof TAGS!=='undefined'&&TAGS[id])?p:{id,name:''}}).map(p=>p.name?p:{id:p.id,name:nameOf(p.id)})}catch(e){}return r};
+  try{const x=cur();if(x&&WX[x.k].sp&&bio&&Array.isArray(r))return(await __bioSwap(r,bio,WX[x.k].sp,.45,null)).map(p=>p.name?p:{id:p.id,name:nameOf(p.id)})}catch(e){}return r};
  /* ===== COMBOS DE EQUIPO ===== */
  const PAR={};try{for(const k in EVO){const e=EVO[k];if(e)PAR[+e[1]]=+k}}catch(e){}
  const root=id=>{let r=+id,g=0;while(PAR[r]&&g++<5)r=PAR[r];return r};
@@ -20986,6 +21017,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const msLv=m=>{const p=m&&m.ms|0;let l=0;for(let i=1;i<MS.length;i++)if(p>=MS[i])l=i;return l};
  window.msLv=msLv;
  window.__ms={lv:m=>msLv(m),names:MSN};
+ try{window.__wxs={cur:()=>{try{return cur()}catch(e){return null}},WX}}catch(e){}
  function addMs(m,n){if(!m)return;const l0=msLv(m);m.ms=(m.ms|0)+n;const l1=msLv(m);if(l1>l0)setTimeout(()=>{try{toast(`🎖️ ${nmS(m)} sube a maestría ${l1}: ${MSN[l1]} (+${l1*2}% daño, −${l1*2}% recibido)`)}catch(_){}},1500)}
  /* ===== efectos en combate ===== */
  const inAdv=()=>{try{return B&&B.adv&&!B.prac&&B.pl===R.team}catch(e){return false}};
@@ -21049,7 +21081,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   await ask(`${f.e} ${f.n}`,`<div class="evx"><div class="evxa">${f.e}</div><div class="evxt">${t}${extra}<br><b>${giveTxt(o)}</b></div></div>`,['¡Gracias!']);paintFest();try{window.__ntf&&__ntf.poll()}catch(e){}}
  window.openFestGift=festGift;
  /* apariciones del evento */
- const _pe=window.pickEnemies;if(typeof _pe==='function')window.pickEnemies=pickEnemies=async function(n,w,bio){const r=await _pe.apply(this,arguments);try{const f=festNow();if(f&&bio&&Array.isArray(r))return r.map(p=>{if(rnd()<.3){const id=pick(f.sp);return{id,name:nameOf(id)}}return p})}catch(e){}return r};
+ const _pe=window.pickEnemies;if(typeof _pe==='function')window.pickEnemies=pickEnemies=async function(n,w,bio){const r=await _pe.apply(this,arguments);try{const f=festNow();if(f&&bio&&Array.isArray(r))return await __bioSwap(r,bio,f.sp,.3,nameOf)}catch(e){}return r};
  /* San Valentín: crías más rápidas */
  /* decoración y etiqueta */
  function paintFest(){const f=festNow();D.body.classList.toggle('fest',!!f);FEST.forEach(x=>D.body.classList.toggle('fest-'+x.id,!!f&&f.id===x.id));
@@ -21562,14 +21594,14 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const _sm=window.showMap;window.showMap=function(){try{tick()}catch(e){}const r=_sm.apply(this,arguments);try{paint()}catch(e){}return r};
  /* apariciones */
  const _pe=window.pickEnemies;window.pickEnemies=pickEnemies=async function(n,w,bio){const r=await _pe.apply(this,arguments);
-  try{if(bio&&Array.isArray(r)){const x=xw(),ph=phase();return r.map(p=>{if(x&&rnd()<.5){const id=pick(XW[x.k].sp);return{id,name:nameOf(id)}}const P=ph==='night'?NIGHT:ph==='day'?DAYS:ph?(rnd()<.5?NIGHT:DAYS):null;if(P&&rnd()<.25){const id=pick(P);return{id,name:nameOf(id)}}return p})}}catch(e){}return r};
+  try{if(bio&&Array.isArray(r)){const x=xw(),ph=phase();let o=r;if(x)o=await __bioSwap(o,bio,XW[x.k].sp,.5,nameOf);const P=ph==='night'?NIGHT:ph==='day'?DAYS:ph?(rnd()<.5?NIGHT:DAYS):null;if(P)o=await __bioSwap(o,bio,P,.25,nameOf);return o}}catch(e){}return r};
  /* efectos en combate */
  const _dm=window.dmg;window.dmg=function(at,df,mv){const r=_dm.apply(this,arguments);try{if(r&&r.d>0&&mv&&B&&B.adv){const x=xw(),ph=phase();let k=1;if((mv.t==='ghost'||mv.t==='dark')){if(x&&x.k==='eclipse')k*=1.3;else if(ph==='night')k*=1.1}if(k!==1)r.d=Math.max(1,Math.round(r.d*k))}}catch(e){}return r};
  const _mk=window.mk;window.mk=mk=async function(e,L){const m=await _mk.apply(this,arguments);try{const x=xw();if(x&&x.k==='eclipse'&&m&&!m.sh&&typeof SHINY_RATE!=='undefined'&&rnd()<SHINY_RATE*2)m.sh=1}catch(_){}return m};
  const _f=window.fight;window.fight=fight=async function(c){try{const x=xw();if(x&&x.k==='aurora'&&c&&!c._xa){c._xa=1;c.xm=(c.xm||1)*1.5}}catch(e){}return _f.apply(this,arguments)};
  const _ae=window.advEnd;window.advEnd=advEnd=async function(w){try{const x=xw();if(w&&x&&B&&B.adv){if(x.k==='aurora')R.team.forEach(m=>{if(m.hp>0)m.hp=Math.min(m.max,m.hp+Math.ceil(m.max*.1))});if(x.k==='meteor'&&rnd()<.35){R.bag.can=(R.bag.can|0)+1;setTimeout(()=>{try{toast('☄️ ¡Un fragmento de meteorito! +1 Caramelo Raro')}catch(_){}},1500)}}}catch(e){}return _ae.apply(this,arguments)};
  setInterval(()=>{try{if(D.body.dataset.v==='map'&&S.dn==='real')paint()}catch(e){}},60000);
- window.__dn={phase,xw,paint};
+ window.__dn={phase,xw,paint,NIGHT,DAYS,XW,PH};
 })();
 /* ---------- Pokémon sueltos por la casa: pasean, duermen, juegan y reaccionan ---------- */
 (()=>{const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));const D=document,Q=s=>D.querySelector(s),rnd=Math.random,pick=a=>a[rnd()*a.length|0];
