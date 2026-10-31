@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v46.3</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v46.4</div>
 </section>
 
 <section id="team" class="scr">
@@ -5207,6 +5207,7 @@ const DEF=[
   {k:'rounds',t:'Rondas (aventura)',d:'Longitud de la aventura. Infinitas: no tiene final',o:[[20,'20 rondas'],[40,'40 rondas'],[60,'60 rondas'],[80,'80 rondas'],[100,'100 rondas'],[120,'120 rondas'],['inf','∞ Infinitas']]},
   {k:'lives',t:'Vidas',d:'Infinitas: al caer, tu equipo se cura y sigues sin perder vidas',o:[[3,'3 vidas'],['inf','∞ Infinitas']]},
   {k:'speed',t:'Velocidad de combate',o:[[1,'1×'],[2,'2×'],[3,'3×'],[4,'4×']]},
+  {k:'autoheal',t:'Curar tras cada combate',d:'Al ganar un combate de la aventura usa solo las pociones justas de tu mochila para curar al equipo',b:1},
   {k:'ntf',t:'Avisos automáticos',d:'Carteles que salen solos (hucha, banco, misiones, huevos, sobres…) y la campanita del menú. Desactivado: solo verás los avisos de lo que tocas tú',b:1},
   {k:'gender',t:'Personaje',d:'Combates de gimnasio',o:[['m','Chico'],['f','Chica']]},
   {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
@@ -8558,7 +8559,14 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'46.3',t:'Aventura Multiplayer: eventos, jefes y arreglos',s:'cur',l:[
+ {v:'46.4',t:'Calidad de vida',s:'cur',l:[
+  '💊 Nuevo ajuste «Curar tras cada combate»: al ganar un combate de la aventura usa solo las pociones justas de tu mochila para curar al equipo (desactivado de serie)',
+  '🕓 Historial de avisos: en el panel de la campanita 🔔 ves los últimos 40 avisos con su hora, también los que se ocultan con los avisos automáticos apagados',
+  '↕ Ordenar la Caja: nuevo botón para ordenar tus Pokémon por nivel, número de Pokédex, nombre, estrellas, shiny o favoritos',
+  '✨ La animación de evolución se acelera tocando la pantalla',
+  '🎒 La mochila recuerda la última pestaña que usaste, también al volver a abrir el juego'
+]},
+{v:'46.3',t:'Aventura Multiplayer: eventos, jefes y arreglos',s:'prev',l:[
   '❓ 7 eventos nuevos: Nido abandonado, Campamento, Estatua antigua (da una bendición extra… o una maldición), Panal gigante, Casa encantada (combate contra fantasmas), Feria ambulante y más. Ya no se repite el mismo evento seguido',
   '👑 8 jefes finales con nombre, equipo temático y ventaja propia: Reina Dragón Draconia, Coloso de Acero Ferrum, Sombra Nocturna Umbra, Señor del Volcán Ígneo, Sirena Abisal Marea, Hechicera Psíquica Aura, Titán del Bosque Silvano y Tormenta Viviente Voltio',
   '🐞 Arreglado: un combate podía quedarse atascado varios minutos si nadie podía hacer daño por las inmunidades (por ejemplo, Gastly contra un Pokémon Normal). Ahora, tras 3 rondas sin daño, los rivales huyen',
@@ -10681,7 +10689,7 @@ function build(){
  const w=bx.querySelector('.bgw'),sg=w&&w.querySelector('.sg');if(!sg)return;
  const all=[...sg.querySelectorAll('.sl[data-s]')];if(!all.length)return;
  const cnt={all:all.length};all.forEach(b=>{const c=b.dataset.c||'other';cnt[c]=(cnt[c]||0)+1});
- let cur=window.__bagTab||'all';if(!cnt[cur])cur='all';
+ let cur=window.__bagTab||(()=>{try{return localStorage.getItem('pa_bagtab')}catch(e){return null}})()||'all';if(!cnt[cur])cur='all';
  const t=D.createElement('div');t.className='btabs';t.setAttribute('role','tablist');t.setAttribute('aria-label','Categorías de la mochila');
  t.innerHTML=TABS.filter(([k])=>cnt[k]).map(([k,l,ic])=>`<button type="button" class="btab" role="tab" data-t="${k}" title="${l}" aria-label="${l}"><span class="bti">${ic||(typeof IC!='undefined'?IC.ball:'⚪')}</span><span class="btl">${l}</span><span class="btn">${cnt[k]}</span></button>`).join('');
  const apply=()=>{
@@ -10691,7 +10699,7 @@ function build(){
   keep.forEach(b=>{b.classList.remove('on');sg.append(b)});
   const sd=bx.querySelector('#sd');if(sd)sd.innerHTML='<small>Toca un objeto para ver qué hace.</small>';
   MD.dispatchEvent(new Event('bagtab'))};
- t.addEventListener('click',e=>{const b=e.target.closest('.btab');if(!b||b.dataset.t==cur)return;cur=b.dataset.t;window.__bagTab=cur;try{beep(660,.06,'triangle')}catch(_){}apply()});
+ t.addEventListener('click',e=>{const b=e.target.closest('.btab');if(!b||b.dataset.t==cur)return;cur=b.dataset.t;window.__bagTab=cur;try{localStorage.setItem('pa_bagtab',cur)}catch(_){}try{beep(660,.06,'triangle')}catch(_){}apply()});
  w.parentNode.insertBefore(t,w);apply()}
 new MutationObserver(build).observe(MD,{childList:true,subtree:true});
 })();
@@ -16738,23 +16746,23 @@ window.evoAnim=(oid,nid,sh,on,nn)=>{const run=async()=>{
  const sa=(()=>{try{return art(oid,sh)}catch(e){return''}})(),sb=(()=>{try{return art(nid,sh)}catch(e){return''}})();
  await Promise.all([load(sa),load(sb)]);
  const o=D.createElement('div');o.id='evoa';o.setAttribute('role','dialog');o.setAttribute('aria-label','Evolución');
- o.innerHTML=`<div class="ev-rays"></div><div class="ev-glow"></div><div class="ev-mon"><img class="o" src="${sa}" alt=""><img class="n" src="${sb}" alt=""></div><div class="ev-fl"></div><div class="ev-tx">¿Eh? ¡<b>${on}</b> está evolucionando!</div>`;
- const stop=e=>{e.stopPropagation();e.preventDefault()};['click','pointerdown','touchstart','keydown'].forEach(t=>o.addEventListener(t,stop,true));
+ o.innerHTML=`<div class="ev-skip">Toca para acelerar</div><div class="ev-rays"></div><div class="ev-glow"></div><div class="ev-mon"><img class="o" src="${sa}" alt=""><img class="n" src="${sb}" alt=""></div><div class="ev-fl"></div><div class="ev-tx">¿Eh? ¡<b>${on}</b> está evolucionando!</div>`;
+ let fast=0;const stop=e=>{e.stopPropagation();e.preventDefault();if(e.type==='pointerdown'&&!fast){fast=1;o.classList.add('evfast')}};['click','pointerdown','touchstart','keydown'].forEach(t=>o.addEventListener(t,stop,true));const sl0=sl,slx=ms=>sl0(fast?Math.min(ms,40):ms);
  const kd=e=>{e.stopPropagation();e.preventDefault()};D.addEventListener('keydown',kd,true);window.__evkd=kd;
  D.body.append(o);bp(523,.15);
  const A=o.querySelector('.o'),B=o.querySelector('.n'),M=o.querySelector('.ev-mon'),tx=o.querySelector('.ev-tx');
- await sl(450);o.classList.add('on','sil');bp(392,.3,'sine');await sl(450);
+ await slx(450);o.classList.add('on','sil');bp(392,.3,'sine');await slx(450);
  /* parpadeo entre las dos siluetas, cada vez más rápido */
  const gaps=[380,300,240,190,150,120,95,75,60,50,42,36];let f=0;
- for(const g of gaps){f^=1;A.style.opacity=f?0:1;B.style.opacity=f?1:0;M.style.transform=`translate(-50%,-50%) scale(${f?1.08:.94})`;bp(440+f*220+(12-gaps.indexOf(g))*30,.05,'square');await sl(g)}
+ for(const g of gaps){f^=1;A.style.opacity=f?0:1;B.style.opacity=f?1:0;M.style.transform=`translate(-50%,-50%) scale(${f?1.08:.94})`;bp(440+f*220+(12-gaps.indexOf(g))*30,.05,'square');await slx(g)}
  /* destello y revelación */
  A.style.opacity=0;B.style.opacity=1;const fl=o.querySelector('.ev-fl');fl.animate([{opacity:0},{opacity:1,offset:.35},{opacity:0}],{duration:650,easing:'ease-out'});
- await sl(220);o.classList.remove('sil');M.animate([{transform:'translate(-50%,-50%) scale(1.25)'},{transform:'translate(-50%,-50%) scale(.95)',offset:.6},{transform:'translate(-50%,-50%) scale(1)'}],{duration:600,easing:'ease-out'});M.style.transform='translate(-50%,-50%)';
+ await slx(220);o.classList.remove('sil');M.animate([{transform:'translate(-50%,-50%) scale(1.25)'},{transform:'translate(-50%,-50%) scale(.95)',offset:.6},{transform:'translate(-50%,-50%) scale(1)'}],{duration:600,easing:'ease-out'});M.style.transform='translate(-50%,-50%)';
  for(let i=0;i<22;i++){const s=D.createElement('i');s.className='ev-sp';o.append(s);const a=Math.random()*Math.PI*2,r=110+Math.random()*170;s.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${Math.cos(a)*r}px,${Math.sin(a)*r}px) scale(.2)`,opacity:0}],{duration:900+Math.random()*500,easing:'ease-out',fill:'forwards'})}
  [659,784,1046,1318].forEach((x,i)=>setTimeout(()=>bp(x,.16),i*110));
  tx.innerHTML=`¡Enhorabuena! ¡<b>${on}</b> ha evolucionado en <b>${nn}</b>!`;
- await sl(1500);
- o.animate([{opacity:1},{opacity:0}],{duration:260,fill:'forwards'});await sl(260);
+ await slx(1500);
+ o.animate([{opacity:1},{opacity:0}],{duration:260,fill:'forwards'});await slx(260);
  D.removeEventListener('keydown',kd,true);o.remove()};
  const safe=()=>run().catch(e=>console.error('evoAnim',e)).finally(()=>{D.querySelectorAll('#evoa').forEach(x=>x.remove());if(window.__evkd){D.removeEventListener('keydown',window.__evkd,true);window.__evkd=null}});
  busy=busy.then(safe,safe);return busy};
@@ -20341,6 +20349,13 @@ body[data-v=menu] #potdm{display:flex}
 #tourov .toch div{font-size:34px}#tourov .toch img{width:72px;height:72px;image-rendering:pixelated}#tourov .toch b{font-size:18px;color:#fde68a}#tourov .toch small{opacity:.8}
 /* v46.2 dificultad Aventura Multiplayer */
 .ma-ascb{display:flex;flex-wrap:wrap;gap:6px}.ma-ascb .ma-b.on{background:linear-gradient(180deg,#f97316,#b91c1c)!important;color:#fff!important;border-color:#fde68a!important}
+/* v46.4 calidad de vida */
+#ntf .tlog{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow:auto;margin:0 0 8px}
+#ntf .tlog div{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:10px;background:#ffffff0d;font-size:12.5px}
+#ntf .tlog span{flex:1;min-width:0;overflow-wrap:anywhere}#ntf .tlog small{flex:none;opacity:.6;font-size:10.5px}
+#evoa.evfast *{transition-duration:.05s!important;animation-duration:.2s!important}
+#evoa .ev-skip{position:absolute;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));translate:-50% 0;z-index:5;font:700 12px system-ui;color:#fff;opacity:.6;pointer-events:none}
+#evoa.evfast .ev-skip{display:none}
 </style>
 <script id="v37js">
 (()=>{
@@ -20937,6 +20952,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   const still=R.team.some(m=>m.hp<m.max||m.s);try{toast(still?'💊 Equipo curado en parte: no quedaban más objetos':'💊 ¡Equipo curado!')}catch(e){}
   MD.dispatchEvent(new Event('chestrefresh'))}
  window.healTeamBag=healTeam;
+ window.__healAuto=()=>{try{if(typeof R!=='object'||!R||!R.team)return 0;if(!R.team.some(m=>m.hp>0&&(m.hp<m.max||m.s)))return 0;const {use}=plan(),L=Object.entries(use);if(!L.length)return 0;apply();try{saveRun();if(document.querySelector('#tm'))teamBar()}catch(e){}return L.reduce((a,[,n])=>a+n,0)}catch(e){return 0}};
  /* botón dentro de la mochila (fuera de combate) */
  const MD=document.getElementById('mod');if(!MD)return;
  /* v42.1: botón flotante redondo sobre la mochila (en vez del botón largo) */
@@ -23265,6 +23281,26 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  setInterval(()=>{const hd=Q('#frp .fr-hd');if(hd&&!hd.querySelector('.fr-tour')){const b=D.createElement('button');b.type='button';b.className='fr-tour';b.innerHTML='🏆 Torneo';b.onclick=e=>{e.stopPropagation();open()};hd.insertBefore(b,hd.querySelector('.fr-x'))}},1000);
  /* el organizador reenvía el estado cada 20 s por si alguien se perdió un mensaje */
  setInterval(()=>{if(isOrg()&&T&&T.st!=='done')T.pl.forEach(p=>{if(p.id!==me())send(p.id,{t:'tost',T})})},20000);
+})();
+
+/* ---------- v46.4: calidad de vida (historial de avisos, curar tras combate, ordenar la Caja…) ---------- */
+(()=>{const D=document,Q=s=>D.querySelector(s);
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ /* 1) historial de los últimos 40 avisos (también los que no se muestran con los avisos automáticos apagados) */
+ const LK='pa_tlog';const lg=()=>{try{return JSON.parse(localStorage.getItem(LK)||'[]')}catch(e){return[]}};
+ const clean=t=>String(t||'').replace(/<svg[\s\S]*?<\/svg>/gi,'🪙').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+ const wrapT=()=>{if(typeof window.toast!=='function'||window.toast._lg)return;const o=window.toast;const w=function(t){try{const x=clean(t);if(x&&!/^PE: /.test(x)){const L=lg();if(!L.length||L[0].t!==x){L.unshift({t:x,d:Date.now()});localStorage.setItem(LK,JSON.stringify(L.slice(0,40)))}}}catch(e){}return o.apply(this,arguments)};w._lg=1;window.toast=w;try{toast=w}catch(e){}};
+ wrapT();setTimeout(wrapT,1500);setTimeout(wrapT,5000);
+ const ago=d=>{const s=(Date.now()-d)/1000;return s<60?'ahora':s<3600?Math.round(s/60)+' min':s<86400?Math.round(s/3600)+' h':Math.round(s/86400)+' d'};
+ function logHTML(){const L=lg();return`<div class="ntsec">🕓 Últimos avisos</div>${L.length?`<div class="tlog">${L.slice(0,25).map(x=>`<div><span>${esc(x.t)}</span><small>${ago(x.d)}</small></div>`).join('')}</div>`:'<div class="nte">Aún no hay avisos.</div>'}`}
+ new MutationObserver(()=>{const w=Q('#ntf .ntw');if(w&&!w.querySelector('.tlogw')){const d=D.createElement('div');d.className='tlogw';d.innerHTML=logHTML();const sec=[...w.querySelectorAll('.ntsec')].find(x=>/Avisarme/.test(x.textContent));if(sec)sec.before(d);else w.append(d)}}).observe(D.body,{childList:true,subtree:true});
+ /* 2) curar automáticamente al ganar un combate */
+ const _ae=window.advEnd;if(_ae)window.advEnd=advEnd=async function(w){const r=await _ae.apply(this,arguments);try{if(w&&S&&S.autoheal&&B&&B.adv&&!B.prac&&!(B.c&&B.c.raid)&&window.__healAuto){const n=__healAuto();if(n)setTimeout(()=>{try{toast(`💊 Curación automática: ${n} objeto${n>1?'s':''} usado${n>1?'s':''}`)}catch(_){}},600)}}catch(e){}return r};
+ /* 3) ordenar la Caja */
+ const SORTS=[['lvl','📈 Nivel (mayor primero)',(a,b)=>b.lvl-a.lvl],['dex','🔢 Nº de Pokédex',(a,b)=>a.id-b.id],['name','🔤 Nombre',(a,b)=>String(a.nick||a.name).localeCompare(String(b.nick||b.name))],['rb','⭐ Estrellas',(a,b)=>(b.rb|0)-(a.rb|0)||b.lvl-a.lvl],['sh','✨ Shiny primero',(a,b)=>(b.sh?1:0)-(a.sh?1:0)||b.lvl-a.lvl],['fav','⭐ Favoritos primero',(a,b)=>(b.fav?1:0)-(a.fav?1:0)||b.lvl-a.lvl]];
+ async function sortBox(){if(!R||!R.box||R.box.length<2)return toast('No hay suficientes Pokémon en la Caja');const p=Q('#pcbox');if(p)p.style.visibility='hidden';let i;try{i=await ask('↕ Ordenar la Caja','<small>Elige cómo ordenar los Pokémon de la Caja.</small>',[...SORTS.map(x=>x[1]),'Cancelar'])}finally{if(p)p.style.visibility=''}
+  if(!(i>=0&&i<SORTS.length))return;R.box.sort(SORTS[i][2]);try{saveRun()}catch(e){}try{p&&p.__rr&&p.__rr()}catch(e){}toast('↕ Caja ordenada por '+SORTS[i][1].replace(/^\S+\s/,'').toLowerCase())}
+ new MutationObserver(()=>{const bt=Q('#pcbox .bxbt');if(!bt||bt.querySelector('#bxsort'))return;const b=D.createElement('button');b.className='act';b.id='bxsort';b.type='button';b.textContent='↕ Ordenar Caja';b.onclick=sortBox;bt.prepend(b)}).observe(D.body,{childList:true,subtree:true});
 })();
 
 })();</script>
