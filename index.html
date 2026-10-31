@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v45.7</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v45.8</div>
 </section>
 
 <section id="team" class="scr">
@@ -8557,7 +8557,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'45.7',t:'Los rivales megaevolucionan',s:'cur',l:[
+ {v:'45.8',t:'Megaincursiones más difíciles',s:'cur',l:[
+  'Megaincursiones y megaincursiones simples rebalanceadas para que se pueda perder: el jefe aguanta bastante más daño y hace falta atacar sin parar, aprovechar los golpes perfectos, el combo y los tipos para ganar',
+  'Con más jugadores el jefe ataca más a menudo (hasta casi el doble con 4) y lanza más ataques contra todo el equipo',
+  'Ánimos: 3 por jugador en cada asalto (antes 5) y «¡A por todas!» sube el ataque un 30% (antes 50%)'
+]},
+{v:'45.7',t:'Los rivales megaevolucionan',s:'prev',l:[
   '⚡ Los entrenadores rivales ahora también pueden megaevolucionar a sus Pokémon (una vez por combate): los líderes de gimnasio y los jefes siempre que su Pokémon pueda y tenga Nv.40 o más, y los entrenadores normales a veces, con Pokémon de Nv.60 o más',
   'La Mega de un rival sube sus estadísticas ×1,5 (la tuya sigue siendo ×3) y puede usar cualquiera de sus formas, incluidas las nuevas X, Y y Z'
 ]},
@@ -13460,7 +13465,7 @@ const fmt=n=>nf(Math.max(0,Math.round(n)));
 const now=()=>Date.now();
 const rnd=()=>Math.random();
 /* ---------- horario: 11:00, 15:00, 19:00 y 23:00 (hora local), abiertas 1 hora ---------- */
-const CAPN=3,CAPP0=.22,SLOTS0=[11,15,19,23],SLOTS_S=[0,2,4,6,8,10,12,14,16,18,20,22],OPEN_MIN=60,MAXHP=800000,HPN=n=>MAXHP+450000*Math.max(0,n-1),WR=n=>Math.max(1.15,1.4-.05*Math.max(0,n-1)),ASSAULT=600000,REV=15000,TICKETS=2;
+const CAPN=3,CAPP0=.22,SLOTS0=[11,15,19,23],SLOTS_S=[0,2,4,6,8,10,12,14,16,18,20,22],OPEN_MIN=60,MAXHP=800000,HPN=n=>MAXHP+450000*Math.max(0,n-1),WR=n=>Math.max(.85,1.02-.05*Math.max(0,n-1)),ASSAULT=600000,REV=15000,TICKETS=2;
 const pad=n=>String(n).padStart(2,'0');
 /* v27.0: dos tipos · «mega» (megapokémon) y «simple» (singulares, ultraentes y paradojas, sin legendarios ni shinys, un 20% más fáciles) */
 const isS=wid=>/^s-/.test(String(wid||''));
@@ -13587,11 +13592,11 @@ const H={st:null,loop:null,lobby:[],me:null,
   let bm;try{bm=await mk({id:b.id,name:sname(b.id)},lv)}catch(e){bm={id:b.id,name:sname(b.id),types:['dragon'],lvl:lv,a:200,d:200,sa:200,sd:200,sp:150,max:400,moves:[{n:'Golpe',t:'normal',p:90,ph:true}]}}
   const boss={id:b.id,f:b.f,n:bossName(b),art:UI.bossArt,types:b.ty||bm.types,lvl:lv,a:bm.a*1.6,d:bm.d*1.6,sa:bm.sa*1.6,sd:bm.sd*1.6,sp:bm.sp,max:MX,hp,sh:0,shMax:Math.round(MX*.06),thr,stg:{a:0,d:0,sa:0,sd:0,sp:0,ac:0,ev:0},ail:null,ailT:0,nextAt:now()+3500,stun:0,clr:now(),moves:(bm.moves||[]).filter(v=>v.p>0).map(v=>({n:v.n,t:v.t,p:v.p,ph:!!v.ph}))};
   if(!boss.moves.length)boss.moves=[{n:'Megaimpacto',t:boss.types[0],p:100,ph:true}];
-  const players=ppl.map(p=>{const m=p.mon;return{pid:p.pid,n:p.n,mon:m,hp:m.max,stg:{a:0,d:0,sa:0,sd:0,sp:0,ac:0,ev:0},ready:now()+1200,ko:false,rev:0,prot:0,sub:0,end:0,cheers:5,dealt:0,cdms:Math.round(Math.max(2200,Math.min(4200,3400-(m.sp-boss.sp)*2.2)))}});
+  const players=ppl.map(p=>{const m=p.mon;return{pid:p.pid,n:p.n,mon:m,hp:m.max,stg:{a:0,d:0,sa:0,sd:0,sp:0,ac:0,ev:0},ready:now()+1200,ko:false,rev:0,prot:0,sub:0,end:0,cheers:3,dealt:0,cdms:Math.round(Math.max(2200,Math.min(4200,3400-(m.sp-boss.sp)*2.2)))}});
   /* escala del daño: que el grupo (con buen juego y sus 3 tickets) pueda llegar a vencer */
   const base=p=>{const m=p.mon,mv=m.moves.filter(v=>v.p>0);if(!mv.length)return 30;return Math.max(...mv.map(v=>{const A=v.ph?m.a:m.sa,Dd=v.ph?boss.d:boss.sd,st=m.types.includes(v.t)?1.5:1;return((2*m.lvl/5+2)*v.p*A/Dd/50+2)*st*.925}))};
   const avg=players.reduce((s,p)=>s+base(p),0)/players.length,tpa=players.reduce((s,p)=>s+ASSAULT/p.cdms*.7,0)/players.length;
-  const K=WR(players.length)*MX0/(players.length*TICKETS*tpa*avg);
+  const K=WR(players.length)*MX0/(players.length*TICKETS*tpa*(.92/.7)*avg);/* v45.8: se cuenta con que el grupo ataca casi sin pausa (Repetir) */
   boss.d=Math.round(boss.d*(SM?1.7*EASY:1.7));boss.sd=Math.round(boss.sd*(SM?1.7*EASY:1.7));boss.adp=1;
   players.forEach(p=>{p.exp=Math.max(1,base(p)*K*.92)});
   H.st={simple:SM,wid:w.wid,code:NETR.code,boss,players,team:{ref:0,ls:0,tw:0,atk:0,def:0},t0:now(),tEnd:now()+ASSAULT,K,over:false,ev:[],seq:0,log:SM?'¡La megaincursión simple ha comenzado!':'¡La megaincursión ha comenzado!'};
@@ -13638,7 +13643,7 @@ const H={st:null,loop:null,lobby:[],me:null,
   const ally=s.players.find(x=>x.pid===o.tg&&!x.ko)||p;const who=mName(p.mon);
   if(mv.p>0){/* ataque */
    if(mv.acc&&mv.acc<100&&!b.stun&&rnd()*100>=mv.acc*(b.ail==='par'?1.05:1)){H.say(`${who} usó ${mv.n}… ¡pero falló!`);H.ev({k:'miss',pid});return}
-   const A=(mv.ph?p.mon.a*STG(p.stg.a):p.mon.sa*STG(p.stg.sa))*(s.team.atk>t?1.5:1),Dd=mv.ph?b.d*STG(b.stg.d):b.sd*STG(b.stg.sd),e0=effT(mv.t,b.types),e=p.ut&&mv.t===p.mon.tera?Math.max(e0,2):e0,tt=p.tera&&mv.t===p.mon.tera,stab=tt&&p.mon.types.includes(mv.t)?2:(tt||p.mon.types.includes(mv.t))?1.5:1,cr=rnd()<1/16,sk=(p.mon.rb|0)>=4?1.1:1;
+   const A=(mv.ph?p.mon.a*STG(p.stg.a):p.mon.sa*STG(p.stg.sa))*(s.team.atk>t?1.3:1),Dd=mv.ph?b.d*STG(b.stg.d):b.sd*STG(b.stg.sd),e0=effT(mv.t,b.types),e=p.ut&&mv.t===p.mon.tera?Math.max(e0,2):e0,tt=p.tera&&mv.t===p.mon.tera,stab=tt&&p.mon.types.includes(mv.t)?2:(tt||p.mon.types.includes(mv.t))?1.5:1,cr=rnd()<1/16,sk=(p.mon.rb|0)>=4?1.1:1;
    const v=((2*p.mon.lvl/5+2)*mv.p*A/Dd/50+2)*stab*(e||.25)*(cr?1.5:1)*(.85+rnd()*.15)*s.K*sk;
    /* defensa adaptativa: si el daño efectivo se dispara, el megajefe se endurece hasta que vuelva a ser normal */
    const ad=p.adp||1,ve=v/ad,ra=ve/(p.exp||ve);p.dm=(p.dm==null?1:p.dm)*.75+Math.min(ra,8)*.25;
@@ -13676,12 +13681,12 @@ const H={st:null,loop:null,lobby:[],me:null,
   if(!did){H.say(`${who} usó ${mv.n}… pero no tiene efecto en la megaincursión.`);p.ready=t+1400}},
  ail(a,who){const b=H.st.boss;b.ail=a==='tox'?'tox':a;b.ailT=now()+25000;if(a==='slp'||a==='frz'){b.nextAt+=4000;b.ailT=now()+5000}H.say(`¡${b.n} está ${AILN[b.ail]?AILN[b.ail][2]:a}! (${who})`);H.ev({k:'ail'})},
  bossAct(){const s=H.st,b=s.boss,t=now(),alive=s.players.filter(p=>!p.ko&&!p.gone);
-  const rage=b.hp<b.max*.25,itv=(b.sh>0?3600:4600)*(b.ail==='par'?1.3:1)*(rage?.8:1);b.nextAt=t+itv*(.85+rnd()*.3);
+  const rage=b.hp<b.max*.25,np=Math.max(1,alive.length),itv=(b.sh>0?3600:4600)*(b.ail==='par'?1.3:1)*(rage?.8:1)/(1+.28*(np-1));/* v45.8: con más jugadores el jefe ataca más a menudo */b.nextAt=t+itv*(.85+rnd()*.3);
   if(!alive.length)return;
   if(b.ail==='cnf'&&rnd()<.25){H.say(`¡${b.n} está confuso y se hiere a sí mismo!`);H.dmgBoss(Math.round(b.max*.004),null,{dot:1});return}
   const r=rnd();
   if(r<.08&&t-(b.clr||0)>=CLR){let any=false;s.players.forEach(q=>{for(const k in q.stg)if(q.stg[k]>0){q.stg[k]=0;any=true}});if(any){b.clr=t;H.say(`¡${b.n} lanza un rugido y anula las mejoras del equipo!`);H.ev({k:'roar'});return}}
-  const aoe=r<.3;const tg=aoe?alive:[alive[rnd()*alive.length|0]];
+  const aoe=r<.3+.06*Math.max(0,alive.length-1);const tg=aoe?alive:[alive[rnd()*alive.length|0]];
   const mvs=b.moves;let mv=mvs[rnd()*mvs.length|0];if(!aoe){const best=mvs.slice().sort((x,y)=>effT(y.t,tys(tg[0]))-effT(x.t,tys(tg[0])))[0];if(rnd()<.6)mv=best}
   H.ev({k:'boss',aoe,mv:mv.n});H.say(aoe?`¡${b.n} usó ${mv.n} contra todo el equipo!`:`¡${b.n} usó ${mv.n} contra ${mName(tg[0].mon)}!`);
   tg.forEach(p=>{const e=effT(mv.t,tys(p));if(e===0){H.ev({k:'pdmg',to:p.pid,v:0,e:0});return}
