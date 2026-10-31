@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v46.6</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v46.7</div>
 </section>
 
 <section id="team" class="scr">
@@ -922,6 +922,15 @@ const gR=(c,roll)=>{if(!c.g)return roll?0:'0';const m=rm('mm'),lo=Math.floor(c.g
 const TN=['Cazabichos Dani','Excursionista Rosa','Karateka Iván','Pescador Leo','Ejecutiva Mara','Domadora Eli','Motero Rafa','Científica Nora'];
 window.__pname=()=>{const ok=n=>n&&String(n).trim()&&!/^(Entrenador|Jugador)$/i.test(String(n).trim());try{const n=localStorage.getItem('pa_lan_name');if(ok(n))return n.trim().slice(0,16)}catch(e){}try{const s=JSON.parse(localStorage.getItem('pa_lan')||'{}');if(s&&ok(s.name))return String(s.name).trim().slice(0,16)}catch(e){}try{const n=localStorage.getItem('pa_mpa_name');if(ok(n))return n.trim().slice(0,16)}catch(e){}
  const g='Entrenador'+(100+Math.random()*900|0);try{localStorage.setItem('pa_lan_name',g)}catch(e){}return g};
+/* v46.7: cambiar el nombre de jugador en cualquier momento (Ajustes → Juego, o desde el menú lateral) */
+window.setPName=v=>{const n=String(v==null?'':v).replace(/[<>"'`&\\\u0000-\u001f]/g,'').replace(/\s+/g,' ').trim().slice(0,16);if(!n||/^(Entrenador|Jugador)$/i.test(n))return'';
+ try{localStorage.setItem('pa_lan_name',n);localStorage.setItem('pa_mpa_name',n.slice(0,14));const o=JSON.parse(localStorage.getItem('pa_lan')||'null');if(o&&typeof o==='object'){o.name=n;localStorage.setItem('pa_lan',JSON.stringify(o))}}catch(e){}
+ try{window.dispatchEvent(new CustomEvent('pa-name',{detail:n}))}catch(e){}try{window.__setRefresh&&__setRefresh()}catch(e){}return n};
+window.changeName=async()=>{const cur=window.__pname();
+ const P=ask('✏️ Nombre de jugador',`<small>Así te verán tus amigos y los demás jugadores en salas, torneos y megaincursiones. Máximo 16 caracteres.</small><input id="pnin" maxlength="16" autocomplete="off" spellcheck="false" style="display:block;width:100%;margin:10px 0 4px;padding:10px 12px;border-radius:10px;border:1px solid #fff4;background:#0006;color:#fff;font:inherit;font-size:16px;box-sizing:border-box">`,['Guardar','Cancelar']);
+ const i=document.getElementById('pnin');if(i){i.value=cur;setTimeout(()=>{try{i.focus();i.select()}catch(_){}},60);i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();const b=document.querySelector('#mod [data-i="0"]');b&&b.click()}}}
+ const k=await P;if(k!==0)return;const n=setPName(i?i.value:'');if(!n){toast('✏️ Escribe un nombre válido (1 a 16 caracteres)');return}if(n===cur){toast('✏️ Te sigues llamando '+n);return}
+ toast('✏️ Ahora te llamas '+n);try{beep(880,.08,'triangle')}catch(e){}};
 window.nf=n=>{n=Math.floor(+n||0);const g=n<0?'-':'';return g+String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.')};
 const sv=b=>`<svg class="ic" viewBox="0 0 24 24">${b}</svg>`,bt=c=>sv(`<path d="M9 2h6v3l3 5v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V10l3-5z" fill="${c}" stroke="#111" stroke-width="1.5"/><path d="M9 5h6" stroke="#111" stroke-width="1.5"/>`);
 const IC={
@@ -5213,6 +5222,7 @@ const DEF=[
   {k:'speed',t:'Velocidad de combate',o:[[1,'1×'],[2,'2×'],[3,'3×'],[4,'4×']]},
   {k:'autoheal',t:'Curar tras cada combate',d:'Al ganar un combate de la aventura usa solo las pociones justas de tu mochila para curar al equipo',b:1},
   {k:'ntf',t:'Avisos automáticos',d:'Carteles que salen solos (hucha, banco, misiones, huevos, sobres…) y la campanita del menú. Desactivado: solo verás los avisos de lo que tocas tú',b:1},
+  {k:'pname',t:'Nombre de jugador',d:'Lo ven tus amigos, las salas multijugador, los torneos y las megaincursiones',x:1},
   {k:'gender',t:'Personaje',d:'Combates de gimnasio',o:[['m','Chico'],['f','Chica']]},
   {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
   {k:'dn',t:'Ciclo día y noche',d:'Por turnos: cambia cada pocas rondas · Hora real: sigue el reloj de tu dispositivo',o:[['turn','Por turnos'],['real','Hora real'],['off','Desactivado']]},
@@ -5251,7 +5261,8 @@ DEF.forEach(([id,ic,name,items])=>{
  const p=document.createElement('div');p.className='sp';p.dataset.c=id;panels[id]=p;
  items.forEach(d=>{const r=document.createElement('div');r.className='row'+(d.s?' vol':'');rows[d.k]={d,r};
   const lb=`<div class="lb">${d.t}${d.d?`<small class="sd">${d.d}</small>`:''}</div>`;
-  if(d.b){r.innerHTML=lb+`<button type="button" class="tg" role="switch"></button>`;r.querySelector('.tg').onclick=()=>setOpt(d.k,!S[d.k])}
+  if(d.x){r.innerHTML=lb+`<button type="button" class="pnb"></button>`;r.querySelector('.pnb').onclick=()=>window.changeName&&changeName()}
+  else if(d.b){r.innerHTML=lb+`<button type="button" class="tg" role="switch"></button>`;r.querySelector('.tg').onclick=()=>setOpt(d.k,!S[d.k])}
   else if(d.s){r.innerHTML=`<div class="lb" style="width:100%">${d.t}${d.d?`<small class="sd">${d.d}</small>`:''}</div><div class="sxv"><span>🔈</span><input type="range" min="0" max="100" step="5"><span class="sxp"></span><span>🔊</span></div>`;
    const inp=r.querySelector('input'),vp=r.querySelector('.sxp');
    inp.oninput=()=>{S.vol=+inp.value;vp.textContent=S.vol+'%';applyVol()};
@@ -5268,9 +5279,11 @@ function refresh(){
  tabs.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.c===cur));
  Object.entries(panels).forEach(([id,p])=>p.classList.toggle('on',id===cur));
  for(const k in rows){const{d,r}=rows[k];
-  if(d.b)r.querySelector('.tg').classList.toggle('on',!!S[k]);
+  if(d.x){const b=r.querySelector('.pnb');let n='';try{n=window.__pname()}catch(e){}b.textContent='✏️ '+n}
+  else if(d.b)r.querySelector('.tg').classList.toggle('on',!!S[k]);
   else if(d.s){const i=r.querySelector('input');i.value=S.vol;r.querySelector('.sxp').textContent=S.vol+'%';r.classList.toggle('off',!S.snd)}
   else{r.querySelector('.dd>button').textContent=lbl(d);r.querySelectorAll('.pop button').forEach(b=>b.classList.toggle('on',b.dataset.v===String(S[k])))}}}
+window.__setRefresh=()=>{try{refresh()}catch(e){}};
 const _rs=window.renderSet;window.renderSet=function(){try{_rs.apply(this,arguments)}catch(e){}try{refresh()}catch(e){}};
 refresh();applyVol();
 /* ===== Vidas infinitas ===== */
@@ -5700,6 +5713,7 @@ const L={stage:'home',pc:null,dc:null,host:false,name:'',pname:'',code:'',inTxt:
   myReady:false,theirReady:null,myCommit:null,theirCommit:null,busy:false,seq:0,pv:null,pq:[],gSrc:'m',gAmt:'',gPend:null,gLog:[],gSeen:new Set(),io:{},ith:{},iKey:'-',ithKey:'-',iRdy:false,iThRdy:null,iCom:null,iThCom:null,ibusy:false};
 try{L.name=clean(localStorage.getItem('pa_lan_name'),16)}catch(e){}
 if(!L.name||/^Jugador\d*$/.test(L.name))L.name=window.__pname();
+window.addEventListener('pa-name',e=>{try{L.name=clean(e.detail,16)||L.name;const i=Q('#lnm');if(i)i.value=L.name}catch(_){}});
 
 /* ---------- partida guardada ---------- */
 const liveR=()=>{try{return R&&R.ach&&R.team&&R.team.length&&!R.done?R:null}catch(e){return null}};
@@ -8563,7 +8577,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'46.6',t:'Nuevo icono',s:'cur',l:[
+ {v:'46.7',t:'Cambiar nombre de jugador',s:'cur',l:[
+  '✏️ Ya puedes cambiar tu nombre de jugador cuando quieras desde Ajustes → Juego → «Nombre de jugador»',
+  'El nuevo nombre se usa en todas partes a la vez: amigos, salas de intercambio y combate, torneos, Aventura Multiplayer y megaincursiones',
+  'Si te cambias el nombre dentro de una sala de la Aventura Multiplayer, también queda guardado para el resto del juego'
+]},
+{v:'46.6',t:'Nuevo icono',s:'prev',l:[
   '🔷 Nuevo icono de la app y del acceso directo: emblema hexagonal dorado con un destello sobre fondo violeta oscuro, más limpio y profesional',
   'El icono de la pestaña del navegador también se actualiza'
 ]},
@@ -16710,7 +16729,7 @@ async function onClick(ev){const t=ev.target;
  if(a==='stats'){if(S)ask('📊 Estadísticas',statsH(S)||'Aún no hay datos.',['Cerrar']);return}
  if(a==='skip0'||a==='skip1'){req({k:'skip',v:a==='skip1'?1:0});return}
  if(a.startsWith('ev:')){req({k:'ev',v:+a.slice(3)});b.disabled=true;bp(760,.05);return}
- if(a==='myname'){const i=Q('#mamyname');const n=cleanN(i&&i.value);if(!n)return tst('Escribe un nombre');try{localStorage.setItem('pa_mpa_name',n)}catch(e){}tst('✏️ Ahora te llamas '+n);if(ROLE==='host'&&G){G.seats[0].n=n;push()}else if(ROLE==='guest')dsend(NET.dc,{t:'name',n});else render();return}
+ if(a==='myname'){const i=Q('#mamyname');const n=cleanN(i&&i.value);if(!n)return tst('Escribe un nombre');try{localStorage.setItem('pa_mpa_name',n)}catch(e){}try{window.setPName&&setPName(n)}catch(e){}tst('✏️ Ahora te llamas '+n);if(ROLE==='host'&&G){G.seats[0].n=n;push()}else if(ROLE==='guest')dsend(NET.dc,{t:'name',n});else render();return}
  if(a==='shop'){MOD={k:'shop'};return modal()}
  if(a==='center'){const k=await ask('🏥 Centro Pokémon','Cura por completo y reanima a todo el equipo a cambio de <b>50 Pokémonedas</b> del grupo.',['Pagar 50','Cancelar']);if(k===0)req({k:'center'});return}
  if(a==='close')return close();
@@ -20381,6 +20400,7 @@ body[data-v=menu] #potdm{display:flex}
 @media (prefers-reduced-motion:reduce){#bg.lowhp{animation:none;box-shadow:0 0 0 3px #ef4444aa}}
 #pcbox .bxqr input{flex:1;min-width:0;padding:7px 10px;border-radius:10px;border:1px solid #fff3;background:#0006;color:#fff;font:inherit;font-size:13px}
 #pcbox .bxc{-webkit-touch-callout:none;user-select:none}
+#set .row .pnb{max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:8px 12px;border-radius:10px;border:1px solid #a78bfa66;background:#a78bfa22;color:#ede9fe;font:inherit;font-weight:700;cursor:pointer}
 </style>
 <script id="v37js">
 (()=>{
