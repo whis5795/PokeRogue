@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v44.2</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v44.3</div>
 </section>
 
 <section id="team" class="scr">
@@ -383,7 +383,7 @@ async function megaResolve(m){const sl=megaSlug(m);if(window.MEGART&&MEGART[m.id
   const id=megaSpr(m);try{await Promise.race([new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src=art(id)}),new Promise(r=>setTimeout(r,1500))])}catch(e){}
   return id}
 const front=m=>art(m.megaOn&&megaCap(m)?megaSpr(m):m.id,m.sh),back=front;
-const megaName=m=>(m.megaOn&&megaCap(m)?'Mega ':'')+(m.megaOn&&window.MEGABASE&&MEGABASE[m.id]?MEGABASE[m.id]:m.name.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()))+(m.megaOn&&megaCap(m)&&m.mfs?' '+m.mfs.toUpperCase():'');
+const megaName=m=>(m.megaOn&&megaCap(m)?'Mega ':'')+(m.megaOn&&window.MEGABASE&&MEGABASE[m.id]?MEGABASE[m.id]:m.name.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()))+(m.megaOn&&megaCap(m)&&m.mfs?' '+((window.MEGALBL&&MEGALBL[m.id+'|'+m.mfs])||m.mfs.toUpperCase()):'');
 const nm=m=>(m.sh?'✨ ':'')+(m.nick||megaName(m))+(m.rb>0?' ⭐'+Math.min(8,m.rb):'');
 /* ---------- Etiquetas de Pokémon especiales (Legendario / Singular / Ultraente / Paradoja) ---------- */
 const TAGL={leg:'Legendario',mit:'Singular',ub:'Ultraente',par:'Paradoja'};
@@ -774,7 +774,7 @@ async function megaTap(){const p=act('p');
   if(!megaReady(p)){toast(megaInfo(p));return}
   const b=$('#bm'),g=$('.mvg');if(!b||b.classList.contains('go'))return;
   let f='';const fs=MEGAF[p.id]||[''];
-  if(fs.length>1){const base=p.name.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()),i=await ask('⚡ Megaevolución','<small>Elige la forma a la que megaevoluciona '+base+'.</small>',[...fs.map(x=>`<span class="mgopt"><img src="${art(megaSpr({...p,mfs:x}),p.sh)}" alt="" loading="lazy"><span>Mega ${base}${x?' '+x.toUpperCase():''}${x?'':' <small>(original)</small>'}</span></span>`),'Cancelar']);if(!(i<fs.length))return;f=fs[i]}
+  if(fs.length>1){const base=p.name.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()),i=await ask('⚡ Megaevolución','<small>Elige la forma a la que megaevoluciona '+base+'.</small>',[...fs.map(x=>`<span class="mgopt"><img src="${art(megaSpr({...p,mfs:x}),p.sh)}" alt="" loading="lazy"><span>Mega ${(window.MEGABASE&&MEGABASE[p.id])||base}${x?' '+((window.MEGALBL&&MEGALBL[p.id+'|'+x])||x.toUpperCase()):''}${x?'':' <small>(original)</small>'}</span></span>`),'Cancelar']);if(!(i<fs.length))return;f=fs[i]}
   const b2=$('#bm'),g2=$('.mvg');if(!b2||b2.classList.contains('go'))return;
   b2.classList.add('go');if(g2)g2.classList.add('go');beep(660,.25,'triangle');setTimeout(()=>turn({mega:1,mf:f}),520)}
 function revertMega(m){if(m.megaOn){m.megaOn=false;stats(m);m.hp=Math.min(m.hp,m.max)}}
@@ -8554,7 +8554,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'44.2',t:'Mochila más despejada en el móvil',s:'cur',l:[
+ {v:'44.3',t:'Megas de incursión para tu equipo',s:'cur',l:[
+  'Las 7 Megas propias que solo salían en las Megaincursiones ya las pueden usar tus Pokémon: Mega Zoroark de Hisui, Mega Tinkaton, Mega Parasect y Mega Slowking (su primera Mega) y Mega Gyarados Abisal, Mega Alakazam Místico y Mega Sableye Cristal (formas alternativas: al pulsar MEGA eliges entre la original y la nueva)',
+  'Las formas alternativas se muestran con su nombre (Abisal, Místico, Cristal) en el combate, en la ventana para elegir y en las incursiones'
+]},
+{v:'44.2',t:'Mochila más despejada en el móvil',s:'prev',l:[
   'Mochila en el móvil: los objetos ocupan todo el ancho (4 por fila) y los amuletos y reliquias pasan al fondo, cada uno en su fila de 5, como en PC'
 ]},
 {v:'44.1',t:'Megas originales conservadas',s:'prev',l:[
@@ -13503,7 +13507,7 @@ const H={st:null,loop:null,lobby:[],me:null,
   else if((e.k==='buff'||e.k==='debuff'||e.k==='ail'||e.k==='cheer')&&by)S(by).sup++;
   else if(e.k==='block'&&to)S(to).block++},
  say(t){H.st.log=t;H.ev({k:'msg',t})},
- snap(full){const s=H.st;return{now:now(),tEnd:s.tEnd,over:s.over,log:s.log,team:s.team,boss:{n:s.boss.n,id:s.boss.id,art:s.boss.art,types:s.boss.types,lvl:s.boss.lvl,hp:s.boss.hp,max:s.boss.max,sh:s.boss.sh,shMax:s.boss.shMax,stg:s.boss.stg,ail:s.boss.ail,stun:s.boss.stun,adp:s.boss.adp||1},players:s.players.map(p=>({pid:p.pid,n:p.n,id:p.mega&&p.mf?p.mf[1]:p.mon.id,sh:p.mon.sh,name:(p.mega?'mega-':'')+p.mon.name+(p.mega&&p.mf&&p.mf[0]?'-'+p.mf[0]:''),nick:p.mon.nick?(p.mega?'Mega ':'')+p.mon.nick+(p.mega&&p.mf&&p.mf[0]?' '+p.mf[0].toUpperCase():''):'',mfs:(p.mon.mid||[]).map(x=>x[0]),te:!!p.tera,ut:!!p.ut,mg:!!p.mega,rb:p.mon.rb|0,cT:!!p.mon.tera,cU:!!p.mon.ut,cM:!!p.mon.cm,tera:p.mon.tera,lvl:p.mon.lvl,types:p.mon.types,max:p.mon.max,hp:p.hp,stg:p.stg,ready:p.ready,ko:p.ko,rev:p.rev,prot:p.prot,sub:p.sub,cheers:p.cheers,dealt:p.dealt,cdms:p.cdms,gone:!!p.gone})),ev:full?[]:s.ev.splice(0)}},
+ snap(full){const s=H.st;return{now:now(),tEnd:s.tEnd,over:s.over,log:s.log,team:s.team,boss:{n:s.boss.n,id:s.boss.id,art:s.boss.art,types:s.boss.types,lvl:s.boss.lvl,hp:s.boss.hp,max:s.boss.max,sh:s.boss.sh,shMax:s.boss.shMax,stg:s.boss.stg,ail:s.boss.ail,stun:s.boss.stun,adp:s.boss.adp||1},players:s.players.map(p=>({pid:p.pid,n:p.n,id:p.mega&&p.mf?p.mf[1]:p.mon.id,sh:p.mon.sh,name:(p.mega?'mega-':'')+p.mon.name+(p.mega&&p.mf&&p.mf[0]?'-'+p.mf[0]:''),nick:p.mon.nick?(p.mega?'Mega ':'')+p.mon.nick+(p.mega&&p.mf&&p.mf[0]?' '+p.mf[0].toUpperCase():''):'',mfs:(p.mon.mid||[]).map(x=>x[0]),bid:p.mon.id,te:!!p.tera,ut:!!p.ut,mg:!!p.mega,rb:p.mon.rb|0,cT:!!p.mon.tera,cU:!!p.mon.ut,cM:!!p.mon.cm,tera:p.mon.tera,lvl:p.mon.lvl,types:p.mon.types,max:p.mon.max,hp:p.hp,stg:p.stg,ready:p.ready,ko:p.ko,rev:p.rev,prot:p.prot,sub:p.sub,cheers:p.cheers,dealt:p.dealt,cdms:p.cdms,gone:!!p.gone})),ev:full?[]:s.ev.splice(0)}},
  tick(){const s=H.st;if(!s||s.over)return;const t=now(),b=s.boss;
   s.players.forEach(p=>{if(p.ko&&t>=p.rev){p.ko=false;p.hp=p.mon.max;p.stg={a:0,d:0,sa:0,sd:0,sp:0,ac:0,ev:0};p.ready=t+600;H.say(`¡${mName(p.mon)} vuelve a la carga!`);H.ev({k:'heal',to:p.pid,v:p.mon.max})}});
   if(b.ail&&t>b.ailT){H.say(`El jefe ya no está ${AILN[b.ail][2]}.`);b.ail=null}
@@ -13761,7 +13765,7 @@ ${!w.open?(()=>{const run=getRun(),n=run&&run.bag&&run.bag.mrinv|0,P=100000000,m
   e.querySelectorAll('#mrctl .mr-ch button').forEach(b=>{const d=me.ko||me.cheers<=0||t<me.ready-80||s.over;if(b.disabled!==d)b.disabled=d});
   {const sp=e.querySelector('#mrsp');if(sp){const L=[],R2=UI.rep,rmv=R2&&R2.i!=null&&G.moves&&G.moves[NETR.id]&&G.moves[NETR.id][R2.i];if(me.cU)L.push(`<button data-a="rep" class="mr-rp${R2?' on':''}${R2&&R2.arm?' arm':''}">🔁 ${!R2?'Repetir':R2.arm?'Elige el movimiento…':'Repitiendo'}<small>${!R2?'Repite solo un movimiento':R2.arm?'Toca el que quieres repetir':esc(rmv?rmv.n:'')+' · toca para parar'}</small></button>`);else if(me.cT)L.push(`<button data-a="sp:t" class="mr-t"${me.te||me.ko||s.over?' disabled':''}>💎 ${me.te?'Tera activa':'Teracristalizar'}<small>${ES[me.tera]||me.tera||''}</small></button>`);
     if(me.cU)L.push(`<button data-a="sp:u" class="mr-u"${me.ut||me.ko||s.over?' disabled':''}>🔄 ${me.ut?'Ultra activa':'Ultra Tera'}<small>⭐ Tipo Tera supereficaz</small></button>`);
-    if(me.cM){const fs=me.mfs&&me.mfs.length>1&&!me.mg?me.mfs:[''];fs.forEach(f=>L.push(`<button data-a="sp:m${f?':'+f:''}" class="mr-m"${me.mg||me.ko||s.over?' disabled':''}>⚡ ${me.mg?'Mega activa':'Mega'+(f?' '+f.toUpperCase():'')}<small>×1,5 poder y vida</small></button>`))}
+    if(me.cM){const fs=me.mfs&&me.mfs.length>1&&!me.mg?me.mfs:[''];fs.forEach(f=>L.push(`<button data-a="sp:m${f?':'+f:''}" class="mr-m"${me.mg||me.ko||s.over?' disabled':''}>⚡ ${me.mg?'Mega activa':'Mega'+(f?' '+((window.MEGALBL&&MEGALBL[me.bid+'|'+f])||f.toUpperCase()):'')}<small>×1,5 poder y vida</small></button>`))}
     UI.setH(sp,L.join(''));sp.style.display=L.length?'':'none'}}
   const c=e.querySelector('#mrctl .mr-ch');if(c)c.title=`Ánimos restantes: ${me.cheers}`;
   e.querySelectorAll('#mrctl .mr-ch button').forEach(b=>{if(b.dataset.n!=me.cheers)b.dataset.n=me.cheers});
@@ -22463,7 +22467,11 @@ const ADD={229:['x','y'],248:['z'],181:['z'],719:['z'],655:['z'],609:['z'],998:[
 for(const id in ADD){const cur=MEGAF[id]||[''];ADD[id].forEach(f=>{if(!cur.includes(f))cur.push(f)});MEGAF[id]=cur}
 if(!MEGAF[778])MEGAF[778]=[''];
 window.MEGART={'229|x':'mhoundoomx','229|y':'mhoundoomy','248|z':'mtyranitarz','181|z':'mampharosz','719|z':'mdianciez','778|':'mmimikyu','655|z':'mdelphox','609|z':'mchandelure','998|z':'mbaxcalibur'};
-window.MEGABASE={778:'Mimikyu'};
+window.MEGABASE={778:'Mimikyu',10239:'Zoroark de Hisui'};
+/* v44.3: las Megas inventadas de las Megaincursiones también se pueden usar */
+[[10239,''],[130,'z'],[959,''],[65,'z'],[302,'z'],[47,''],[199,'']].forEach(([id,f])=>{const cur=MEGAF[id]||[];if(!cur.includes(f))cur.push(f);MEGAF[id]=cur});
+Object.assign(MEGART,{'10239|':'bzoroark','130|z':'bgyarados','959|':'btinkaton','65|z':'balakazam','302|z':'bsableye','47|':'mparasect','199|':'mslowking'});
+window.MEGALBL={'130|z':'Abisal','65|z':'Místico','302|z':'Cristal'};
 })();
 
 })();</script>
