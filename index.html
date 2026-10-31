@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v42.7</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v42.8</div>
 </section>
 
 <section id="team" class="scr">
@@ -8539,7 +8539,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'42.7',t:'Sin legendarios por el clima',s:'cur',l:[
+ {v:'42.8',t:'Pulido general',s:'cur',l:[
+  '🎒 Menú: el rango de entrenador y los desafíos ahora están juntos encima de las Novedades',
+  '📱 El botón «atrás» del móvil cierra la ventana que tengas abierta (casa, cocina, sobres, minijuegos, rango, colecciones, expediciones, mercado…) en vez de salir del juego',
+  '🖼️ Megaincursiones: arreglada la imagen de Mega Alakazam, que tenía zonas blancas de fondo mal recortadas',
+  '🔧 Revisadas las 22 pantallas del juego en busca de errores; arreglado el comparador, que fallaba si se abría sin un Pokémon elegido',
+ ]},
+ {v:'42.7',t:'Sin legendarios por el clima',s:'prev',l:[
   '🌙 Arreglado: el ciclo de día y noche y el clima extremo podían hacer aparecer legendarios y singulares en los biomas normales (Darkrai y Zygarde de noche, Lunala y Necrozma en el eclipse, Articuno con la aurora). Ahora el día/noche, los climas y el clima extremo nunca traen Pokémon con etiqueta (legendarios, singulares, ultraentes ni paradójicos)',
  ]},
  {v:'42.6',t:'Optimización general',s:'prev',l:[
@@ -12784,7 +12790,7 @@ Object.assign(MEGAF,N);
 /* ilustraciones propias de megajefes */
 window.CART=window.CART||{};CART.mslowking='assets/00c5ea680bc3.webp';CART.mparasect='assets/3aa1a8624cee.webp';
 /* v23.4: Slowking y Parasect pasan a ser solo megajefes de las Megaincursiones */
-CART.bzoroark='assets/5ceccf7427f0.webp';CART.bgyarados='assets/7929b41621fd.webp';CART.btinkaton='assets/c17af24a4066.webp';CART.balakazam='assets/6ab1838b27fc.webp';CART.bsableye='assets/82f6c51364cd.webp';
+CART.bzoroark='assets/5ceccf7427f0.webp';CART.bgyarados='assets/7929b41621fd.webp';CART.btinkaton='assets/c17af24a4066.webp';CART.balakazam='assets/aeb49a547fa5.webp';CART.bsableye='assets/82f6c51364cd.webp';
 
 })();</script>
 
@@ -19631,6 +19637,9 @@ body.ovl .scr.on *,body.ovl .scr.on *::before,body.ovl .scr.on *::after,body.ovl
 .gfx-medio #menu h1 .ch,.gfx-medio #menu h1 .bo,.gfx-medio #menu h1 .bo *,.gfx-bajo #menu h1 .ch,.gfx-bajo #menu h1 .bo,.gfx-bajo #menu h1 .bo *,.gfx-medio #menu h1 .ptw .ob svg,.gfx-bajo #menu h1 .ptw .ob svg{animation-iteration-count:1!important}
 .gfx-bajo #menu h1::before,.gfx-medio #menu h1::before{animation:none!important}
 .lowfx .mbg .mt{animation:none!important}
+/* rango y desafíos encima de las Novedades */
+#clrow{display:flex;align-items:center;gap:8px}
+#clrow #rkb,#clrow #chalb{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important}
 </style>
 <script id="v37js">
 (()=>{
@@ -21479,7 +21488,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   <div class="cmsec">Movimientos</div><div class="cmg2">${mv(A)}${mv(Bm)}</div>
   <div class="cmsec">Comparar con…</div><input type="search" class="cmq" data-qq="1" placeholder="🔍 Buscar…" value="${esc(QS)}"><div class="cmp">${L.map(([m,w],i)=>`<button type="button" data-q="p:${i}" class="${m===Bm?'on':''}"><img src="${mini(m.id,m.sh)}" alt=""><b>${esc(nm(m))}</b><small>Nv.${m.lvl} · ${w}</small></button>`).join('')||'<p class="cmn">No hay otros Pokémon.</p>'}</div></div>`;
   W._L=L;const sc=W.querySelector('.cmw2')?W.querySelector('.cmw2').scrollTop:0;window.__morph?__morph(W,h):(W.innerHTML=h);const w2=W.querySelector('.cmw2');if(w2&&w2.scrollTop!==sc)w2.scrollTop=sc}
- window.openCompare=(a,b)=>{A=a;Bm=b||null;QS='';if(!W){W=D.createElement('div');W.id='cmpov';W.addEventListener('click',e=>{if(e.target===W)return close();const t=e.target.closest('[data-q]');if(!t)return;const k=t.dataset.q;
+ window.openCompare=(a,b)=>{if(!a){try{a=R.team[0]}catch(e){}if(!a)return}A=a;Bm=b||null;QS='';if(!W){W=D.createElement('div');W.id='cmpov';W.addEventListener('click',e=>{if(e.target===W)return close();const t=e.target.closest('[data-q]');if(!t)return;const k=t.dataset.q;
    if(k==='x')return close();if(k==='swap'){const x=A;A=Bm;Bm=x;return paint()}if(k.startsWith('p:')){const it=W._L[+k.slice(2)];if(it){Bm=it[0];paint();const w2=W.querySelector('.cmw2');if(w2)w2.scrollTo({top:0,behavior:'smooth'})}}});
    W.addEventListener('input',e=>{if(e.target.matches('[data-qq]')){QS=e.target.value;paint()}})}D.body.append(W);paint()};
  function close(){if(W)W.remove()}
@@ -21862,6 +21871,30 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  new MutationObserver(ms=>{for(const m of ms){if(m.type==='childList'){for(const n of[...m.addedNodes,...m.removedNodes])if(n.nodeType===1&&n.id&&OVS.includes('#'+n.id)){sch();return}}else if(m.target.id&&OVS.includes('#'+m.target.id)){sch();return}}}).observe(B,{childList:true,subtree:false,attributes:true,subtree:true,attributeFilter:['class','style']});
  D.addEventListener('visibilitychange',()=>{if(!D.hidden)kick()});
  window.__kick=kick;
+})();
+/* ---------- v42.7: rango de entrenador y desafíos, juntos encima de las Novedades del menú ---------- */
+(()=>{const D=document;function place(){const cl=D.getElementById('clog'),bt=D.getElementById('clbtn'),rk=D.getElementById('rkb'),ch=D.getElementById('chalb');if(!cl||!bt||(!rk&&!ch))return false;
+ let row=D.getElementById('clrow');if(!row){row=D.createElement('div');row.id='clrow';cl.insertBefore(row,bt)}
+ [rk,ch].forEach(e=>{if(e&&e.parentNode!==row)row.append(e)});return true}
+ if(!place()){let n=0;const t=setInterval(()=>{if(place()||++n>20)clearInterval(t)},500)}
+ new MutationObserver(()=>{const r=D.getElementById('clrow');if(!r||D.getElementById('rkb')&&D.getElementById('rkb').parentNode!==r||D.getElementById('chalb')&&D.getElementById('chalb').parentNode!==r)place()}).observe(D.getElementById('menu')||D.body,{childList:true});
+})();
+/* ---------- v42.7: el botón «atrás» del móvil cierra la ventana abierta (en vez de salir del juego) ---------- */
+(()=>{const D=document;if(!history.pushState)return;
+ const OV=['#cookov','#mktov','#specov','#mgov','#cmpov','#rkov','#exov','#chov','#colov','#msov','#rnov','#ntf','#frp','#tcgov','#homeov','#pcas'];
+ const shown=e=>{if(!e||!e.isConnected)return false;const cs=getComputedStyle(e);if(cs.display==='none'||cs.visibility==='hidden')return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};
+ const open=()=>OV.map(s=>D.querySelector(s)).filter(shown);
+ const closeBtn=e=>e.querySelector('[data-c="x"],[data-m="x"],[data-s="x"],[data-g="x"],[data-a="close"],[aria-label="Cerrar"],[aria-label="Salir"],.clx,.mgx');
+ let st=false,ignore=false,raf=0;
+ function top(){const L=open();if(!L.length)return null;return L.sort((a,b)=>(+getComputedStyle(b).zIndex||0)-(+getComputedStyle(a).zIndex||0))[0]}
+ function sync(){raf=0;const any=open().length>0;if(any&&!st){st=true;try{history.pushState({prov:1},'')}catch(e){}}else if(!any&&st){st=false;ignore=true;try{history.back()}catch(e){ignore=false}}}
+ addEventListener('popstate',()=>{if(ignore){ignore=false;return}if(!st)return;st=false;const t=top();if(!t)return;
+  /* si hay un diálogo encima, no se toca nada: se vuelve a poner el estado */
+  const md=D.getElementById('mod');if(md&&getComputedStyle(md).display!=='none'){st=true;try{history.pushState({prov:1},'')}catch(e){}return}
+  const b=closeBtn(t);if(b)b.click();else t.click();setTimeout(()=>{if(!raf)raf=requestAnimationFrame(sync)},120)});
+ new MutationObserver(()=>{if(!raf)raf=requestAnimationFrame(sync)}).observe(D.body,{childList:true,attributes:true,attributeFilter:['class','style'],subtree:false});
+ OV.forEach(s=>{const e=D.querySelector(s);if(e)new MutationObserver(()=>{if(!raf)raf=requestAnimationFrame(sync)}).observe(e,{attributes:true,attributeFilter:['class','style']})});
+ setInterval(()=>{if(!raf)raf=requestAnimationFrame(sync)},1500);
 })();
 
 })();</script>
