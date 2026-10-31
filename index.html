@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v46.0</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v46.1</div>
 </section>
 
 <section id="team" class="scr">
@@ -6291,7 +6291,7 @@ function pvChoose(c){
   P.ch[P.me]=g;P.ui='main';send({t:'pact',n:P.turn,c:g});pvTry();pvDraw()}
 function pvForfeit(){
   if(!P||P.over)return;send({t:'pff'});P.over=true;P.win=oth(P.me);P.msg='🏳️ Te has rendido.';P.phase='end';pvDraw();pvEnd()}
-function pvEnd(){pvDraw()}
+function pvEnd(){pvDraw();try{if(P&&!P._tcb){P._tcb=1;window.__pvEndCb&&__pvEndCb(P.win===P.me,P.win==='d')}}catch(e){}}
 async function pvBegin(lv,seed,ex){
   const mine=L.pv&&L.pv.myPack,their=L.pv&&L.pv.theirPack;
   if(!mine||!their){return}
@@ -6589,6 +6589,7 @@ window.__LANX={L,NET,render,close:()=>close(),isOpen:()=>ov.style.display=='flex
  finish:c=>hostFinish(c),
  async joinFor(code,via){open();L.wan=1;L.via=via;await joinStart(code);if(L.stage!='join2'){L.via=null;render();return null}L.via=via;render();return L.code},
  cancel:()=>{cleanup();render()},
+ startPvp(n){if(L.host&&L.stage=='hub'){L.pv={n,sel:[],myPack:null,theirPack:null};L.pq=[];L.err='';L.stage='pteam';send({t:'go',k:'pvp',n});render();return true}return false},
  stage:()=>L.stage};
 function close(){cleanup();ov.style.display='none';netSync()}
 D.addEventListener('keydown',e=>{if(e.key=='Escape'&&ov.style.display=='flex'){if(L.stage=='home')close();else if(L.stage=='codes'){L.stage='home';render()}}});
@@ -8557,7 +8558,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'46.0',t:'Amistad, premios diarios, Pokémon del día, Balls con efectos y ruinas nuevas',s:'cur',l:[
+ {v:'46.1',t:'🏆 Torneos entre amigos',s:'cur',l:[
+  'Nuevo botón «🏆 Torneo» en el panel de Amigos: crea una sala, invita a tus amigos conectados (hasta 8 jugadores) y empieza una eliminatoria',
+  'El cuadro (cuartos, semifinal y final) se sortea al empezar y todos lo ven en directo. Si sois impares, alguien pasa directamente de ronda',
+  'Cada combate es un PvP de 3 Pokémon con tu equipo de aventura: pulsa «Jugar mi combate» y tu rival se conecta solo, aunque no seáis amigos entre vosotros. El resultado se apunta solo al terminar',
+  'Premios: el campeón gana 25.000 Pokémonedas y 3 Caramelos Raros (el doble con 5 o más jugadores), el subcampeón 10.000 y 1 Caramelo, y el resto 3.000 por participar'
+]},
+{v:'46.0',t:'Amistad, premios diarios, Pokémon del día, Balls con efectos y ruinas nuevas',s:'prev',l:[
   '💕 Amistad: cada Pokémon te coge cariño al ganar combates juntos y con tus mimos en casa (toca a tus compañeros, una vez por ronda). Con mucho cariño puede aguantar un golpe mortal con 1 PS (10%, 15% o 20% según el nivel de amistad, una vez por combate). Se ve con corazones en su ficha',
   '📅 Premio diario: la semana de bienvenida trae premios grandes (Caramelos Raros, Ultra Balls, Revivir máximos y hasta 50.000 Pokémonedas el día 7) y después hay un premio pequeño cada día, con racha. Botón 📅 en el menú',
   '🌟 Pokémon del día: uno distinto cada día que sale mucho más en su bioma, es 10 veces más probable que sea shiny y da un Caramelo Raro al capturarlo. Sale en el menú y en el mapa',
@@ -14988,7 +14995,7 @@ function onMsg(o){if(!o||typeof o!=='object'||!okId(o.f)||o.f===FID)return;if(o.
   case'lans':{if(PEND.lan&&PEND.lan.f===o.f&&typeof o.code==='string'){PEND.lan.got=1;try{__LANX.finish(o.code)}catch(e){}}break}
   case'lno':{if(PEND.lan&&PEND.lan.f===o.f){PEND.lan=null;try{__LANX.cancel();__LANX.L.err=n+' ha rechazado la invitación.';__LANX.render()}catch(e){}}break}
   case'rno':{invDone(o.f,'invT');tst(n+' no puede unirse ahora a tu megaincursión');break}
-  default:{const h=window.__frx&&window.__frx[o.t];if(h&&fr)try{h(o,n)}catch(e){console.error(e)}}
+  default:{const h=window.__frx&&window.__frx[o.t];if(h&&(fr||h.any))try{h(o,n,ld)}catch(e){console.error(e)}}
  }
  draw();badge()}
 let unsub=null;
@@ -20253,6 +20260,38 @@ body[data-v=menu] #potdm{display:flex}
 @keyframes bfxN{0%{opacity:0;transform:scale(.5)}15%{opacity:1;transform:scale(1.1)}25%{transform:none}80%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
 /* v46.0: partida guardada: equipo en 2 filas de 3 */
 #mod .box.dlx .pgteam{display:grid!important;grid-template-columns:repeat(3,auto);justify-content:center;gap:6px!important}
+/* v46.1 torneos */
+#frp .fr-tour{padding:7px 12px;border-radius:12px;border:2px solid #fbbf24;background:linear-gradient(180deg,#b45309,#78350f);color:#fff;font:900 12.5px system-ui;cursor:pointer;white-space:nowrap}
+#tourov{position:fixed;inset:0;z-index:9400;display:flex;align-items:center;justify-content:center;padding:12px;background:#000b;opacity:0;transition:opacity .18s;font-family:system-ui,sans-serif}
+#tourov.on{opacity:1}
+#tourov .tobx{position:relative;width:min(560px,100%);max-height:calc(100dvh - 24px);overflow:auto;padding:18px 14px 14px;border-radius:20px;color:#fff;background:radial-gradient(120% 50% at 50% 0,#b4530966,transparent 70%),linear-gradient(180deg,#1e1b4b,#0b0716);border:2px solid #fbbf24;box-shadow:0 14px 40px #000c}
+#tourov .tox{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;border:1px solid #fff3;background:#0006;color:#fff;cursor:pointer}
+#tourov h3{margin:0 0 6px;text-align:center;font-size:20px;color:#fde68a}#tourov h4{margin:12px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#a5b4fc}
+#tourov p{margin:0 0 10px;text-align:center;font-size:13px;opacity:.88;line-height:1.4}
+#tourov .toi{text-align:center;font-size:64px}
+#tourov .togo{width:100%;margin:10px 0 0;min-height:46px;background:linear-gradient(180deg,#f59e0b,#b45309)!important;color:#fff!important;border:1px solid #fde68a!important;font-weight:900}
+#tourov .togo:disabled{opacity:.45}
+#tourov .tolv{width:100%;margin:8px 0 0;background:#ffffff12!important;color:#fecaca!important;border:1px solid #f8717166!important}
+#tourov .topl{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+#tourov .topl span{position:relative;display:flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:999px;background:#ffffff14;border:1px solid #ffffff22;font-size:13px}
+#tourov .topl img,#tourov .tofr img{width:32px;height:32px;image-rendering:pixelated}
+#tourov .topl em{font-style:normal}
+#tourov .tofr{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px}
+#tourov .tofr button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:12px;border:2px solid #a78bfa66;background:#ffffff10;color:#fff;cursor:pointer;font:inherit}
+#tourov .tofr b{font-size:13px}#tourov .tofr small{font-size:11px;color:#fde68a}
+#tourov .tomut{opacity:.7;font-size:12px}
+#tourov .tob{display:grid;grid-template-columns:repeat(var(--nr),minmax(0,1fr));gap:8px;margin:10px 0;overflow-x:auto}
+#tourov .tor{display:flex;flex-direction:column;justify-content:space-around;gap:8px}
+#tourov .tor h5{margin:0;text-align:center;font-size:11px;color:#a5b4fc;text-transform:uppercase}
+#tourov .tom{border-radius:10px;overflow:hidden;border:1px solid #ffffff2a;background:#0006}
+#tourov .tos{display:flex;align-items:center;gap:4px;padding:4px 6px;font-size:11.5px;min-height:30px}
+#tourov .tos+.tos{border-top:1px solid #ffffff1a}
+#tourov .tos img{width:24px;height:24px;image-rendering:pixelated;flex:none}#tourov .tos i{width:24px;flex:none}
+#tourov .tos span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#tourov .tos.w{background:#16a34a44;font-weight:900;color:#bbf7d0}#tourov .tos.l{opacity:.45;text-decoration:line-through}
+#tourov .tos.me{box-shadow:inset 3px 0 0 #fde047}
+#tourov .toch{display:flex;flex-direction:column;align-items:center;margin:8px 0;padding:10px;border-radius:16px;background:linear-gradient(135deg,#f59e0b33,#be185d33);border:2px solid #fbbf24}
+#tourov .toch div{font-size:34px}#tourov .toch img{width:72px;height:72px;image-rendering:pixelated}#tourov .toch b{font-size:18px;color:#fde68a}#tourov .toch small{opacity:.8}
 </style>
 <script id="v37js">
 (()=>{
@@ -23086,6 +23125,97 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
   requestAnimationFrame(loop);return()=>{done=true}}
  const wrap=()=>{if(typeof window.ballAnim!=='function'||window.ballAnim._bfx)return;const o=window.ballAnim;const w=async function(m,k){const stop=attach(k);try{return await o.apply(this,arguments)}finally{setTimeout(stop,400)}};w._bfx=1;window.ballAnim=w};
  wrap();setTimeout(wrap,2000);
+})();
+
+/* ---------- v46.1: 🏆 Torneos entre amigos (eliminatoria de 4 u 8 jugadores con combates PvP reales) ---------- */
+(()=>{const D=document,Q=s=>D.querySelector(s);
+ const FR=()=>window.__FR,LX=()=>window.__LANX;
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const tst=t=>{try{toast(t)}catch(e){}},bp=(f,d)=>{try{beep(f,d,'triangle')}catch(e){}};
+ const me=()=>FR()&&FR().fid();
+ const myName=()=>{try{const s=JSON.parse(localStorage.getItem('pa_lan')||'{}');if(s&&s.name)return String(s.name).slice(0,16)}catch(e){}try{return(LX()&&LX().me().n)||window.__pname()||'Yo'}catch(e){return'Yo'}};
+ const myLd=()=>{try{const r=(typeof R==='object'&&R&&R.team&&R.team.length)?R:JSON.parse(localStorage.getItem('pa_run')||'null');const m=r&&r.team&&r.team[0];return m?{id:m.id,sh:m.sh?1:0,lv:m.lvl}:null}catch(e){return null}};
+ const spr=ld=>{try{return ld&&ld.id?mini(+ld.id,ld.sh?1:0):''}catch(e){return''}};
+ let T=null,ov=null,cur=null;/* cur: combate en marcha {tid,mi,r,opp} */
+ const isOrg=()=>T&&T.org===me();
+ const pl=id=>T&&T.pl.find(p=>p.id===id);
+ const send=(id,o)=>{try{FR().send(id,Object.assign({tid:T&&T.id},o))}catch(e){}};
+ const bcast=()=>{if(!isOrg())return;T.v=(T.v|0)+1;T.pl.forEach(p=>{if(p.id!==me())send(p.id,{t:'tost',T})});draw()};
+ /* cuadro */
+ function seedBracket(){const n=T.pl.length,size=n<=2?2:n<=4?4:8,ids=T.pl.map(p=>p.id).sort(()=>Math.random()-.5);while(ids.length<size)ids.push(null);
+  const r0=[];for(let i=0;i<size;i+=2)r0.push({a:ids[i],b:ids[i+1],w:null});T.rounds=[r0];let k=size/2;while(k>1){k/=2;T.rounds.push(Array.from({length:k},()=>({a:null,b:null,w:null})))}advance()}
+ function advance(){for(let r=0;r<T.rounds.length;r++){T.rounds[r].forEach((m,i)=>{if(!m.w&&m.a&&!m.b&&(r>0?false:true))m.w=m.a;if(!m.w&&m.b&&!m.a&&r===0)m.w=m.b;
+    if(m.w&&r+1<T.rounds.length){const nx=T.rounds[r+1][i>>1];if(i%2===0)nx.a=m.w;else nx.b=m.w}});}
+  const F=T.rounds[T.rounds.length-1][0];if(F.w){T.st='done';T.champ=F.w}}
+ function myMatch(){if(!T||T.st!=='run')return null;for(let r=0;r<T.rounds.length;r++){const i=T.rounds[r].findIndex(m=>!m.w&&m.a&&m.b&&(m.a===me()||m.b===me()));if(i>=0)return{r,i,m:T.rounds[r][i]}}return null}
+ /* recompensas */
+ function prize(){if(!T||T.st!=='done')return;const k='pa_tourp_'+T.id;try{if(localStorage.getItem(k))return;localStorage.setItem(k,'1')}catch(e){}
+  const F=T.rounds[T.rounds.length-1][0],champ=T.champ===me(),fin=!champ&&(F.a===me()||F.b===me()),n=T.pl.length;const mult=n>=5?2:1;
+  const rw=champ?{m:25000*mult,can:3*mult}:fin?{m:10000*mult,can:1}:{m:3000};
+  try{if(typeof R==='object'&&R&&R.team&&R.team.length){R.money=(R.money|0)+rw.m;if(rw.can)R.bag.can=(R.bag.can|0)+rw.can;saveRun()}else{const r=JSON.parse(localStorage.getItem('pa_run')||'null');if(r&&r.bag){r.money=(r.money|0)+rw.m;if(rw.can)r.bag.can=(r.bag.can|0)+rw.can;localStorage.setItem('pa_run',JSON.stringify(r))}}}catch(e){}
+  if(champ){[523,659,784,1046,1319].forEach((f,i)=>setTimeout(()=>bp(f,.14),i*120))}
+  tst(`${champ?'👑 ¡Campeón del torneo!':fin?'🥈 ¡Subcampeón!':'🎖️ Torneo terminado'} +${nf(rw.m)} Pokémonedas${rw.can?' y '+rw.can+' Caramelo'+(rw.can>1?'s':'')+' Raro'+(rw.can>1?'s':''):''}`)}
+ /* mensajes */
+ const H=window.__frx=window.__frx||{};
+ const any=f=>{f.any=1;return f};
+ H.toinv=async(o,n,ld)=>{if(!o.tid||T&&T.st!=='done'&&T.id!==o.tid){send(o.f,{t:'tono',tid:o.tid});return}if(T&&T.id===o.tid)return;
+  let i;try{i=await ask('🏆 Invitación a un torneo',`<small><b>${esc(n)}</b> te invita a su torneo de amigos (${o.size} jugadores, eliminatoria, combates de 3 Pokémon).</small>`,['✅ Unirme','Rechazar'])}catch(e){return}
+  if(i===0){FR().send(o.f,{t:'tacc',tid:o.tid,n:myName(),ld:myLd()});tst('🏆 Te has apuntado. Espera a que empiece el torneo');}else FR().send(o.f,{t:'tono',tid:o.tid})};
+ H.tacc=any((o,n)=>{if(!isOrg()||o.tid!==T.id||T.st!=='lobby')return;if(pl(o.f))return;if(T.pl.length>=8){send(o.f,{t:'tfull'});return}T.pl.push({id:o.f,n:String(o.n||n).slice(0,16),ld:o.ld||null});bp(880,.08);tst('🏆 '+n+' se une al torneo');bcast()});
+ H.tono=any((o,n)=>{if(isOrg()&&o.tid===T.id)tst(n+' no puede unirse al torneo')});
+ H.tfull=any(()=>tst('🏆 El torneo ya está lleno'));
+ H.tost=any((o)=>{const t=o.T;if(!t||!t.id||!t.pl||!t.pl.some(p=>p.id===me()))return;if(T&&T.id===t.id&&(t.v|0)<=(T.v|0))return;const was=T&&T.st;T=t;if(was!=='run'&&T.st==='run'){tst('🏆 ¡El torneo ha empezado!');open()}draw();if(T.st==='done')prize()});
+ H.tores=any((o)=>{if(!isOrg()||o.tid!==T.id)return;const m=T.rounds[o.r]&&T.rounds[o.r][o.i];if(!m||m.w||(o.f!==m.a&&o.f!==m.b))return;
+  const w=o.win?o.f:(o.f===m.a?m.b:m.a);m.w=w;advance();bcast();if(T.st==='done')prize()});
+ H.tleave=any((o)=>{if(!isOrg()||o.tid!==T.id)return;if(T.st==='lobby'){T.pl=T.pl.filter(p=>p.id!==o.f);bcast();return}
+  T.rounds.forEach((rd,r)=>rd.forEach(m=>{if(!m.w&&m.a&&m.b&&(m.a===o.f||m.b===o.f))m.w=m.a===o.f?m.b:m.a}));advance();bcast()});
+ /* conexión del combate entre dos jugadores del torneo (aunque no sean amigos entre sí) */
+ H.tolinv=any(async(o,n)=>{if(!T||o.tid!==T.id||!pl(o.f)||typeof o.code!=='string')return;const mm=myMatch();if(!mm||(mm.m.a!==o.f&&mm.m.b!==o.f))return;
+  cur={tid:T.id,r:mm.r,i:mm.i,opp:o.f};closeOv();tst('⚔️ Conectando con '+n+' para tu combate del torneo…');const L=LX();if(!L)return;if(L.busy())L.cancel();
+  const ans=await L.joinFor(o.code,{n,ld:(pl(o.f)||{}).ld});if(ans)FR().send(o.f,{t:'tolans',tid:T.id,code:ans});else tst('No se pudo conectar con '+n)});
+ H.tolans=any((o)=>{if(!cur||o.tid!==cur.tid||o.f!==cur.opp||typeof o.code!=='string')return;try{LX().finish(o.code)}catch(e){}
+  let k=0;const iv=setInterval(()=>{const L=LX();if(++k>40)return clearInterval(iv);if(L&&L.stage()==='hub'){clearInterval(iv);setTimeout(()=>{try{L.startPvp(3)}catch(e){}},600)}},500)});
+ async function playMine(){const mm=myMatch();if(!mm)return;const opp=mm.m.a===me()?mm.m.b:mm.m.a,P=pl(opp);
+  if(mm.m.a!==me()){tst('⏳ '+(P?P.n:'Tu rival')+' te enviará el combate. ¡Atento!');return}
+  const L=LX();if(!L)return tst('El multijugador no está disponible');if(L.busy())L.cancel();
+  cur={tid:T.id,r:mm.r,i:mm.i,opp};closeOv();const code=await L.hostFor({n:P&&P.n,ld:P&&P.ld});if(!code){tst('No se pudo preparar la conexión');return}
+  FR().send(opp,{t:'tolinv',tid:T.id,code});tst('⚔️ Combate enviado a '+(P?P.n:'tu rival')+'. Esperando a que se conecte…')}
+ window.__pvEndCb=(win,draw)=>{if(!cur||!T||cur.tid!==T.id)return;const c=cur;cur=null;if(draw){tst('🤝 ¡Empate! Repetid el combate del torneo');return}
+  const m=T.rounds[c.r]&&T.rounds[c.r][c.i];if(!m||m.w)return;
+  if(isOrg()){m.w=win?me():c.opp;advance();bcast();if(T.st==='done')prize()}else FR().send(T.org,{t:'tores',tid:T.id,r:c.r,i:c.i,win});
+  tst(win?'🏆 ¡Ganas tu combate del torneo! Vuelve al torneo para ver el cuadro':'💀 Has caído en el torneo. ¡Mira cómo termina!');setTimeout(()=>{try{open()}catch(_){}},2500)};
+ /* panel */
+ function create(){T={id:Math.random().toString(36).slice(2,10),org:me(),st:'lobby',pl:[{id:me(),n:myName(),ld:myLd()}],rounds:[],v:1};draw()}
+ function invite(id){const f=FR().list()[id];if(!f)return;FR().send(id,{t:'toinv',tid:T.id,size:T.pl.length<4?4:8});T.inv=T.inv||{};T.inv[id]=Date.now();tst('📨 Invitación enviada a '+f.n);draw()}
+ function start(){if(!isOrg()||T.pl.length<2)return;T.st='run';seedBracket();bcast();bp(988,.15)}
+ function leave(){if(!T)return;if(isOrg()&&T.st!=='done'){T.pl.forEach(p=>{if(p.id!==me())send(p.id,{t:'tost',T:Object.assign({},T,{st:'done',champ:null,cancel:1,v:(T.v|0)+1})})})}else if(!isOrg()&&T.st!=='done')send(T.org,{t:'tleave'});T=null;cur=null;draw()}
+ const nmOf=id=>id?(pl(id)||{n:'?'}).n:'—';
+ function bracketHTML(){return`<div class="tob" style="--nr:${T.rounds.length}">${T.rounds.map((rd,r)=>`<div class="tor"><h5>${r===T.rounds.length-1?'Final':r===T.rounds.length-2?'Semifinal':'Cuartos'}</h5>${rd.map(m=>{const row=id=>{const P=pl(id);return`<div class="tos${m.w&&m.w===id?' w':m.w&&id?' l':''}${id===me()?' me':''}">${P&&spr(P.ld)?`<img src="${spr(P.ld)}" alt="">`:'<i></i>'}<span>${id?esc(nmOf(id)):(r===0?'(libre)':'…')}</span></div>`};return`<div class="tom">${row(m.a)}${row(m.b)}</div>`}).join('')}</div>`).join('')}</div>`}
+ function draw(){if(!ov||!ov.isConnected)return;let h='';
+  if(!T){h=`<div class="toi">🏆</div><h3>Torneo de amigos</h3><p>Organiza una eliminatoria de hasta 8 jugadores. Cada combate es un PvP de 3 Pokémon con tu equipo de aventura. El campeón gana Pokémonedas y Caramelos Raros.</p><button type="button" class="act togo" data-t="new">➕ Crear torneo</button>`}
+  else if(T.st==='lobby'){const L=FR()?FR().list():{},onl=Object.entries(L).filter(([id,f])=>Date.now()-Math.max(f.pong||0,f.live||0)<90000);
+   h=`<h3>🏆 Sala del torneo</h3><p>${isOrg()?'Invita a tus amigos conectados. Cuando estéis todos, pulsa Empezar.':'Esperando a que el organizador empiece el torneo…'}</p>
+   <div class="topl">${T.pl.map(p=>`<span>${spr(p.ld)?`<img src="${spr(p.ld)}" alt="">`:'👤'}<b>${esc(p.n)}</b>${p.id===T.org?'<em>👑</em>':''}</span>`).join('')}</div>
+   ${isOrg()?`<h4>Amigos conectados</h4><div class="tofr">${onl.length?onl.filter(([id])=>!pl(id)).map(([id,f])=>`<button type="button" data-t="inv:${id}">${spr(f.ld)?`<img src="${spr(f.ld)}" alt="">`:'👤'}<b>${esc(f.n)}</b><small>${T.inv&&T.inv[id]?'✔ Invitado':'Invitar'}</small></button>`).join('')||'<p class="tomut">Todos tus amigos conectados ya están dentro.</p>':'<p class="tomut">No hay amigos conectados ahora mismo.</p>'}</div>
+   <button type="button" class="act togo" data-t="start" ${T.pl.length<2?'disabled':''}>▶ Empezar torneo (${T.pl.length} jugador${T.pl.length>1?'es':''})</button>`:''}
+   <button type="button" class="act tolv" data-t="leave">${isOrg()?'Cancelar torneo':'Salir del torneo'}</button>`}
+  else{const mm=myMatch(),done=T.st==='done';
+   h=`<h3>${done?(T.cancel?'🏆 Torneo cancelado':'🏆 ¡Torneo terminado!'):'🏆 Torneo en curso'}</h3>${done&&T.champ?`<div class="toch"><div>👑</div>${spr((pl(T.champ)||{}).ld)?`<img src="${spr((pl(T.champ)||{}).ld)}" alt="">`:''}<b>${esc(nmOf(T.champ))}</b><small>Campeón del torneo</small></div>`:''}
+   ${bracketHTML()}
+   ${mm?`<button type="button" class="act togo" data-t="play">⚔️ ${mm.m.a===me()?'Jugar mi combate contra':'Esperando el combate de'} ${esc(nmOf(mm.m.a===me()?mm.m.b:mm.m.a))}</button>`:done?'':'<p class="tomut">No tienes combate pendiente ahora: espera a que terminen los demás.</p>'}
+   <button type="button" class="act tolv" data-t="leave">${done?'Cerrar torneo':isOrg()?'Cancelar torneo':'Abandonar'}</button>`}
+  ov.querySelector('.toc').innerHTML=h}
+ function open(){if(!FR()){tst('Los amigos no están disponibles');return}if(!ov){ov=D.createElement('div');ov.id='tourov';ov.innerHTML='<div class="tobx" role="dialog" aria-label="Torneo"><button type="button" class="tox" data-t="x" aria-label="Cerrar">✕</button><div class="toc"></div></div>';
+   ov.addEventListener('click',e=>{const t=e.target.closest('[data-t]');if(e.target===ov)return closeOv();if(!t||t.disabled)return;const a=t.dataset.t;
+    if(a==='x')closeOv();else if(a==='new')create();else if(a==='start')start();else if(a==='leave')leave();else if(a==='play')playMine();else if(a.startsWith('inv:'))invite(a.slice(4))})}
+  if(!ov.isConnected)D.body.append(ov);requestAnimationFrame(()=>ov.classList.add('on'));draw()}
+ function closeOv(){if(ov){ov.classList.remove('on');setTimeout(()=>{if(ov&&!ov.classList.contains('on'))ov.remove()},180)}}
+ window.__tourOpen=open;
+ /* botón en el panel de amigos */
+ new MutationObserver(()=>{const hd=Q('#frp .fr-hd');if(!hd||hd.querySelector('.fr-tour'))return;const b=D.createElement('button');b.type='button';b.className='fr-tour';b.innerHTML='🏆 Torneo';b.onclick=e=>{e.stopPropagation();open()};const x=hd.querySelector('.fr-x');hd.insertBefore(b,x)}).observe(D.body,{childList:true,subtree:false});
+ setInterval(()=>{const hd=Q('#frp .fr-hd');if(hd&&!hd.querySelector('.fr-tour')){const b=D.createElement('button');b.type='button';b.className='fr-tour';b.innerHTML='🏆 Torneo';b.onclick=e=>{e.stopPropagation();open()};hd.insertBefore(b,hd.querySelector('.fr-x'))}},1000);
+ /* el organizador reenvía el estado cada 20 s por si alguien se perdió un mensaje */
+ setInterval(()=>{if(isOrg()&&T&&T.st!=='done')T.pl.forEach(p=>{if(p.id!==me())send(p.id,{t:'tost',T})})},20000);
 })();
 
 })();</script>
