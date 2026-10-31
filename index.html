@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v43.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v44.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -367,7 +367,7 @@ const CH={};T.forEach(t=>{CH[t]={};RAW[t].split(' ').forEach(x=>{const m=x.match
 const eff=(t,d)=>d.reduce((m,x)=>m*(CH[t][x]??1),1);
 
 const art=(id,sh)=>(window.CART&&CART[id])||`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${sh?'shiny/':''}${id}.png`;
-const mini=(id,sh)=>`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${sh?'shiny/':''}${id}.png`;
+const mini=(id,sh)=>(window.CART&&CART[id])||`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${sh?'shiny/':''}${id}.png`;
 const SHINY_RATE=1/64; /* probabilidad de que cualquier Pokémon generado sea shiny */
 const sn=n=>n.replace(/[^a-z0-9]/g,'');
 /* ---------- Megaevoluciones: especies que pueden megaevolucionar (id → formas) ---------- */
@@ -377,13 +377,13 @@ const MEGAF={3:[''],6:['x','y'],9:[''],15:[''],18:[''],65:[''],80:[''],94:[''],1
 const MEGAFB={'venusaur-mega':10033,'charizard-mega-x':10034,'charizard-mega-y':10035,'blastoise-mega':10036,'alakazam-mega':10037,'gengar-mega':10038,'kangaskhan-mega':10039,'pinsir-mega':10040,'gyarados-mega':10041,'aerodactyl-mega':10042,'mewtwo-mega-x':10043,'mewtwo-mega-y':10044,'ampharos-mega':10045,'scizor-mega':10046,'heracross-mega':10047,'houndoom-mega':10048,'tyranitar-mega':10049,'blaziken-mega':10050,'gardevoir-mega':10051,'mawile-mega':10052,'aggron-mega':10053,'medicham-mega':10054,'manectric-mega':10055,'banette-mega':10056,'absol-mega':10057,'garchomp-mega':10058,'lucario-mega':10059,'abomasnow-mega':10060,'latias-mega':10062,'latios-mega':10063,'swampert-mega':10064,'sceptile-mega':10065,'sableye-mega':10066,'altaria-mega':10067,'gallade-mega':10068,'audino-mega':10069,'sharpedo-mega':10070,'slowbro-mega':10071,'steelix-mega':10072,'pidgeot-mega':10073,'glalie-mega':10074,'diancie-mega':10075,'metagross-mega':10076,'rayquaza-mega':10079,'camerupt-mega':10087,'lopunny-mega':10088,'salamence-mega':10089,'beedrill-mega':10090},MEGAID={};
 const megaCap=m=>!!m&&!!MEGAF[m.id];
 const megaSlug=m=>m.name+'-mega'+(m.mfs?'-'+m.mfs:'');
-const megaSpr=m=>MEGAID[megaSlug(m)]||MEGAFB[megaSlug(m)]||m.id;
-async function megaResolve(m){const sl=megaSlug(m);if(MEGAID[sl])return MEGAID[sl];
+const megaSpr=m=>(window.MEGART&&MEGART[m.id+'|'+(m.mfs||'')])||MEGAID[megaSlug(m)]||MEGAFB[megaSlug(m)]||m.id;
+async function megaResolve(m){const sl=megaSlug(m);if(window.MEGART&&MEGART[m.id+'|'+(m.mfs||'')])return MEGART[m.id+'|'+(m.mfs||'')];if(MEGAID[sl])return MEGAID[sl];
   try{const j=await(await fetch('https://pokeapi.co/api/v2/pokemon/'+sl)).json();if(j&&j.name==sl&&j.id>10000)MEGAID[sl]=j.id}catch(e){}
   const id=megaSpr(m);try{await Promise.race([new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src=art(id)}),new Promise(r=>setTimeout(r,1500))])}catch(e){}
   return id}
 const front=m=>art(m.megaOn&&megaCap(m)?megaSpr(m):m.id,m.sh),back=front;
-const megaName=m=>(m.megaOn&&megaCap(m)?'Mega ':'')+m.name.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase())+(m.megaOn&&megaCap(m)&&m.mfs?' '+m.mfs.toUpperCase():'');
+const megaName=m=>(m.megaOn&&megaCap(m)?'Mega ':'')+(m.megaOn&&window.MEGABASE&&MEGABASE[m.id]?MEGABASE[m.id]:m.name.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()))+(m.megaOn&&megaCap(m)&&m.mfs?' '+m.mfs.toUpperCase():'');
 const nm=m=>(m.sh?'✨ ':'')+(m.nick||megaName(m))+(m.rb>0?' ⭐'+Math.min(8,m.rb):'');
 /* ---------- Etiquetas de Pokémon especiales (Legendario / Singular / Ultraente / Paradoja) ---------- */
 const TAGL={leg:'Legendario',mit:'Singular',ub:'Ultraente',par:'Paradoja'};
@@ -774,7 +774,7 @@ async function megaTap(){const p=act('p');
   if(!megaReady(p)){toast(megaInfo(p));return}
   const b=$('#bm'),g=$('.mvg');if(!b||b.classList.contains('go'))return;
   let f='';const fs=MEGAF[p.id]||[''];
-  if(fs.length>1){const base=p.name.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()),i=await ask('⚡ Megaevolución','<small>Elige la forma a la que megaevoluciona '+base+'.</small>',[...fs.map(x=>'Mega '+base+(x?' '+x.toUpperCase():'')),'Cancelar']);if(!(i<fs.length))return;f=fs[i]}
+  if(fs.length>1){const base=p.name.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()),i=await ask('⚡ Megaevolución','<small>Elige la forma a la que megaevoluciona '+base+'.</small>',[...fs.map(x=>`<span class="mgopt"><img src="${art(megaSpr({...p,mfs:x}),p.sh)}" alt="" loading="lazy"><span>Mega ${base}${x?' '+x.toUpperCase():''}${x?'':' <small>(original)</small>'}</span></span>`),'Cancelar']);if(!(i<fs.length))return;f=fs[i]}
   const b2=$('#bm'),g2=$('.mvg');if(!b2||b2.classList.contains('go'))return;
   b2.classList.add('go');if(g2)g2.classList.add('go');beep(660,.25,'triangle');setTimeout(()=>turn({mega:1,mf:f}),520)}
 function revertMega(m){if(m.megaOn){m.megaOn=false;stats(m);m.hp=Math.min(m.hp,m.max)}}
@@ -1236,7 +1236,7 @@ async function bag(){R.team.forEach(m=>{try{evoFill(m)}catch(e){}});
     const N=Math.max(12,Math.ceil(it.length/4)*4);
     const x=await new Promise(res=>{
       const m=$('#mod');
-      m.innerHTML=`<div class="box"><h3>${IC.bag} Mochila</h3>${hearts()}<small>${IC.coin} ${nf(R.money)} Pokémonedas</small><div class="sg">${Array.from({length:N},(_,i)=>it[i]?`<button class="sl" data-s="${i}" data-c="${bagCat(it[i])}">${it[i].ic}<b>${it[i].c}</b><small>${it[i].t}</small></button>`:'<div class="sl e"></div>').join('')}</div><div id="sd"><small>Toca un objeto para ver qué hace.</small></div>${R.ach?'<button class="act" id="ac">🏆 Logros y recompensas'+(achReady()?' · 🎁 '+achReady():'')+'</button>':''}<button class="act" id="pd">Pokédex</button><button class="act" id="gd">Guías (PDF)</button><button class="act" id="cl">Cerrar</button></div>`;
+      m.innerHTML=`<div class="box bagb"><h3>${IC.bag} Mochila</h3>${hearts()}<small>${IC.coin} ${nf(R.money)} Pokémonedas</small><div class="sg">${Array.from({length:N},(_,i)=>it[i]?`<button class="sl" data-s="${i}" data-c="${bagCat(it[i])}">${it[i].ic}<b>${it[i].c}</b><small>${it[i].t}</small></button>`:'<div class="sl e"></div>').join('')}</div><div id="sd"><small>Toca un objeto para ver qué hace.</small></div>${R.ach?'<button class="act" id="ac">🏆 Logros y recompensas'+(achReady()?' · 🎁 '+achReady():'')+'</button>':''}<button class="act" id="pd">Pokédex</button><button class="act" id="gd">Guías (PDF)</button><button class="act" id="cl">Cerrar</button></div>`;
       m.style.display='flex';let sel=-1;m.addEventListener('bagtab',()=>{sel=-1});m.addEventListener('chestrefresh',()=>{m.style.display='none';res('r')},{once:true});if(!MM.classList.contains('keep')){const bx=m.firstElementChild;if(bx)bx.addEventListener('animationend',e=>{if(e.animationName=='bxin')MM.classList.add('keep')})}
       $$('.sl[data-s]').forEach(b=>b.onclick=()=>{const i=+b.dataset.s,o=it[i];
         if(sel==i&&!o.r){m.style.display='none';res(o.k)}
@@ -3061,7 +3061,7 @@ function mountRel(){const bx=Qs('#mod .box');if(!bx||typeof R!='object'||!R||!R.
  relHead()}
 const mod=Qs('#mod');
 if(mod){new MutationObserver(()=>{clearFab();mountRel();setTimeout(mountRel,0)}).observe(mod,{childList:true});
- new MutationObserver(()=>{if(getComputedStyle(mod).display==='none')clearFab()}).observe(mod,{attributes:true,attributeFilter:['style','class']});
+ new MutationObserver(()=>{if((mod.style.display==='none'||!mod.style.display))clearFab()}).observe(mod,{attributes:true,attributeFilter:['style','class']});
  document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#cl'))clearFab()},true);
  mod.addEventListener('click',e=>{if(!Qs('#mod .box'))return;const b=e.target.closest('.sl,.cs[data-c]');if(!b)return;
   if(b.dataset.rel!=null)relSell(+b.dataset.rel,b);
@@ -4538,7 +4538,7 @@ window.learnNew=async function(m,from){
 /* ===== INTERFACES INMERSIVAS: cada menú parece el objeto que representa ===== */
 
 /* ---------- MOCHILA: interior de una mochila de lona ---------- */
-#mod .box:has(.bgw){position:relative;padding-top:34px;border:3px solid #17110a;border-radius:24px;color:#f3e7c2;
+#mod .box.bagb{position:relative;padding-top:34px;border:3px solid #17110a;border-radius:24px;color:#f3e7c2;
  outline:2px dashed #e5d29a88;outline-offset:-9px;
  background:
   repeating-linear-gradient(90deg,#c9b27a 0 4px,#3b2d12 4px 8px) top 5px left 14px/calc(100% - 28px) 8px no-repeat,
@@ -4547,23 +4547,23 @@ window.learnNew=async function(m,from){
   repeating-linear-gradient(90deg,#0000 0 3px,#00000024 3px 4px),
   radial-gradient(ellipse at 50% 12%,#5b6c3c 0,#3b4a28 52%,#1d2713 100%);
  box-shadow:inset 0 0 80px #000d,inset 0 -30px 50px #0008,0 18px 44px #000b}
-#mod .box:has(.bgw) h3{align-self:center;margin:6px 0 2px;padding:4px 18px;border-radius:6px;color:#fbeab8;
+#mod .box.bagb h3{align-self:center;margin:6px 0 2px;padding:4px 18px;border-radius:6px;color:#fbeab8;
  background:linear-gradient(#8f2323,#6a1717);border:2px dashed #f3d99b;text-shadow:0 1px 0 #000a;box-shadow:0 3px 0 #0006,0 6px 10px #0008;letter-spacing:.06em}
-#mod .box:has(.bgw)>small{align-self:center;color:#f5d36a;text-shadow:0 1px 2px #000}
-#mod .box:has(.bgw) .bgw{filter:none}
-#mod .box:has(.bgw) .sl{color:#fff4cf;border:2px dashed #e5d29a99;border-radius:10px 10px 16px 16px;
+#mod .box.bagb>small{align-self:center;color:#f5d36a;text-shadow:0 1px 2px #000}
+#mod .box.bagb .bgw{filter:none}
+#mod .box.bagb .sl{color:#fff4cf;border:2px dashed #e5d29a99;border-radius:10px 10px 16px 16px;
  background:linear-gradient(180deg,#00000033 0 14%,#0000 14%),linear-gradient(180deg,#6d7d4a,#4b5a32);
  box-shadow:inset 0 3px 0 #ffffff1c,inset 0 -5px 8px #0006,0 3px 0 #0007;text-shadow:0 1px 2px #000}
-#mod .box:has(.bgw) .sl:active{transform:translateY(2px) scale(.97)}
-#mod .box:has(.bgw) .sl.e{background:#1c2412;border-color:#e5d29a30;box-shadow:inset 0 8px 14px #000d;opacity:.85}
-#mod .box:has(.bgw) .sl b{text-shadow:0 1px 0 #000;color:#ffe9a8}
-#mod .box:has(.bgw) .spc .chs{background:radial-gradient(circle,#0000 38%,#0007 40%) 0 0/8px 8px,#2c3b2b;border:2px dashed #cfe6c488;border-radius:12px;box-shadow:inset 0 6px 14px #000c}
-#mod .box:has(.bgw) .spc .chs small,#mod .box:has(.bgw) .rh{color:#e8dcaa;text-shadow:0 1px 2px #000;font-weight:800}
-#mod .box:has(.bgw) .cs.e{border:2px dashed #cfe6c455;color:#cfe6c466;background:#0004}
-#mod .box:has(.bgw) .rls{background:repeating-linear-gradient(45deg,#0000 0 5px,#0000001a 5px 6px),linear-gradient(#85552b,#5e3817);border:2px dashed #f1d29a99;border-radius:12px;box-shadow:inset 0 3px 0 #ffffff22,inset 0 -8px 14px #0007,0 3px 0 #0007}
-#mod .box:has(.bgw) .rls .sl{background:linear-gradient(#a06a3a,#74461f)}
-#mod .box:has(.bgw) .rls .sl.e{background:#3a2210;box-shadow:inset 0 6px 10px #000c}
-#mod .box:has(.bgw) #sd{color:#f3e7c2}
+#mod .box.bagb .sl:active{transform:translateY(2px) scale(.97)}
+#mod .box.bagb .sl.e{background:#1c2412;border-color:#e5d29a30;box-shadow:inset 0 8px 14px #000d;opacity:.85}
+#mod .box.bagb .sl b{text-shadow:0 1px 0 #000;color:#ffe9a8}
+#mod .box.bagb .spc .chs{background:radial-gradient(circle,#0000 38%,#0007 40%) 0 0/8px 8px,#2c3b2b;border:2px dashed #cfe6c488;border-radius:12px;box-shadow:inset 0 6px 14px #000c}
+#mod .box.bagb .spc .chs small,#mod .box.bagb .rh{color:#e8dcaa;text-shadow:0 1px 2px #000;font-weight:800}
+#mod .box.bagb .cs.e{border:2px dashed #cfe6c455;color:#cfe6c466;background:#0004}
+#mod .box.bagb .rls{background:repeating-linear-gradient(45deg,#0000 0 5px,#0000001a 5px 6px),linear-gradient(#85552b,#5e3817);border:2px dashed #f1d29a99;border-radius:12px;box-shadow:inset 0 3px 0 #ffffff22,inset 0 -8px 14px #0007,0 3px 0 #0007}
+#mod .box.bagb .rls .sl{background:linear-gradient(#a06a3a,#74461f)}
+#mod .box.bagb .rls .sl.e{background:#3a2210;box-shadow:inset 0 6px 10px #000c}
+#mod .box.bagb #sd{color:#f3e7c2}
 
 /* ---------- TIENDA: interior de madera con estantes ---------- */
 #mod .box.shop:not(.cheats){
@@ -4719,14 +4719,14 @@ button,.sl,.ca,.cd,.mvb,.sw,.act,.fab,.pxc{touch-action:manipulation}
 #evtab,#evtab.on,body[data-v=cards] #evtab.on,body[data-v=battle] #evtab.on,body[data-v=menu] #evtab.on,body[data-v=team] #evtab.on{display:none!important}
 body[data-v=map] #evtab.on{display:flex!important}
 /* ===== Mochila: nada se sale del recuadro ===== */
-#mod .box:has(.bgw){box-sizing:border-box;width:min(440px,calc(100vw - 28px));max-width:100%;overflow-x:hidden;overflow-y:auto;padding-left:14px;padding-right:14px}
-#mod .box:has(.bgw)>*{max-width:100%;min-width:0;box-sizing:border-box}
-#mod .box:has(.bgw) .lives{flex:0 0 auto;flex-wrap:nowrap;justify-content:center;gap:6px;margin:2px auto}
-#mod .box:has(.bgw) .lives svg{width:clamp(22px,7vw,30px);height:auto;aspect-ratio:1;flex:0 0 auto}
-#mod .box:has(.bgw) .bgw{width:100%;min-width:0}
-#mod .box:has(.bgw) .keyrow,#mod .box:has(.bgw) #sd{max-width:100%;overflow-wrap:anywhere}
-#mod .box:has(.bgw) .sl small{max-width:100%;overflow:hidden;text-overflow:ellipsis;overflow-wrap:anywhere}
-#mod .box:has(.bgw) .chs{max-width:72px}
+#mod .box.bagb{box-sizing:border-box;width:min(440px,calc(100vw - 28px));max-width:100%;overflow-x:hidden;overflow-y:auto;padding-left:14px;padding-right:14px}
+#mod .box.bagb>*{max-width:100%;min-width:0;box-sizing:border-box}
+#mod .box.bagb .lives{flex:0 0 auto;flex-wrap:nowrap;justify-content:center;gap:6px;margin:2px auto}
+#mod .box.bagb .lives svg{width:clamp(22px,7vw,30px);height:auto;aspect-ratio:1;flex:0 0 auto}
+#mod .box.bagb .bgw{width:100%;min-width:0}
+#mod .box.bagb .keyrow,#mod .box.bagb #sd{max-width:100%;overflow-wrap:anywhere}
+#mod .box.bagb .sl small{max-width:100%;overflow:hidden;text-overflow:ellipsis;overflow-wrap:anywhere}
+#mod .box.bagb .chs{max-width:72px}
 </style>
 <script id="fxperfs">(()=>{const D=document,B=D.body,MD=D.getElementById('mod');
 const upd=()=>B.classList.toggle('mo',!!MD&&MD.style.display!=='none'&&MD.style.display!=='');
@@ -6850,22 +6850,22 @@ const st=document.getElementById('set');if(st)new MutationObserver(refresh).obse
 @media (min-width:560px){
  html.vm-pc,html.vm-mh{--bs:340px;--bi:120px}
  html.vm-mh{--bs:250px;--bi:86px}
- html.vm-pc #mod .box:has(.bgw),html.vm-mh #mod .box:has(.bgw){display:grid;grid-template-columns:minmax(0,1fr) var(--bs);grid-template-rows:auto auto auto auto auto auto auto auto minmax(0,1fr);column-gap:18px;row-gap:8px;width:min(1200px,calc(100vw - 28px),var(--fw));max-width:100%;padding:18px 22px;align-content:start}
- html.vm-mh #mod .box:has(.bgw){padding:12px 14px;column-gap:12px;row-gap:6px}
- html.vm-pc #mod .box:has(.bgw)>*,html.vm-mh #mod .box:has(.bgw)>*{grid-column:2}
- html.vm-pc #mod .box:has(.bgw)>.bgw,html.vm-mh #mod .box:has(.bgw)>.bgw{grid-column:1;grid-row:1/-1;gap:14px;min-width:0}
- html.vm-pc #mod .box:has(.bgw) .bgw .sg,html.vm-mh #mod .box:has(.bgw) .bgw .sg{grid-template-columns:repeat(auto-fill,minmax(var(--bi),1fr))!important;grid-auto-rows:minmax(calc(var(--bi)*.8),auto)!important;align-content:start!important;gap:8px}
+ html.vm-pc #mod .box.bagb,html.vm-mh #mod .box.bagb{display:grid;grid-template-columns:minmax(0,1fr) var(--bs);grid-template-rows:auto auto auto auto auto auto auto auto minmax(0,1fr);column-gap:18px;row-gap:8px;width:min(1200px,calc(100vw - 28px),var(--fw));max-width:100%;padding:18px 22px;align-content:start}
+ html.vm-mh #mod .box.bagb{padding:12px 14px;column-gap:12px;row-gap:6px}
+ html.vm-pc #mod .box.bagb>*,html.vm-mh #mod .box.bagb>*{grid-column:2}
+ html.vm-pc #mod .box.bagb>.bgw,html.vm-mh #mod .box.bagb>.bgw{grid-column:1;grid-row:1/-1;gap:14px;min-width:0}
+ html.vm-pc #mod .box.bagb .bgw .sg,html.vm-mh #mod .box.bagb .bgw .sg{grid-template-columns:repeat(auto-fill,minmax(var(--bi),1fr))!important;grid-auto-rows:minmax(calc(var(--bi)*.8),auto)!important;align-content:start!important;gap:8px}
  html.vm-pc #mod .bgw .sg .sl{font-size:15px}
  html.vm-pc #mod .bgw .sg .sl small{font-size:12px}
  html.vm-pc #mod .bgw .sg .sl b{font-size:14px}
  html.vm-pc #mod .bgw .sg .sl .ic{width:42px;height:42px}
  /* amuletos y reliquias: dos columnas de casillas más grandes */
- html.vm-pc #mod .box:has(.bgw) .spc,html.vm-mh #mod .box:has(.bgw) .spc{width:calc(var(--bi)*1.5);flex:none}
- html.vm-pc #mod .box:has(.bgw) .chs,html.vm-mh #mod .box:has(.bgw) .chs{max-width:none;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
- html.vm-pc #mod .box:has(.bgw) .chs>small,html.vm-mh #mod .box:has(.bgw) .chs>small{grid-column:1/-1}
- html.vm-pc #mod .box:has(.bgw) .rls .rg,html.vm-mh #mod .box:has(.bgw) .rls .rg{grid-template-columns:1fr 1fr}
- html.vm-pc #mod .box:has(.bgw) #sd,html.vm-mh #mod .box:has(.bgw) #sd{min-height:110px;font-size:15px}
- html.vm-pc #mod .box:has(.bgw) h3{font-size:24px}
+ html.vm-pc #mod .box.bagb .spc,html.vm-mh #mod .box.bagb .spc{width:calc(var(--bi)*1.5);flex:none}
+ html.vm-pc #mod .box.bagb .chs,html.vm-mh #mod .box.bagb .chs{max-width:none;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ html.vm-pc #mod .box.bagb .chs>small,html.vm-mh #mod .box.bagb .chs>small{grid-column:1/-1}
+ html.vm-pc #mod .box.bagb .rls .rg,html.vm-mh #mod .box.bagb .rls .rg{grid-template-columns:1fr 1fr}
+ html.vm-pc #mod .box.bagb #sd,html.vm-mh #mod .box.bagb #sd{min-height:110px;font-size:15px}
+ html.vm-pc #mod .box.bagb h3{font-size:24px}
 }
 </style>
 <style id="resp11e">
@@ -6924,13 +6924,13 @@ html.vm-pc #battle .spr img{scale:-1 1}
    ocupando todo el ancho; a la derecha, la ficha (descripción) y los botones. */
 @media (min-width:1000px){
  html.vm-pc{--bs:380px;--bi:116px}
- html.vm-pc #mod .box:has(.bgw){width:min(1640px,calc(100vw - 36px));padding:20px 28px;column-gap:24px}
- html.vm-pc #mod .box:has(.bgw)>.bgw{display:flex;flex-direction:column;align-items:stretch;gap:16px}
- html.vm-pc #mod .box:has(.bgw)>.bgw>.spc{order:-1;width:100%;flex:0 0 auto;flex-direction:row;align-items:stretch;gap:16px}
- html.vm-pc #mod .box:has(.bgw)>.bgw>.spc>.chs{flex:6 1 0;min-width:0;max-width:none;width:auto;grid-template-columns:repeat(6,minmax(0,96px));justify-content:space-evenly;align-content:center;padding:10px 12px}
- html.vm-pc #mod .box:has(.bgw)>.bgw>.spc>.rls{flex:5 1 0;min-width:0;padding:10px 12px;justify-content:center}
- html.vm-pc #mod .box:has(.bgw) .rls .rg{grid-template-columns:repeat(5,minmax(0,96px));justify-content:space-evenly}
- html.vm-pc #mod .box:has(.bgw)>.bgw>.sg{flex:1 1 auto;height:auto!important;grid-template-rows:none!important;grid-template-columns:repeat(auto-fill,minmax(var(--bi),1fr))!important;grid-auto-rows:minmax(calc(var(--bi)*.82),auto)!important;align-content:start!important;gap:10px}
+ html.vm-pc #mod .box.bagb{width:min(1640px,calc(100vw - 36px));padding:20px 28px;column-gap:24px}
+ html.vm-pc #mod .box.bagb>.bgw{display:flex;flex-direction:column;align-items:stretch;gap:16px}
+ html.vm-pc #mod .box.bagb>.bgw>.spc{order:-1;width:100%;flex:0 0 auto;flex-direction:row;align-items:stretch;gap:16px}
+ html.vm-pc #mod .box.bagb>.bgw>.spc>.chs{flex:6 1 0;min-width:0;max-width:none;width:auto;grid-template-columns:repeat(6,minmax(0,96px));justify-content:space-evenly;align-content:center;padding:10px 12px}
+ html.vm-pc #mod .box.bagb>.bgw>.spc>.rls{flex:5 1 0;min-width:0;padding:10px 12px;justify-content:center}
+ html.vm-pc #mod .box.bagb .rls .rg{grid-template-columns:repeat(5,minmax(0,96px));justify-content:space-evenly}
+ html.vm-pc #mod .box.bagb>.bgw>.sg{flex:1 1 auto;height:auto!important;grid-template-rows:none!important;grid-template-columns:repeat(auto-fill,minmax(var(--bi),1fr))!important;grid-auto-rows:minmax(calc(var(--bi)*.82),auto)!important;align-content:start!important;gap:10px}
 }
 </style>
 <script id="fxpcx">
@@ -7928,7 +7928,7 @@ function sendFromBag(id,qty){const d=bagList().find(x=>x.id==id);if(!d)return;
  mod.dispatchEvent(new Event('chestrefresh'))}
 if(mod){
  new MutationObserver(dropRow).observe(mod,{childList:true});
- new MutationObserver(()=>{if(getComputedStyle(mod).display==='none')dropRow()}).observe(mod,{attributes:true,attributeFilter:['style','class']});
+ new MutationObserver(()=>{if((mod.style.display==='none'||!mod.style.display))dropRow()}).observe(mod,{attributes:true,attributeFilter:['style','class']});
  mod.addEventListener('click',e=>{dropRow();
   if(!owned()||getComputedStyle(mod).display==='none'||inBattle())return;
   const box=mod.querySelector('.box');if(!box||!/Mochila/.test((box.querySelector('h3')||{}).textContent||''))return;
@@ -8554,7 +8554,15 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'43.9',t:'MT más limpias en la tienda',s:'cur',l:[
+ {v:'44.0',t:'Megas nuevas y mochila más fluida',s:'cur',l:[
+  '⚡ Megaevoluciones nuevas con ilustración propia: Mega Houndoom X, Mega Houndoom Y, Mega Tyranitar Z, Mega Ampharos Z, Mega Diancie Z y Mega Mimikyu',
+  'Mega Delphox, Mega Chandelure y Mega Baxcalibur estrenan su ilustración (antes se veía la del Pokémon normal)',
+  'Los Pokémon que ya tenían Megaevolución (Houndoom, Tyranitar, Ampharos y Diancie) te dejan elegir al pulsar MEGA entre la original y la nueva; la ventana muestra la ilustración de cada forma',
+  '🌋 Las 9 aparecen también como jefes de las Megaincursiones, y en las incursiones puedes elegir la forma de tu Mega',
+  '🎒 Mochila mucho más fluida: al tocar un objeto o cambiar de pestaña ya no se recalcula el estilo de toda la pantalla (unas 10 veces menos trabajo), y los vigilantes que leían el tamaño de la ventana en cada cambio ya no fuerzan repintados',
+  'Con la mochila (o cualquier ventana) abierta, el mapa de detrás deja de recolocarse cada pocos milisegundos y sus animaciones se pausan'
+]},
+{v:'43.9',t:'MT más limpias en la tienda',s:'prev',l:[
   'Tienda: las tarjetas de las MT solo muestran el nombre, el tipo y el poder; la precisión y la descripción del movimiento están en su «i»'
 ]},
 {v:'43.8',t:'📘 Tutorial y clima ocasional',s:'prev',l:[
@@ -10387,7 +10395,7 @@ function updSign(){
   pend=0;
   try{
     const m=D.getElementById('mod');
-    if(!m||getComputedStyle(m).display==='none')return hideSign();
+    if(!m||m.style.display==='none'||!m.style.display)return hideSign();
     const box=m.querySelector('.box'),h=box&&box.querySelector('h3');
     if(!box||!box.querySelector('.sg')||!h||!/Mochila/.test(h.textContent))return hideSign();
     const sd=box.querySelector('#sd'),sel=box.querySelector('.sl.on,.cs.on');
@@ -10543,8 +10551,8 @@ window.escapeTaunt=(m,k)=>new Promise(async res=>{
 @media(min-width:520px){.btab .btl,.btab .btn{display:inline-block}.btab{font-size:13px}}
 html.vm-mh .btab:not(.on) .btl,html.vm-mh .btab:not(.on) .btn{display:none}
 html.vm-mh .btab{height:28px;font-size:11px}html.vm-mh .btab.on{height:31px}html.vm-mh .btabs{margin-top:0}
-html.vm-pc #mod .box:has(.bgw)>.btabs,html.vm-mh #mod .box:has(.bgw)>.btabs{grid-column:1;grid-row:1;margin-top:0}
-html.vm-pc #mod .box:has(.bgw)>.bgw,html.vm-mh #mod .box:has(.bgw)>.bgw{grid-row:2/-1}
+html.vm-pc #mod .box.bagb>.btabs,html.vm-mh #mod .box.bagb>.btabs{grid-column:1;grid-row:1;margin-top:0}
+html.vm-pc #mod .box.bagb>.bgw,html.vm-mh #mod .box.bagb>.bgw{grid-row:2/-1}
 </style>
 <script id="bagtabs_js">
 (()=>{
@@ -10584,14 +10592,14 @@ new MutationObserver(build).observe(MD,{childList:true,subtree:true});
 <style id="bagfix16">
 /* ===== Mochila en PC: compacta (sin columna lateral vacía), iconos centrados ===== */
 @media (min-width:1000px){
- html.vm-pc #mod .box:has(.bgw){display:flex!important;flex-direction:column;align-items:stretch;gap:10px;width:min(980px,calc(100vw - 36px));padding:18px 26px}
- html.vm-pc #mod .box:has(.bgw)>*{grid-column:auto!important;grid-row:auto!important;max-width:100%}
- html.vm-pc #mod .box:has(.bgw)>.btabs{width:100%}
- html.vm-pc #mod .box:has(.bgw)>.bgw>.spc{justify-content:center;gap:18px}
- html.vm-pc #mod .box:has(.bgw)>.bgw>.spc>.chs{flex:0 1 auto;grid-template-columns:repeat(4,92px)!important;justify-content:center}
- html.vm-pc #mod .box:has(.bgw)>.bgw>.spc>.rls{flex:0 1 auto}
- html.vm-pc #mod .box:has(.bgw) .rls .rg{grid-template-columns:repeat(4,92px)!important;justify-content:center}
- html.vm-pc #mod .box:has(.bgw)>.bgw>.sg{grid-template-columns:repeat(auto-fill,minmax(112px,1fr))!important;grid-auto-rows:minmax(92px,auto)!important;justify-content:center}
+ html.vm-pc #mod .box.bagb{display:flex!important;flex-direction:column;align-items:stretch;gap:10px;width:min(980px,calc(100vw - 36px));padding:18px 26px}
+ html.vm-pc #mod .box.bagb>*{grid-column:auto!important;grid-row:auto!important;max-width:100%}
+ html.vm-pc #mod .box.bagb>.btabs{width:100%}
+ html.vm-pc #mod .box.bagb>.bgw>.spc{justify-content:center;gap:18px}
+ html.vm-pc #mod .box.bagb>.bgw>.spc>.chs{flex:0 1 auto;grid-template-columns:repeat(4,92px)!important;justify-content:center}
+ html.vm-pc #mod .box.bagb>.bgw>.spc>.rls{flex:0 1 auto}
+ html.vm-pc #mod .box.bagb .rls .rg{grid-template-columns:repeat(4,92px)!important;justify-content:center}
+ html.vm-pc #mod .box.bagb>.bgw>.sg{grid-template-columns:repeat(auto-fill,minmax(112px,1fr))!important;grid-auto-rows:minmax(92px,auto)!important;justify-content:center}
  html.vm-pc #mod .bgw .sg .sl{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;padding:8px 6px}
  html.vm-pc #mod .bgw .sg .sl .ic,html.vm-pc #mod .bgw .sg .sl .isp,html.vm-pc #mod .bgw .sg .sl svg,html.vm-pc #mod .bgw .sg .sl img{margin-left:auto;margin-right:auto}
  html.vm-pc #mod .bgw .sg .sl b,html.vm-pc #mod .bgw .sg .sl small{text-align:center;max-width:100%}
@@ -11749,7 +11757,7 @@ function sellItem(k,n){n=Math.min(n,R.bag[k]|0);if(n<=0)return;const g=itPrice(k
 function sellTM(t){const i=R.tms.indexOf(t);if(i<0)return;const g=tmPrice(t);R.tms.splice(i,1);R.money+=g;done(`💰 Vendiste la MT ${t.n}: +${nf(g)} Pokémonedas`);try{window.__undo&&__undo(`💰 MT ${t.n} vendida`,()=>{R.tms.splice(Math.min(i,R.tms.length),0,t);R.money=Math.max(0,R.money-g);done(`↩ Recuperaste la MT ${t.n}`)})}catch(_){}}
 MD.addEventListener('click',e=>{
  drop();
- if(inBattle()||getComputedStyle(MD).display==='none'||!isBag()||typeof R!='object'||!R||!R.bag)return;
+ if(inBattle()||MD.style.display==='none'||!MD.style.display||!isBag()||typeof R!='object'||!R||!R.bag)return;
  const b=e.target.closest('.sl');if(!b||b.classList.contains('e')||b.dataset.rel!=null||!b.dataset.s)return;
  const s=b.querySelector('small'),name=s?s.textContent.trim():'';if(!name)return;
  const L=[];
@@ -11761,7 +11769,7 @@ MD.addEventListener('click',e=>{
  let row=D.querySelector('.fabrow');
  if(!row){row=D.createElement('div');row.className='fabrow';D.body.append(row);own=row}
  L.forEach(x=>{row.append(x);mine.push(x)})});
-new MutationObserver(()=>{if(getComputedStyle(MD).display==='none')drop()}).observe(MD,{attributes:true,attributeFilter:['style','class']});
+new MutationObserver(()=>{if((MD.style.display==='none'||!MD.style.display))drop()}).observe(MD,{attributes:true,attributeFilter:['style','class']});
 new MutationObserver(()=>{if(!isBag())drop()}).observe(MD,{childList:true});
 })();</script>
 <style id="sellbag_css">
@@ -13366,7 +13374,8 @@ const dur=ms=>{ms=Math.max(0,ms);const h=Math.floor(ms/3600000),m=Math.floor(ms%
 const clk=ms=>{ms=Math.max(0,ms);const m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000);return`${m}:${pad(s)}`};
 /* ---------- jefes: megapokémon legendarios ---------- */
 const POOL=[{id:384,f:''},{id:150,f:'x'},{id:150,f:'y'},{id:380,f:''},{id:381,f:''},{id:719,f:''},{id:382,f:'primal',art:10077,n:'Kyogre Primigenio'},{id:383,f:'primal',art:10078,n:'Groudon Primigenio'},{id:718,f:''},{id:485,f:''},{id:491,f:''},{id:801,f:''},{id:807,f:''},
- {id:10239,art:'bzoroark',n:'Mega Zoroark de Hisui'},{id:130,art:'bgyarados',n:'Mega Gyarados Abisal'},{id:959,art:'btinkaton',n:'Mega Tinkaton'},{id:65,art:'balakazam',n:'Mega Alakazam Místico'},{id:302,art:'bsableye',n:'Mega Sableye Cristal'},{id:47,art:'mparasect',n:'Mega Parasect'},{id:199,art:'mslowking',n:'Mega Slowking'}];
+ {id:10239,art:'bzoroark',n:'Mega Zoroark de Hisui'},{id:130,art:'bgyarados',n:'Mega Gyarados Abisal'},{id:959,art:'btinkaton',n:'Mega Tinkaton'},{id:65,art:'balakazam',n:'Mega Alakazam Místico'},{id:302,art:'bsableye',n:'Mega Sableye Cristal'},{id:47,art:'mparasect',n:'Mega Parasect'},{id:199,art:'mslowking',n:'Mega Slowking'},
+ {id:229,f:'x',art:'mhoundoomx',n:'Mega Houndoom X'},{id:229,f:'y',art:'mhoundoomy',n:'Mega Houndoom Y'},{id:248,f:'z',art:'mtyranitarz',n:'Mega Tyranitar Z'},{id:181,f:'z',art:'mampharosz',n:'Mega Ampharos Z'},{id:719,f:'z',art:'mdianciez',n:'Mega Diancie Z'},{id:778,art:'mmimikyu',n:'Mega Mimikyu'},{id:655,art:'mdelphox',n:'Mega Delphox'},{id:609,art:'mchandelure',n:'Mega Chandelure'},{id:998,art:'mbaxcalibur',n:'Mega Baxcalibur'}];
 const hsh=s=>{let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
 const SPOOL=(()=>{try{return Object.keys(TAGS).map(Number).filter(n=>n>0&&TAGS[n]!=='leg').sort((a,b)=>a-b).map(id=>({id,s:1}))}catch(e){return[{id:151,s:1},{id:251,s:1},{id:385,s:1},{id:793,s:1}]}})();
 const bossFor=wid=>{if(isS(wid))return SPOOL[hsh(wid||'x')%SPOOL.length];const F=forced();if(F&&F.wid===wid&&F.b!=null&&POOL[F.b])return POOL[F.b];return POOL[hsh(wid||'x')%POOL.length]};
@@ -15428,14 +15437,14 @@ function mount(){const fab=Q('#fab'),fm=Q('#fmenu');if(!fab||!fm)return;let b=Q(
   b.innerHTML=SVG+'<span class="t">Amigos</span><span class="bd"></span><i class="on-dot"></i>';
   b.onclick=e=>{e.stopPropagation();try{window.__FR&&__FR.open()}catch(err){console.error(err)}}}
  if(b.parentNode!==fab||b.nextElementSibling!==fm)fab.insertBefore(b,fm)}
-function tick(){mount();const b=Q('#ffr');if(!b)return;
+function tick(){mount();const b=Q('#ffr');if(!b)return;if(document.body.classList.contains('mo'))return;
  try{const fs=Q('#fset');if(fs){const w=fs.getBoundingClientRect().width;if(w)b.style.setProperty('--fsw',w+'px')}}catch(e){}
  try{const n=window.__FR&&__FR.rin?Object.keys(__FR.rin()).length:0,bd=b.querySelector('.bd');const t=n?String(n):'';if(bd.textContent!==t)bd.textContent=t;bd.classList.toggle('on',n>0);
   b.querySelector('.on-dot').classList.toggle('on',!n&&window.__FR&&__FR.online&&__FR.online()>0)}catch(e){}
  center()}
 /* ---- centrar el mapa entre la barra de arriba y el panel del equipo ---- */
 function center(){const H=D.documentElement,c=Q('#cards');if(!c)return;
- if(!H.classList.contains('vm-mv')||D.body.dataset.v!=='map'){if(c.style.getPropertyValue('--mapdy'))c.style.removeProperty('--mapdy');return}
+ if(!H.classList.contains('vm-mv')||D.body.dataset.v!=='map'){if(c.style.getPropertyValue('--mapdy'))c.style.removeProperty('--mapdy');return}if(document.body.classList.contains('mo'))return;
  const cur=parseFloat(c.style.getPropertyValue('--mapdy'))||0,r=c.getBoundingClientRect();if(!r.height)return;
  let top=0;['#chips','#fab','#bagb'].forEach(s=>{const e=Q(s);if(e&&e.offsetParent!==null||e&&getComputedStyle(e).position==='fixed'){const q=e.getBoundingClientRect();if(q.height&&q.top<innerHeight*.3)top=Math.max(top,q.bottom)}});
  let bot=innerHeight;['#tmtog','#tm'].forEach(s=>{const e=Q(s);if(!e)return;const q=e.getBoundingClientRect();if(q.height&&q.top>innerHeight*.4&&q.top<bot&&getComputedStyle(e).visibility!=='hidden')bot=q.top});
@@ -16650,7 +16659,7 @@ async function open(i){const b=BIO[i];if(!b)return;try{if(window.dexSync)dexSync
  draw()}
 window.openBiomeDex=open;
 /* ---------- botones «i» en el mapa ilustrado y en el mapa simple ---------- */
-function place(){const v=D.body.dataset.v;if(v!=='map'){D.querySelectorAll('.bzi').forEach(e=>e.remove());return}
+function place(){const v=D.body.dataset.v;if(v!=='map'){D.querySelectorAll('.bzi').forEach(e=>e.remove());return}if(document.body.classList.contains('mo'))return;
  const c=Q('#dmap .imc');if(c&&getComputedStyle(Q('#dmap')).display!=='none'){const r0=c.getBoundingClientRect();
   BIO.forEach((b,i)=>{const z=Q('#mz'+i);let btn=c.querySelector('.bzi[data-b="'+i+'"]');if(!z){if(btn)btn.remove();return}
    if(!btn){btn=D.createElement('button');btn.type='button';btn.className='bzi';btn.dataset.b=i;btn.textContent='i';btn.setAttribute('aria-label','Guía de '+b.n);btn.onclick=e=>{e.stopPropagation();e.preventDefault();open(i)};{const zz=Q('#mz'+i);if(zz&&zz.classList.contains('sel'))btn.classList.add('on')}
@@ -18377,7 +18386,7 @@ btn.onclick=e=>{e.stopPropagation();want=!want;try{localStorage.setItem('pr_mapp
  if(want){clearTimeout(tm);const c=Q('#cards');if(c&&B.dataset.v==='map'){const r=c.getBoundingClientRect();if(r.height)setV(save(r))}}
  else unpin()};
 /* colocar la pestaña y el botón justo encima del mapa */
-function place(){const inMap=B.dataset.v==='map',t=Q('#abdt');if(inMap&&B.classList.contains('mappin')&&simple())B.classList.remove('mappin');else if(inMap&&want&&!B.classList.contains('mappin')&&!simple()&&Q('#dmap')&&Q('#dmap').offsetParent&&fits(getP()))setV(getP());
+function place(){if(B.classList.contains('mo'))return;const inMap=B.dataset.v==='map',t=Q('#abdt');if(inMap&&B.classList.contains('mappin')&&simple())B.classList.remove('mappin');else if(inMap&&want&&!B.classList.contains('mappin')&&!simple()&&Q('#dmap')&&Q('#dmap').offsetParent&&fits(getP()))setV(getP());
  if(!inMap){if(btn.classList.contains('show'))btn.classList.remove('show');if(t&&(t.style.left||t.style.top||t.style.right)){t.style.left='';t.style.top='';t.style.right=''}return}
  const d=Q('#dmap'),sm=Q('#smap'),vis=d&&d.offsetParent,a=vis?d:(sm||Q('#cards'));if(!a||!t)return;
  const r=a.getBoundingClientRect();if(!r.width)return;
@@ -19930,6 +19939,13 @@ body.lowfx #tutb *{animation:none!important}
 #tutov .tt-ch i{font-style:normal;font-size:26px}#tutov .tt-ch b{font-size:13px;text-align:center}#tutov .tt-ch small{font-size:10.5px;opacity:.7}
 #tutov .tt-ch.done{border-color:#22c55e}#tutov .tt-ch.done small{color:#86efac;opacity:1}
 body.lowfx #tutov .tt-pg{animation:none}
+/* v44.0: con una ventana abierta (mochila…) se pausan las animaciones de lo que queda detrás */
+body.mo #chips,body.mo #chips *,body.mo #tcgtab,body.mo #tcgtab *,body.mo #evtab,body.mo #evtab *,body.mo #tm *,body.mo #bagb,body.mo #bagb *,body.mo #fab *{animation-play-state:paused!important}
+/* v44.0: elegir forma de Megaevolución con su ilustración */
+#mod .mgopt{display:flex;align-items:center;gap:10px;text-align:left}
+#mod .mgopt img{width:58px;height:58px;object-fit:contain;flex:none;filter:drop-shadow(0 2px 3px #0008)}
+#mod .mgopt small{opacity:.7;font-weight:600}
+#mod .mgopt>span{min-width:0;overflow-wrap:anywhere;font-size:13.5px;line-height:1.2}
 </style>
 <script id="v37js">
 (()=>{
@@ -20367,7 +20383,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
 })();
 /* ---------- Mapa (móvil): el aviso de la zona elegida va debajo del mapa, sin tapar la ronda ni las monedas ---------- */
 (()=>{const H=D.documentElement,B=D.body;
- const place=()=>{const h=D.getElementById('mhint');if(!h)return;const mob=H.classList.contains('vm-mv')||H.classList.contains('vm-mh');
+ const place=()=>{const h=D.getElementById('mhint');if(!h)return;if(document.body.classList.contains('mo'))return;const mob=H.classList.contains('vm-mv')||H.classList.contains('vm-mh');
   if(!mob||B.dataset.v!=='map'){if(h.style.top){h.style.top='';h.style.bottom=''}return}
   const m=D.querySelector('#dmap .imw')||D.getElementById('dmap');if(!m||!m.offsetParent)return;const r=m.getBoundingClientRect(),hh=h.offsetHeight||40,lim=innerHeight-hh-78;
   let t=Math.round(r.bottom+8);if(t>lim)t=Math.max(8,Math.round(lim));const v=t+'px';if(h.style.top!==v){h.style.setProperty('top',v,'important');h.style.bottom='auto'}};
@@ -20481,7 +20497,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   try{const p=openBox();setTimeout(()=>{const b=document.querySelector('#pcbox #'+(mode==='s'?'bxps':'bxpl'));if(b)b.click()},60);await p;try{saveRun()}catch(e){}}finally{if(tmp)R=prev}
   try{if(document.body.dataset.v==='map'&&typeof showMap==='function'&&live())showMap()}catch(e){}};
  const b=document.createElement('button');b.type='button';b.id='teamq';b.innerHTML='<span>📂</span><span>Equipos</span>';b.title='Cargar o guardar un equipo';b.onclick=e=>{e.stopPropagation();if(window.R&&R.lock)return;openTeams('l')};document.body.append(b);
- const place=()=>{const on=document.body.dataset.v==='map'&&!document.querySelector('#pcbox');const pin=document.getElementById('mappin');
+ const place=()=>{if(document.body.classList.contains('mo'))return;const on=document.body.dataset.v==='map'&&!document.querySelector('#pcbox');const pin=document.getElementById('mappin');
   if(!on||!pin||!pin.classList.contains('show')){if(b.classList.contains('show'))b.classList.remove('show');return}
   const r=pin.getBoundingClientRect(),t=Math.round(r.top)+'px',l=Math.round(r.right+8)+'px';if(b.style.top!==t)b.style.top=t;if(b.style.left!==l)b.style.left=l;if(!b.classList.contains('show'))b.classList.add('show')};
  setInterval(place,300);addEventListener('resize',place);
@@ -21228,11 +21244,11 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
 /* ---------- Ficha del Pokémon: líneas extra (maestría, objeto) que sobreviven a su repintado ---------- */
 (()=>{const D=document,MD=D.getElementById('mod');if(!MD)return;const ADD=[];let cur=null;
  window.__infoAdd=(cls,fn)=>ADD.push([cls,fn]);
- const place=()=>{if(!cur)return;const bx=MD.querySelector('.box');if(!bx||getComputedStyle(MD).display==='none')return;const host=bx.querySelector('.svw')||bx;const anchor=host.querySelector('.svh')||bx.querySelector('h3');
+ const place=()=>{if(!cur)return;const bx=MD.querySelector('.box');if(!bx||MD.style.display==='none'||!MD.style.display)return;const host=bx.querySelector('.svw')||bx;const anchor=host.querySelector('.svh')||bx.querySelector('h3');
   let last=anchor;ADD.forEach(([cls,fn])=>{let el=host.querySelector('.'+cls);if(!el){try{el=fn(cur);if(!el)return;el.classList.add(cls)}catch(e){return}if(last&&last.parentNode===host)last.after(el);else host.prepend(el)}last=el})};
  const _i=window.info;window.info=function(m){cur=m;const r=_i.apply(this,arguments);requestAnimationFrame(place);setTimeout(place,120);setTimeout(place,400);return r};
  new MutationObserver(()=>{if(cur)requestAnimationFrame(place)}).observe(MD,{childList:true,subtree:true});
- new MutationObserver(()=>{if(getComputedStyle(MD).display==='none')cur=null}).observe(MD,{attributes:true,attributeFilter:['style']});
+ new MutationObserver(()=>{if((MD.style.display==='none'||!MD.style.display))cur=null}).observe(MD,{attributes:true,attributeFilter:['style']});
 })();
 /* ---------- Clima del mapa, combos de equipo y maestría ---------- */
 (()=>{const D=document,Q=s=>D.querySelector(s),rnd=Math.random,pick=a=>a[rnd()*a.length|0];
@@ -22301,7 +22317,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
 
 /* ---------- v43.3: el mapa simple empieza justo debajo de los chips de arriba (sin solaparse ni bajar de más) ---------- */
 (()=>{const D=document;let lastM=-1;
- const fit=()=>{try{const s=D.getElementById('smap'),c=D.getElementById('chips');if(!s||!c||D.body.dataset.v!=='map'||!s.offsetParent)return;
+ const fit=()=>{try{if(D.body.classList.contains('mo'))return;const s=D.getElementById('smap'),c=D.getElementById('chips');if(!s||!c||D.body.dataset.v!=='map'||!s.offsetParent)return;
   const cm=parseFloat(s.style.marginTop)||parseFloat(getComputedStyle(s).marginTop)||0,base=s.getBoundingClientRect().top+(D.scrollingElement.scrollTop||0)-cm;
   const cb=c.getBoundingClientRect().bottom,m=Math.max(8,Math.round(cb+10-base));if(Math.abs(m-lastM)>1||Math.abs(cm-m)>1){lastM=m;s.style.setProperty('margin-top',m+'px','important')}
   /* si aun así no cabe sobre el equipo, se compacta un poco más */
@@ -22414,6 +22430,24 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  /* jugadores nuevos: se abre solo la primera vez */
  const veteran=()=>{try{const L=localStorage;return !!(L.getItem('pa_run')||L.getItem('pa_slot_cur')||L.getItem('pa_t')||L.getItem('pa_tcg')||L.getItem('pa_bkp_last')||L.getItem('pa_mg')||L.getItem('pa_cl_seen')||L.getItem('pr_mappin')||Object.keys(L).some(k=>/^pa_slot_\d/.test(k)))}catch(e){return true}};
  setTimeout(()=>{try{st=ld();if(st.seen||st.auto)return;st.auto=1;sv(st);if(veteran()){upBtn();return}if(D.body.dataset.v&&D.body.dataset.v!=='menu')return;open(0)}catch(e){}},1600);
+})();
+
+/* ---------- v44.0: megaevoluciones nuevas con ilustración propia (Houndoom X/Y, Tyranitar Z, Ampharos Z, Diancie Z, Mimikyu, Delphox, Chandelure, Baxcalibur) ---------- */
+(()=>{if(typeof MEGAF!=='object')return;window.CART=window.CART||{};
+CART.mhoundoomx='assets/3de52a371be1.webp';
+CART.mhoundoomy='assets/e4c3ccbaed8b.webp';
+CART.mtyranitarz='assets/aeef78d9a4b9.webp';
+CART.mampharosz='assets/56af3135e064.webp';
+CART.mdianciez='assets/69e503903fe7.webp';
+CART.mmimikyu='assets/2f2eec24a3c7.webp';
+CART.mdelphox='assets/599ceb829119.webp';
+CART.mchandelure='assets/3fe9251479f2.webp';
+CART.mbaxcalibur='assets/8b21ce4b8cb6.webp';
+const ADD={229:['x','y'],248:['z'],181:['z'],719:['z']};
+for(const id in ADD){const cur=MEGAF[id]||[''];ADD[id].forEach(f=>{if(!cur.includes(f))cur.push(f)});MEGAF[id]=cur}
+if(!MEGAF[778])MEGAF[778]=[''];
+window.MEGART={'229|x':'mhoundoomx','229|y':'mhoundoomy','248|z':'mtyranitarz','181|z':'mampharosz','719|z':'mdianciez','778|':'mmimikyu','655|':'mdelphox','609|':'mchandelure','998|':'mbaxcalibur'};
+window.MEGABASE={778:'Mimikyu'};
 })();
 
 })();</script>
