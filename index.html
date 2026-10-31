@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v43.0</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v43.1</div>
 </section>
 
 <section id="team" class="scr">
@@ -8541,7 +8541,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'43.0',t:'Carteles nuevos y mapa más limpio',s:'cur',l:[
+ {v:'43.1',t:'Momia arreglada y botón de curar recolocado',s:'cur',l:[
+  '🧟 Habilidades: Momia y Olor Persistente cambiaban para siempre la habilidad de tu Pokémon al tocarlo; ahora solo dura ese combate y luego vuelve la suya. Lo mismo con Rastro. Tampoco afectan a habilidades que no se pueden cambiar (Multitipo, Cambio Táctico, Disfraz…)',
+  '💊 Mochila: el botón «Curar a todos» ahora está en la esquina superior derecha de la propia mochila, sin tapar nada',
+ ]},
+ {v:'43.0',t:'Carteles nuevos y mapa más limpio',s:'prev',l:[
   '💬 Carteles de aviso rediseñados: fondo morado con borde dorado, icono a un lado y una barrita que marca el tiempo. Ya nunca muestran código raro en vez del icono de las monedas',
   '🔕 Ajustes → Juego → «Avisos automáticos»: al desactivarlo desaparecen los carteles que salen solos (hucha, banco, misiones, huevos, sobres…) y la campanita; los avisos de lo que tocas tú se siguen viendo',
   '🗺️ Mapa: la «i» de la guía y el nivel de cada bioma solo aparecen al tocar el bioma',
@@ -9597,6 +9601,9 @@ async function ensureAb(m){try{
   m.abid=m.id}catch(e){}return m.ab}
 window.ensureAb=ensureAb;
 const MB=new Set(['mold-breaker','teravolt','turboblaze']);
+/* v43.1: Momia, Olor Persistente y Rastro cambian la habilidad solo durante el combate (antes se quedaba para siempre) */
+const abBk=m=>{try{const v=MX.V(m);v.bk=v.bk||{};if(!('ab' in v.bk))v.bk.ab=m.ab}catch(e){}};
+const NOMUM=new Set(['multitype','stance-change','schooling','comatose','shields-down','disguise','rks-system','battle-bond','power-construct','ice-face','gulp-missile','zero-to-hero','commander','as-one-glastrier','as-one-spectrier','tera-shift','mummy','lingering-aroma']);
 function abOf(m){if(!m||!m.ab)return null;if(m.ab==='neutralizing-gas')return m.ab;
   try{if(['p','e'].some(s=>{const o=act(s);return o&&o!==m&&o.hp>0&&o.ab==='neutralizing-gas'}))return null}catch(e){}return m.ab}
 /* ---------- niveles de característica ---------- */
@@ -9645,7 +9652,7 @@ function entryFx(s){const m=act(s),o=foe(s),A=abOf(m);if(!A||!o)return;const OA=
     case 'psychic-surge':show();setTn('psychic');break;
     case 'misty-surge':show();setTn('misty');break;
     case 'download':show();chg(m,o.d<o.sd?'a':'sa',1,null);Q6(`¡${nm(m)} analizó a ${nm(o)}!`);break;
-    case 'trace':if(OA&&!NOTRACE.has(OA)){show();m.ab=OA;Q6(`¡${nm(m)} copió ${es(OA)} de ${nm(o)}!`);entryFx(s)}break;
+    case 'trace':if(OA&&!NOTRACE.has(OA)){show();abBk(m);m.ab=OA;Q6(`¡${nm(m)} copió ${es(OA)} de ${nm(o)}!`);entryFx(s)}break;
     case 'forewarn':{const t=(o.moves||[]).slice().sort((a,b)=>b.p-a.p)[0];if(t){show();Q6(`¡Alerta! ${nm(m)} detectó ${t.n} en ${nm(o)}.`)}break}
     case 'anticipation':if((o.moves||[]).some(v=>v.p>0&&eff(v.t,m.types)>1)){show();Q6(`¡${nm(m)} se estremeció al anticipar un ataque!`)}break;
     case 'frisk':show();Q6(`¡${nm(m)} cacheó a ${nm(o)}: no lleva ningún objeto!`);break;
@@ -9848,7 +9855,7 @@ window.hit=async function(s,r,mv){
     if(Dd&&c&&a.hp>0&&!MB.has(A)){
       if(Dd==='rough-skin'||Dd==='iron-barbs'){banner(s,Dd);dmgTo(a,a.max/8,`¡${nm(a)} se hirió con ${es(Dd)}!`,1)}
       else if(Dd==='gooey'||Dd==='tangling-hair'){banner(s,Dd);chg(a,'sp',-1,t)}
-      else if(Dd==='mummy'||Dd==='lingering-aroma'){if(a.ab!==Dd&&abOf(a)){banner(s,Dd);a.ab=Dd;Q6(`¡La habilidad de ${nm(a)} cambió a ${es(Dd)}!`)}}
+      else if(Dd==='mummy'||Dd==='lingering-aroma'){if(a.ab!==Dd&&abOf(a)&&!NOMUM.has(a.ab)){banner(s,Dd);abBk(a);a.ab=Dd;Q6(`¡La habilidad de ${nm(a)} cambió a ${es(Dd)}!`)}}
       else if(Dd==='fluffy-'){}}
     if(A&&!fainted){
       if(A==='poison-touch'&&c&&pr())await stA(t,'psn');
@@ -19627,12 +19634,13 @@ body.lowfx #mgov .mgin,body.lowfx #mgov .mmc{animation:none}
 #cookov .ck-body{animation:mgIn .22s ease-out}
 /* Casino: el contenido de cada juego aparece con un fundido */
 #pcas .kcb{animation:mgIn .24s ease-out}
-/* Mochila: botón flotante «Curar a todos» */
-#mod .hlfab{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom));z-index:3;display:flex;align-items:center;gap:8px;height:56px;padding:0 18px 0 8px;border-radius:999px;border:2px solid #bbf7d0;background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;font:900 14px system-ui;box-shadow:0 10px 24px #000a,0 0 0 4px #22c55e33;cursor:pointer;touch-action:manipulation;animation:hlIn .35s cubic-bezier(.2,1.4,.4,1)}
-#mod .hlfab i{font-style:normal;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#ffffff2e;font-size:21px}
+/* Mochila: botón «Curar a todos» en la esquina superior derecha de la propia mochila (no tapa nada) */
+#mod .box:has(.hlfab){position:relative}
+#mod .hlfab{position:absolute;right:12px;top:12px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:1px;width:58px;padding:5px 0 4px;border-radius:14px;border:2px solid #bbf7d0;background:linear-gradient(160deg,#22c55e,#15803d);color:#fff;font:900 9.5px/1.1 system-ui;box-shadow:0 6px 14px #0008;cursor:pointer;touch-action:manipulation;animation:hlIn .35s cubic-bezier(.2,1.4,.4,1)}
+#mod .hlfab i{font-style:normal;font-size:20px;line-height:1}
+#mod .hlfab span{text-align:center}
 #mod .hlfab:active{transform:scale(.94)}
-@keyframes hlIn{from{opacity:0;transform:translateY(20px) scale(.7)}}
-@media(max-width:380px){#mod .hlfab span{display:none}#mod .hlfab{padding:0 8px}}
+@keyframes hlIn{from{opacity:0;transform:scale(.6)}}
 /* 2 vs 2: sprites sin parpadeo y animaciones más ligeras */
 #coop .cb-spr img{grid-area:1/1}
 #coop .cb-orb{box-shadow:0 0 14px var(--c)}
@@ -20318,7 +20326,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   if(!box||!box.querySelector('.bgw')&&!box.querySelector('.sg')||!MD.querySelector('#sd')||document.querySelector('#battle.on')){if(old)old.remove();return}if(old)return;
   const need=(R.team||[]).some(m=>m.hp<m.max||m.s||m.cf);if(!need)return;
   const b=document.createElement('button');b.type='button';b.id='hlall';b.className='hlfab';b.setAttribute('aria-label','Curar a todo el equipo con la mochila');b.title='Curar a todo el equipo';b.innerHTML='<i>💊</i><span>Curar a todos</span>';
-  b.onclick=e=>{e.stopPropagation();MD.style.display='none';healTeam()};MD.append(b)}).observe(MD,{childList:true});
+  b.onclick=e=>{e.stopPropagation();MD.style.display='none';healTeam()};box.append(b)}).observe(MD,{childList:true});
 })();
 /* ---------- Combate acelerado (1×–4×) y combate automático ---------- */
 (()=>{const D=document,Q=s=>D.querySelector(s);const arena=Q('#arena');if(!arena||typeof S!=='object')return;
