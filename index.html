@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v43.7</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v43.8</div>
 </section>
 
 <section id="team" class="scr">
@@ -8554,7 +8554,14 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'43.7',t:'Cocina y santuario con espera',s:'cur',l:[
+ {v:'43.8',t:'📘 Tutorial y clima ocasional',s:'cur',l:[
+  'Nuevo 📘 Tutorial con 16 capítulos que explican todo el juego: mapa y rondas, biomas y captura, combate, niveles, Tera/Mega/Ultra Tera, estrellas, mochila, tienda, clima, combos, eventos, casa, megaincursiones, multijugador y ajustes',
+  'Se abre solo la primera vez que entra un jugador nuevo, y siempre desde el botón 📘 del menú principal (junto al rango y los desafíos). Tiene índice, se pasa de página deslizando y recuerda por dónde ibas',
+  'El clima del mapa ahora es ocasional: un episodio de 2-3 rondas cada 7-8 rondas, y el resto del tiempo está despejado. Avisa cuando llega y cuando se va',
+  'El clima extremo (eclipse, meteoritos, aurora) ya no sale al azar cualquier ronda: a veces ocupa el lugar de un episodio de clima',
+  'El botón atrás del móvil cierra también el tutorial, la calculadora de estrellas y la ficha de la tienda'
+]},
+{v:'43.7',t:'Cocina y santuario con espera',s:'prev',l:[
   'La cocina y el santuario vuelven a tener su espera en rondas, como el telescopio, el huerto, la nevera y la ruleta'
 ]},
 {v:'43.6',t:'Adiós al Modo ayuda',s:'prev',l:[
@@ -19880,6 +19887,46 @@ body.bdock.bdopen[data-v=battle]::after{height:288px!important}
  #smap.smt2 .smb{padding:6px 3px!important}
 }
 @media (max-width:640px){#smap .smb{font-size:11px!important;letter-spacing:-.02em;word-break:normal!important;overflow-wrap:anywhere;hyphens:auto}}
+/* v43.8 📘 Tutorial */
+#tutb{position:relative;display:grid;place-items:center;width:46px;height:46px;padding:0;border-radius:50%;border:2px solid #60a5fa;background:linear-gradient(180deg,#1e3a8aee,#172554ee);cursor:pointer;box-shadow:0 4px 12px #0008;font-size:20px}
+#tutb span{line-height:1}
+#tutb b{position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;border-radius:10px;background:#ef4444;color:#fff;font:900 12px/20px system-ui;display:none;box-shadow:0 0 0 2px #172554}
+#tutb.has b{display:block}#tutb.has span{animation:nxBeat 1.4s ease-in-out infinite}
+body.lowfx #tutb *{animation:none!important}
+#tutov{position:fixed;inset:0;z-index:97;display:flex;align-items:center;justify-content:center;padding:12px;background:#000b;opacity:0;transition:opacity .2s}
+#tutov.on{opacity:1}#tutov[hidden]{display:none}
+#tutov .tt-box{--tc:#f59e0b;position:relative;display:flex;flex-direction:column;width:min(540px,100%);height:min(680px,calc(100dvh - 24px));border-radius:20px;overflow:hidden;color:#f1f5f9;
+ background:radial-gradient(120% 60% at 50% 0,color-mix(in srgb,var(--tc) 35%,transparent),transparent 70%),linear-gradient(180deg,#1e1b4b,#0b1024);border:2px solid color-mix(in srgb,var(--tc) 70%,#fff 10%);box-shadow:0 14px 40px #000c;transform:translateY(12px) scale(.97);transition:transform .22s,border-color .3s}
+#tutov.on .tt-box{transform:none}
+#tutov .tt-hd{display:flex;align-items:center;gap:8px;padding:10px 10px 8px}
+#tutov .tt-hd b{flex:1;text-align:center;font-size:16px;line-height:1.15}
+#tutov .tt-hd b small{display:block;font-size:10.5px;font-weight:700;opacity:.65;margin-top:1px}
+#tutov .tt-ib{width:36px;height:36px;border-radius:50%;border:1px solid #ffffff33;background:#0006;color:#fff;font-size:16px;cursor:pointer;flex:none}
+#tutov .tt-ib.on{background:var(--tc);border-color:#fff8}
+#tutov .tt-bar{height:4px;background:#ffffff1a;margin:0 14px;border-radius:2px;overflow:hidden}
+#tutov .tt-bar i{display:block;height:100%;background:var(--tc);transition:width .25s}
+#tutov .tt-main{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:10px 18px 14px}
+#tutov .tt-pg{animation:ttIn .25s ease}
+@keyframes ttIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+#tutov .tt-ill{display:grid;place-items:center;margin:6px auto 8px;width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--tc) 70%,#fff 20%),color-mix(in srgb,var(--tc) 40%,#000 40%));box-shadow:0 6px 18px #0008,inset 0 -6px 0 #0003}
+#tutov .tt-ill span{font-size:48px;line-height:1;filter:drop-shadow(0 3px 3px #0007)}
+#tutov .tt-pg h3{margin:0 0 8px;text-align:center;font-size:19px;color:#fff}
+#tutov .tt-tx{font-size:14px;line-height:1.5;color:#e2e8f0}
+#tutov .tt-tx p{margin:0 0 8px}#tutov .tt-tx ul{margin:0 0 8px;padding-left:18px}#tutov .tt-tx li{margin:3px 0}
+#tutov .tt-tx b{color:#fde68a}
+#tutov .tt-tip{background:#ffffff12;border-left:3px solid var(--tc);border-radius:8px;padding:7px 10px;font-size:13px}
+#tutov .tt-ft{display:flex;align-items:center;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid #ffffff1a;background:#0005}
+#tutov .tt-nv{flex:1;margin:0;min-height:44px;font-weight:800}
+#tutov .tt-nv:disabled{opacity:.35}
+#tutov .tt-go{background:linear-gradient(180deg,color-mix(in srgb,var(--tc) 90%,#fff 10%),color-mix(in srgb,var(--tc) 60%,#000 40%))!important;color:#fff!important;border:1px solid #fff5!important}
+#tutov .tt-dots{display:flex;gap:5px;flex:none}
+#tutov .tt-dots i{width:7px;height:7px;border-radius:50%;background:#ffffff40}#tutov .tt-dots i.on{background:var(--tc);transform:scale(1.25)}
+#tutov .tt-ih{margin:4px 0 10px;text-align:center;font-size:18px}
+#tutov .tt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+#tutov .tt-ch{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 6px;border-radius:14px;border:2px solid color-mix(in srgb,var(--cc) 60%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--cc) 30%,#0b1024),#0b1024);color:#fff;font:inherit;cursor:pointer}
+#tutov .tt-ch i{font-style:normal;font-size:26px}#tutov .tt-ch b{font-size:13px;text-align:center}#tutov .tt-ch small{font-size:10.5px;opacity:.7}
+#tutov .tt-ch.done{border-color:#22c55e}#tutov .tt-ch.done small{color:#86efac;opacity:1}
+body.lowfx #tutov .tt-pg{animation:none}
 </style>
 <script id="v37js">
 (()=>{
@@ -21201,8 +21248,16 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const W8=[['clear',34],['rain',15],['sun',15],['snow',8],['sand',9],['fog',9],['storm',10]];
  const roll=()=>{let t=rnd()*W8.reduce((a,x)=>a+x[1],0);for(const [k,w] of W8){if((t-=w)<0)return k}return'clear'};
  const cur=()=>{if(!live())return null;const w=R.mwx;return w&&WX[w.k]?w:null};
- function tickWx(){if(!live())return;let w=R.mwx;if(!w||!WX[w.k]||R.round>=w.u){const prev=w&&w.k;let k=roll();if(k===prev&&rnd()<.6)k=roll();R.mwx={k,u:R.round+3+(rnd()*3|0)};
-   if(prev!==undefined&&k!==prev){const X=WX[k];setTimeout(()=>{try{toast(`${X.e} El tiempo cambia: ${X.n}`)}catch(_){}},700)}try{saveRun()}catch(_){}}}
+ /* v43.8: el clima es ocasional: un episodio de 2-3 rondas cada 7-8 rondas; el resto del tiempo, despejado */
+ const gap=()=>7+(rnd()*2|0);
+ function tickWx(){if(!live())return;const r=R.round|0;let w=R.mwx,ch=false;
+  if(R.wxN==null){R.wxN=r+gap();if(w&&WX[w.k]&&w.k!=='clear')w.u=Math.min(w.u,r+3);ch=true}
+  if(!w||!WX[w.k]){R.mwx=w={k:'clear',u:1e9};ch=true}
+  if(w.k!=='clear'&&r>=w.u){const X=WX[w.k];R.mwx=w={k:'clear',u:1e9};ch=true;setTimeout(()=>{try{toast(`☀️ ${X.n} se ha ido: vuelve a estar despejado`)}catch(_){}},700)}
+  if(w.k==='clear'&&r>=R.wxN&&r>=3){R.wxN=r+gap();ch=true;
+   if(rnd()<.15&&typeof window.__xwStart==='function'&&window.__xwStart()){}
+   else{let k=roll(),g=0;while(k==='clear'&&g++<20)k=roll();if(k==='clear')k='rain';R.mwx=w={k,u:r+2+(rnd()*2|0)};const X=WX[k];setTimeout(()=>{try{toast(`${X.e} El tiempo cambia: ${X.n}`)}catch(_){}},700)}}
+  if(ch)try{saveRun()}catch(_){}}
  function paintWx(){const w=cur(),wr=Q('#dmap .imw');let o=wr&&wr.querySelector('.mwx');if(!w||!wr||w.k==='clear'){if(o)o.remove();}
   else{if(!o){o=D.createElement('div');o.className='mwx';wr.append(o)}if(o.dataset.k!==w.k){o.dataset.k=w.k;o.className='mwx mwx-'+w.k;o.innerHTML=w.k==='sun'?'<i class="ray"></i>':Array.from({length:w.k==='fog'?3:26},(_,i)=>`<i style="--x:${(i*37)%100}%;--y:${(i*53)%95}%;--d:${(i*.23)%1.8}s;--s:${.6+(i%5)*.12}"></i>`).join('')}}
   const ch=Q('#chips');if(!ch)return;let c=Q('#wxchip');if(!w){if(c)c.remove();return}
@@ -21800,7 +21855,9 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const xw=()=>{if(!live())return null;const x=R.xwx;return x&&XW[x.k]&&R.round<x.u?x:null};
  function phase(){if(!live()||S.dn==='off')return null;const x=xw();if(x&&x.k==='eclipse')return'night';if(S.dn==='real'){const h=new Date().getHours();return h>=6&&h<9?'dawn':h>=9&&h<18?'day':h>=18&&h<21?'dusk':'night'}return ORD[Math.floor((R.round||1)/3)%4]}
  window.__dayPhase=phase;
- function tick(){if(!live())return;const x=R.xwx;if(x&&R.round>=x.u){R.xwx=null}if(!R.xwx&&R.round>=4&&R.round!==R.xwr&&rnd()<.04){const k=pick(Object.keys(XW));R.xwx={k,u:R.round+1+(rnd()*2|0)};R.xwr=R.round;setTimeout(()=>{try{toast(`${XW[k].e} ¡Clima extremo: ${XW[k].n}!`);beep(330,.2,'triangle');beep(990,.3,'triangle')}catch(_){}},900);try{saveRun()}catch(_){}}}
+ function tick(){if(!live())return;const x=R.xwx;if(x&&R.round>=x.u){R.xwx=null}}
+ /* v43.8: el clima extremo ya no sale al azar cada ronda: lo lanza el calendario del clima (a veces sustituye a un episodio normal) */
+ window.__xwStart=()=>{if(!live()||R.round<4||R.xwx)return false;const k=pick(Object.keys(XW));R.xwx={k,u:R.round+1+(rnd()*2|0)};R.xwr=R.round;setTimeout(()=>{try{toast(`${XW[k].e} ¡Clima extremo: ${XW[k].n}!`);beep(330,.2,'triangle');beep(990,.3,'triangle')}catch(_){}},900);try{saveRun()}catch(_){}return true};
  function paint(){const wr=Q('#dmap .imw'),ph=phase(),x=xw();
   if(wr){let o=wr.querySelector(':scope>.dnx');const cls=ph&&ph!=='day'||x?`dnx dnx-${ph||'day'}${x?' mxw-'+x.k:''}`:'';
    if(!cls){if(o)o.remove()}else{if(!o){o=D.createElement('div');wr.append(o)}if(o.className!==cls){o.className=cls;o.innerHTML=(ph==='night'?Array.from({length:14},(_,i)=>`<b style="left:${(i*41)%100}%;top:${(i*23)%45}%"></b>`).join(''):'')+(x&&x.k==='meteor'?Array.from({length:5},(_,i)=>`<s style="--x:${15+i*17}%;--d:${i*1.3}s"></s>`).join(''):'')+(x&&x.k==='aurora'?'<u></u>':'')}}}
@@ -22132,7 +22189,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
 })();
 /* ---------- v42.7: el botón «atrás» del móvil cierra la ventana abierta (en vez de salir del juego) ---------- */
 (()=>{const D=document;if(!history.pushState)return;
- const OV=['#cookov','#mktov','#specov','#mgov','#cmpov','#rkov','#exov','#chov','#colov','#msov','#rnov','#ntf','#frp','#tcgov','#homeov','#pcas'];
+ const OV=['#cookov','#mktov','#specov','#mgov','#cmpov','#rkov','#exov','#chov','#colov','#msov','#rnov','#ntf','#frp','#tcgov','#homeov','#pcas','#tutov','#stov','#shinf'];
  const shown=e=>{if(!e||!e.isConnected)return false;const cs=getComputedStyle(e);if(cs.display==='none'||cs.visibility==='hidden')return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};
  const open=()=>OV.map(s=>D.querySelector(s)).filter(shown);
  const closeBtn=e=>e.querySelector('[data-c="x"],[data-m="x"],[data-s="x"],[data-g="x"],[data-a="close"],[aria-label="Cerrar"],[aria-label="Salir"],.clx,.mgx');
@@ -22251,6 +22308,109 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  }catch(e){}};
  setInterval(fit,300);addEventListener('resize',fit);
  const _r=window.__smapRefresh;if(_r)window.__smapRefresh=function(){const r=_r.apply(this,arguments);requestAnimationFrame(fit);return r};
+})();
+
+/* ---------- v43.8: 📘 Tutorial para jugadores nuevos (todas las mecánicas, por capítulos) ---------- */
+(()=>{const D=document,Q=s=>D.querySelector(s),SK='pa_tut';
+ const ld=()=>{try{return JSON.parse(localStorage.getItem(SK)||'null')||{}}catch(e){return{}}},sv=o=>{try{localStorage.setItem(SK,JSON.stringify(o))}catch(e){}};
+ const b=t=>`<b>${t}</b>`;
+ const C=[
+ {e:'👋',n:'Bienvenida',c:'#f59e0b',p:[
+  {e:'🎒',t:'¡Bienvenido a PokeRogue!',h:`<p>PokeRogue es una aventura Pokémon <b>por rondas</b>: cada ronda eliges qué camino tomar, combates, capturas y mejoras a tu equipo para llegar lo más lejos posible.</p><p>Cada 20 rondas te espera un <b>líder de gimnasio</b> con su medalla y, al final, el <b>Campeón</b>.</p><p class="tt-tip">Este tutorial va por capítulos. Puedes saltar a cualquiera desde el <b>📑 Índice</b> y volver a abrirlo cuando quieras con el botón <b>📘</b> del menú principal.</p>`},
+  {e:'🏁',t:'Empezar una aventura',h:`<p>Pulsa ${b('Modo aventura')} en el menú y elige a tu <b>Pokémon inicial</b>.</p><ul><li>${b('Rondas')}: elige en Ajustes cuánto dura la aventura (20 a 120) o juega en modo <b>infinito</b>.</li><li>${b('Vidas ❤️')}: empiezas con 3. Si cae todo tu equipo en un combate pierdes una. Con vidas <b>∞</b> nunca termina.</li><li>${b('💀 Hardcore')}: los Pokémon debilitados se pierden para siempre, pero ganas un 25% más de dinero.</li></ul><p>Tu partida se guarda sola. Con ${b('Volver a la batalla')} retomas donde lo dejaste.</p>`}]},
+ {e:'🗺️',n:'El mapa y las rondas',c:'#22c55e',p:[
+  {e:'🃏',t:'Elegir carta',h:`<p>En el mapa pulsa ${b('▶ Continuar la ruta')} (o toca la casilla de la ronda) y elige una de las <b>cartas</b>:</p><ul><li>⚔️ ${b('Entrenador')}: combate con premio en dinero. Algunos luchan en <b>dobles</b>.</li><li>🌿 ${b('Salvaje')}: combate contra un Pokémon que puedes <b>capturar</b>.</li><li>🛒 ${b('Tienda')} y ❓ ${b('Evento')}: compras o un encuentro misterioso.</li><li>👑 ${b('Líder / Jefe')}: los combates importantes.</li></ul><p>Las ⭐ de la carta indican la dificultad: más estrellas, más premio.</p>`},
+  {e:'🏅',t:'Líderes, medallas y Campeón',h:`<p>Cada <b>20 rondas</b> hay un líder de gimnasio de un tipo concreto (lo ves marcado en el mapa unas rondas antes). Al ganarle consigues su <b>medalla</b>.</p><p>Cada medalla sube un 1% el interés de tu banco. Los líderes llevan objetos y a veces <b>reglas especiales</b>; toca el cartel del combate para leerlas.</p><p>En la última ronda espera el <b>Campeón</b>. En modo infinito aparece cada 100 rondas.</p>`},
+  {e:'📍',t:'Lugares del mapa',h:`<ul><li>🌲 ${b('Biomas')}: zonas de captura (siguiente capítulo).</li><li>🛒 ${b('Tienda')}: siempre abierta.</li><li>🏥 ${b('Centro Pokémon')}: cura a todo tu equipo y abre la Caja.</li><li>🏦 ${b('Banco')}: guarda dinero y gana interés cada vez que ganas un combate.</li><li>🏠 ${b('Mi casa')}: tu base personal.</li><li>🌋 ${b('Megaincursiones')}: jefes legendarios con otros jugadores.</li></ul><p>En el mapa ilustrado se entra tocando <b>dos veces</b> un lugar. Con ${b('📌 Fijar mapa')} se queda quieto. Si prefieres botones grandes, activa ${b('Mapa simple')} en Ajustes.</p>`},
+  {e:'🏷️',t:'Chips de arriba',h:`<p>Arriba a la izquierda ves la ronda, tu dinero y unos <b>chips</b> que se pueden tocar:</p><ul><li>🌧️ ${b('Clima')} y 🌙 ${b('fase del día')}.</li><li>📜 ${b('Misiones')}: encargos de la gente de la región.</li><li>🧩 ${b('Combos')} activos de tu equipo.</li><li>🎃 ${b('Eventos festivos')} según la fecha (Halloween, Navidad…).</li><li>🏆 ${b('Desafío')} activo y avisos de deudas o huevos de los eventos.</li></ul>`}]},
+ {e:'🌲',n:'Biomas y captura',c:'#16a34a',p:[
+  {e:'🌲',t:'Los biomas',h:`<p>Bosque, Pradera, Montaña helada, Volcán, Costa y Cueva son <b>zonas de captura</b>. Cada una tiene sus propios Pokémon y un nivel que sube contigo.</p><ul><li>Se van <b>desbloqueando</b> según la ronda.</li><li>Puedes entrar en ellas todas las veces que quieras.</li><li>Toca la <b>ⓘ</b> de un bioma para ver qué Pokémon salen ahí ahora mismo, según la hora del día y el clima.</li></ul><p>Entrar en un bioma no gasta ronda: es la forma de buscar Pokémon concretos.</p>`},
+  {e:'🔴',t:'Capturar Pokémon',h:`<p>Al <b>debilitar</b> a un Pokémon salvaje se abre la ventana de captura. Desliza para elegir Ball; siempre empieza en la que más probabilidad tiene.</p><ul><li>Poké Ball 20%, Súper Ball 40%, Ultra Ball 60%.</li><li>${b('Nidoball')}: 75% con Pokémon de Nv.15 o menos.</li><li>${b('Balls de tipo')} (Redball, OceanoBall…): 75% contra su tipo.</li></ul><p>Cada vez que se escapa de la Ball aumenta el riesgo de que <b>huya</b>. Si tu equipo está lleno (6), el nuevo va a la <b>Caja</b>.</p>`},
+  {e:'📦',t:'La Caja',h:`<p>Desde el Centro Pokémon abres la <b>Caja</b>: toca un Pokémon del equipo y otro de la Caja para intercambiarlos.</p><ul><li>⭐ ${b('Favorito')}: evita liberarlo por error.</li><li>⚖️ ${b('Comparar')} dos Pokémon, 🎒 ${b('Usar objeto')} en varios a la vez, 🕊️ ${b('Liberar')} (con unos segundos para deshacer).</li><li>🔄 ${b('Renacer')} y ⭐ ${b('Sumar estrellas')} (capítulo de estrellas).</li></ul>`}]},
+ {e:'⚔️',n:'Combate',c:'#ef4444',p:[
+  {e:'⚔️',t:'Lo básico',h:`<p>Cada turno eliges un <b>movimiento</b> (o cambiar, mochila o huir). Quien tiene más <b>Velocidad</b> ataca primero, salvo los movimientos con prioridad.</p><ul><li>💥 Físico usa Ataque · ✨ Especial usa At. Esp. · 🔰 Estado no hace daño.</li><li>Cada movimiento tiene <b>PP</b> (usos). Toca su <b>ⓘ</b> para leer qué hace.</li><li>▲ ×2 indica que es <b>muy eficaz</b> y ▼ ×½ que es poco eficaz contra el rival.</li><li>Los ataques de tu mismo tipo (STAB) pegan un 50% más. Los críticos (1 de cada 16) pegan ×1,5.</li></ul>`},
+  {e:'🧪',t:'Estados, características y habilidades',h:`<ul><li>${b('Estados')}: quemado (menos daño físico), paralizado, envenenado, dormido, congelado y confuso.</li><li>${b('Características')}: movimientos como Danza Espada o Doble Equipo suben o bajan Ataque, Defensa, Velocidad, Precisión o Evasión (de −6 a +6). Se ven bajo la barra de vida.</li><li>${b('Habilidades')}: cada Pokémon tiene una (Intimidación, Levitación…). Cuando se activa aparece un cartel. La guía 📖 las explica todas.</li><li>${b('Clima y campos')}: lluvia, sol, arena, granizo y campos que cambian el daño de ciertos tipos.</li></ul>`},
+  {e:'🔄',t:'Cambiar, mochila y huir',h:`<ul><li>${b('🔄 Cambiar')}: la flecha <b style="color:#4ade80">▲</b> marca a quién le va bien contra el rival y la <b style="color:#f87171">▼</b> a quién le va mal. Si el rival cambia de Pokémon, tú cambias gratis.</li><li>${b('🎒 Mochila')}: pociones, revivir, Balls…</li><li>${b('🏃 Huir')}: solo de combates salvajes.</li></ul>`},
+  {e:'🤖',t:'Botones útiles',h:`<ul><li>${b('⏩ 1×–4×')}: velocidad del combate.</li><li>${b('🤖 Auto')}: tu Pokémon elige solo el mejor ataque. Se pausa si va bajo de vida.</li><li>${b('📜')}: registro de todo lo que ha pasado.</li><li>La <b>pestaña de la derecha</b> (‹) tiene Amigos, Menú, Ajustes, la Tabla de tipos y la guía 📖 de habilidades.</li></ul><p class="tt-tip">En PC: teclas 1–4 para atacar, A para Auto y V para la velocidad.</p>`}]},
+ {e:'📈',n:'Niveles y evolución',c:'#3b82f6',p:[
+  {e:'📈',t:'Experiencia y niveles',h:`<p>Al ganar, la experiencia se reparte entre quienes participaron: por salir al combate, turnos, daño y KOs. El nivel máximo es <b>200</b>.</p><ul><li>${b('Caramelos')}: XP S (+1), M (+2), Raro (+3), L (+5) y XL (+10 niveles).</li><li>Al aprender un movimiento con 4 ya sabidos, eliges cuál olvidar.</li><li>${b('MT')}: enseñan movimientos nuevos (se compran en la tienda).</li><li>${b('Vitaminas')}: suben una característica para siempre.</li></ul>`},
+  {e:'✨',t:'Evolución',h:`<p>Los Pokémon evolucionan solos al llegar a su nivel, con una animación. La ficha del Pokémon dice a qué nivel evoluciona.</p><ul><li>${b('Piedras evolutivas')}: algunos necesitan una (Fuego, Agua, Trueno, Hoja, Lunar…). La guía de piedras de la mochila dice cuál.</li><li>${b('Piedra Eterna')}: equípala para que un Pokémon <b>no</b> evolucione. Úsala otra vez para quitarla.</li></ul>`}]},
+ {e:'💎',n:'Tera, Mega y Ultra Tera',c:'#a855f7',p:[
+  {e:'💎',t:'Teracristalización',h:`<p>Desde el <b>Nv.30</b>, el botón ${b('Tera')} cambia el tipo de tu Pokémon a su <b>tipo Tera</b> durante el combate (una vez por combate).</p><ul><li>Sus ataques de ese tipo pegan más: ×1,5, o ×2 si el tipo Tera coincide con uno de sus tipos.</li><li>Su defensa pasa a ser la del tipo Tera: úsalo para quitarte una debilidad.</li></ul>`},
+  {e:'⚡',t:'Megaevolución',h:`<p>Los Pokémon que tienen Megaevolución (Charizard, Lucario, Gardevoir…) muestran el botón ${b('MEGA')} entre sus movimientos cuando está listo.</p><ul><li>Se desbloquea al <b>Nv.100</b> y después se recarga ganando combates.</li><li>La Mega sube mucho sus estadísticas y a veces cambia su tipo y su habilidad.</li></ul>`},
+  {e:'🌈',t:'Ultra Teracristalización',h:`<p>Los Pokémon con al menos <b>⭐1</b> y Nv.60 desbloquean el pequeño botón rojo de la Tera: la <b>Ultra Tera</b>.</p><p>Sus ataques del tipo Tera son <b>siempre muy eficaces</b>. Se recarga cada 3 victorias.</p>`}]},
+ {e:'⭐',n:'Estrellas: renacer',c:'#eab308',p:[
+  {e:'🔄',t:'Renacer',h:`<p>Cuando un Pokémon llega al <b>Nv.200</b> puede <b>renacer</b>: vuelve al Nv.30, pero gana una <b>estrella</b> para siempre (hasta ⭐8).</p><ul><li>Cada estrella da más estadísticas: +5% por estrella hasta la 5ª y +3% las siguientes (+34% con 8).</li><li>Cada estrella desbloquea una <b>mejora única</b>: Ultra Tera, Mega más frecuente, Segunda vida, Último aliento, Vampirismo, Presencia estelar…</li><li>Conserva sus movimientos y su objeto.</li></ul>`},
+  {e:'⭐',t:'Sumar estrellas',h:`<p>El botón ${b('⭐ Sumar estrellas')} (en la ficha del Pokémon o en la Caja) lo hace todo de una vez:</p><ul><li>Eliges cuántas estrellas quieres y con qué caramelo.</li><li>Te calcula cuántos caramelos hacen falta y lo que cuesta, usando primero los que ya tienes.</li><li>Con ${b('⚡ Hacerlo automáticamente')} sube al Nv.200 y renace las veces necesarias.</li></ul>`}]},
+ {e:'🎒',n:'Mochila y objetos',c:'#f97316',p:[
+  {e:'🎒',t:'La mochila',h:`<p>Toca el botón de la mochila (en el mapa o en combate). Tiene pestañas por categoría.</p><ul><li>${b('Curación')}: pociones (20, 40, 60 PS o todo), Revivir (50%), Éter (+10 PP).</li><li>💊 ${b('Curar a todos')}: usa las pociones justas para curar a tu equipo de golpe.</li><li>${b('Guías PDF')}: tabla de tipos, piedras evolutivas y habilidades.</li><li>${b('Logros')}: objetivos con premios.</li></ul>`},
+  {e:'🧤',t:'Objetos equipables',h:`<p>Cada Pokémon puede llevar <b>un objeto</b>: Restos, Cinta Elegida, Vidasfera, Banda Focus, Chaleco Asalto, bayas…</p><ul><li>Se equipan desde la pestaña ${b('Equipables')} de la mochila.</li><li>El objeto que lleva sale arriba a la derecha de su tarjeta del equipo. Tócalo para quitarlo.</li><li>Se compran en la tienda o se ganan (los líderes a veces regalan uno).</li></ul>`},
+  {e:'🧿',t:'Amuletos y reliquias',h:`<ul><li>${b('Amuletos')}: tienes <b>5 ranuras</b>. Dan ventajas como más dinero, más experiencia o más daño. Se pueden vender desde la mochila para cambiar de estrategia.</li><li>${b('Reliquias')}: efectos permanentes para el resto de la partida (hasta 5). Cada una que compras encarece un 6% las siguientes.</li></ul>`}]},
+ {e:'🛒',n:'Tienda y dinero',c:'#0ea5e9',p:[
+  {e:'🛒',t:'La tienda',h:`<p>Pestañas: Objetos, Poké Balls, Piedras, Equipables, MT, Reliquias y Amuletos.</p><ul><li>Toca la <b>ⓘ</b> de cualquier artículo para leer qué hace y comprarlo desde ahí.</li><li>${b('🛒 Cantidad')}: compra ×5, ×10, ×25 o el máximo de golpe.</li><li>${b('🔄 Rerroll')}: cambia las ofertas de MT, reliquias o amuletos.</li><li>El encapuchado de abajo te lleva al ${b('PokéCasino')}.</li></ul>`},
+  {e:'🏦',t:'Dinero, banco y casino',h:`<ul><li>Ganas Pokémonedas al vencer combates, en eventos, misiones y logros.</li><li>${b('Banco')}: lo que guardas gana un 1% (+1% por medalla) cada vez que ganas un combate.</li><li>${b('PokéCasino')}: 10 juegos (tragaperras, ruleta, blackjack…). La casa siempre tiene algo de ventaja: juega con cabeza.</li><li>Con amigos puedes hacer <b>préstamos</b> con interés desde el banco.</li></ul>`}]},
+ {e:'🌦️',n:'Clima y día/noche',c:'#38bdf8',p:[
+  {e:'🌧️',t:'Clima',h:`<p>Cada 7–8 rondas llega un <b>episodio de clima</b> de 2–3 rondas; el resto del tiempo está despejado.</p><ul><li>🌧️ Lluvia y ⛈️ tormenta: más tipos Agua y Eléctrico.</li><li>🔆 Sol: más Fuego y Planta.</li><li>❄️ Nevada, 🏜️ arena y 🌫️ niebla (−10% de precisión).</li></ul><p>El clima cambia qué Pokémon salen y los combates empiezan con ese tiempo. Toca su chip para leer el efecto.</p>`},
+  {e:'☄️',t:'Clima extremo',h:`<p>A veces el episodio es <b>extremo</b>:</p><ul><li>🌑 ${b('Eclipse')}: noche de golpe, fantasma y siniestro pegan más y los shiny son más frecuentes.</li><li>☄️ ${b('Lluvia de meteoritos')}: Minior, Clefairy… y Caramelos Raros al ganar.</li><li>🌌 ${b('Aurora')}: Hielo y Hada, +50% de experiencia y curación tras cada combate.</li></ul>`},
+  {e:'🌙',t:'Día y noche',h:`<p>El mapa pasa por amanecer, día, atardecer y noche (por rondas o con la hora real, en Ajustes).</p><ul><li>De día salen más Planta, Bicho y Volador.</li><li>De noche salen más Fantasma, Siniestro y Psíquico, y sus ataques pegan un 10% más.</li></ul><p>En fechas especiales hay <b>eventos festivos</b> con Pokémon temáticos y decoración.</p>`}]},
+ {e:'🧩',n:'Combos, maestría y rango',c:'#14b8a6',p:[
+  {e:'🧩',t:'Combos de equipo',h:`<p>Según los Pokémon que lleves se activan <b>combos</b>: Trío inicial, Familia unida, Monotipo, Triángulo elemental, Arcoíris, Destello, Leyendas, Veteranos…</p><p>Dan más daño, defensa o dinero. Toca el chip ${b('🧩 combos')} del mapa para ver los activos y cómo conseguir los demás.</p>`},
+  {e:'🎖️',t:'Maestría y rango',h:`<ul><li>${b('Maestría')}: cada Pokémon gana puntos al debilitar rivales y ganar. Sube hasta el nivel 5 (Maestro): +2% de daño y −2% de daño recibido por nivel.</li><li>${b('Rango de entrenador')} (🌱 en el menú): sube con todo lo que haces y da premios al subir.</li></ul>`}]},
+ {e:'❓',n:'Eventos, misiones y retos',c:'#8b5cf6',p:[
+  {e:'❓',t:'Encuentros misteriosos',h:`<p>Las cartas de ${b('Evento')} traen situaciones con <b>decisiones</b>: un prestamista, un huevo misterioso, un duelo con apuesta, un viajero herido, el Team Rocket…</p><p>Se ven las probabilidades y los riesgos. Algunas decisiones tienen consecuencias <b>rondas después</b>.</p><p>De vez en cuando aparecen ${b('Ruinas misteriosas')} durante 2 rondas: resuelve sus puzles y quizás se te una un Unown.</p>`},
+  {e:'📜',t:'Misiones, desafíos y colecciones',h:`<ul><li>${b('📜 Misiones')}: encargos (enseñar un Pokémon de cierto tipo, ganar, capturar…) a cambio de premios.</li><li>${b('🏆 Desafíos')} (menú principal): uno diario y uno semanal con reglas especiales. Solo cuentan si los activas.</li><li>${b('🏅 Colecciones')} (en la Pokédex): medallas por completar grupos, regiones y shiny.</li><li>La ${b('🔔 campanita')} del menú avisa de premios, huevos y expediciones listas.</li></ul>`}]},
+ {e:'🏠',n:'Tu casa',c:'#ec4899',p:[
+  {e:'🏠',t:'Decorar',h:`<p>Entra desde ${b('Mi casa')} en el mapa o el botón 🏠. Con ${b('🎨 Decorar')} compras muebles, papel pintado y suelos, los colocas y los tiñes.</p><p>Elige <b>compañeros</b> para que paseen por la casa; tócalos y reaccionan. La casa tiene varias <b>habitaciones</b>, una sala de trofeos y, si lo compras, el Laboratorio.</p>`},
+  {e:'🍳',t:'Muebles útiles',h:`<p>Muchos muebles hacen algo al tocarlos y luego esperan unas rondas:</p><ul><li>🍳 ${b('Cocina')}: recetas con bayas y un minijuego. Curan o dan ventajas durante varios combates.</li><li>⛩️ ${b('Santuario')}: revive a un Pokémon.</li><li>🍓 ${b('Huerto')}, 🧊 ${b('Nevera')}, 🔭 ${b('Telescopio')}, 🎡 ${b('Ruleta')}: regalos.</li></ul>`},
+  {e:'🥚',t:'Cría, guardería y expediciones',h:`<ul><li>🪺 ${b('Nido')}: cruza dos Pokémon y nace una cría que mezcla sus tipos (puede salir shiny).</li><li>🔬 ${b('Laboratorio')}: experimentos con tus Pokémon.</li><li>${b('Guardería')}: tus Pokémon suben de nivel con el tiempo real.</li><li>🧭 ${b('Expediciones')}: mándalos de viaje 30 min, 2 h o 6 h y vuelven con premios.</li></ul><p>La pestaña lateral ${b('MÁS')} de la casa tiene además los 🃏 <b>Sobres</b> de cartas y los 🎮 <b>Minijuegos</b>.</p>`}]},
+ {e:'🌋',n:'Megaincursiones',c:'#dc2626',p:[
+  {e:'🌋',t:'Megaincursiones',h:`<p>Hasta <b>6 jugadores</b> contra un jefe legendario gigante, en tiempo real.</p><ul><li>Se abren a <b>horas fijas</b>; el menú muestra cuándo es la próxima. Hay normales y ✨ Simples (más fáciles, jefe shiny).</li><li>Tienes <b>3 tickets</b>: cada uno es un asalto de pocos minutos. La vida del jefe se guarda entre asaltos.</li><li>Puedes atacar, apoyar al grupo, usar Tera y Mega y lanzar <b>ánimos</b>.</li><li>Si lo derrotáis, intentas capturarlo con <b>Megaballs</b>.</li></ul>`}]},
+ {e:'👥',n:'Multijugador y amigos',c:'#6366f1',p:[
+  {e:'👥',t:'Amigos',h:`<p>El botón 👥 abre tu lista de amigos. Comparte tu <b>código de amigo</b> o añade el de otro.</p><ul><li>Ves quién está conectado y qué hace.</li><li>Invítalos a intercambiar, combatir, regalar, a una megaincursión o a la Aventura Multiplayer.</li><li>${b('🏠 Visitar casa')}: dale «me gusta» o déjale un regalo.</li><li>${b('🛒 Mercado')}: compra y vende objetos y Pokémon entre amigos.</li></ul>`},
+  {e:'🎮',t:'Modos multijugador',h:`<ul><li>${b('Multijugador')} (menú): intercambios, combates contra amigos y la 🗼 ${b('Torre de batalla')} 2 contra 2 (libre, torre infinita o torre del jefe).</li><li>${b('Aventura Multiplayer')}: de 1 a 4 jugadores, cada uno con un solo Pokémon que es una <b>clase</b> (asesino, sanador…). Recorréis juntos un mapa con combates, tienda y eventos.</li><li>También puedes <b>mirar</b> el combate de un amigo como espectador.</li></ul>`}]},
+ {e:'⚙️',n:'Ajustes y modos',c:'#64748b',p:[
+  {e:'⚙️',t:'Ajustes',h:`<ul><li>${b('Juego')}: rondas, vidas, velocidad, personaje, mapa simple, ciclo día/noche y avisos automáticos.</li><li>${b('Gráficos')}: baja la calidad si el móvil va lento.</li><li>${b('Datos')}: <b>3 ranuras de guardado</b> y copia de seguridad para pasar tu partida a otro dispositivo.</li><li>🎮 ${b('Modo libre')}: modo práctica y equipo a tu gusto para probar combates.</li></ul><p>Con el botón 📲 del menú puedes instalar el juego en tu pantalla de inicio y jugar incluso sin conexión.</p>`},
+  {e:'💡',t:'Consejos finales',h:`<ul><li>Lleva un equipo variado: un atacante rápido, uno resistente y uno que cubra tus debilidades.</li><li>Cura en el Centro antes de un líder y guarda Revivir para las rondas difíciles.</li><li>Mira las flechas ▲▼ y la Tabla de tipos: la ventaja de tipo gana más combates que el nivel.</li><li>Guarda dinero en el banco: crece con cada victoria.</li></ul><p class="tt-tip">¡Ya estás listo! Puedes volver a este tutorial cuando quieras desde el botón <b>📘</b> del menú.</p>`}]}];
+ const PAGES=[];C.forEach((c,ci)=>c.p.forEach((p,pi)=>PAGES.push({ci,pi,...p})));
+ let ov=null,cur=0,idx=false,st=ld();
+ const firstOf=ci=>PAGES.findIndex(p=>p.ci===ci);
+ function mark(){const p=PAGES[cur];if(!p)return;st.read=st.read||{};const all=C[p.ci].p.length;const k=String(p.ci);st.read[k]=Math.max(st.read[k]|0,p.pi+1);if(st.read[k]>all)st.read[k]=all;st.seen=1;st.last=cur;sv(st);upBtn()}
+ function paint(){if(!ov)return;const p=PAGES[cur],c=C[p.ci];
+  const box=ov.querySelector('.tt-box');box.style.setProperty('--tc',c.c);
+  if(idx){box.querySelector('.tt-main').innerHTML=`<h3 class="tt-ih">📑 Índice</h3><div class="tt-grid">${C.map((x,i)=>{const r=(st.read||{})[i]|0,done=r>=x.p.length;return`<button type="button" class="tt-ch${done?' done':''}" data-ch="${i}" style="--cc:${x.c}"><i>${x.e}</i><b>${x.n}</b><small>${done?'✓ leído':r?r+'/'+x.p.length:x.p.length+' pág.'}</small></button>`}).join('')}</div>`;
+   box.querySelector('.tt-hd b').textContent='Tutorial';box.querySelector('.tt-ft').style.visibility='hidden';box.querySelector('[data-a="idx"]').classList.add('on');return}
+  box.querySelector('[data-a="idx"]').classList.remove('on');box.querySelector('.tt-ft').style.visibility='';
+  box.querySelector('.tt-hd b').innerHTML=`${c.e} ${c.n}<small>Capítulo ${p.ci+1}/${C.length}</small>`;
+  box.querySelector('.tt-main').innerHTML=`<div class="tt-pg"><div class="tt-ill"><span>${p.e}</span></div><h3>${p.t}</h3><div class="tt-tx">${p.h}</div></div>`;
+  box.querySelector('.tt-main').scrollTop=0;
+  box.querySelector('.tt-dots').innerHTML=c.p.map((_,i)=>`<i class="${i===p.pi?'on':''}"></i>`).join('');
+  box.querySelector('[data-a="prev"]').disabled=cur===0;const last=cur===PAGES.length-1;const nx=box.querySelector('[data-a="next"]');nx.textContent=last?'✓ Terminar':(p.pi===c.p.length-1?'Siguiente capítulo →':'Siguiente →');
+  box.querySelector('.tt-bar i').style.width=((cur+1)/PAGES.length*100).toFixed(1)+'%';
+  mark()}
+ function go(n){cur=Math.max(0,Math.min(PAGES.length-1,n));idx=false;paint();try{beep(620,.04,'triangle')}catch(e){}}
+ function build(){ov=D.createElement('div');ov.id='tutov';ov.hidden=true;
+  ov.innerHTML=`<div class="tt-box" role="dialog" aria-label="Tutorial"><div class="tt-hd"><button type="button" class="tt-ib" data-a="idx" aria-label="Índice">📑</button><b></b><button type="button" class="tt-ib" data-a="x" aria-label="Cerrar">✕</button></div><div class="tt-bar"><i></i></div><div class="tt-main"></div><div class="tt-ft"><button type="button" class="act tt-nv" data-a="prev">← Anterior</button><span class="tt-dots"></span><button type="button" class="act tt-nv tt-go" data-a="next">Siguiente →</button></div></div>`;
+  D.body.append(ov);
+  ov.addEventListener('click',e=>{const t=e.target;if(t===ov)return close();const a=t.closest('[data-a]');const ch=t.closest('[data-ch]');
+   if(ch){go(firstOf(+ch.dataset.ch));return}if(!a)return;const k=a.dataset.a;
+   if(k==='x')close();else if(k==='idx'){idx=!idx;paint()}else if(k==='prev')go(cur-1);else if(k==='next'){if(cur===PAGES.length-1){close();try{toast('📘 ¡Tutorial completado! Puedes repasarlo cuando quieras desde el menú')}catch(_){}}else go(cur+1)}});
+  let x0=null,y0=0;const m=ov.querySelector('.tt-main');
+  m.addEventListener('touchstart',e=>{const t=e.touches[0];x0=t.clientX;y0=t.clientY},{passive:true});
+  m.addEventListener('touchend',e=>{if(x0==null||idx)return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;x0=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5)go(cur+(dx<0?1:-1))},{passive:true});
+  D.addEventListener('keydown',e=>{if(!ov||ov.hidden)return;if(e.key==='Escape')close();else if(e.key==='ArrowRight'&&!idx)go(cur+1);else if(e.key==='ArrowLeft'&&!idx)go(cur-1)})}
+ function open(at){if(!ov)build();st=ld();cur=typeof at==='number'?at:(st.last|0);if(cur>=PAGES.length-1&&at==null)cur=0;idx=false;ov.hidden=false;D.body.classList.add('ovl');paint();requestAnimationFrame(()=>ov.classList.add('on'))}
+ function close(){if(!ov)return;ov.classList.remove('on');D.body.classList.remove('ovl');setTimeout(()=>{if(ov&&!ov.classList.contains('on'))ov.hidden=true},200);try{window.__kick&&__kick()}catch(e){}}
+ window.__tutOpen=open;
+ /* botón 📘 en el menú principal (junto al rango y los desafíos) */
+ let btn=null;function upBtn(){if(!btn)return;btn.classList.toggle('has',!(ld().seen))}
+ function addBtn(){const row=D.getElementById('clrow');if(!row)return false;if(btn&&btn.parentNode===row)return true;
+  if(!btn){btn=D.createElement('button');btn.type='button';btn.id='tutb';btn.setAttribute('aria-label','Tutorial');btn.title='Tutorial';btn.innerHTML='<span>📘</span><b>!</b>';btn.onclick=e=>{e.stopPropagation();open()}}
+  row.append(btn);upBtn();return true}
+ if(!addBtn()){let n=0;const t=setInterval(()=>{if(addBtn()||++n>40)clearInterval(t)},500)}
+ new MutationObserver(()=>{const r=D.getElementById('clrow');if(r&&btn&&btn.parentNode!==r)addBtn()}).observe(D.getElementById('menu')||D.body,{childList:true,subtree:true});
+ /* jugadores nuevos: se abre solo la primera vez */
+ const veteran=()=>{try{const L=localStorage;return !!(L.getItem('pa_run')||L.getItem('pa_slot_cur')||L.getItem('pa_t')||L.getItem('pa_tcg')||L.getItem('pa_bkp_last')||L.getItem('pa_mg')||L.getItem('pa_cl_seen')||L.getItem('pr_mappin')||Object.keys(L).some(k=>/^pa_slot_\d/.test(k)))}catch(e){return true}};
+ setTimeout(()=>{try{st=ld();if(st.seen||st.auto)return;st.auto=1;sv(st);if(veteran()){upBtn();return}if(D.body.dataset.v&&D.body.dataset.v!=='menu')return;open(0)}catch(e){}},1600);
 })();
 
 })();</script>
