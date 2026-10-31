@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v42.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v43.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -1145,7 +1145,7 @@ async function pick(i){
   if(c.k=='shop'){await shop();C.splice(i,1);R.lock=0;$('#cards').innerHTML=C.map((x,j)=>cardHTML(x,j,C.length)).join('');$$('#cards .ca').forEach((b,j)=>b.onclick=()=>pick(j));$('#mn').innerHTML=IC.coin+' '+nf(R.money);teamBar();$$('#tm>div').forEach((d,j)=>d.onclick=()=>info(R.team[j],1));return}else if(c.k=='ev'){await EV[Math.random()*EV.length|0]();ach('ev')}else{try{await fight(c)}catch(e){console.error(e);R.lock=0;show('run');toast('No se pudo cargar el combate. Reintenta.')}return}
   R.round++;showMap()}
 async function fight(c){
-  toast('Buscando rival…');
+  toast('Buscando rival…');try{R.team.forEach(m=>{try{const p=evoFill(m);if(p&&p.catch)p.catch(()=>{})}catch(e){}})}catch(e){} /* v43: datos de evolución precargados: sin espera vacía al acabar el combate */
   const n=c.k=='wild'?1:c.k=='boss'?6:(c.np||1);
   const picks=c.raid?[c.raid]:c.roster?c.roster.map(([id,name])=>({id,name})):c.ray?[{id:384,name:'rayquaza'}]:c.k=='boss'?await pickBoss(6):await pickEnemies(n,c.k=='wild'?(Math.random()<.2?2:1):0,c.bio);
   const en=await Promise.all(picks.map(p=>mk(p,c.lv)));
@@ -1168,6 +1168,7 @@ async function gainXp(f){
     while(m.lvl<MAXL&&m.xp>=XPT(m.lvl+1)){m.lvl++;up=1;const o=m.max;stats(m);if(m.hp>0)m.hp+=m.max-o}
     if(m===act('p')){if(up){bar('p');$('#pP small').textContent=' Nv.'+m.lvl;burst(...ctr(el('p')),'#ffd23f');beep(900,.3,'triangle');await say(`¡${nm(m)} subió al nivel ${m.lvl}!`)}}if(m.lvl>lo)await learnNew(m,lo)}}
 async function checkEvo(){
+  try{await Promise.all(R.team.map(m=>Promise.resolve(evoFill(m)).catch(()=>{})))}catch(e){}
   for(const m of R.team){let e;
     while((await evoFill(m),e=pickEvo(m))&&m.lvl>=e[0]){
       const old=nm(m),oid=m.id;m.id=e[1];m.name=NAMES[m.id];const d=await getD(m.id);m.types=d.types;m.b=d.st;m.tera=d.types[0];
@@ -5190,7 +5191,7 @@ const DEF=[
   {k:'lives',t:'Vidas',d:'Infinitas: al caer, tu equipo se cura y sigues sin perder vidas',o:[[3,'3 vidas'],['inf','∞ Infinitas']]},
   {k:'speed',t:'Velocidad de combate',o:[[1,'1×'],[2,'2×'],[3,'3×'],[4,'4×']]},
   {k:'help',t:'Modo ayuda',d:'Flechas de ventaja de tipo',b:1},
-  {k:'ntf',t:'Notificaciones',d:'Campanita del menú y avisos de huevos, sobres, incursiones, expediciones…',b:1},
+  {k:'ntf',t:'Avisos automáticos',d:'Carteles que salen solos (hucha, banco, misiones, huevos, sobres…) y la campanita del menú. Desactivado: solo verás los avisos de lo que tocas tú',b:1},
   {k:'gender',t:'Personaje',d:'Combates de gimnasio',o:[['m','Chico'],['f','Chica']]},
   {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
   {k:'dn',t:'Ciclo día y noche',d:'Por turnos: cambia cada pocas rondas · Hora real: sigue el reloj de tu dispositivo',o:[['turn','Por turnos'],['real','Hora real'],['off','Desactivado']]},
@@ -8540,7 +8541,14 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'42.9',t:'Biomas respetados y avisos opcionales',s:'cur',l:[
+ {v:'43.0',t:'Carteles nuevos y mapa más limpio',s:'cur',l:[
+  '💬 Carteles de aviso rediseñados: fondo morado con borde dorado, icono a un lado y una barrita que marca el tiempo. Ya nunca muestran código raro en vez del icono de las monedas',
+  '🔕 Ajustes → Juego → «Avisos automáticos»: al desactivarlo desaparecen los carteles que salen solos (hucha, banco, misiones, huevos, sobres…) y la campanita; los avisos de lo que tocas tú se siguen viendo',
+  '🗺️ Mapa: la «i» de la guía y el nivel de cada bioma solo aparecen al tocar el bioma',
+  '🧭 Mapa simple: cada botón tiene su propia decoración (árboles en el bosque, olas en la costa, picos en la montaña, cristales en la cueva, toldo en la tienda…)',
+  '⚡ Al terminar un combate en el que tu Pokémon aprende un movimiento ya no se queda la pantalla vacía unos segundos: los datos de evolución se cargan antes',
+ ]},
+ {v:'42.9',t:'Biomas respetados y avisos opcionales',s:'prev',l:[
   '🌿 Arreglado: el clima del mapa, el día/noche, el clima extremo y los eventos festivos metían Pokémon de otros biomas (por ejemplo, Snivy en la costa con Sol intenso). Ahora solo hacen más frecuentes a los Pokémon que ya viven en ese bioma',
   '📖 Guía de cada bioma: muestra la hora y el clima actuales, marca con 🌙/🌞 y el icono del clima a los Pokémon que salen más, y tiene filtros ⏰ Ahora, 🌞 Día y 🌙 Noche',
   '🔔 Ajustes → Juego: nuevo interruptor «Notificaciones» para quitar la campanita del menú y todos los avisos',
@@ -9936,9 +9944,9 @@ function mapHTML(sh,zs){
     const body=`<rect class="tt" x="${x-27}" y="${y-27}" width="54" height="54" rx="11" style="fill:${isC?'#fbbf24':'#22c55e'};fill-opacity:${isC?.55:(op*.5).toFixed(2)}"/><text class="tn${isC?' new':''}${j>99?' tn3':''}" x="${x}" y="${y+(boss?10:9)}" text-anchor="middle" font-size="${boss?30:(j>99?20:26)}" style="opacity:${op.toFixed(2)}">${boss?'👑':j}</text>${gm}`;
     if(isC){let spr='';try{const m0=R.team&&(R.team[R.li]||R.team[0]);if(m0)spr=`<g class="bob"><image href="${mini(m0.id,m0.sh)}" x="${x-38}" y="${y-92}" width="76" height="76" style="image-rendering:pixelated;filter:drop-shadow(0 3px 2px #000a)"/></g>`}catch(e){}
       cur=`<g class="mnode cur" role="button" tabindex="0" aria-label="Ronda ${j}"><circle class="cg" cx="${x}" cy="${y}" r="46"/><rect x="${x-34}" y="${y-34}" width="68" height="68" fill="transparent"/>${body}${spr}</g>`}else tl+=`<g class="mdn">${body}</g>`}
-  const bd=Object.entries(bad).map(([id,t])=>`<span class="mbd" style="left:${CE[id][0]/W*100}%;top:${CE[id][1]/H*100}%">${t}</span>`).join('')+Object.entries(lvb).map(([id,[l,d]])=>CE[id]?`<span class="mbd mlv mlv-${d}" style="left:${CE[id][0]/W*100}%;top:${CE[id][1]/H*100}%">Nv. ${l}</span>`:'').join('')+(R.cenFree?`<span class="mbd ok" style="left:${CE.mcen[0]/W*100}%;top:${(CE.mcen[1]+60)/H*100}%">Gratis</span>`:'')+`<span class="mbd raid" id="mraidb" style="left:${CE.mraid[0]/W*100}%;top:${(CE.mraid[1]-70)/H*100}%"></span>`;
+  const bd=Object.entries(bad).map(([id,t])=>`<span class="mbd" style="left:${CE[id][0]/W*100}%;top:${CE[id][1]/H*100}%">${t}</span>`).join('')+Object.entries(lvb).map(([id,[l,d]])=>CE[id]?`<span class="mbd mlv mlv-${d}" data-z="${id}" style="left:${CE[id][0]/W*100}%;top:${CE[id][1]/H*100}%">Nv. ${l}</span>`:'').join('')+(R.cenFree?`<span class="mbd ok" style="left:${CE.mcen[0]/W*100}%;top:${(CE.mcen[1]+60)/H*100}%">Gratis</span>`:'')+`<span class="mbd raid" id="mraidb" style="left:${CE.mraid[0]/W*100}%;top:${(CE.mraid[1]-70)/H*100}%"></span>`;
   return`<div id="dmap" class="imap"><div class="imw"><div class="imc"><svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg"><image href="${IMG}" width="${W}" height="${H}"/>${hs}${dim}${tl}${cur}</svg>${bd}</div></div><div id="mhint" class="mhint">${DEF}</div></div>`}
-function setSel(id){sel=id;{const rb=Q('#mraidb');if(rb)rb.classList.toggle('sel',id==='mraid')}document.querySelectorAll('#dmap .hs').forEach(g=>g.classList.toggle('sel',g.id===id));const h=Q('#mhint');if(h)h.innerHTML=id?(HINT[id]||''):DEF}
+function setSel(id){sel=id;/* v43: la «i» y el nivel solo se ven en el bioma tocado */document.querySelectorAll('#dmap .mlv').forEach(e=>e.classList.toggle('on',!!id&&e.dataset.z===id));document.querySelectorAll('#dmap .bzi').forEach(e=>e.classList.toggle('on',!!id&&'mz'+e.dataset.b===id));{const rb=Q('#mraidb');if(rb)rb.classList.toggle('sel',id==='mraid')}document.querySelectorAll('#dmap .hs').forEach(g=>g.classList.toggle('sel',g.id===id));const h=Q('#mhint');if(h)h.innerHTML=id?(HINT[id]||''):DEF}
 document.addEventListener('click',e=>{const t=e.target;if(!t.closest)return;const g=t.closest('#dmap .hs');
   if(g){if(sel!==g.id){e.stopImmediatePropagation();e.preventDefault();setSel(g.id)}else setSel(null)}else if(t.closest('#dmap')&&!t.closest('.mnode'))setSel(null)},true);
 document.addEventListener('keydown',e=>{if(e.key!='Enter'&&e.key!=' ')return;const g=e.target.closest&&e.target.closest('#dmap .hs');if(!g)return;
@@ -12063,15 +12071,15 @@ const tn=n=>n+(n==1?' turno':' turnos');
 function places(){
  const r=R.round,L=[];let locked=0,zs=[];try{zs=zoneState()}catch(e){}
  zs.forEach((z,i)=>{const b=BIO[i];if(r<z.u){locked++;return}
-  const zl=window.zoneLv?zoneLv(i):0;L.push({id:'mz'+i,ic:b.ic||'🌿',n:b.n,s:(z.ok?'Abierto':'💤 descansa '+z.w+(z.w==1?' ronda':' rondas'))+(zl?' · Nv. '+zl:''),ok:z.ok,c:ZC[i]||ZC[0]})});
+  const zl=window.zoneLv?zoneLv(i):0;L.push({id:'mz'+i,k:b.k||'for',ic:b.ic||'🌿',n:b.n,s:(z.ok?'Abierto':'💤 descansa '+z.w+(z.w==1?' ronda':' rondas'))+(zl?' · Nv. '+zl:''),ok:z.ok,c:ZC[i]||ZC[0]})});
  let sh=r-R.ls>=3;try{sh=!!(CHT.open||S.help||sh||gk(r)>0)}catch(e){}
- L.push({id:'mshop',ic:'🛒',n:'Tienda',s:sh?'Abierta':'🔒 '+tn(Math.max(1,3-(r-R.ls))),ok:sh,c:['#2563eb','#1e3a8a']});
- L.push({id:'mcen',ic:'🏥',n:'Centro Pokémon',s:R.cenFree?'Gratis hoy':'Cura a tu equipo',ok:1,hot:!!R.cenFree,c:['#e11d48','#881337']});
- L.push({id:'mbank',ic:'🏦',n:'Banco Pokémon',s:'Guarda y retira dinero',ok:1,c:['#ca8a04','#713f12']});
- L.push({id:'mhome',ic:'🏠',n:'Mi casa',s:'Decoración y trofeos',ok:1,c:['#db2777','#831843']});
+ L.push({id:'mshop',k:'shop',ic:'🛒',n:'Tienda',s:sh?'Abierta':'🔒 '+tn(Math.max(1,3-(r-R.ls))),ok:sh,c:['#2563eb','#1e3a8a']});
+ L.push({id:'mcen',k:'cen',ic:'🏥',n:'Centro Pokémon',s:R.cenFree?'Gratis hoy':'Cura a tu equipo',ok:1,hot:!!R.cenFree,c:['#e11d48','#881337']});
+ L.push({id:'mbank',k:'bank',ic:'🏦',n:'Banco Pokémon',s:'Guarda y retira dinero',ok:1,c:['#ca8a04','#713f12']});
+ L.push({id:'mhome',k:'home',ic:'🏠',n:'Mi casa',s:'Decoración y trofeos',ok:1,c:['#db2777','#831843']});
  const raid=!!(window.__mraidAny&&__mraidAny());
  let rs='Mega y Simple';try{const X=window.__mraidNext?__mraidNext():[],o=X.find(x=>x.open);if(o)rs=o.k==='simple'?'✨ ¡Simple abierta ahora!':'🌋 ¡Megaincursión abierta ahora!';else{const n=X.filter(x=>x.next).sort((a,b)=>a.next-b.next)[0];if(n)rs=(n.k==='simple'?'Próxima simple':'Próxima mega')+' a las '+new Date(n.next).getHours()+':00'}}catch(e){}
- L.push({id:'mraid',ic:'🌋',n:'Megaincursiones',s:rs,ok:1,hot:raid,c:['#a21caf','#4c1d95']});
+ L.push({id:'mraid',k:'raid',ic:'🌋',n:'Megaincursiones',s:rs,ok:1,hot:raid,c:['#a21caf','#4c1d95']});
  return{L:L.filter(p=>Q('#'+p.id)),locked}}
 function go(id){const g=Q('#'+id);if(!g||R.lock)return;if(typeof g.onclick=='function')g.onclick();else g.dispatchEvent(new MouseEvent('click',{bubbles:true}))}
 function apply(){
@@ -12080,7 +12088,7 @@ function apply(){
  d.style.display='none';
  const{L,locked}=places(),m0=R.team&&(R.team[R.li]||R.team[0]),boss=window.isChampR?isChampR(R.round):(!R.inf&&R.round==R.max);
  const h=`<button type="button" class="smgo" data-go="cur">${m0?`<img src="${mini(m0.id,m0.sh)}" alt="">`:''}<span>${boss?'👑 Combate final':'▶ Continuar la ruta'}<small>Ronda ${R.round}/${R.inf?'∞':R.max} · elegir carta</small></span></button>
-<div class="smgr">${L.map((p,i)=>`<button type="button" class="smb${p.ok?'':' off'}${p.hot?' hot':''}" data-go="${p.id}" style="--c1:${p.c[0]};--c2:${p.c[1]};--dl:${(-i*.45).toFixed(2)}s" aria-label="${esc(p.n)}"><i>${p.ic}</i>${esc(p.n)}<small>${esc(p.s)}</small></button>`).join('')}</div>
+<div class="smgr">${L.map((p,i)=>`<button type="button" class="smb${p.ok?'':' off'}${p.hot?' hot':''}" data-go="${p.id}" data-k="${p.k||''}" style="--c1:${p.c[0]};--c2:${p.c[1]};--dl:${(-i*.45).toFixed(2)}s" aria-label="${esc(p.n)}"><i>${p.ic}</i>${esc(p.n)}<small>${esc(p.s)}</small></button>`).join('')}</div>
 `;
  let s=old;if(!s){s=document.createElement('div');s.id='smap';d.after(s)}
  s.innerHTML=h;
@@ -12643,9 +12651,20 @@ let q=[],cur=null,tm=0,hideT=0,at=0;
 const dur=t=>Math.min(7000,Math.max(3400,String(t).length*55));
 function next(){const e=box();if(!e)return;clearTimeout(tm);clearTimeout(hideT);
  if(!q.length){cur=null;e.classList.add('tout');hideT=setTimeout(()=>{e.style.display='none';e.classList.remove('tout')},240);return}
- cur=q.shift();at=Date.now();e.classList.remove('tout');e.textContent=cur;e.style.display='none';void e.offsetWidth;e.style.display='block';
+ cur=q.shift();at=Date.now();e.classList.remove('tout');
+ /* v43: cartel con icono, texto y barra de tiempo */
+ {const m=cur.match(/^((?:\p{Extended_Pictographic}|\p{Regional_Indicator})(?:\uFE0F|\u20E3|\u200D(?:\p{Extended_Pictographic}))*)\s*/u),ic=m?m[1]:'💬',tx=m?cur.slice(m[0].length):cur,d0=q.length?1700:dur(cur);
+  const es=x=>x.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));e.innerHTML=`<i class="tic">${es(ic)}</i><span class="ttx">${es(tx)}</span><b class="tbar" style="animation-duration:${d0}ms"></b>`}
+ e.style.display='none';void e.offsetWidth;e.style.display='block';
  tm=setTimeout(next,q.length?1700:dur(cur))}
-function show(t){t=String(t==null?'':t);if(!t.trim())return;
+/* los iconos dibujados (monedas, objetos…) se cambian por emojis: el cartel nunca muestra código */
+const IEM={coin:'🪙',bag:'🎒',pot:'🧪',sup:'🧪',hyp:'🧪',max:'🧪',rev:'💎',can:'🍬',pb:'🔴',gb:'🔵',ub:'🟡',mrb:'🔴'};
+function clean(t){if(t.indexOf('<')<0)return t;try{if(typeof IC==='object')for(const k in IC){const v=IC[k];if(typeof v==='string'&&v.length>8&&t.includes(v))t=t.split(v).join(IEM[k]||'')}}catch(e){}
+ return t.replace(/<svg[\s\S]*?<\/svg>/gi,'🪙').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s{2,}/g,' ').trim()}
+/* «Avisos automáticos» desactivados en Ajustes: solo salen los carteles de lo que acabas de tocar tú */
+let lastIn=0;['pointerdown','keydown'].forEach(ev=>D.addEventListener(ev,()=>{lastIn=Date.now()},true));
+function show(t){t=clean(String(t==null?'':t));if(!t.trim())return;
+ try{if(typeof S==='object'&&S&&S.ntf===false&&Date.now()-lastIn>1500)return}catch(e){}
  /* sin aviso de experiencia tras los combates */
  if(/^PE: /.test(t))return;
  /* el aviso de rendimiento (FPS) sale como mucho 2 veces en total */
@@ -12656,7 +12675,7 @@ function show(t){t=String(t==null?'':t);if(!t.trim())return;
  if(!cur)next();
  else{clearTimeout(tm);tm=setTimeout(next,Math.max(150,1700-(Date.now()-at)))}}
 toast=show;window.toast=show;
-D.addEventListener('click',e=>{const t=box();if(t&&e.target===t)next()});
+D.addEventListener('click',e=>{const t=box();if(t&&e.target&&e.target.closest&&e.target.closest('#toast'))next()});
 /* ---------- Pantalla completa ---------- */
 const can=!!(E.requestFullscreen||E.webkitRequestFullscreen)&&(D.fullscreenEnabled!==false||D.webkitFullscreenEnabled);
 const isFs=()=>!!(D.fullscreenElement||D.webkitFullscreenElement);
@@ -16569,7 +16588,7 @@ window.openBiomeDex=open;
 function place(){const v=D.body.dataset.v;if(v!=='map'){D.querySelectorAll('.bzi').forEach(e=>e.remove());return}
  const c=Q('#dmap .imc');if(c&&getComputedStyle(Q('#dmap')).display!=='none'){const r0=c.getBoundingClientRect();
   BIO.forEach((b,i)=>{const z=Q('#mz'+i);let btn=c.querySelector('.bzi[data-b="'+i+'"]');if(!z){if(btn)btn.remove();return}
-   if(!btn){btn=D.createElement('button');btn.type='button';btn.className='bzi';btn.dataset.b=i;btn.textContent='i';btn.setAttribute('aria-label','Guía de '+b.n);btn.onclick=e=>{e.stopPropagation();e.preventDefault();open(i)};
+   if(!btn){btn=D.createElement('button');btn.type='button';btn.className='bzi';btn.dataset.b=i;btn.textContent='i';btn.setAttribute('aria-label','Guía de '+b.n);btn.onclick=e=>{e.stopPropagation();e.preventDefault();open(i)};{const zz=Q('#mz'+i);if(zz&&zz.classList.contains('sel'))btn.classList.add('on')}
     ['pointerdown','touchstart','dblclick'].forEach(t=>btn.addEventListener(t,e=>e.stopPropagation()));c.append(btn)}
    const r=z.getBoundingClientRect();if(!r.width){btn.style.display='none';return}btn.style.display='';const x=r.right-r0.left-8,y=r.top-r0.top+10;btn.style.left=x+'px';btn.style.top=y+'px'})}
  D.querySelectorAll('#smap .smb[data-go^="mz"]').forEach(s=>{if(s.querySelector('.bzi2'))return;const i=+s.dataset.go.slice(2);const k=D.createElement('span');k.className='bzi2';k.textContent='i';k.setAttribute('role','button');k.setAttribute('aria-label','Guía del bioma');
@@ -19661,6 +19680,41 @@ body.nontf #ntfb{display:none!important}
 #bdx .zqcd .bdtg{position:absolute;left:4px;top:4px;display:flex;gap:1px;font-size:12px;line-height:1;pointer-events:none}
 #bdx .zqcd .bdtg em{position:static!important;font-style:normal}
 #bdx .zqcd.bst{box-shadow:0 0 0 2px #fde047aa,0 0 12px #fde04755}
+/* v43: carteles (toasts) con más estilo */
+html body #toast{display:none;background:linear-gradient(135deg,#2a1458f2,#120a2ef2)!important;color:#fff!important;border:1.5px solid #fbbf24aa!important;border-left:1.5px solid #fbbf24aa!important;border-radius:16px!important;padding:10px 14px 12px 10px!important;box-shadow:0 12px 30px #000c,0 0 0 1px #ffffff12 inset,0 0 18px #7c3aed55!important;font:800 13.5px/1.35 system-ui,sans-serif!important;text-align:left!important;overflow:hidden;cursor:pointer;-webkit-backdrop-filter:none;backdrop-filter:none}
+html body #toast[style*="block"]{display:flex!important;align-items:center;gap:10px}
+#toast .tic{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:12px;font-style:normal;font-size:21px;background:radial-gradient(circle at 35% 30%,#fde68a55,#7c3aed55 70%);box-shadow:inset 0 0 0 1px #fde68a55}
+#toast .ttx{flex:1;min-width:0;overflow-wrap:anywhere}
+#toast .tbar{position:absolute;left:0;bottom:0;height:3px;width:100%;transform-origin:left;background:linear-gradient(90deg,#fbbf24,#f472b6);animation:tbar linear forwards;opacity:.85}
+@keyframes tbar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+html body #toast::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120px 50px at 0 0,#fde68a22,transparent 70%)}
+html body #toast{position:fixed}
+body.lowfx #toast .tbar{animation:none;display:none}
+html body #toast{max-width:min(380px,calc(100vw - 24px))!important;min-width:min(260px,calc(100vw - 24px))}
+/* mapa: la «i» de la guía y el nivel de cada bioma aparecen solo al tocar el bioma */
+#dmap .mlv{opacity:0;transform:translate(-50%,-50%) scale(.7);transition:opacity .2s,transform .25s cubic-bezier(.3,1.4,.5,1);pointer-events:none}
+#dmap .mlv.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#dmap .bzi{opacity:0;transform:scale(.6);pointer-events:none;transition:opacity .2s,transform .25s cubic-bezier(.3,1.4,.5,1)}
+#dmap .bzi.on{opacity:1;transform:scale(1);pointer-events:auto}
+/* v43: mapa simple con decoración temática de cada lugar (estática: no gasta rendimiento) */
+#smap .smb{overflow:hidden;isolation:isolate}
+#smap .smb::before{content:"";position:absolute;inset:auto 0 0 0;height:72%;z-index:-1;background:var(--deco) center bottom/100% auto no-repeat;opacity:.24;pointer-events:none}
+#smap .smb>i{position:relative;width:52px;height:52px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffffff40,#ffffff10 60%,transparent 70%);box-shadow:inset 0 0 0 2px #ffffff30}
+#smap .smb small{background:#0004;padding:2px 8px;border-radius:999px}
+#smap .smb{box-shadow:0 10px 20px #0008,inset 0 -4px 0 #0003,inset 0 1px 0 #ffffff40}
+#smap .smb::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,#ffffff1f,transparent 40%)}
+#smap .smb.hot::after{background:none}
+#smap .smb[data-k="for"]{--deco:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 80%27%3E%3Cg fill=%27#fff%27%3E%3Cpath d=%27M20 80V62H14l12-18H18l14-20 14 20h-8l12 18h-6v18z%27/%3E%3Cpath d=%27M70 80V66h-5l9-14h-6l11-16 11 16h-6l9 14h-5v14z%27/%3E%3Ccircle cx=%27104%27 cy=%2718%27 r=%273%27/%3E%3Ccircle cx=%2796%27 cy=%2730%27 r=%272%27/%3E%3C/g%3E%3C/svg%3E")}
+#smap .smb[data-k="pra"]{--deco:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 80%27%3E%3Cg fill=%27#fff%27%3E%3Cpath d=%27M0 80c20-14 40-16 60-10s40 4 60-6v16z%27/%3E%3Ccircle cx=%2728%27 cy=%2752%27 r=%275%27/%3E%3Ccircle cx=%2722%27 cy=%2748%27 r=%273%27/%3E%3Ccircle cx=%2734%27 cy=%2748%27 r=%273%27/%3E%3Ccircle cx=%2786%27 cy=%2746%27 r=%275%27/%3E%3Ccircle cx=%2780%27 cy=%2742%27 r=%273%27/%3E%3Ccircle cx=%2792%27 cy=%2742%27 r=%273%27/%3E%3Cpath d=%27M27 57v14M85 51v14%27 stroke=%27#fff%27 stroke-width=%272%27/%3E%3C/g%3E%3C/svg%3E")}
+#smap .smb[data-k="mon"]{--deco:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 80%27%3E%3Cg fill=%27#fff%27%3E%3Cpath d=%27M0 80l30-46 14 18 22-40 30 46 24-20v42z%27/%3E%3C/g%3E%3Cpath d=%27M60 12l8 12-8-3-8 4z%27 fill=%27#fff%27 opacity=%27.9%27/%3E%3C/svg%3E")}
+#smap .smb[data-k="vol"]{--deco:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 80%27%3E%3Cg fill=%27#fff%27%3E%3Cpath d=%27M10 80l34-46h20l36 46z%27/%3E%3Cpath d=%27M50 30c-4-8 4-14 0-22M60 28c4-8-4-14 2-24%27 stroke=%27#fff%27 stroke-width=%273%27 fill=%27none%27 stroke-linecap=%27round%27/%3E%3Ccircle cx=%2788%27 cy=%2722%27 r=%273%27/%3E%3Ccircle cx=%2724%27 cy=%2730%27 r=%272%27/%3E%3C/g%3E%3C/svg%3E")}
+#smap .smb[data-k="wat"]{--deco:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 80%27%3E%3Cg fill=%27none%27 stroke=%27#fff%27 stroke-width=%274%27 stroke-linecap=%27round%27%3E%3Cpath d=%27M0 50q15-10 30 0t30 0 30 0 30 0%27/%3E%3Cpath d=%27M0 66q15-10 30 0t30 0 30 0 30 0%27/%3E%3C/g%3E%3Ccircle cx=%2796%27 cy=%2722%27 r=%274%27 fill=%27#fff%27/%3E%3Ccircle cx=%2786%27 cy=%2730%27 r=%272%27 fill=%27#fff%27/%3E%3C/svg%3E")}
+#smap .smb[data-k="cav"]{--deco:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 80%27%3E%3Cg fill=%27#fff%27%3E%3Cpath d=%27M0 0h120v10q-10 14-20 2t-20 6-22-4-20 8-20-6-18 4z%27/%3E%3Cpath d=%27M80 80l8-26 8 26zM92 80l5-16 5 16zM20 80l6-20 6 20z%27/%3E%3C/g%3E%3C/svg%3E")}
+#smap .smb[data-k="shop"]{--deco:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 80%27%3E%3Cg fill=%27#fff%27%3E%3Cpath d=%27M10 10h100l-6 18H16z%27/%3E%3Cpath d=%27M16 28q8 10 16 0 8 10 16 0 8 10 16 0 8 10 16 0 8 10 16 0 8 10 16 0%27 fill=%27none%27 stroke=%27#fff%27 stroke-width=%273%27/%3E%3Crect x=%2730%27 y=%2744%27 width=%2760%27 height=%2730%27 rx=%274%27/%3E%3C/g%3E%3C/svg%3E")}
+#smap .smb[data-k="cen"]{--deco:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 80%27%3E%3Cg fill=%27#fff%27%3E%3Cpath d=%27M52 18h16v16h16v16H68v16H52V50H36V34h16z%27/%3E%3C/g%3E%3C/svg%3E")}
+#smap .smb[data-k="bank"]{--deco:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 80%27%3E%3Cg fill=%27#fff%27%3E%3Cellipse cx=%2730%27 cy=%2766%27 rx=%2716%27 ry=%276%27/%3E%3Cellipse cx=%2730%27 cy=%2758%27 rx=%2716%27 ry=%276%27/%3E%3Cellipse cx=%2730%27 cy=%2750%27 rx=%2716%27 ry=%276%27/%3E%3Cellipse cx=%2788%27 cy=%2766%27 rx=%2716%27 ry=%276%27/%3E%3Cellipse cx=%2788%27 cy=%2758%27 rx=%2716%27 ry=%276%27/%3E%3Cpath d=%27M60 10l26 14H34z%27/%3E%3C/g%3E%3C/svg%3E")}
+#smap .smb[data-k="home"]{--deco:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 80%27%3E%3Cg fill=%27#fff%27%3E%3Cpath d=%27M30 44l30-26 30 26v32H30z%27/%3E%3Cpath d=%27M94 22c4-6 12-2 8 4l-8 8-8-8c-4-6 4-10 8-4z%27/%3E%3C/g%3E%3C/svg%3E")}
+#smap .smb[data-k="raid"]{--deco:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 80%27%3E%3Cg fill=%27none%27 stroke=%27#fff%27 stroke-width=%274%27%3E%3Ccircle cx=%2760%27 cy=%2742%27 r=%2730%27/%3E%3Ccircle cx=%2760%27 cy=%2742%27 r=%2718%27/%3E%3C/g%3E%3Ccircle cx=%2760%27 cy=%2742%27 r=%276%27 fill=%27#fff%27/%3E%3C/svg%3E")}
 </style>
 <script id="v37js">
 (()=>{
