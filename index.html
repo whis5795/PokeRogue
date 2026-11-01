@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.2</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.3</div>
 </section>
 
 <section id="team" class="scr">
@@ -8583,7 +8583,14 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'47.2',t:'Caja, intercambios, avisos y mercado',s:'cur',l:[
+ {v:'47.3',t:'Vitrina pública',s:'cur',l:[
+  '🏛️ Nueva Vitrina: expón hasta 12 de tus Pokémon en vitrinas de cristal. Ábrela desde Amigos → «🏛️ Mi vitrina» o con el botón 🏛️ de la Caja',
+  '✨ Los shinys brillan: marco dorado, destellos y cinta «Shiny». El primero es tu Pokémon destacado 👑, y también se ven sus estrellas ⭐ y tipos',
+  '✎ «Organizar»: toca un hueco para añadir un Pokémon de tu equipo o Caja (los shinys salen primero) y toca uno expuesto para destacarlo, moverlo o quitarlo. «🔄 Actualizar fotos» refresca nivel, evolución y estrellas',
+  '👥 Tus amigos pueden verla desde Amigos → ⋯ → «Ver su vitrina» (tú tienes que tener el juego abierto). La última vitrina que viste de cada amigo se guarda',
+  'Exponer un Pokémon no lo saca de tu equipo ni de tu Caja: es solo una foto'
+]},
+{v:'47.2',t:'Caja, intercambios, avisos y mercado',s:'prev',l:[
   '🧬 Caja: nuevo botón «Evolucionar» que evoluciona de una vez a todos los Pokémon de la Caja que ya tienen nivel para ello (los que llevan Piedra Eterna no se tocan). Antes te enseña quiénes son y al final el resultado',
   '📖 Pokédex: si un Pokémon evoluciona dos veces seguidas, la forma intermedia también queda registrada como capturada (también con piedras evolutivas y en la Aventura Multiplayer)',
   '🔄 Intercambios (de Pokémon, de objetos y regalos de dinero): los botones de abajo son solo el símbolo y están en una fila',
@@ -15183,7 +15190,7 @@ let lastTab='';
 function draw(full){try{draw0(full)}catch(e){console.error('amigos',e);try{P.innerHTML='';shell();lastTab='';draw0(full)}catch(_){}}}
 function draw0(full){if(!P||!P.classList.contains('on'))return;if(!P.querySelector('.fr-box'))shell();
  const m=me(),c=counts(),L=F.list,rm=window.__mraidRoom&&__mraidRoom();
- setH(P.querySelector('.fr-me'),`${av(m.ld,'',true)}<div class="fr-mi"><b>${esc(m.n)}</b><small>Tu código de amigo</small><div class="fr-code"><code>${fmtC(FID)}</code><button class="fr-cp" data-a="copy">Copiar</button><button class="fr-cp fr-stall" data-a="mystall">🛒 Mi puesto</button></div></div>`);
+ setH(P.querySelector('.fr-me'),`${av(m.ld,'',true)}<div class="fr-mi"><b>${esc(m.n)}</b><small>Tu código de amigo</small><div class="fr-code"><code>${fmtC(FID)}</code><button class="fr-cp" data-a="copy">Copiar</button><button class="fr-cp fr-stall" data-a="mystall">🛒 Mi puesto</button><button class="fr-cp fr-stall fr-vit" data-a="myvit">🏛️ Mi vitrina</button></div></div>`);
  const tb=P.querySelectorAll('.fr-tab'),lab={list:`Amigos<em>${c.f}</em>`,req:`Solicitudes${c.ri?`<span class="bd">${c.ri}</span>`:''}`,add:'➕ Añadir'};
  tb.forEach(b=>{b.classList.toggle('on',b.dataset.t===tab);setH(b,lab[b.dataset.t])});
  {const on=[...tb].find(b=>b.dataset.t===tab),pl=P.querySelector('.fr-pill');if(on&&pl){pl.style.width=on.offsetWidth+'px';pl.style.transform=`translateX(${on.offsetLeft-4}px)`}}
@@ -15216,9 +15223,9 @@ function sheet(id){const f=F.list[id];if(!f)return;const rm=window.__mraidRoom&&
  <button class="fr-opt" data-a="cx" style="--a:#1f2937;--b:#111827"><i>↩</i><span><b>Cancelar</b></span></button></div>`;
  box.append(s);s.onclick=e=>{e.stopPropagation();const b=e.target.closest('[data-a]');if(e.target===s){s.remove();return}if(!b||b.disabled)return;s.remove();if(b.dataset.a==='lan')inviteLan(id);else if(b.dataset.a==='raid')inviteRaid(id)}}
 function more(id){const f=F.list[id];if(!f)return;const box=P.querySelector('.fr-box'),s=D.createElement('div');s.className='fr-sheet';
- s.innerHTML=`<div><h3>${esc(f.n)}</h3><p>${fmtC(id)} · amigos desde ${new Date(f.since||now()).toLocaleDateString()}</p><button class="fr-opt" data-a="loan" style="--a:#a16207;--b:#713f12"><i>💸</i><span><b>Prestarle dinero</b><small>Con el interés que tú elijas cada 6 horas</small></span></button><button class="fr-opt" data-a="visit" style="--a:#0e7490;--b:#164e63"><i>🏠</i><span><b>Visitar su casa</b><small>Necesita tener el juego abierto</small></span></button><button class="fr-opt" data-a="spec" style="--a:#6d28d9;--b:#312e81"><i>👁️</i><span><b>Espectear</b><small>Mira en directo su partida y sus combates</small></span></button><button class="fr-opt" data-a="mkt" style="--a:#c2410c;--b:#7c2d12"><i>🛒</i><span><b>Ver su puesto del mercado</b><small>Compra los objetos y Pokémon que vende</small></span></button><button class="fr-opt" data-a="del" style="--a:#9f1239;--b:#4c0519"><i>🗑️</i><span><b>Eliminar de amigos</b><small>Podréis volver a añadiros con el código</small></span></button><button class="fr-opt" data-a="cx" style="--a:#1f2937;--b:#111827"><i>↩</i><span><b>Cancelar</b></span></button></div>`;
- box.append(s);s.onclick=e=>{e.stopPropagation();const b=e.target.closest('[data-a]');if(e.target===s){s.remove();return}if(!b)return;s.remove();if(b.dataset.a==='visit'){if(window.__visitHouse){close();__visitHouse(id,f.n)}return}if(b.dataset.a==='spec'){if(window.__specStart){close();__specStart(id,f.n)}return}if(b.dataset.a==='mkt'){if(window.__mktOpen){close();__mktOpen(id,f.n)}return}if(b.dataset.a==='loan'){if(window.__loanOffer){close();__loanOffer(id)}return}if(b.dataset.a==='del'){remove(id);say('Has eliminado a '+f.n)}}}
-async function click(e){if(e.target===P){close();return}const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const a=b.dataset.a,id=b.dataset.id;if(a==='mystall'){if(window.__mktOpen){close();__mktOpen()}return}
+ s.innerHTML=`<div><h3>${esc(f.n)}</h3><p>${fmtC(id)} · amigos desde ${new Date(f.since||now()).toLocaleDateString()}</p><button class="fr-opt" data-a="loan" style="--a:#a16207;--b:#713f12"><i>💸</i><span><b>Prestarle dinero</b><small>Con el interés que tú elijas cada 6 horas</small></span></button><button class="fr-opt" data-a="visit" style="--a:#0e7490;--b:#164e63"><i>🏠</i><span><b>Visitar su casa</b><small>Necesita tener el juego abierto</small></span></button><button class="fr-opt" data-a="spec" style="--a:#6d28d9;--b:#312e81"><i>👁️</i><span><b>Espectear</b><small>Mira en directo su partida y sus combates</small></span></button><button class="fr-opt" data-a="vit" style="--a:#a16207;--b:#422006"><i>🏛️</i><span><b>Ver su vitrina</b><small>Los Pokémon que tiene expuestos, shinys incluidos</small></span></button><button class="fr-opt" data-a="mkt" style="--a:#c2410c;--b:#7c2d12"><i>🛒</i><span><b>Ver su puesto del mercado</b><small>Compra los objetos y Pokémon que vende</small></span></button><button class="fr-opt" data-a="del" style="--a:#9f1239;--b:#4c0519"><i>🗑️</i><span><b>Eliminar de amigos</b><small>Podréis volver a añadiros con el código</small></span></button><button class="fr-opt" data-a="cx" style="--a:#1f2937;--b:#111827"><i>↩</i><span><b>Cancelar</b></span></button></div>`;
+ box.append(s);s.onclick=e=>{e.stopPropagation();const b=e.target.closest('[data-a]');if(e.target===s){s.remove();return}if(!b)return;s.remove();if(b.dataset.a==='visit'){if(window.__visitHouse){close();__visitHouse(id,f.n)}return}if(b.dataset.a==='spec'){if(window.__specStart){close();__specStart(id,f.n)}return}if(b.dataset.a==='mkt'){if(window.__mktOpen){close();__mktOpen(id,f.n)}return}if(b.dataset.a==='vit'){if(window.__vitOpen){close();__vitOpen(id,f.n)}return}if(b.dataset.a==='loan'){if(window.__loanOffer){close();__loanOffer(id)}return}if(b.dataset.a==='del'){remove(id);say('Has eliminado a '+f.n)}}}
+async function click(e){if(e.target===P){close();return}const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const a=b.dataset.a,id=b.dataset.id;if(a==='mystall'){if(window.__mktOpen){close();__mktOpen()}return}if(a==='myvit'){if(window.__vitOpen){close();__vitOpen()}return}
  if(a==='close')return close();
  if(a==='tab'){tab=b.dataset.t;draw(true);return}
  if(a==='copy'){const t=fmtC(FID);try{await navigator.clipboard.writeText(t);say('📋 Código copiado: '+t)}catch(_){say('Tu código: '+t)}return}
@@ -20466,6 +20473,49 @@ body[data-v=menu] #potdm{display:flex}
 #lan .ldock.ico .fb{flex:0 0 auto!important;width:58px!important;min-width:0!important;max-width:none!important;height:58px!important;min-height:0!important;padding:0!important;border-radius:50%!important;gap:0!important;transform:none!important;margin:0!important;position:relative!important;left:auto!important;right:auto!important;bottom:auto!important}
 #lan .ldock.ico .fb>span{display:none!important}
 #lan .ldock.ico .fb>i{font-size:25px;margin:0;font-style:normal}
+/* v47.3: vitrina */
+#vitov{position:fixed;inset:0;z-index:100001;display:flex;align-items:center;justify-content:center;padding:12px;background:#05030fcc;opacity:0;transition:opacity .2s;font-family:system-ui,sans-serif;color:#fff}
+#vitov.on{opacity:1}
+.vt-box{width:min(760px,100%);max-height:94vh;display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:22px;background:radial-gradient(120% 60% at 50% 0%,#3b2a10,#140c05 55%,#0a0612);border:2px solid #fbbf2477;box-shadow:0 20px 60px #000c,inset 0 1px 0 #fde68a33}
+.vt-hd{display:flex;align-items:center;justify-content:space-between;gap:8px}.vt-hd b{font:900 18px system-ui;letter-spacing:.3px;color:#fde68a;text-shadow:0 2px 0 #0008}
+.vt-x{width:36px;height:36px;border-radius:12px;border:1px solid #ffffff33;background:#ffffff14;color:#fff;font-size:16px;cursor:pointer}
+.vt-st{display:flex;flex-wrap:wrap;gap:6px}.vt-st span{padding:4px 10px;border-radius:999px;background:#0008;border:1px solid #fbbf2444;font-size:12px}.vt-st b{color:#fde68a}.vt-st .vt-old{opacity:.7}
+.vt-g{overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding:4px 2px 8px}
+.vt-c{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:196px;padding:24px 8px 10px;border-radius:16px;border:2px solid #fde68a33;background:linear-gradient(180deg,#ffffff0d,#ffffff03 40%,#00000044);color:#fff;cursor:pointer;overflow:hidden;animation:vtin .4s var(--d,0s) both;font:inherit}
+@keyframes vtin{from{opacity:0;transform:translateY(14px) scale(.96)}}
+.vt-c .vt-gl{position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 30%,#ffffff1c 42%,transparent 54%);border-radius:inherit}
+.vt-c .vt-ped{position:absolute;left:18%;right:18%;bottom:64px;height:16px;border-radius:50%;background:radial-gradient(#fde68a55,#0000 70%)}
+.vt-c img{position:relative;width:112px;height:112px;object-fit:contain;filter:drop-shadow(0 6px 6px #000a);transition:transform .2s}
+.vt-c:hover img{transform:translateY(-4px) scale(1.04)}
+.vt-c b{position:relative;font-size:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.vt-c small{opacity:.75;font-size:11px}
+.vt-rb{font-style:normal;font-size:11px;letter-spacing:-1px}.vt-tys{display:flex;gap:3px;justify-content:center;flex-wrap:wrap}.vt-tys.c{margin:6px 0}
+.vt-ty{font-style:normal;font-size:10px;font-weight:800;padding:1px 6px;border-radius:6px;background:var(--c);text-shadow:0 1px 0 #0006}
+.vt-c.star{border-color:#fbbf24aa;box-shadow:0 0 18px #fbbf2433}
+.vt-crown{position:absolute;top:4px;left:8px;font-size:16px;font-weight:900;color:#fde68a}
+.vt-c.sh{border-color:#fde047;background:radial-gradient(90% 70% at 50% 40%,#fde04726,transparent 70%),linear-gradient(180deg,#ffffff10,#00000044);box-shadow:0 0 22px #fde04755,inset 0 0 18px #fde04722}
+.vt-shr{position:absolute;top:6px;right:8px;font-size:10px;font-weight:900;padding:1px 7px;border-radius:999px;background:linear-gradient(90deg,#fde047,#f59e0b);color:#3b1d00}
+.vt-sp{position:absolute;width:8px;height:8px;top:30%;left:20%;background:#fff;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:vtsp 2.2s ease-in-out infinite;pointer-events:none}
+.vt-sp.b{top:22%;left:76%;animation-delay:.7s;width:11px;height:11px}.vt-sp.c{top:55%;left:70%;animation-delay:1.4s}
+@keyframes vtsp{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:1;transform:scale(1) rotate(90deg)}}
+.vt-c.emp{border-style:dashed;justify-content:center;opacity:.65;cursor:default}button.vt-c.emp{cursor:pointer;opacity:.9}.vt-c.emp b{font-size:32px;color:#fde68a}
+.vt-ed{position:absolute;bottom:6px;right:8px;font-size:13px;opacity:.8}
+.vt-ft{display:flex;gap:8px;justify-content:center}.vt-ft button{padding:10px 18px;border-radius:999px;border:2px solid #fde68a99;background:linear-gradient(#a16207,#713f12);color:#fff;font:800 14px system-ui;cursor:pointer}.vt-ft button.on{background:linear-gradient(#16a34a,#166534);border-color:#bbf7d0}
+.vt-empty,.vt-wait{display:flex;flex-direction:column;align-items:center;gap:8px;padding:30px 14px;text-align:center;font-size:40px}.vt-empty b,.vt-wait span{font-size:15px}.vt-empty small{font-size:12px;opacity:.75;max-width:420px}
+.vt-wait i{width:34px;height:34px;border-radius:50%;border:4px solid #fde68a44;border-top-color:#fde68a;animation:vtspin 1s linear infinite}@keyframes vtspin{to{transform:rotate(360deg)}}
+.vt-wait button{font-size:14px;padding:8px 16px;border-radius:999px;border:1px solid #fde68a88;background:#713f12;color:#fff}
+.vt-pk{position:fixed;inset:0;z-index:100003;display:flex;align-items:flex-end;justify-content:center;padding:10px;background:#000a}
+.vt-pkw{width:min(560px,100%);max-height:80vh;display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:20px;background:linear-gradient(180deg,#3b2a10,#140c05);border:2px solid #fbbf2477}
+.vt-q{padding:10px 12px;border-radius:12px;border:2px solid #fbbf2455;background:#0008;color:#fff;font:700 14px system-ui}
+.vt-pg{overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px}
+.vt-pg button{position:relative;display:flex;flex-direction:column;align-items:center;padding:6px 4px;border-radius:12px;border:2px solid #ffffff22;background:#ffffff10;color:#fff;font:inherit;cursor:pointer}
+.vt-pg button.sh{border-color:#fde047aa;background:#fde0471a}.vt-pg button.used{opacity:.35}
+.vt-pg img{width:56px;height:56px;image-rendering:pixelated}.vt-pg b{font-size:11px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.vt-pg small{font-size:10px;opacity:.7}.vt-pg em{position:absolute;top:2px;right:4px;font-style:normal}
+.vt-big{display:flex;justify-content:center}.vt-big img{width:180px;height:180px;object-fit:contain;filter:drop-shadow(0 8px 8px #000a)}.vt-big.sh img{filter:drop-shadow(0 0 14px #fde047) drop-shadow(0 8px 8px #000a)}
+@media (max-width:480px){.vt-g{grid-template-columns:repeat(2,1fr);gap:8px}.vt-c{min-height:176px}.vt-c img{width:92px;height:92px}.vt-c .vt-ped{bottom:58px}}
+@media (prefers-reduced-motion:reduce){.vt-c,.vt-sp{animation:none}.vt-sp{opacity:.8}}
+#frp .fr-code{flex-wrap:wrap}#frp .fr-mi{min-width:0;flex:1}
+#frp .fr-stall{margin-left:0!important;white-space:nowrap}
+#frp .fr-vit{background:linear-gradient(#ca8a04,#854d0e)!important}
 </style>
 <script id="v37js">
 (()=>{
@@ -23450,6 +23500,56 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  window.__evoAllBox=evoAll;
  new MutationObserver(()=>{const bt=Q('#pcbox .bxbt');if(!bt||bt.querySelector('#bxevo'))return;const b=D.createElement('button');b.className='act';b.id='bxevo';b.type='button';b.textContent='🧬 Evolucionar';b.title='Evolucionar a todos los que puedan';b.onclick=evoAll;const s=bt.querySelector('#bxsort');if(s)s.after(b);else bt.prepend(b)}).observe(D.body,{childList:true,subtree:true});
 })();
+/* ===== v47.3: 🏛️ Vitrina pública · tus Pokémon favoritos expuestos para que los vean tus amigos ===== */
+(()=>{const D=document,Q=s=>D.querySelector(s),now=()=>Date.now(),K='pa_vit',KC='pa_vitc',MAX=12;
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const FR=()=>window.__FR,send=(id,o)=>{try{FR().send(id,o)}catch(e){}},H=window.__frx=window.__frx||{};
+ const tst=t=>{try{toast(t)}catch(e){}},bp=(f,d)=>{try{beep(f,d||.08,'triangle')}catch(e){}};
+ const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+ const VIT=()=>{const v=ld(K,null);return v&&Array.isArray(v.l)?v:{l:[],t:''}},put=v=>sv(K,v);
+ const TY=['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
+ /* foto del Pokémon (lo que se guarda y se envía; el Pokémon sigue en tu equipo o caja) */
+ const snap=m=>({id:m.id|0,sh:m.sh?1:0,lvl:m.lvl|0,n:String(nm(m)).replace(/^✨\s*/,'').replace(/\s*⭐.*$/,'').trim().slice(0,22),rb:Math.max(0,Math.min(10,m.rb|0)),ty:(m.types||[]).filter(t=>TY.includes(t)).slice(0,2),fv:m.fav?1:0,d:now()});
+ const clean=a=>(Array.isArray(a)?a:[]).slice(0,MAX).map(x=>x&&typeof x==='object'?{id:Math.max(1,Math.min(20000,x.id|0)),sh:x.sh?1:0,lvl:Math.max(1,Math.min(250,x.lvl|0)),n:String(x.n||'').replace(/[<>&"]/g,'').slice(0,22),rb:Math.max(0,Math.min(10,x.rb|0)),ty:(Array.isArray(x.ty)?x.ty:[]).filter(t=>TY.includes(t)).slice(0,2),fv:x.fv?1:0,d:+x.d||0}:null).filter(x=>x&&x.id>0);
+ const live=()=>{try{return typeof R=='object'&&R&&R.team?R:(typeof loadRun=='function'?loadRun():null)}catch(e){return null}};
+ const stars=n=>n>0?`<em class="vt-rb">${'⭐'.repeat(Math.min(n,5))}${n>5?'+'+(n-5):''}</em>`:'';
+ const tyC=t=>{try{return COL[t]||'#64748b'}catch(e){return'#64748b'}},tyN=t=>{try{return ES[t]||t}catch(e){return t}};
+ const tyb=ty=>(ty||[]).map(t=>`<i class="vt-ty" style="--c:${tyC(t)}">${esc(tyN(t))}</i>`).join('');
+ let ov=null,mode='mine',fid='',fname='',fl=null,edit=false,wait=0,wt=0;
+ function caseH(x,i,mine){if(!x)return mine&&edit?`<button type="button" class="vt-c emp" data-v="add:${i}"><span class="vt-gl"></span><b>＋</b><small>Añadir</small></button>`:`<div class="vt-c emp"><span class="vt-gl"></span></div>`;
+  return`<button type="button" class="vt-c${x.sh?' sh':''}${i===0?' star':''}" data-v="${mine&&edit?'opt:':'see:'}${i}" style="--d:${(i%6)*.06}s">${i===0?'<span class="vt-crown" title="Destacado">👑</span>':''}${x.sh?'<span class="vt-shr">✨ Shiny</span><i class="vt-sp"></i><i class="vt-sp b"></i><i class="vt-sp c"></i>':''}<span class="vt-gl"></span><span class="vt-ped"></span><img src="${art(x.id,x.sh)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${mini(x.id,x.sh)}'"><b>${esc(x.n)}</b><small>Nv.${x.lvl}</small>${stars(x.rb)}<span class="vt-tys">${tyb(x.ty)}</span>${mine&&edit?'<span class="vt-ed">✎</span>':''}</button>`}
+ function render(){if(!ov)return;const mine=mode==='mine',V=mine?VIT():{l:fl||[]},L=V.l,shn=L.filter(x=>x.sh).length,rbn=L.reduce((a,x)=>a+(x.rb|0),0);
+  const who=mine?'Mi vitrina':'Vitrina de '+esc(fname);
+  let body;if(!mine&&fl===null)body=`<div class="vt-wait"><i></i><span>${wait?'Pidiendo la vitrina a '+esc(fname)+'…':esc(fname)+' no ha respondido. Tiene que tener el juego abierto.'}</span>${wait?'':'<button type="button" data-v="retry">🔄 Reintentar</button>'}</div>`;
+  else if(!L.length&&!(mine&&edit))body=`<div class="vt-empty">🏛️<b>${mine?'Tu vitrina está vacía':esc(fname)+' aún no expone ningún Pokémon'}</b>${mine?'<small>Toca «✎ Organizar» para exponer hasta 12 de tus Pokémon. Tus amigos podrán verla desde Amigos → ⋯ → «Ver su vitrina».</small>':''}</div>`;
+  else body=`<div class="vt-g">${Array.from({length:mine&&edit?MAX:Math.max(L.length,0)},(_,i)=>caseH(L[i],i,mine)).join('')}</div>`;
+  ov.innerHTML=`<div class="vt-box"><div class="vt-hd"><b>🏛️ ${who}</b><button type="button" class="vt-x" data-v="close" aria-label="Cerrar">✕</button></div>${L.length?`<div class="vt-st"><span>🖼️ <b>${L.length}</b>/${MAX}</span><span>✨ <b>${shn}</b> shiny${shn===1?'':'s'}</span><span>⭐ <b>${rbn}</b></span>${!mine&&V.cached?`<span class="vt-old">guardada el ${new Date(V.cached).toLocaleDateString()}</span>`:''}</div>`:''}${body}${mine?`<div class="vt-ft"><button type="button" data-v="edit" class="${edit?'on':''}">${edit?'✔ Listo':'✎ Organizar'}</button>${edit&&L.length?'<button type="button" data-v="refresh">🔄 Actualizar fotos</button>':''}</div>`:''}</div>`}
+ function pick(slot){const r=live();const all=r?[...(r.team||[]),...(r.box||[])]:[];if(!all.length)return tst('No tienes Pokémon que exponer');
+  const V=VIT(),used=new Set(V.l.map(x=>x.id+'|'+x.sh+'|'+x.lvl+'|'+x.n));
+  const L=all.map((m,i)=>({m,i})).sort((a,b)=>(b.m.sh?1:0)-(a.m.sh?1:0)||(b.m.rb|0)-(a.m.rb|0)||(b.m.lvl|0)-(a.m.lvl|0));
+  const p=D.createElement('div');p.className='vt-pk';p.innerHTML=`<div class="vt-pkw"><div class="vt-hd"><b>Elige un Pokémon para exponer</b><button type="button" class="vt-x" data-q="x">✕</button></div><input class="vt-q" placeholder="🔍 Buscar…" autocomplete="off"><div class="vt-pg">${L.map(({m,i})=>{const s=snap(m),u=used.has(s.id+'|'+s.sh+'|'+s.lvl+'|'+s.n);return`<button type="button" data-q="${i}" data-n="${esc(s.n.toLowerCase())}" class="${s.sh?'sh':''}${u?' used':''}" ${u?'disabled':''}><img src="${mini(m.id,m.sh)}" alt="" loading="lazy">${s.sh?'<em>✨</em>':''}<b>${esc(s.n)}</b><small>Nv.${s.lvl}${s.rb?' · ⭐'+s.rb:''}</small></button>`}).join('')}</div></div>`;
+  D.body.append(p);const q=p.querySelector('.vt-q');q.oninput=()=>{const v=q.value.trim().toLowerCase();p.querySelectorAll('.vt-pg button').forEach(b=>b.style.display=!v||b.dataset.n.includes(v)?'':'none')};
+  p.onclick=e=>{const b=e.target.closest('[data-q]');if(e.target===p||(b&&b.dataset.q==='x')){p.remove();return}if(!b||b.disabled)return;const m=all[+b.dataset.q];if(!m)return;const V2=VIT();V2.l[slot]=snap(m);V2.l=V2.l.filter(Boolean);V2.t=now();put(V2);p.remove();bp(880);tst(`🏛️ ${nm(m)} ya está en tu vitrina`);render()}}
+ async function opt(i){const V=VIT(),x=V.l[i];if(!x)return;const k=await ask(`🏛️ ${esc(x.n)}`,`<small>${x.sh?'✨ Shiny · ':''}Nv.${x.lvl}</small>`,[i?'👑 Poner como destacado':'👑 Ya es el destacado','◀ Mover antes','▶ Mover después','🗑️ Quitar de la vitrina','Cancelar'].map((t,j)=>j===0&&!i?{t,off:1}:t));
+  if(k===0&&i){V.l.splice(i,1);V.l.unshift(x)}else if(k===1&&i>0){[V.l[i-1],V.l[i]]=[V.l[i],V.l[i-1]]}else if(k===2&&i<V.l.length-1){[V.l[i+1],V.l[i]]=[V.l[i],V.l[i+1]]}else if(k===3){V.l.splice(i,1)}else return;V.t=now();put(V);render()}
+ function see(i){const L=mode==='mine'?VIT().l:(fl||[]),x=L[i];if(!x)return;bp(x.sh?1175:700);
+  ask(`${x.sh?'✨ ':''}${esc(x.n)}`,`<div class="vt-big${x.sh?' sh':''}"><img src="${art(x.id,x.sh)}" alt="" onerror="this.onerror=null;this.src='${mini(x.id,x.sh)}'"></div><div class="vt-tys c">${tyb(x.ty)}</div><small>Nv.${x.lvl}${x.rb?' · '+'⭐'.repeat(Math.min(x.rb,10)):''}${x.sh?' · Variocolor':''}<br>Nº ${String(x.id).padStart(4,'0')}${x.d?' · expuesto el '+new Date(x.d).toLocaleDateString():''}</small>`,['Cerrar'])}
+ function refresh(){const r=live();if(!r)return;const all=[...(r.team||[]),...(r.box||[])],V=VIT();let n=0;
+  V.l=V.l.map(x=>{const m=all.find(m=>(m.sh?1:0)===x.sh&&String(nm(m)).replace(/^✨\s*/,'').replace(/\s*⭐.*$/,'').trim().slice(0,22)===x.n)||all.find(m=>(m.sh?1:0)===x.sh&&m.id===x.id);if(!m)return x;const s=snap(m);s.d=x.d;if(JSON.stringify(s)!==JSON.stringify(x))n++;return s});put(V);render();tst(n?`🔄 ${n} foto${n>1?'s':''} actualizada${n>1?'s':''} (nivel, evolución, estrellas…)`:'🔄 Todo está al día')}
+ function open(id,name){if(!ov){ov=D.createElement('div');ov.id='vitov';ov.addEventListener('click',onClick)}D.body.append(ov);requestAnimationFrame(()=>ov.classList.add('on'));edit=false;
+  if(id){mode='friend';fid=id;fname=name||'Tu amigo';const C=ld(KC,{})[id];fl=C?C.l:null;ask2()}else{mode='mine';fl=null}render()}
+ function ask2(){wait=1;clearTimeout(wt);send(fid,{t:'vitq'});wt=setTimeout(()=>{wait=0;render()},9000);render()}
+ function close(){if(ov){ov.classList.remove('on');setTimeout(()=>{if(ov&&!ov.classList.contains('on'))ov.remove()},200)}clearTimeout(wt)}
+ function onClick(e){if(e.target===ov)return close();const b=e.target.closest('[data-v]');if(!b)return;const [a,v]=b.dataset.v.split(':');
+  if(a==='close')close();else if(a==='edit'){edit=!edit;render()}else if(a==='add')pick(+v);else if(a==='opt')opt(+v);else if(a==='see')see(+v);else if(a==='retry')ask2();else if(a==='refresh')refresh()}
+ D.addEventListener('keydown',e=>{if(e.key==='Escape'&&ov&&ov.classList.contains('on')&&!Q('.vt-pk')){const m=Q('#mod');if(m&&getComputedStyle(m).display!=='none')return;e.stopPropagation();close()}},true);
+ /* red: mis amigos piden mi vitrina y yo les respondo */
+ H.vitq=o=>{const V=VIT();send(o.f,{t:'vit',l:clean(V.l),vt:V.t||0})};
+ H.vit=(o,n)=>{const l=clean(o.l),C=ld(KC,{});C[o.f]={l,t:now(),n};const ks=Object.keys(C);if(ks.length>30)ks.sort((a,b)=>C[a].t-C[b].t).slice(0,ks.length-30).forEach(k=>delete C[k]);sv(KC,C);
+  if(ov&&ov.classList.contains('on')&&mode==='friend'&&fid===o.f){fl=l;wait=0;clearTimeout(wt);render()}};
+ window.__vitOpen=open;window.__vit={get:VIT,snap,clean};
+})();
+(()=>{const D=document;new MutationObserver(()=>{const p=D.querySelector('#pcbox .bxpr');if(!p||p.querySelector('#bxvit'))return;const b=D.createElement('button');b.className='act';b.id='bxvit';b.type='button';b.title='Mi vitrina';b.setAttribute('aria-label','Mi vitrina');b.textContent='🏛️';b.onclick=()=>{window.__vitOpen&&__vitOpen()};p.append(b)}).observe(D.body,{childList:true,subtree:true})})();
 
 })();</script>
 </body></html>
