@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.5</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.6</div>
 </section>
 
 <section id="team" class="scr">
@@ -3897,7 +3897,7 @@ if(_us)window.useStone=async k=>{const r=await _us(k);if(r)ach('stn');return r};
 /* ---- Nivel de los Pokémon salvajes: de Nv.1 a 2 niveles sobre tu Pokémon más fuerte ---- */
 const _f66=window.fight;
 window.fight=async function(c){
- try{if(c&&c.k=='wild'&&!c.ray&&!c.raid&&R&&R.team&&R.team.length){
+ try{if(c&&c.k=='wild'&&!c.ray&&!c.raid&&!c.herd&&R&&R.team&&R.team.length){
   const top=Math.max(1,...[...R.team,...(R.box||[])].map(m=>m.lvl|0));
   c.lv=1+Math.floor(Math.random()*(top+2))}}catch(e){console.error(e)}
  return _f66(c)};
@@ -4375,7 +4375,7 @@ window.dexSync=sync;window.dexMark=m=>{try{if(m){caught(m.id);shc(m)}}catch(e){}
 {const _f=fight;fight=async function(){const r=await _f.apply(this,arguments);try{(B.en||[]).forEach(m=>seen(m.id))}catch(e){}sync();return r}}
 {const _s=showMap;showMap=function(){const r=_s.apply(this,arguments);sync();return r}}
 const SEC=[['f','n'],['c','Capturados'],['s','Vistos'],['u','Sin ver']].map(([k,l])=>[k,l]);
-const FLT=[['all','Todos'],['c','Capturados'],['s','Vistos'],['u','Sin ver'],['sh','✨ Shiny']];
+const FLT=[['all','Todos'],['c','Capturados'],['s','Vistos'],['u','Sin ver'],['sh','✨ Shiny'],['reg','🌍 Regionales']];
 const STL=['PS','Ataque','Defensa','At. Esp.','Def. Esp.','Velocidad'],STC=['#ef4444','#f97316','#eab308','#3b82f6','#22c55e','#ec4899'];
 const cap=s=>(s||'').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
 const ID=n=>'#'+String(n).padStart(4,'0');
@@ -4398,15 +4398,18 @@ window.openPokedex=async function(){
     const chips=()=>{Z('#pxf').innerHTML=FLT.map(([k,l])=>`<button type="button" data-f="${k}" class="${f==k?'on':''}">${l}</button>`).join('')+BOXT.slice(1).map(([k,,l])=>`<button type="button" data-t="${k}" class="${tg==k?'on':''}">${l}</button>`).join('')};
     const grid=()=>{
       const ql=q.trim().toLowerCase(),out=[];
-      for(let i=1;i<=MAXID;i++){
+      try{window.__regFix&&__regFix()}catch(e){}const RB=window.REGBY||{},RG=window.REGI||{},ORD=[];for(let k=1;k<=MAXID;k++){ORD.push(k);if(RB[k])ORD.push(...RB[k])}
+      const rgN=i=>RG[i]?RG[i].dn.replace(/^./,c=>c.toUpperCase()):null,rgID=i=>RG[i]?ID(RG[i].sp)+' · '+RG[i].r:ID(i);
+      if(f==='reg')for(const i of ORD){if(!RG[i])continue;const st=state(i);if(ql){const nme=(rgN(i)||'').toLowerCase();if(!nme.includes(ql))continue}out.push(`<button type="button" class="pxc ${st} pxreg" data-id="${i}"><span class="pxn">${rgID(i)}</span><span class="pxi">${st=='u'?`<img loading="lazy" decoding="async" class="pxsil" src="${mini(i,0)}" alt="">`:`<img loading="lazy" decoding="async" src="${mini(i,DX.sh[i])}" alt="">`}</span><b>${rgN(i)}${DX.sh[i]?' ✨':''}</b></button>`)}
+      for(const i of (f==='reg'?[]:ORD)){
         const st=state(i);if(f=='sh'){if(!DX.sh[i])continue}else if(f!='all'&&st!=f)continue;
         if(tg&&TAGS[i]!=tg)continue;
-        if(ql){const nme=nameOf(i).toLowerCase();if(!(String(i)==ql.replace('#','')||(st!='u'&&nme.includes(ql))))continue}
-        out.push(`<button type="button" class="pxc ${st}" data-id="${i}"><span class="pxn">${ID(i)}</span><span class="pxi">${st=='u'?'?':`<img loading="lazy" decoding="async" src="${mini(i,DX.sh[i])}" alt="">`}</span><b>${st=='u'?'???':(nmOf(i)||'Nº '+i)+(DX.sh[i]?' ✨':'')}</b>${st!='u'?tgb(i):''}</button>`)}
+        if(ql){const nme=(rgN(i)||nameOf(i)).toLowerCase();if(!(String(i)==ql.replace('#','')||(st!='u'&&nme.includes(ql))||(RG[i]&&nme.includes(ql))))continue}
+        out.push(`<button type="button" class="pxc ${st}${RG[i]?' pxreg':''}" data-id="${i}"><span class="pxn">${rgID(i)}</span><span class="pxi">${st=='u'?(RG[i]?`<img loading="lazy" decoding="async" class="pxsil" src="${mini(i,0)}" alt="">`:'?'):`<img loading="lazy" decoding="async" src="${mini(i,DX.sh[i])}" alt="">`}</span><b>${st=='u'?(RG[i]?'??? de '+RG[i].r:'???'):(rgN(i)||nmOf(i)||'Nº '+i)+(DX.sh[i]?' ✨':'')}</b>${st!='u'&&!RG[i]?tgb(i):''}</button>`)}
       Z('#pxg').innerHTML=out.length?out.join(''):'<p class="pxe">No hay Pokémon con este filtro todavía.</p>'};
     const detail=async id=>{
-      const st=state(id);if(st=='u'){toast('Aún no has visto este Pokémon');return}
-      const box=Z('#pxd');box.innerHTML=`<div class="dp"><button class="dpx" id="dpx" aria-label="Cerrar">✕</button><div class="dpt"><img id="dpimg" src="${art(id,DX.sh[id])}" alt=""><div><h4>${nmOf(id)||'Nº '+id}</h4><small>${ID(id)} · ${st=='c'?'✔ Capturado':'👁 Visto'}</small><div class="dpy" id="dpy">${tgb(id)}</div><button type="button" class="act" id="dpsh" style="margin-top:6px;padding:6px 10px"></button></div></div><div class="dps" id="dps"><small style="grid-column:1/-1">Cargando datos…</small></div></div>`;
+      const st=state(id),RGd=(window.REGI||{})[id];if(st=='u'){toast(RGd?`🌍 Existe la forma de ${RGd.r} de ${RGd.n.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase())}: búscala en los biomas${(()=>{try{const b=BIO.find(x=>x.k===biomeOf(RGd.ty));return b?' (sale en '+b.n+')':''}catch(e){return''}})()}`:'Aún no has visto este Pokémon');return}
+      const box=Z('#pxd');box.innerHTML=`<div class="dp"><button class="dpx" id="dpx" aria-label="Cerrar">✕</button><div class="dpt"><img id="dpimg" src="${art(id,DX.sh[id])}" alt=""><div><h4>${RGd?RGd.dn.replace(/^./,c=>c.toUpperCase()):(nmOf(id)||'Nº '+id)}</h4><small>${RGd?ID(RGd.sp)+' · Forma de '+RGd.r:ID(id)} · ${st=='c'?'✔ Capturado':'👁 Visto'}</small><div class="dpy" id="dpy">${tgb(id)}</div><button type="button" class="act" id="dpsh" style="margin-top:6px;padding:6px 10px"></button></div></div><div class="dps" id="dps"><small style="grid-column:1/-1">Cargando datos…</small></div></div>`;
       Z('#dpx').onclick=()=>{box.innerHTML=''};
       {let sh=!!DX.sh[id];const im=Z('#dpimg'),bt=Z('#dpsh'),ap=()=>{im.src=art(id,sh);bt.textContent=sh?'↩ Ver normal':'✨ Ver shiny'};ap();bt.onclick=()=>{sh=!sh;ap()}}
       try{const d=await getD(id);if(!Z('#dpx'))return;
@@ -8586,7 +8589,34 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'47.5',t:'Captura en grupo',s:'cur',l:[
+ {v:'47.6',t:'Nuevo mapa: Pueblo y Biomas',s:'cur',l:[
+  '🙈 La barrita de la cortina se esconde en cuanto abres cualquier otra pantalla (Caja, amigos, casino, biomas, combates…) y vuelve al regresar al mapa',
+  '📱 Mapa más despejado: los avisos de arriba, la ronda, el dinero, «Fijar mapa», «Equipos», Amigos, Menú y Ajustes están ahora en una cortina que se despliega desde arriba, como la de un móvil. Arriba solo queda una barrita con la ronda y el dinero: tócala o deslízala hacia abajo para abrirla. La mochila sigue a mano en su esquina',
+  '📌 El mapa fijado ya no se monta sobre nada: con el nuevo diseño se vuelve a medir su sitio',
+  '🌿 Biomas más tranquilos: menos decoración y mejor repartida, sin cosas amontonadas',
+  '🔍 Botones de zoom más pequeños y en la esquina. Dentro del bioma ya no se tapa la pantalla con su nombre y nivel',
+  '🔍 Dentro de los biomas puedes hacer zoom: pellizca con dos dedos, usa los botones ＋/－, el botón ⤢ para alejarte del todo, o la rueda del ratón en PC. El zoom que elijas se guarda (también al cerrar el juego)',
+  '🔄 Cada vez que entras a un bioma los Pokémon son distintos (al volver de un combate sigues en la misma visita)',
+  '🗺️ El Pueblo y la isla se ven enteros en la pantalla, también en el móvil',
+  '🏷️ Los carteles con el nombre de cada edificio o bioma solo salen al tocarlo y nunca se salen de la pantalla. Cada bioma tiene su «i» para abrir su guía de Pokémon (en el cartel de la isla y dentro del bioma)',
+  '🌍 Formas regionales: más de 50 formas de Alola, Galar, Hisui y Paldea (Decidueye de Hisui, Vulpix de Alola, Ponyta de Galar, Wooper de Paldea…). Salen en los biomas de su tipo (a veces como Alfa: por ejemplo, Decidueye de Hisui en un grupo de Dartrix), evolucionan con sus formas regionales y aparecen en la Pokédex junto a su especie, con el filtro «🌍 Regionales», y en la guía de cada bioma',
+  '📖 Las formas regionales que aún no has visto salen en la Pokédex como silueta («??? de Hisui»): así sabes que existen y que puedes buscarlas',
+  '🌱 El cartel bajo el logo pasa a ser el de la «Lively Update», en grande: una Poké Ball que brota con hojas que se mecen, destellos y los colores de la isla',
+  '🌋 Megaincursiones: el daño que hace cada jugador sale también, más pequeño, encima de su tarjeta (⚔️ daño, 🛡️ al escudo). Así se ve quién hizo cuánto',
+  '📊 Megaincursiones: las estadísticas del final ya no se solapan con números grandes: a partir de 10.000 se abrevian (12,3 k, 1,2 M) y al mantener el dedo o el ratón encima se ve la cifra exacta',
+  '🎭 Nueva Ruta: un pequeño teatro con el mundo en el que las rondas van sobre los ladrillos del arco (del 1 al 10 y del 11 al 20, y así sucesivamente). La ronda actual brilla con tu Pokémon encima: tócala para continuar. Las rondas superadas llevan ✓ y las de líder 🏅',
+  '🐾 En los biomas los Pokémon pasean, dan saltitos y muestran lo que sienten (♪, ❤️, ❗, 💤 por la noche…)',
+  '🗺️ El mapa ahora tiene tres pestañas: 🗺️ Ruta (tu camino de rondas), 🏘️ Pueblo y 🌿 Biomas, con ilustraciones nuevas para la mañana, el día, la tarde y la noche',
+  '🏘️ Pueblo: toca una vez para ver qué es y otra vez para entrar. Centro Pokémon, Banco, Tienda (los puestos del mercado), Mi casa, el PokéCasino, el Mercado entre amigos (tu puesto) y la casa de un amigo (para visitar la casa de tus amigos). Al tocar un sitio sale su cartel con icono y un botón «Entrar ▶»',
+  '🌿 Biomas: una isla con Bosque, Pradera, Montaña helada, Volcán, Costa y Desierto rocoso. Toca una zona para entrar a un plano enorme con su propia temática que recorres arrastrando la pantalla (o con la rueda del ratón)',
+  '🐾 Dentro de cada bioma los Pokémon pasean en grupitos de su especie o solos, como en Púrpura',
+  '🔴 Los grupos grandes tienen un Alfa: su evolución, más grande, de más nivel, más fuerte y con aura roja',
+  '✨ Cada Pokémon de los biomas tiene 1/120 de ser shiny (al salir en grupo hay más oportunidades), y los shinys brillan en el mapa antes de combatir',
+  '⚔️ Toca un Pokémon para ver su nombre y nivel y pulsa «Combatir» (o tócalo otra vez). Al debilitarlo sale la captura normal y vuelves al bioma donde estabas. Perder no cuesta vidas y no se avanza ronda',
+  'En la isla ves cuántos Pokémon quedan en cada zona y si hay un Alfa (los shinys no se avisan: hay que encontrarlos). Si despejas una zona, vuelven Pokémon en la siguiente ronda, y cada 8 rondas cambian las especies. Los biomas que se desbloquean más tarde siguen cerrados hasta su ronda',
+  'Los biomas del mapa de la Ruta (y del mapa simple) ahora te llevan directamente a esa zona de la pestaña Biomas. En la isla también está el Altar de megaincursiones'
+]},
+{v:'47.5',t:'Captura en grupo',s:'prev',l:[
   '🌿 Nueva Captura en grupo para 1 a 4 jugadores: Amigos → «🌿 Captura en grupo» (crea una sala o únete con un código de 5 letras) o Amigos → ⋯ → «Capturar juntos» para invitar directamente a un amigo',
   'El anfitrión elige el bioma (Bosque, Pradera, Montaña helada, Volcán, Costa o Cueva) y la duración (2, 3 o 5 minutos). Funciona aunque estéis en redes distintas',
   'Cada jugador captura sus propios Pokémon: 15 Safari Balls gratis más las Poké, Super y Ultra Balls de tu mochila, 3 cebos 🍓 (más fácil de capturar y huye menos) y «Siguiente» para buscar otro',
@@ -13898,7 +13928,7 @@ ${!w.open?(()=>{const run=getRun(),n=run&&run.bag&&run.bag.mrinv|0,P=100000000,m
     <div class="mr-rk">${r.rank.map((p,i)=>`<div>${['🥇','🥈','🥉'][i]||'🎖️'}<img src="${mini(p.id,p.sh)}" alt="">${esc(p.n)}<span>${fmt(p.dealt)}</span></div>`).join('')}</div></div>
     ${(()=>{const L=r.rank;if(!L.length)return'';const top=k=>{const m=Math.max(...L.map(p=>p[k]|0));return m>0?L.find(p=>(p[k]|0)===m):null};
      const T=[['dealt','⚔️ MVP','más daño'],['heal','💚 Mejor sanador','más curación'],['taken','🛡️ El muro','más daño aguantado'],['sup','📈 Estratega','más mejoras y apoyo'],['block','🌀 Intocable','más golpes evitados']].map(([k,t,d])=>{const p=top(k);return p?`<span class="mr-tt"><b>${t}</b>${esc(p.n)}<small>${d}</small></span>`:''}).join('');
-     return`<div class="mr-mcard"><div class="mr-sth">📊 Estadísticas del asalto</div>${T?`<div class="mr-tts">${T}</div>`:''}<div class="mr-stt"><div class="mr-str mr-sth2"><span>Jugador</span><span>⚔️</span><span>💚</span><span>🛡️</span><span>📈</span><span>💫</span></div>${L.map(p=>`<div class="mr-str"><span><img src="${mini(p.id,p.sh)}" alt="">${esc(p.n)}</span><span>${fmt(p.dealt|0)}</span><span>${fmt(p.heal|0)}</span><span>${fmt(p.taken|0)}</span><span>${p.sup|0}</span><span>${p.ko|0}</span></div>`).join('')}</div><p class="mr-note" style="margin-top:6px">⚔️ daño causado · 💚 curación dada · 🛡️ daño recibido · 📈 mejoras y apoyo · 💫 veces debilitado</p></div>`})()}
+     return`<div class="mr-mcard"><div class="mr-sth">📊 Estadísticas del asalto</div>${T?`<div class="mr-tts">${T}</div>`:''}<div class="mr-stt"><div class="mr-str mr-sth2"><span>Jugador</span><span>⚔️</span><span>💚</span><span>🛡️</span><span>📈</span><span>💫</span></div>${L.map(p=>{const K=v=>{v=Math.round(+v||0);const t=fmt(v);return`<span title="${t}">${v<10000?t:v<1e6?(v/1e3).toFixed(v<1e5?1:0).replace('.',',').replace(/,0$/,'')+' k':(v/1e6).toFixed(1).replace('.',',').replace(/,0$/,'')+' M'}</span>`};return`<div class="mr-str"><span><img src="${mini(p.id,p.sh)}" alt=""><i class="mr-snm">${esc(p.n)}</i></span>${K(p.dealt)}${K(p.heal)}${K(p.taken)}<span>${p.sup|0}</span><span>${p.ko|0}</span></div>`}).join('')}</div><p class="mr-note" style="margin-top:6px">⚔️ daño causado · 💚 curación dada · 🛡️ daño recibido · 📈 mejoras y apoyo · 💫 veces debilitado</p></div>`})()}
     ${NETR.role==='guest'&&NETR.dc&&NETR.dc.readyState==='open'?`<div class="mr-mcard" style="text-align:center"><p class="mr-note">🔁 Sigues en la sala de tu amigo: cuando el anfitrión vuelva a la sala, entrarás automáticamente para el siguiente asalto.</p></div>`:''}
     <div class="mr-bts">${NETR.role==='host'&&NETR.code&&NETR.code!=='SOLO'?`<button class="mr-bt mr-p" data-a="toroom">🔁 Volver a la sala (código ${esc(NETR.code)})</button>`:''}${r.win&&(sv(r.wid).canCap&&!sv(r.wid).cap)?`<button class="mr-bt mr-g" data-a="cap">🔴 ¡Capturar!</button>`:''}<button class="mr-bt" data-a="home">${NETR.role==='host'&&NETR.code!=='SOLO'?'Cerrar sala y salir':NETR.role==='guest'?'Salir de la sala':'Volver'}</button></div>`}
   UI.morph(e,`<div class="mr-mw">${h}</div>`,v);UI.bind()},
@@ -14017,7 +14047,9 @@ ${!w.open?(()=>{const run=getRun(),n=run&&run.bag&&run.bag.mrinv|0,P=100000000,m
   /* v27.6: una animación de golpe no se reinicia antes de terminar (antes parpadeaba sin parar) */
   const kick=(el,c,ms)=>{if(!el)return;const t=performance.now(),k=el._kk||(el._kk={});if(k[c]&&t-k[c]<ms)return;k[c]=t;el.classList.remove(c);void el.offsetWidth;el.classList.add(c)};
   const float=(host,txt,cls)=>{if(!host)return;const fl=host.querySelectorAll(':scope>.mr-fl');if(fl.length>=5)fl[0].remove();const f=D.createElement('span');f.className='mr-fl '+(cls||'');f.textContent=txt;f.style.left=(40+Math.random()*20)+'%';host.append(f);setTimeout(()=>f.remove(),1150)};
-  if(ev.k==='dmg'&&ev.to==='boss'){float(bo,(ev.sh?'🛡️ ':'')+'-'+fmt(ev.v)+(ev.cr?'!':''),ev.sh?'mr-sh':ev.e>1?'mr-se':ev.e<1?'mr-nv':'');if(!ev.dot){kick(bo,'mr-hit',420);if(ev.by)kick(e.querySelector(`.mr-al[data-pid="${ev.by}"]`),'mr-atk',500)}try{if(!ev.dot)beep(ev.e>1?880:620,.05,'square')}catch(_){}}
+  if(ev.k==='dmg'&&ev.to==='boss'){float(bo,(ev.sh?'🛡️ ':'')+'-'+fmt(ev.v)+(ev.cr?'!':''),ev.sh?'mr-sh':ev.e>1?'mr-se':ev.e<1?'mr-nv':'');
+   /* v47.6: el daño de cada jugador también sale, más pequeño, encima de su tarjeta: así se ve quién hizo cuánto */
+   if(ev.by){const pc=e.querySelector(`.mr-pc[data-pid="${ev.by}"]`);if(pc){const L=pc.querySelectorAll(':scope>.mr-dl');if(L.length>=3)L[0].remove();const f=D.createElement('span');f.className='mr-dl'+(ev.sh?' sh':ev.cr?' cr':ev.e>1?' se':ev.e<1?' nv':'');f.textContent=(ev.sh?'🛡️':'⚔️')+' '+fmt(ev.v)+(ev.cr?'!':'');f.style.setProperty('--x',(Math.random()*30-15).toFixed(0)+'px');pc.append(f);setTimeout(()=>f.remove(),1300)}}if(!ev.dot){kick(bo,'mr-hit',420);if(ev.by)kick(e.querySelector(`.mr-al[data-pid="${ev.by}"]`),'mr-atk',500)}try{if(!ev.dot)beep(ev.e>1?880:620,.05,'square')}catch(_){}}
   else if(ev.k==='boss'){kick(bo,'mr-lunge',550);try{beep(160,.18,'sawtooth')}catch(_){}}
   else if(ev.k==='pdmg'||ev.k==='heal'||ev.k==='block'){const c=e.querySelector(`.mr-pc[data-pid="${ev.to}"]`);if(!c)return;
    const al=e.querySelector(`.mr-al[data-pid="${ev.to}"]`);if(al&&ev.k==='pdmg'&&ev.v>0)kick(al,'mr-hit',450)
@@ -14196,12 +14228,15 @@ if(h&&!h.querySelector('.ptw')){const w=document.createElement('div');w.classNam
  w.innerHTML=`<span class="w1">P<span class="ob"><svg viewBox="0 0 40 40"><defs><linearGradient id="ptR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6b6b"/><stop offset="1" stop-color="#e11d48"/></linearGradient></defs><circle cx="20" cy="20" r="17" fill="#f8fafc"/><path d="M3 20a17 17 0 0 1 34 0z" fill="url(#ptR)"/><circle cx="20" cy="20" r="17" fill="none" stroke="#1a1238" stroke-width="3.4"/><path d="M3 20h12.6M24.4 20H37" stroke="#1a1238" stroke-width="3.4"/><circle cx="20" cy="20" r="4.4" fill="#f8fafc" stroke="#1a1238" stroke-width="3"/><path d="M9 12.5c2.4-3 5.6-4.6 9-5" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="2.4" stroke-linecap="round"/></svg></span>KE</span><span class="w2">ROGUE</span>`;
   const sub=h.querySelector('span.tgu');h.insertBefore(w,sub||h.firstChild)}
 const s=document.querySelector('#menu h1 span.tgu,#menu h1>span');if(!s)return;
-s.className='tgu';s.setAttribute('aria-label','Love Update');
-s.innerHTML=`<svg class="tgi" viewBox="0 0 54 40" aria-hidden="true"><defs><linearGradient id="tgL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8fb8"/><stop offset="1" stop-color="#e11d74"/></linearGradient></defs>
-<path d="M27 37C14 28 6 21 6 13.2 6 7.6 10.3 3.5 15.6 3.5c4.6 0 8.6 3 11.4 7.2 2.8-4.2 6.8-7.2 11.4-7.2C43.7 3.5 48 7.6 48 13.2 48 21 40 28 27 37z" fill="#f8fafc" stroke="#0b0a24" stroke-width="2.4" stroke-linejoin="round"/>
-<path d="M6.4 17.5C6.1 16.1 6 14.6 6 13.2 6 7.6 10.3 3.5 15.6 3.5c4.6 0 8.6 3 11.4 7.2 2.8-4.2 6.8-7.2 11.4-7.2C43.7 3.5 48 7.6 48 13.2c0 1.4-.1 2.9-.4 4.3z" fill="url(#tgL)" stroke="#0b0a24" stroke-width="2.4" stroke-linejoin="round"/>
-<path d="M6.6 17.6h40.8" stroke="#0b0a24" stroke-width="2.6"/><circle cx="27" cy="17.6" r="5" fill="#fff" stroke="#0b0a24" stroke-width="2.2"/><circle cx="27" cy="17.6" r="2" fill="#ff8fb8"/>
-<path d="M12 9.5c1.4-2 3.4-3.1 5.6-3.4" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/><path d="M47.5 3l1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="#fde047"/></svg><span class="tgt"><b>LOVE</b><i>UPDATE</i></span>`;
+s.className='tgu tgl';s.setAttribute('aria-label','Lively Update');
+/* v47.6: «Lively Update» · Poké Ball que brota con hojas, destellos y colores de la isla */
+s.innerHTML=`<svg class="tgi" viewBox="0 0 56 44" aria-hidden="true"><defs><linearGradient id="lvB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cf5c4"/><stop offset="1" stop-color="#10a37f"/></linearGradient><linearGradient id="lvL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9f99d"/><stop offset="1" stop-color="#16a34a"/></linearGradient></defs>
+<g class="lvlf"><path d="M28 14C27 7 31 2.5 39 1.5c.6 7.4-3.6 12.2-11 12.5z" fill="url(#lvL)" stroke="#0b2a1f" stroke-width="2" stroke-linejoin="round"/><path d="M29 13c2.6-3.4 5-5.6 8.2-8.6" fill="none" stroke="#0b2a1f" stroke-width="1.4" stroke-linecap="round"/>
+<path d="M27 14.5C24.6 9 20.2 6.6 14.6 7.4c.4 5.8 4.6 8.6 12.4 7.1z" fill="url(#lvL)" stroke="#0b2a1f" stroke-width="2" stroke-linejoin="round"/></g>
+<circle cx="28" cy="28" r="14" fill="#f8fafc" stroke="#0b2a1f" stroke-width="2.4"/><path d="M14 28a14 14 0 0 1 28 0z" fill="url(#lvB)" stroke="#0b2a1f" stroke-width="2.4" stroke-linejoin="round"/>
+<path d="M14.2 28h27.6" stroke="#0b2a1f" stroke-width="2.6"/><circle cx="28" cy="28" r="4.6" fill="#fff" stroke="#0b2a1f" stroke-width="2.2"/><circle cx="28" cy="28" r="1.8" fill="#34d399"/>
+<path d="M19 21.5c1.4-2.2 3.4-3.4 5.6-3.8" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/>
+<path class="lvs a" d="M50 8l1.1 2.6 2.6 1.1-2.6 1.1L50 15.4l-1.1-2.6-2.6-1.1 2.6-1.1z" fill="#fde047"/><path class="lvs b" d="M7 30l.8 1.8 1.8.8-1.8.8L7 35.2l-.8-1.8-1.8-.8 1.8-.8z" fill="#a5f3fc"/><path class="lvs c" d="M47 34l.7 1.5 1.5.7-1.5.7-.7 1.5-.7-1.5-1.5-.7 1.5-.7z" fill="#fbcfe8"/></svg><span class="tgt"><b>LIVELY</b><i>UPDATE</i></span>`;
 })();</script>
 
 <style id="tcgx">
@@ -16957,7 +16992,7 @@ async function open(i){const b=BIO[i];if(!b)return;try{if(window.dexSync)dexSync
    bf.onclick=e=>{const x=e.target.closest('[data-f]');if(!x)return;F=x.dataset.f;draw()};bf.querySelector('#bdq').oninput=e=>{QS=e.target.value.trim().toLowerCase();draw()};bf.querySelector('#bdq').value=QS}
   bf.querySelectorAll('[data-f]').forEach(x=>x.classList.toggle('on',x.dataset.f===F));
   const list=ids.filter(id=>{const st=d.c[id]?'c':d.s[id]?'s':'u';if(F==='s'&&st==='u')return false;if(F==='c'&&st!=='c')return false;if(F==='u'&&st!=='u')return false;if(F==='sh'&&!sh(id))return false;if(F==='now'&&!boost(id))return false;if(F==='day'&&!DS.has(id))return false;if(F==='night'&&!NS.has(id))return false;if(QS&&!(st!=='u'&&nm(id).toLowerCase().includes(QS))&&!String(id).startsWith(QS))return false;return true});
-  o.querySelector('#bdgr').innerHTML=list.length?list.map(id=>{const st=d.c[id]?'c':d.s[id]?'s':'u',s1=sh(id);return`<div class="zqcd ${st}${boost(id)?' bst':''}"><img src="${mini(id,s1?1:0)}" alt="" loading="lazy">${s1?'<em>✨</em>':st==='c'?'<em>🔴</em>':''}<span class="bdtg">${tags(id)}</span><b>${st==='u'?'???':esc(nm(id))}</b><small>#${String(id).padStart(4,'0')}</small><div class="ty">${st==='u'?'':T[id].filter(Boolean).map(t=>`<i style="--t:${COL[t]}" title="${ES[t]||t}"></i>`).join('')}</div></div>`}).join(''):'<div class="zqld">No hay Pokémon con este filtro.</div>'};
+  o.querySelector('#bdgr').innerHTML=list.length?list.map(id=>{const st=d.c[id]?'c':d.s[id]?'s':'u',s1=sh(id);return`<div class="zqcd ${st}${boost(id)?' bst':''}"><img src="${mini(id,s1?1:0)}" alt="" loading="lazy">${s1?'<em>✨</em>':st==='c'?'<em>🔴</em>':''}<span class="bdtg">${tags(id)}</span><b>${st==='u'?'???':esc(nm(id))}</b><small>${(window.REGI||{})[id]?'#'+String(REGI[id].sp).padStart(4,'0')+' · '+REGI[id].r:'#'+String(id).padStart(4,'0')}</small><div class="ty">${st==='u'?'':T[id].filter(Boolean).map(t=>`<i style="--t:${COL[t]}" title="${ES[t]||t}"></i>`).join('')}</div></div>`}).join(''):'<div class="zqld">No hay Pokémon con este filtro.</div>'};
  draw()}
 window.openBiomeDex=open;
 /* ---------- botones «i» en el mapa ilustrado y en el mapa simple ---------- */
@@ -20604,6 +20639,182 @@ body[data-v=menu] #potdm{display:flex}
 .sf-mb{right:auto;left:50%;bottom:34px}
 .sf-hud{z-index:2}.sf-stage{z-index:1;padding-top:96px}
 .sf-lanes::before{content:'';position:absolute;left:-6px;right:-6px;top:50px;height:26px;background:linear-gradient(transparent,color-mix(in srgb,var(--b3) 18%,transparent),transparent);z-index:-1}
+/* v47.6: pestañas del mapa */
+#mtabs{display:flex;gap:6px;justify-content:center;margin:2px auto 8px;padding:4px;border-radius:999px;background:#0b0720d9;border:1px solid #fff3;width:max-content;max-width:calc(100% - 16px);box-shadow:0 6px 16px #0007}
+#mtabs button{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;border:0;background:transparent;color:#e9d5ff;font:800 14px system-ui;cursor:pointer;transition:background .2s,transform .12s}
+#mtabs button i{font-style:normal;font-size:16px}#mtabs button.on{background:linear-gradient(#fbbf24,#d97706);color:#2b1702;box-shadow:0 3px 0 #78350f}#mtabs button:active{transform:scale(.95)}
+#cards:has(#mtabs){max-width:none}
+#dmap.xmap .imc{min-width:max(100%,880px)}
+#dmap.xmap svg{background:#3b82f6}
+#dmap .hs2{outline:none;-webkit-tap-highlight-color:transparent;cursor:pointer}
+#dmap .hp2{fill:transparent;pointer-events:all;stroke:none;vector-effect:non-scaling-stroke;transition:fill .2s}
+#dmap .hs2:hover .hp2{fill:#ffffff18}#dmap .hs2.sel .hp2{fill:#ffffff26;stroke:#fff;stroke-width:2px;filter:drop-shadow(0 0 4px #fff)}
+.xlab{position:absolute;transform:translate(-50%,-100%);padding:3px 10px;border-radius:12px;background:#0b0720d0;border:1px solid #fde68a77;color:#fde68a;font:800 12px system-ui;white-space:nowrap;pointer-events:none;text-align:center;line-height:1.15;box-shadow:0 3px 8px #0007}
+.xlab small{display:block;font-size:10px;color:#e9d5ff;font-weight:700}.xlab.lk{opacity:.8;color:#cbd5e1}.xlab.alt{transform:translate(-50%,-50%);font-size:11px}
+.hdl{position:absolute;inset:0;pointer-events:none}
+.hd{position:absolute;width:4.6%;aspect-ratio:1;transform:translate(-50%,-78%);padding:0;border:0;background:none;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent;animation:hdw 3.4s ease-in-out var(--dl,0s) infinite;z-index:1}
+.hd img{width:100%;height:100%;image-rendering:pixelated;filter:drop-shadow(0 3px 2px #000a);pointer-events:none;user-select:none;-webkit-user-drag:none}
+.hd::after{content:'';position:absolute;left:18%;right:18%;bottom:4%;height:12%;border-radius:50%;background:radial-gradient(#0007,transparent 70%);z-index:-1}
+.hd.al{width:7.4%;z-index:2}.hd.al img{filter:drop-shadow(0 0 6px #ef4444) drop-shadow(0 0 2px #ef4444) drop-shadow(0 4px 3px #000a)}
+.hda{position:absolute;top:2%;right:4%;display:grid;place-items:center;width:30%;aspect-ratio:1;border-radius:50%;background:#dc2626;color:#fff;font:900 clamp(9px,1.2vw,14px) Georgia,serif;font-style:normal;border:2px solid #fff;box-shadow:0 2px 4px #0008}
+.hd.sh img{filter:drop-shadow(0 0 6px #fde047) drop-shadow(0 3px 2px #000a)}.hd.al.sh img{filter:drop-shadow(0 0 7px #fde047) drop-shadow(0 0 3px #ef4444) drop-shadow(0 4px 3px #000a)}
+.hds{position:absolute;top:8%;left:12%;width:22%;aspect-ratio:1;background:#fff;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:vtsp 1.8s ease-in-out infinite;pointer-events:none}.hds.b{top:30%;left:74%;width:16%;animation-delay:.9s}
+.hd.sel{z-index:3;animation:none;transform:translate(-50%,-78%) scale(1.25)}.hd.sel::before{content:'';position:absolute;inset:-12%;border-radius:50%;border:3px solid #fff;box-shadow:0 0 12px #fff;animation:cgp 1s ease-in-out infinite alternate}
+@keyframes hdw{0%,100%{translate:0 0}25%{translate:6px -3px}50%{translate:0 -6px}75%{translate:-6px -2px}}
+@media (prefers-reduced-motion:reduce){.hd,.hds{animation:none}}
+html.vm-pc #dmap.xmap .imc{min-width:100%}
+#dmap.xmap .imw{overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+#dmap.xmap .dnx{display:none!important}
+#dmap.xmap .imc::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;transition:background .8s}
+#dmap.xmap.ph-night .imc::after{background:linear-gradient(#0b1033a8,#1e1b4b90)}
+#dmap.xmap.ph-dusk .imc::after{background:linear-gradient(#f9731648,#be185d40)}
+#dmap.xmap.ph-dawn .imc::after{background:linear-gradient(#fde68a40,#f9a8d430)}
+#dmap.xmap .xlab,#dmap.xmap .hdl,#dmap.xmap .mbd{z-index:1}
+#dmap.xbio.isnight .hd img{filter:drop-shadow(0 0 4px #fff8) drop-shadow(0 3px 2px #000a)}
+/* v47.6: dentro de un bioma */
+#bzv{position:fixed;inset:0;z-index:9000;background:#0b0720;overflow:hidden;font-family:system-ui,sans-serif;color:#fff;animation:fdin .25s}
+#bzv .bz-vp{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}#bzv .bz-vp.drag{cursor:grabbing}
+#bzv .bz-w{position:absolute;left:0;top:0;will-change:transform}
+#bzv .bz-bg{position:absolute;inset:0;width:100%;height:100%}
+#bzv .bz-pk{position:absolute;inset:0}
+.bzp{position:absolute;transform:translate(-50%,-85%);padding:0;border:0;background:none;cursor:pointer;transition:translate 2.4s ease-in-out;-webkit-tap-highlight-color:transparent;z-index:1}
+.bzp .bzr{display:block;width:100%;height:100%;transition:scale .3s;animation:bzb 2.2s ease-in-out var(--dl,0s) infinite}
+.bzp img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 4px #0008);pointer-events:none;user-select:none;-webkit-user-drag:none}
+.bzp::after{content:'';position:absolute;left:20%;right:20%;bottom:-2%;height:12%;border-radius:50%;background:radial-gradient(#000a,transparent 70%);z-index:-1}
+@keyframes bzb{50%{transform:translateY(-5px)}}
+.bzp.al{z-index:2}.bzp.al img{filter:drop-shadow(0 0 10px #ef4444) drop-shadow(0 0 3px #ef4444) drop-shadow(0 8px 5px #0009)}
+.bza{position:absolute;top:4%;right:6%;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#dc2626;color:#fff;font:900 20px Georgia,serif;font-style:normal;border:3px solid #fff;box-shadow:0 2px 6px #0009}
+.bzp.sh img{filter:drop-shadow(0 0 10px #fde047) drop-shadow(0 6px 4px #0008)}.bzp.al.sh img{filter:drop-shadow(0 0 12px #fde047) drop-shadow(0 0 4px #ef4444) drop-shadow(0 8px 5px #0009)}
+.bzp .hds{top:10%;left:14%;width:16%}.bzp .hds.b{top:28%;left:76%;width:12%}.bzp .hds.c{top:62%;left:20%;width:10%;animation-delay:.5s}
+.bzp.sel{z-index:4}.bzp.sel .bzr{animation:none;scale:1.12}.bzp.sel::before{content:'';position:absolute;left:10%;right:10%;bottom:-6%;height:22%;border-radius:50%;border:4px solid #fff;box-shadow:0 0 16px #fff;animation:cgp 1s ease-in-out infinite alternate}
+#bzv .bz-hud{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;gap:8px;padding:calc(10px + env(safe-area-inset-top)) 12px 8px;background:linear-gradient(#000a,transparent);pointer-events:none;flex-wrap:wrap}
+#bzv .bz-hud>*{pointer-events:auto}#bzv .bz-hud b{font:900 18px system-ui;text-shadow:0 2px 3px #000}#bzv .bz-hud span{padding:4px 10px;border-radius:999px;background:#000a;font:800 12px system-ui}.bz-shn{color:#fde047}
+#bzv .bz-back{padding:9px 14px;border-radius:999px;border:2px solid #fde68a;background:linear-gradient(#a16207,#713f12);color:#fff;font:900 14px system-ui;cursor:pointer}
+#bzv .bz-card{position:absolute;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:18px;background:#0b0720ee;border:2px solid #fde68a99;box-shadow:0 12px 30px #000c;width:min(440px,calc(100% - 24px));animation:fdin .2s}
+#bzv .bz-card[hidden]{display:none}#bzv .bz-card img{width:56px;height:56px;image-rendering:pixelated}#bzv .bz-card div{flex:1;min-width:0}#bzv .bz-card b{display:block;font-size:15px}#bzv .bz-card small{opacity:.8}
+.bzca{font-style:normal;font-size:11px;padding:1px 7px;border-radius:999px;background:#dc2626;margin-left:4px}
+#bzv .bz-card [data-b=fight]{padding:11px 16px;border-radius:14px;border:2px solid #fecaca;background:linear-gradient(#ef4444,#b91c1c);color:#fff;font:900 15px system-ui;cursor:pointer;white-space:nowrap}
+#bzv .bz-cx{width:30px;height:30px;border-radius:50%;border:0;background:#fff2;color:#fff;cursor:pointer}
+#bzv .bz-tip{position:absolute;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);padding:7px 14px;border-radius:999px;background:#000b;font:700 13px system-ui;pointer-events:none;transition:opacity .6s;white-space:nowrap}#bzv .bz-tip.off{opacity:0}
+#bzv .bz-load{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#0b0720d0;font:800 15px system-ui}#bzv .bz-load i{width:40px;height:40px;border-radius:50%;border:4px solid #fff3;border-top-color:#fde68a;animation:vtspin 1s linear infinite}
+.xlab.hassh small{color:#fde047}
+@media (prefers-reduced-motion:reduce){.bzp .bzr{animation:none}.bzp{transition:none}}
+/* v47.6: Ruta en el teatro */
+#dmap.xruta .imc{min-width:100%!important}
+#dmap.xruta svg{background:#1e3a8a}
+#dmap.xruta .rn .rnc{fill:#f3e3c3;stroke:#5c3a1e;stroke-width:4}
+#dmap.xruta .rn .rnt{font:900 26px Georgia,'Times New Roman',serif;fill:#46280f;text-anchor:middle;pointer-events:none}#dmap.xruta .rn .rnt.sm{font-size:19px}
+#dmap.xruta .rn .rnm{font-size:20px;text-anchor:middle}
+#dmap.xruta .rn.past .rnc{fill:#c9d8a6;stroke:#3f5a1e}#dmap.xruta .rn.past .rnt{fill:#3f5a1e;opacity:.75}
+#dmap.xruta .rn .rnk{font:900 16px system-ui;fill:#fff;stroke:#166534;stroke-width:3px;paint-order:stroke;text-anchor:middle}
+#dmap.xruta .rn.fut .rnc{fill:#efe4cf}#dmap.xruta .rn.fut .rnt{opacity:.8}
+#dmap.xruta .rn.cur{cursor:pointer;outline:none}
+#dmap.xruta .rn.cur .rnc{fill:#fde68a;stroke:#b45309;stroke-width:5}
+#dmap.xruta .rn.cur .rng{fill:#fde047;fill-opacity:.45;transform-box:fill-box;transform-origin:center;animation:cgp 1.1s ease-in-out infinite alternate}
+#dmap.xruta .rn.cur:hover .rnc{fill:#fff}
+@media (prefers-reduced-motion:reduce){#dmap.xruta .rn.cur .rng{animation:none}}
+#dmap.xruta .rn .rnt{font-size:31px}#dmap.xruta .rn .rnt.sm{font-size:22px}#dmap.xruta .rn .rnk{font-size:19px}
+.bzp.hop .bzr{animation:bzhop .65s ease-out}@keyframes bzhop{30%{transform:translateY(-26px)}55%{transform:translateY(0)}72%{transform:translateY(-9px)}100%{transform:translateY(0)}}
+.bze{position:absolute;left:50%;top:-8%;transform:translateX(-50%);font-style:normal;font-size:26px;padding:2px 8px;border-radius:14px;background:#fff;color:#111;box-shadow:0 3px 8px #0006;animation:bzem 1.9s ease-out forwards;pointer-events:none;line-height:1.2}
+.bze::after{content:'';position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-top-color:#fff;border-bottom:0}
+@keyframes bzem{0%{opacity:0;transform:translate(-50%,10px) scale(.5)}15%{opacity:1;transform:translate(-50%,0) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-14px)}}
+@media (prefers-reduced-motion:reduce){.bzp.hop .bzr,.bze{animation:none}}
+/* v47.6: megaincursiones · daño de cada jugador sobre su tarjeta y estadísticas sin solaparse */
+#mrd .mr-dl{position:absolute;left:50%;bottom:calc(100% - 4px);transform:translateX(calc(-50% + var(--x,0px)));font:900 14px system-ui,sans-serif;color:#fde68a;text-shadow:0 1px 0 #000,0 0 6px #000;white-space:nowrap;pointer-events:none;z-index:6;animation:mrDl 1.25s ease-out forwards}
+#mrd .mr-dl.se{color:#fde047;font-size:15px}#mrd .mr-dl.cr{color:#fb923c;font-size:16px}#mrd .mr-dl.nv{color:#cbd5e1;font-size:12px}#mrd .mr-dl.sh{color:#67e8f9}
+@keyframes mrDl{0%{opacity:0;translate:0 8px;scale:.7}15%{opacity:1;translate:0 0;scale:1.08}30%{scale:1}100%{opacity:0;translate:0 -26px}}
+@media (prefers-reduced-motion:reduce){#mrd .mr-dl{animation:mrDlR 1.25s linear forwards}@keyframes mrDlR{0%,80%{opacity:1}100%{opacity:0}}}
+#mrd .mr-str{grid-template-columns:minmax(0,1fr) repeat(3,minmax(46px,auto)) repeat(2,minmax(26px,auto));gap:6px;font-variant-numeric:tabular-nums}
+#mrd .mr-str span{min-width:0}#mrd .mr-str span:first-child{overflow:hidden}#mrd .mr-snm{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#mrd .mr-rk>div{display:flex;align-items:center;gap:6px;min-width:0}#mrd .mr-rk span{margin-left:auto;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* v47.6: cartel «Lively Update» */
+#menu h1 span.tgu.tgl{background:linear-gradient(110deg,#0000 40%,#ffffff38 50%,#0000 60%) 0 0/260% 100% no-repeat,radial-gradient(120% 140% at 15% 0%,#1f7a5c 0%,#0e3b45 55%,#081a2b 100%);border-color:#5eead4;box-shadow:inset 0 0 0 .05em #04131c,inset 0 .1em 0 #ffffff2a,0 0 .6em #2dd4bf55;padding:.34em 1.2em .34em .55em}
+#menu h1 span.tgu.tgl .tgi{width:2em;height:1.6em;overflow:visible}
+#menu h1 span.tgu.tgl .tgt b{background:linear-gradient(180deg,#f0fdf4 8%,#86efac 45%,#facc15 100%);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.16em}
+#menu h1 span.tgu.tgl .tgt i{color:#a7f3d0}
+#menu h1 span.tgu.tgl .tgt i::before{background:linear-gradient(90deg,#0000,#5eead4)}#menu h1 span.tgu.tgl .tgt i::after{background:linear-gradient(90deg,#facc15,#0000)}
+#menu h1 span.tgu.tgl .lvlf{transform-origin:28px 16px;animation:lvSway 3.2s ease-in-out infinite}
+@keyframes lvSway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(7deg)}}
+#menu h1 span.tgu.tgl .lvs{transform-box:fill-box;transform-origin:center;animation:lvTw 2.4s ease-in-out infinite}
+#menu h1 span.tgu.tgl .lvs.b{animation-delay:.8s}#menu h1 span.tgu.tgl .lvs.c{animation-delay:1.6s}
+@keyframes lvTw{0%,100%{opacity:.25;transform:scale(.5) rotate(0)}50%{opacity:1;transform:scale(1.15) rotate(45deg)}}
+@media(prefers-reduced-motion:reduce){#menu h1 span.tgu.tgl .lvlf,#menu h1 span.tgu.tgl .lvs{animation:none}}
+.pxc.pxreg{box-shadow:inset 0 0 0 2px #38bdf855}.pxc.pxreg .pxn{color:#7dd3fc}
+.pxc .pxsil{filter:brightness(0) opacity(.45)}
+#dmap.xmap .imc{min-width:100%!important}
+#bzv .bz-w{transform-origin:0 0}
+#bzv .bz-zoom{position:absolute;right:12px;top:calc(64px + env(safe-area-inset-top));display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px;border-radius:16px;background:#000a;box-shadow:0 6px 16px #0008}
+#bzv .bz-zoom button{width:40px;height:40px;border-radius:12px;border:2px solid #fde68a99;background:#1e1b4b;color:#fff;font:900 20px system-ui;cursor:pointer;line-height:1}
+#bzv .bz-zoom button:active{transform:scale(.92)}#bzv .bz-zl{font:800 11px system-ui;color:#fde68a}
+#bzv .bz-tip{white-space:normal;text-align:center;width:max-content;max-width:calc(100% - 32px)}
+/* carteles del mapa solo al tocar */
+#dmap.xmap .xlab{display:none}#dmap.xmap .xlab.on{display:flex;align-items:center;gap:6px;animation:fdin .18s;z-index:3}
+#dmap.xmap .xlab.below{transform:translate(-50%,40%)}
+#dmap.xmap .xlab .xlt{display:block}
+#dmap.xmap .xli{pointer-events:auto;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:2px solid #fff;background:#1e1b4b;color:#fff;font:italic 900 14px Georgia,serif;cursor:pointer;padding:0;flex:none}
+#bdx{z-index:10050!important}
+#bzv .bz-i{width:30px;height:30px;border-radius:50%;border:2px solid #fff;background:#1e1b4bdd;color:#fff;font:italic 900 15px Georgia,serif;cursor:pointer;padding:0}
+#dmap.xmap .imw{overflow:hidden!important}
+#bzv .bz-zoom{right:6px;top:auto;bottom:calc(96px + env(safe-area-inset-bottom));gap:3px;padding:3px;border-radius:12px;background:#0007;box-shadow:none}
+#bzv .bz-zoom button{width:30px;height:30px;border-radius:9px;font-size:16px;border-width:1.5px}
+#bzv .bz-zl{font-size:9px}
+/* v47.6: cortina superior del mapa */
+#shbar,#shade,#shscrim{display:none}
+body.shon #shbar{display:flex;position:fixed;z-index:60;top:calc(6px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);align-items:center;gap:8px;max-width:calc(100% - 140px);min-width:150px;height:34px;padding:0 14px 6px;border-radius:0 0 16px 16px;border:2px solid #a78bfa88;border-top:0;background:linear-gradient(180deg,#2e1065f0,#1e1b4bf0);color:#fff;font:800 12px system-ui;cursor:pointer;box-shadow:0 6px 14px #0008;justify-content:center;white-space:nowrap;overflow:hidden}
+body.shon #shbar .sb-t{display:flex;align-items:center;gap:8px;overflow:hidden;text-overflow:ellipsis}
+body.shon #shbar .sb-t span{display:inline-flex;align-items:center;gap:3px;color:#fde68a}body.shon #shbar .sb-t span svg,body.shon #shbar .sb-t span img{width:14px;height:14px}
+body.shon #shbar .sb-t em{font-style:normal;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#f59e0b;color:#2b1702;font-size:11px;display:grid;place-items:center}
+body.shon #shbar .sb-h{position:absolute;left:50%;bottom:4px;width:34px;height:4px;margin-left:-17px;border-radius:2px;background:#ffffff88}
+body.shon #shscrim{display:block;position:fixed;inset:0;z-index:58;background:#0008;opacity:0;pointer-events:none;transition:opacity .25s}
+body.shon #shscrim.op{opacity:1;pointer-events:auto}
+body.shon #shade{display:block;position:fixed;z-index:59;left:0;right:0;top:0;transform:translateY(-105%);transition:transform .32s cubic-bezier(.2,.9,.25,1);pointer-events:none}
+body.shon #shade.op{transform:none;pointer-events:auto}
+#shade .sh-in{margin:0 auto;width:min(560px,100%);box-sizing:border-box;padding:calc(14px + env(safe-area-inset-top)) 14px 10px;border-radius:0 0 24px 24px;background:linear-gradient(180deg,#1e1b4bfa,#0b0720fa);border:2px solid #a78bfa66;border-top:0;box-shadow:0 18px 40px #000c;display:flex;flex-direction:column;gap:12px;max-height:85vh;overflow:auto}
+#shade .sh-top{display:flex;gap:8px;flex-wrap:wrap}
+#shade #rd,#shade #mn{position:static!important;margin:0!important}
+#shade #fab{position:static!important;display:flex!important;justify-content:center;gap:10px!important;transform:none!important;top:auto!important;right:auto!important;left:auto!important;flex-wrap:wrap}
+#shade #chips2{position:static!important;display:flex!important;flex-wrap:wrap;gap:6px;pointer-events:auto}
+#shade .sh-chips:empty{display:none}
+#shade .sh-tools{display:flex;gap:8px;flex-wrap:wrap}
+#shade #mappin,#shade #teamq{position:static!important;top:auto!important;left:auto!important;display:flex!important}
+#shade .sh-close{align-self:center;width:64px;height:26px;border-radius:13px;border:1px solid #ffffff33;background:#ffffff14;color:#fff;font:900 16px system-ui;cursor:pointer;line-height:1}
+body.shon[data-v=map] #run{padding-top:calc(48px + env(safe-area-inset-top))!important}
+body.shon[data-v=map] #run #bagb{top:calc(4px + env(safe-area-inset-top))!important;bottom:auto!important;right:10px!important;width:46px!important;height:46px!important}
+@media (prefers-reduced-motion:reduce){body.shon #shade{transition:none}}
+body.shon.shop #shbar{opacity:0;pointer-events:none}
+body.shon #shbar{transition:opacity .2s}
+html body.shon[data-v=map] #run.on{padding-top:calc(50px + env(safe-area-inset-top))!important}
+html.vm-pc body.shon[data-v=map] #run.on{padding-top:calc(54px + env(safe-area-inset-top))!important}
+html:not(.vm-zz):not(.vm-yy) body.shon[data-v=map] #run.on.scr{padding-top:calc(50px + env(safe-area-inset-top))!important}
+html.vm-pc:not(.vm-zz) body.shon[data-v=map] #run.on.scr{padding-top:calc(54px + env(safe-area-inset-top))!important}
+html body.shon:not(.mappin)[data-v=map] #run #cards{top:0!important}
+#bzv .bz-zoom{bottom:calc(150px + env(safe-area-inset-bottom))}
+#bzv .bz-tip{max-width:calc(100% - 90px)}
+/* subtítulo «Lively Update» más grande que el título */
+#menu h1 span.tgu.tgl{font-size:min(.95em,calc((min(100vw,var(--fw,100vw)) - 40px)/7.2))!important;margin-top:.22em}
+html.vm-pc #menu h1 span.tgu.tgl{font-size:min(1em,calc((min(100vw,var(--fw,100vw)) - 40px)/7.2))!important}
+#menu h1 span.tgu.tgl .tgt i{font-size:.34em}
+#menu h1 span.tgu.tgl{font-size:min(.9em,calc((min(100vw,var(--fw,100vw)) - 40px)/7.6))!important;max-width:calc(min(100vw,var(--fw,100vw)) - 24px);padding:.28em .9em .28em .4em}
+html.vm-pc #menu h1 span.tgu.tgl{font-size:min(.95em,calc((min(100vw,var(--fw,100vw)) - 40px)/7.6))!important}
+#menu h1 span.tgu.tgl .tgi{width:1.55em;height:1.25em}
+#menu h1 span.tgu.tgl .tgt b{letter-spacing:.08em}
+#menu h1 span.tgu.tgl .tgt i{letter-spacing:.5em}
+body.shon.shhide #shbar{opacity:0;pointer-events:none}
+body.shon.shhide #run #bagb{visibility:hidden}
+/* v47.6: carteles e interfaz del mapa más bonitos */
+#dmap.xmap .xlab.on{gap:8px;padding:6px 12px 6px 6px;border-radius:14px;background:linear-gradient(180deg,#2e1065f2,#0b0720f2);border:1.5px solid #fde68aaa;box-shadow:0 8px 20px #000a,inset 0 1px 0 #ffffff22;color:#fff;text-align:left;animation:xlpop .22s cubic-bezier(.2,1.3,.4,1)}
+@keyframes xlpop{from{opacity:0;scale:.7}}
+#dmap.xmap .xlab::after{content:'';position:absolute;left:50%;bottom:-7px;margin-left:-7px;border:7px solid transparent;border-top-color:#fde68aaa;border-bottom:0}
+#dmap.xmap .xlab.below::after{bottom:auto;top:-7px;border-top:0;border-bottom:7px solid #fde68aaa}
+#dmap.xmap .xlab .xic{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffffff40,#ffffff10);font-style:normal;font-size:17px;flex:none}
+#dmap.xmap .xlab .xlt{font:900 13px system-ui;color:#fde68a;line-height:1.15}#dmap.xmap .xlab .xlt small{display:block;font:700 10.5px system-ui;color:#e9d5ff;max-width:190px;white-space:normal}
+#dmap.xmap .mhint{display:flex;align-items:center;justify-content:center;gap:10px;min-height:22px;border-radius:14px;background:linear-gradient(180deg,#1e1b4bee,#0b0720ee);border:1px solid #a78bfa55}
+#dmap.xmap .mhint.on{border-color:#fde68a88}
+#dmap.xmap .mhint .xht{flex:1;min-width:0}
+#dmap.xmap .mhint .xgo{flex:none;padding:7px 14px;border-radius:999px;border:2px solid #fde68a;background:linear-gradient(180deg,#f59e0b,#b45309);color:#fff;font:900 13px system-ui;cursor:pointer;box-shadow:0 3px 0 #78350f}
+#dmap.xmap .mhint .xgo:active{transform:translateY(2px);box-shadow:none}
+#mtabs{background:linear-gradient(180deg,#1e1b4bee,#0b0720ee);border-color:#a78bfa55}
+#dmap.xmap .imw{border-radius:16px;box-shadow:0 12px 34px #000b,0 0 0 2px #fde68a55}
 </style>
 <script id="v37js">
 (()=>{
@@ -23748,6 +23959,295 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  /* entrada: botón en Amigos */
  new MutationObserver(()=>{const r=Q('#frp .fr-code');if(!r||r.querySelector('.fr-saf'))return;const b=D.createElement('button');b.className='fr-cp fr-stall fr-saf';b.type='button';b.textContent='🌿 Captura en grupo';b.onclick=async e=>{e.stopPropagation();const k=await ask('🌿 Captura en grupo','<small>Crea una sala e invita hasta a 3 amigos, o únete con un código.</small><input id="sfcode" maxlength="5" placeholder="Código (para unirte)" autocomplete="off" style="display:block;width:100%;margin-top:10px;padding:10px 12px;border-radius:10px;border:1px solid #fff4;background:#0006;color:#fff;font:inherit;font-size:16px;text-transform:uppercase;box-sizing:border-box">',['🏕️ Crear sala','🔑 Unirme con código','Cancelar']);
   const v=(Q('#sfcode')||{}).value||'';if(k===0){try{FR().close()}catch(_){}join(mkCode(),true)}else if(k===1){if(!/^[A-Za-z2-9]{5}$/.test(v.trim()))return tst('Escribe el código de 5 letras');try{FR().close()}catch(_){}join(v.trim().toUpperCase(),false)}};r.append(b)}).observe(D.body,{childList:true,subtree:true});
+})();
+/* ===== v47.6: motor de grupos salvajes (estilo Púrpura): grupos de una especie, shinys más frecuentes y un Alfa evolucionado ===== */
+(()=>{const D=document;
+ const live=()=>{try{return typeof R=='object'&&R&&R.team&&R.team.length&&!R.done?R:null}catch(e){return null}};
+ const nameOf=id=>{try{const d=(typeof DEX!='undefined'?DEX:[]).find(x=>x.id==id);if(d&&d.name)return d.name}catch(e){}try{if(NAMES&&NAMES[id])return NAMES[id]}catch(e){}return'pokemon-'+id};
+ const avgLv=()=>{const r=live();if(!r)return 10;return Math.round(r.team.reduce((a,m)=>a+(m.lvl|0),0)/r.team.length)};
+ const SH_G=1/120,SH_A=1/120; /* 1/60 por cada Pokémon: al salir en grupo hay más oportunidades */
+ /* especies por bioma: tabla de tipos compartida con la guía de biomas (18 consultas una sola vez, se guarda) */
+ const TK='pa_bio_types_v1',TYS=['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];let TT=null,TP=null;
+ async function types(){if(TT)return TT;try{window.__regFix&&__regFix();const c=JSON.parse(localStorage.getItem(TK)||'null');if(c&&c.n>900){TT=c.t;try{(window.REG||[]).forEach(x=>{if(!TT[x.id])TT[x.id]=x.ty})}catch(e){}return TT}}catch(e){}
+  if(!TP)TP=(async()=>{const t={};await Promise.all(TYS.map(async ty=>{const r=await fetch('https://pokeapi.co/api/v2/type/'+ty);if(!r.ok)throw new Error('type');const j=await r.json();
+   (j.pokemon||[]).forEach(p=>{const m=String(p.pokemon&&p.pokemon.url||'').match(/\/pokemon\/(\d+)\/?$/);if(!m)return;const id=+m[1];if(id>1025)return;(t[id]=t[id]||[])[p.slot-1]=ty})}));
+   try{(window.REG||[]).forEach(x=>t[x.id]=x.ty)}catch(e){}const n=Object.keys(t).length;try{localStorage.setItem(TK,JSON.stringify({n,t}))}catch(e){}TT=t;return t})().finally(()=>{TP=null});
+  return TP}
+ const POOL={};
+ async function pool(bio){if(POOL[bio])return POOL[bio];const t=await types();const L=[];for(const id in t){const ty=(t[id]||[]).filter(Boolean);if(!ty.length)continue;let b;try{b=biomeOf(ty)}catch(e){b=null}if(b!==bio)continue;try{if(TAGS[id])continue}catch(e){}L.push(+id)}POOL[bio]=L;return L}
+ async function gen(bio){try{if(typeof loadDex=='function')await loadDex()}catch(e){}
+  let L=[];try{L=await pool(bio)}catch(e){L=[]}
+  let base=null,aid=null;
+  if(L.length){/* busca una especie que tenga evolución: el Alfa será esa evolución */
+   const RG=window.REGI||{},LR=L.filter(id=>RG[id]),tried=new Set();for(let k=0;k<6&&!aid;k++){let id=(LR.length&&Math.random()<.18)?LR[Math.random()*LR.length|0]:L[Math.random()*L.length|0];const PR=(window.REGPRE||{})[id];if(PR&&!tried.has(id)){tried.add(id);base=PR;aid=id;break}if(tried.has(id))continue;tried.add(id);try{await evoFill({id});const e=pickEvo({id,lvl:999});if(e&&e[1]&&e[1]!==id){base=id;aid=e[1]}}catch(e){}if(!base)base=id}
+   if(!aid)aid=base}
+  else{const ps=await pickEnemies(1,1,bio||null);base=ps&&ps[0]&&ps[0].id;if(!base)throw new Error('sin especie');aid=base;try{await evoFill({id:base});const e=pickEvo({id:base,lvl:999});if(e&&e[1])aid=e[1]}catch(e){}}
+  const L0=avgLv(),n=4+(Math.random()*3|0),cl=v=>Math.max(2,Math.min(200,v));
+  const members=Array.from({length:n},()=>({id:base,name:nameOf(base),sh:Math.random()<SH_G?1:0,lvl:cl(L0-4+(Math.random()*5|0))}));
+  const alpha={id:aid,name:nameOf(aid),sh:Math.random()<SH_A?1:0,lvl:cl(L0+5+(Math.random()*3|0)),alpha:1};
+  return{bio,sp:base,members,alpha}}
+ /* el siguiente mk() de esa especie sale shiny / Alfa según el grupo */
+ const mk0=mk;mk=async function(e,L){const m=await mk0.apply(this,arguments);const f=window.__herdForce;
+  if(f&&e&&+e.id===+f.id){window.__herdForce=null;if(f.sh)m.sh=1;else delete m.sh;if(f.alpha){m.alpha=1;['max','a','d','sa','sd','sp'].forEach(k=>m[k]=Math.round(m[k]*1.25));m.hp=m.max}}return m};
+ let pend=null;
+ function hfight(mon,bioName){return new Promise(res=>{const r=live();if(!r)return res({err:'run'});if(pend)return res({err:'busy'});
+  pend={res,mon};window.__herdForce={id:mon.id,sh:mon.sh,alpha:mon.alpha};try{R.lock=0}catch(e){}
+  try{fight0({k:'wild',d:1,lv:mon.lvl,n:mon.alpha?'Alfa':'Salvaje',g:mon.alpha?[80,160]:[20,60],xm:mon.alpha?1.5:1,dp:0,free:1,herd:1,bio:mon.bio||null,zn:bioName||'Zona salvaje',roster:[[mon.id,mon.name]]})}catch(e){console.error(e);pend=null;window.__herdForce=null;res({err:'fight'})}})}
+ const fight0=c=>window.fight(c);
+ const done=o=>{const p=pend;pend=null;window.__herdForce=null;if(p)try{p.res(o)}catch(e){}};
+ const ae0=advEnd;advEnd=async function(w){const h=typeof B=='object'&&B&&B.c&&B.c.herd;if(!h)return ae0.apply(this,arguments);const en=B.en&&B.en[0];
+  if(!w){try{R.team.forEach(m=>{revertMega(m);m.s=0;m.cf=0;if(m.hp<=0)m.hp=Math.max(1,Math.round(m.max*.25))});saveRun()}catch(e){}try{showMap()}catch(e){}try{toast('💫 Tu equipo se retira a descansar. No pierdes vidas en los grupos salvajes')}catch(e){}done({won:0});return}
+  const r=await ae0.apply(this,arguments);const caught=!!en&&(R.team.includes(en)||(R.box||[]).includes(en));done({won:1,caught,m:en});return r};
+ const fl0=flee;flee=async function(){const h=typeof B=='object'&&B&&B.c&&B.c.herd;const r=await fl0.apply(this,arguments);if(h&&B.over)done({won:0,fled:1});return r};
+ window.__herd={gen,fight:hfight,busy:()=>!!pend,avgLv};
+})();
+
+/* ===== v47.6: pestañas del mapa · 🗺️ Ruta · 🏘️ Pueblo · 🌿 Biomas (grupos salvajes estilo Púrpura con Alfas) ===== */
+(()=>{const D=document,Q=s=>D.querySelector(s),W=1536,H=1024;
+ const IMG={town:{day:"assets/cf987603ebc7.webp",dawn:"assets/66c2e880f8b6.webp",dusk:"assets/a0b80d5785ea.webp",night:"assets/4aa65edaf8ea.webp"},bio:{day:"assets/d30989fdafe6.webp",dawn:"assets/2f20ea09e258.webp",dusk:"assets/152aad31dd3f.webp",night:"assets/0ee20cd7b48a.webp"}};
+ const imgFor=(k,p)=>IMG[k][p]||IMG[k].day;
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const tst=t=>{try{toast(t)}catch(e){}},bp=(f,d)=>{try{beep(f,d||.06,'triangle')}catch(e){}};
+ const TABS=[['ruta','🗺️','Ruta'],['town','🏘️','Pueblo'],['bio','🌿','Biomas']];
+ let tab=(()=>{try{const t=localStorage.getItem('pa_mtab');return TABS.some(x=>x[0]===t)?t:'ruta'}catch(e){return'ruta'}})(),focus=null,sel=null;
+ const setTab=(t,f)=>{tab=t;focus=f||null;sel=null;try{localStorage.setItem('pa_mtab',t)}catch(e){}bp(t==='bio'?784:660);try{showMap()}catch(e){console.error(e)}};
+ const P=a=>a.map(([x,y])=>x+','+y).join(' ');
+ const ph=()=>{try{return window.__dayPhase?String(__dayPhase()):'day'}catch(e){return'day'}};
+ /* ---------- Pueblo ---------- */
+ const TOWN=[['mcen','Centro Pokémon','Cura a tu equipo',[[262,175],[525,175],[525,365],[262,365]]],['mbank','Banco Pokémon','Guarda y retira Pokémonedas',[[750,70],[1115,70],[1115,395],[750,395]]],
+  ['mshop','Tienda','Objetos, Balls, MT, reliquias y amuletos',[[1150,285],[1485,285],[1485,505],[1150,505]]],['mhome','Mi casa','Decoración, trofeos y tus Pokémon',[[805,650],[1000,650],[1000,850],[805,850]]],
+  ['mmkt','Mercado entre amigos','Tu puesto y los puestos de tus amigos',[[80,300],[335,300],[335,490],[80,490]]],['mfr2','Casa de un amigo','Visita la casa de uno de tus amigos',[[215,490],[470,490],[470,705],[215,705]]],
+  ['mcas','PokéCasino','Tragaperras, ruleta, cartas y más juegos con tus Pokémonedas',[[1040,525],[1262,525],[1262,740],[1040,740]]]];
+ const TIC={mcen:'🏥',mbank:'🏦',mshop:'🛒',mhome:'🏠',mfr2:'👥',mcas:'🎰',mmkt:'🧺',mraid:'🌋'};
+ /* ---------- Biomas: zonas de la isla (índice de BIO: for, pra, mon, vol, wat, cav) ---------- */
+ const ZN={for:{n:'Bosque',l:[230,330],p:[[110,400],[205,355],[320,380],[430,425],[175,505],[410,530]],a:[275,455]},
+  pra:{n:'Pradera',l:[760,560],p:[[560,665],[700,625],[860,650],[985,605],[765,735],[620,565]],a:[905,735]},
+  mon:{n:'Montaña helada',l:[1010,125],p:[[760,235],[875,255],[985,285],[1095,255],[1185,215],[835,185]],a:[1040,215]},
+  vol:{n:'Volcán',l:[300,115],p:[[170,255],[260,290],[385,305],[485,285],[565,250],[215,200]],a:[335,240]},
+  wat:{n:'Costa',l:[330,820],p:[[230,890],[385,935],[560,955],[900,965],[1050,945],[1210,925]],a:[760,985]},
+  cav:{n:'Desierto rocoso',l:[1290,330],p:[[1150,445],[1300,505],[1420,565],[1200,625],[1355,690],[1255,765]],a:[1265,555]}};
+ const ALT=[[650,350],[900,350],[900,505],[650,505]];
+ const live=()=>{try{return typeof R=='object'&&R&&R.team&&R.team.length&&!R.done?R:null}catch(e){return null}};
+ const BI=k=>{try{return BIO.findIndex(b=>b.k===k)}catch(e){return-1}};
+ const zst=()=>{try{return zoneState()}catch(e){return[]}};
+ const HG=()=>{const r=live();return r?(r.herds=r.herds||{}):{}};
+ let gen=new Set();
+ /* genera los grupos que falten (de uno en uno, sin bloquear el mapa) */
+ async function ensure(){const r=live();if(!r||!window.__herd)return;const Hh=HG(),zs=zst();
+  await Promise.all(Object.keys(ZN).map(async k=>{const i=BI(k);if(i<0)return;const z=zs[i];if(z&&r.round<z.u)return;const h=Hh[k];
+   const need=!h||(h.cl!=null&&r.round>h.cl)||(h.t!=null&&r.round-h.t>=8);if(!need||gen.has(k))return;gen.add(k);
+   try{const g=await __herd.gen(k),lv=window.zoneLv?zoneLv(i):__herd.avgLv(),cl=v=>Math.max(2,Math.min(typeof MAXL!='undefined'?MAXL:200,v));
+    g.members.forEach((m,j)=>{m.lvl=cl(lv-3+(Math.random()*4|0));m.u=j});g.alpha.lvl=cl(lv+5+(Math.random()*3|0));g.alpha.u=99;
+    Hh[k]={sp:g.sp,members:g.members,alpha:g.alpha,t:r.round};try{saveRun()}catch(e){}
+    if(tab==='bio'&&D.body.dataset.v==='map'&&Q('#dmap.xbio')){paintHerd(k);relab(k)}}catch(e){console.error('grupo',k,e)}finally{gen.delete(k)}}))}
+ function relab(k){const e=Q(`#dmap.xbio .xlab.z[data-z="${k}"] small`);if(!e)return;const i=BI(k),lv=window.zoneLv&&i>=0?zoneLv(i):0;e.textContent='Nv. '+lv}
+ const monOf=(k,u)=>{const h=HG()[k];if(!h)return null;return u===99?h.alpha:(h.members||[]).find(m=>m.u===u)||null};
+ function herdHTML(k){const h=HG()[k],z=ZN[k];if(!h||h.cl!=null||(!h.members&&!h.alpha))return'';const out=[];
+  (h.members||[]).forEach(m=>{const p=z.p[m.u%z.p.length];out.push(dot(k,m,p))});if(h.alpha)out.push(dot(k,h.alpha,z.a));return out.join('')}
+ const dot=(k,m,p)=>`<button type="button" class="hd${m.sh?' sh':''}${m.alpha?' al':''}" data-h="${k}:${m.u}" style="left:${(p[0]/W*100).toFixed(2)}%;top:${(p[1]/H*100).toFixed(2)}%;--dl:${(-(m.u*0.37)%2).toFixed(2)}s" aria-label="${esc((m.sh?'Shiny ':'')+(m.alpha?'Alfa ':'')+m.name)}"><img src="${mini(m.id,m.sh)}" alt="" draggable="false">${m.alpha?'<em class="hda">α</em>':''}${m.sh?'<i class="hds"></i><i class="hds b"></i>':''}</button>`;
+ function paintHerd(k){const L=Q('#dmap.xbio .hdl');if(!L)return;L.querySelectorAll(`[data-h^="${k}:"]`).forEach(e=>e.remove());L.querySelectorAll(`.hdw[data-z="${k}"]`).forEach(e=>e.remove());L.insertAdjacentHTML('beforeend',herdHTML(k))}
+ const nmS=m=>{try{return cap(m.name)}catch(e){return m.name}},cap=s=>String(s||'').replace(/-/g,' ').replace(/^./,c=>c.toUpperCase());
+ const dummies=(ids,nocur)=>`<div hidden aria-hidden="true">${ids.map(id=>`<span id="${id}"></span>`).join('')}${nocur?'':'<span class="mnode cur"></span>'}</div>`;
+ const bar=()=>`<div id="mtabs" role="tablist">${TABS.map(([k,ic,n])=>`<button type="button" role="tab" data-mt="${k}" class="${k===tab?'on':''}" aria-selected="${k===tab}"><i>${ic}</i><span>${n}</span></button>`).join('')}</div>`;
+ const ALLIDS=['mshop','mcen','mbank','mhome','mraid','mz0','mz1','mz2','mz3','mz4','mz5'];
+ function townHTML(){const hs=TOWN.map(([id,n,,pt])=>`<g class="hs2" id="${id}" role="button" tabindex="0" aria-label="${esc(n)}"><polygon class="hp2" points="${P(pt)}"/></g>`).join('');
+  const lab=TOWN.map(([id,n,,pt])=>{const x=pt.reduce((a,p)=>a+p[0],0)/pt.length,y=Math.min(...pt.map(p=>p[1]));return`<span class="xlab" data-z="${id}" style="left:${x/W*100}%;top:${(y+8)/H*100}%"><i class="xic">${TIC[id]||'📍'}</i><span class="xlt">${esc(n)}<small>${esc(TOWN.find(t=>t[0]===id)[2])}</small></span></span>`}).join('')+(live()&&R.cenFree?`<span class="mbd ok" style="left:${393/W*100}%;top:${380/H*100}%">Gratis</span>`:'');
+  const P0=ph();return`<div id="dmap" class="imap xmap xtown ph-img">${bar()}<div class="imw"><div class="imc"><svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg"><image href="${imgFor('town',P0)}" width="${W}" height="${H}"/>${hs}</svg>${lab}</div></div><div id="mhint" class="mhint" data-def="Toca un edificio para ver qué es">Toca un edificio para ver qué es</div></div>${dummies(ALLIDS.filter(i=>!TOWN.some(t=>t[0]===i)))}`}
+ const RZ={vol:[[60,200],[150,90],[330,30],[480,50],[650,150],[700,260],[620,320],[420,330],[200,320],[50,270]],mon:[[650,160],[720,70],[880,20],[1060,30],[1260,110],[1300,230],[1200,300],[1000,320],[840,300],[690,260]],
+  for:[[20,330],[160,300],[420,300],[560,360],[560,470],[470,560],[330,620],[200,650],[60,650],[10,520]],pra:[[560,505],[650,520],[900,505],[1100,520],[1160,640],[1080,770],[900,800],[650,790],[450,760],[340,690],[460,590]],
+  cav:[[1060,320],[1260,290],[1460,380],[1510,560],[1460,770],[1300,850],[1160,780],[1120,600],[1060,470]],wat:[[100,790],[460,840],[700,890],[1000,900],[1320,890],[1480,940],[1500,1020],[60,1020],[30,860]]};
+ function bioHTML(){const r=live(),zs=zst(),B0=BD();
+  const hs=Object.keys(RZ).map(k=>`<g class="hs2 hz" id="bz-${k}" role="button" tabindex="0" aria-label="${esc(ZN[k].n)}"><polygon class="hp2" points="${P(RZ[k])}"/></g>`).join('');
+  const labs=Object.entries(ZN).map(([k,z])=>{const i=BI(k),zz=zs[i],lock=zz&&r&&r.round<zz.u,lv=window.zoneLv&&i>=0?zoneLv(i):0,d=B0[k],L=allMons(d),al=L.some(m=>m.alpha);
+   const st=lock?`🔒 Ronda ${zz.u}`:(d&&d.cl!=null)?'💤 vuelven en la próxima ronda':`Nv. ${lv}`;
+   return`<span class="xlab z${lock?' lk':''}" data-z="bz-${k}" style="left:${z.l[0]/W*100}%;top:${z.l[1]/H*100}%"><i class="xic">${(()=>{try{return BIO[BI(k)].ic}catch(e){return'🌿'}})()}</i><span class="xlt">${esc(z.n)}<small>${st}</small></span><button type="button" class="xli" data-bi="${k}" aria-label="Guía de ${esc(z.n)}">i</button></span>`}).join('');
+  const P1=ph();return`<div id="dmap" class="imap xmap xbio ph-img${P1==='night'?' isnight':''}">${bar()}<div class="imw"><div class="imc"><svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg"><image href="${imgFor('bio',P1)}" width="${W}" height="${H}"/>${hs}<g class="hs2" id="mraid" role="button" tabindex="0" aria-label="Altar de megaincursiones"><polygon class="hp2" points="${P(ALT)}"/></g></svg>${labs}<span class="xlab alt" data-z="mraid" style="left:${775/W*100}%;top:${330/H*100}%"><i class="xic">🌋</i><span class="xlt">Altar<small>Megaincursiones</small></span></span></div></div><div id="mhint" class="mhint" data-def="Toca una zona de la isla para explorarla">Toca una zona de la isla para explorarla</div></div>${dummies(ALLIDS.filter(i=>i!=='mraid'))}`}
+ /* ---------- Ruta: escenario de teatro con el mundo; las rondas van sobre los ladrillos del arco (1-10 en una imagen, 11-20 en la otra) ---------- */
+ const RIMG=["assets/316aeb6ef7d7.webp","assets/b58d25e80e17.webp"],RW=1024,RH=635,RC=[527,476],RR=231;
+ function rutaHTML(){const r=R.round,blk=Math.floor((r-1)/10),b0=blk*10+1,img=RIMG[blk%2];let lab='',cur='';
+  const gym=j=>{try{return window.gymRounds?gymRounds().includes(j):j%20===0}catch(e){return j%20===0}},champ=j=>{try{return window.isChampR?isChampR(j):(!R.inf&&j===R.max)}catch(e){return false}};
+  for(let i=0;i<10;i++){const j=b0+i;if(!R.inf&&j>R.max)break;const an=(176-i*172/9)*Math.PI/180,x=RC[0]+RR*Math.cos(an),y=RC[1]-RR*Math.sin(an),st=j<r?'past':j===r?'cur':'fut',ch=champ(j),gy=!ch&&gym(j);
+   const body=`<circle class="rnc" r="28"/><text class="rnt${j>99?' sm':''}" y="10">${ch?'👑':j}</text>${gy?`<text class="rnm" x="22" y="-18">🏅</text>`:''}${st==='past'?'<text class="rnk" x="15" y="20">✓</text>':''}`;
+   if(st==='cur'){let spr='';try{const m0=R.team&&(R.team[R.li]||R.team[0]);if(m0)spr=`<g class="bob"><image href="${mini(m0.id,m0.sh)}" x="-45" y="-122" width="90" height="90" style="image-rendering:pixelated"/></g>`}catch(e){}
+    cur=`<g class="rn cur mnode" role="button" tabindex="0" aria-label="Ronda ${j}: continuar" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle class="rng" r="42"/>${body}${spr}</g>`}
+   else lab+=`<g class="rn ${st}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})">${body}</g>`}
+  return`<div id="dmap" class="imap xmap xruta">${bar()}<div class="imw"><div class="imc"><svg viewBox="0 0 ${RW} ${RH}" xmlns="http://www.w3.org/2000/svg"><image href="${img}" width="${RW}" height="${RH}"/>${lab}${cur}</svg></div></div><div id="mhint" class="mhint">Ronda <b>${r}/${R.inf?'∞':R.max}</b> · toca la ronda que brilla para continuar</div></div>${dummies(ALLIDS,1)}`}
+ const _d=dMap;dMap=function(sh,zs){const base=_d.apply(this,arguments);try{if(!live())return base;if(tab==='town')return townHTML();if(tab==='bio')return bioHTML();return rutaHTML()}catch(e){console.error('pestañas del mapa',e);return base}};
+ const _s=showMap;showMap=function(){const r=_s.apply(this,arguments);try{post()}catch(e){console.error(e)}return r};
+ function post(){const c=Q('#cards');if(!c)return;
+  if(tab!=='ruta'){const s=Q('#smap');if(s)s.remove();const d=Q('#dmap');if(d)d.style.display=''}
+  if(tab==='ruta'){/* los biomas de siempre ahora llevan a la pestaña Biomas */const zs=zst();zs.forEach((z,i)=>{const g=Q('#mz'+i);if(g)g.onclick=()=>{if(R.lock)return;if(R.round<z.u)return tst(`${BIO[i].n}: se desbloquea en la ronda ${z.u}`);setTab('bio',BIO[i].k);enterBiome(BIO[i].k,null,1)}})}
+  if(tab==='town'){const fr=Q('#mfr2');if(fr)fr.onclick=visit;const mk=Q('#mmkt');if(mk)mk.onclick=()=>{if(!R.lock&&window.__mktOpen)__mktOpen()};const cs=Q('#mcas');if(cs)cs.onclick=()=>{if(!R.lock&&window.openCasino)openCasino()}}
+  const w=Q('#dmap.xmap .imw');if(w){const fx=focus&&ZN[focus]?ZN[focus].l[0]:768;w.scrollLeft=fx/W*w.scrollWidth-w.clientWidth/2;if(focus){const z=Q(`.xlab.z`);}focus=null}
+  try{c.scrollTop=0}catch(e){}}
+ async function visit(){if(R.lock)return;let L=[];try{L=Object.entries(window.__FR&&__FR.list()||{})}catch(e){}if(!L.length)return tst('🏠 Añade amigos para visitar sus casas (Amigos → Añadir)');
+  const k=await ask('🏠 Visitar la casa de…','<small>Tu amigo tiene que tener el juego abierto.</small>',[...L.slice(0,8).map(([,f])=>esc(f.n)),'Cancelar']);if(k>=0&&k<Math.min(8,L.length)&&window.__visitHouse)__visitHouse(L[k][0],L[k][1].n)}
+ /* toques: el primero muestra qué es, el segundo entra (como el mapa de siempre) */
+ const hint=t=>{const h=Q('#dmap.xmap #mhint');if(!h)return;h.innerHTML=t?`<span class="xht">${t.replace(/<span>[^<]*<\/span>/,'')}</span>${sel&&!/🔒/.test(t)?'<button type="button" class="xgo">Entrar ▶</button>':''}`:h.dataset.def||'';h.classList.toggle('on',!!t)};
+ function select(el,txt){sel=el;D.querySelectorAll('#dmap.xmap .sel').forEach(e=>e.classList.remove('sel'));if(el)el.classList.add('sel');hint(txt);
+  /* el cartel solo se ve al tocar la zona, y siempre dentro del mapa */
+  D.querySelectorAll('#dmap.xmap .xlab.on').forEach(e=>{e.classList.remove('on');e.style.marginLeft='';e.classList.remove('below')});
+  if(el&&el.id){const l=Q(`#dmap.xmap .xlab[data-z="${el.id}"]`),c=Q('#dmap.xmap .imc');if(l&&c){l.classList.add('on');l.style.animation='none';const fit=()=>{const rc=c.getBoundingClientRect(),r=l.getBoundingClientRect();if(r.top<rc.top+4)l.classList.add('below');const r2=l.getBoundingClientRect();let dx=0;if(r2.left<rc.left+4)dx=rc.left+4-r2.left;else if(r2.right>rc.right-4)dx=rc.right-4-r2.right;if(dx)l.style.marginLeft=(parseFloat(l.style.marginLeft)||0)+dx+'px'};fit();l.style.animation='';}}}
+ D.addEventListener('click',e=>{const t=e.target;if(!t.closest)return;const mt=t.closest('#mtabs [data-mt]');if(mt){e.preventDefault();if(mt.dataset.mt!==tab&&!(window.R&&R.lock))setTab(mt.dataset.mt);return}
+  if(!t.closest('#dmap.xmap'))return;
+  const go=t.closest('.xgo');if(go){e.preventDefault();e.stopImmediatePropagation();const el=sel;if(el)el.dispatchEvent(new MouseEvent('click',{bubbles:true}));return}
+  const ib=t.closest('.xli');if(ib){e.preventDefault();e.stopImmediatePropagation();const i=BI(ib.dataset.bi);if(i>=0&&window.openBiomeDex)openBiomeDex(i);return}
+  const hd=t.closest('.hd');if(hd){e.preventDefault();e.stopImmediatePropagation();const [k,u]=hd.dataset.h.split(':'),m=monOf(k,+u);if(!m)return;
+   if(sel!==hd){bp(m.sh?1175:700);return select(hd,`${m.sh?'✨ <b>¡Shiny!</b> ':''}${m.alpha?'<b>α Alfa</b> ':''}<b>${esc(nmS(m))}</b> · Nv. ${m.lvl} · ${esc(ZN[k].n)} <span>— toca otra vez para combatir</span>`)}
+   select(null,'');fightHerd(k,m);return}
+  const g=t.closest('.hs2');if(g){if(g.id.startsWith('bz-')){e.preventDefault();e.stopImmediatePropagation();const k=g.id.slice(3),i=BI(k),zz=zst()[i],z=ZN[k];
+    if(zz&&R.round<zz.u){select(g,`<b>${esc(z.n)}</b> · 🔒 se desbloquea en la ronda ${zz.u}`);return}
+    if(sel!==g){bp(660);return select(g,`<b>${esc(z.n)}</b> · Nv. ${window.zoneLv?zoneLv(i):''} · cada vez que entras hay Pokémon distintos <span>— toca otra vez para entrar</span>`)}
+    select(null,'');if(!R.lock)enterBiome(k,null,1);return}
+   const T=TOWN.find(x=>x[0]===g.id);const lab=T?T[1]:g.id==='mraid'?'Altar de megaincursiones':'';const ds=T?T[2]:'Megaincursiones y megaincursiones simples';
+   if(sel!==g){e.preventDefault();e.stopImmediatePropagation();return select(g,`<b>${esc(lab)}</b> · ${esc(ds)} <span>— toca otra vez para entrar</span>`)}select(null,'');return}
+  select(null,'')},true);
+ async function fightHerd(k,m){const r=live();if(!r||R.lock)return;if(!r.team.some(x=>x.hp>0))return tst('Tu equipo está debilitado: cúralo en el Centro Pokémon');if(!window.__herd||__herd.busy())return;
+  R.lock=1;const res=await __herd.fight(Object.assign({},m,{bio:k}),ZN[k].n);window.__lastHerd=res&&{won:res.won,caught:res.caught,err:res.err,fled:res.fled};const h=HG()[k];
+  if(res&&res.won&&h){if(m.u===99)h.alpha=null;else h.members=(h.members||[]).filter(x=>x.u!==m.u);if(!h.alpha&&!(h.members||[]).length){HG()[k]={cl:r.round};tst(`🌿 Has despejado ${ZN[k].n}: vendrá otro grupo en la próxima ronda`)}try{saveRun()}catch(e){}}
+  if(res&&res.err){R.lock=0}
+  if(D.body.dataset.v==='map'){try{showMap()}catch(e){}}}
+ /* ================= Dentro de un bioma: plano enorme que se recorre arrastrando, con grupos de Pokémon ================= */
+ const WW=2400,WH=1600;
+ const BZT={for:{a:'#2f6b2a',b:'#1d4a1e',dots:['#3f8a36','#24561f','#4d9a3f'],props:[['🌲',70,26],['🌳',64,18],['🌿',30,40],['🍄',22,14],['🪵',34,6],['🌱',20,30]],water:.6,path:'#8b6b3e'},
+  pra:{a:'#86c64f',b:'#5f9f37',dots:['#9fd668','#6fb144','#b4e07a'],props:[['🌼',22,60],['🌸',20,40],['🌾',30,40],['🪨',30,10],['🌳',62,8],['🍀',18,20]],water:.25,path:'#d9b878'},
+  mon:{a:'#eef5fb',b:'#c9dcee',dots:['#ffffff','#dbe8f4','#bfd6ea'],props:[['🌲',66,22],['❄️',22,40],['🪨',34,16],['⛄',40,2],['🧊',30,10]],ice:1,path:'#9fb7cc'},
+  vol:{a:'#5a2a1b',b:'#2b130e',dots:['#6e3622','#40201a','#7a3a1e'],props:[['🪨',40,30],['🔥',30,24],['🌋',90,3],['🪨',26,20]],lava:1,path:'#3a1c14'},
+  wat:{a:'#f1d9a0',b:'#e2c27f',dots:['#f7e4b5','#e8cb8a','#fff0c8'],props:[['🐚',22,30],['🌴',70,14],['🪨',32,16],['🦪',20,8],['⭐',18,10]],sea:1,path:'#e8cf96'},
+  cav:{a:'#dcae66',b:'#b78442',dots:['#e8c07c','#c99550','#f0cf92'],props:[['🌵',56,26],['🪨',38,28],['🗿',46,2],['🦴',22,8]],dunes:1,path:'#c08a48'}};
+ const rngS=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+ function drawBG(cv,k,seed){const T=BZT[k]||BZT.pra,g=cv.getContext('2d'),R0=rngS(seed);const gr=g.createLinearGradient(0,0,WW,WH);gr.addColorStop(0,T.a);gr.addColorStop(1,T.b);g.fillStyle=gr;g.fillRect(0,0,WW,WH);
+  for(let i=0;i<1300;i++){g.fillStyle=T.dots[i%T.dots.length];g.globalAlpha=.18+R0()*.25;const x=R0()*WW,y=R0()*WH,r=6+R0()*26;g.beginPath();g.ellipse(x,y,r,r*.55,R0()*3,0,7);g.fill()}g.globalAlpha=1;
+  if(T.sea){const sg=g.createLinearGradient(0,0,WW*.55,0);sg.addColorStop(0,'#1d6fb8');sg.addColorStop(.85,'#43a9e6');sg.addColorStop(1,'#9fe3f7');g.fillStyle=sg;g.beginPath();g.moveTo(0,0);let x=WW*.5;g.lineTo(x,0);for(let y=0;y<=WH;y+=80){x=WW*.5+Math.sin(y/170)*60+R0()*20;g.lineTo(x,y)}g.lineTo(0,WH);g.fill();
+   g.strokeStyle='#ffffffaa';g.lineWidth=3;for(let i=0;i<120;i++){const x=R0()*WW*.48,y=R0()*WH;g.beginPath();g.arc(x,y,16+R0()*16,3.6,5.8);g.stroke()}
+   g.strokeStyle='#ffffffdd';g.lineWidth=8;g.beginPath();for(let y=0;y<=WH;y+=40){const xx=WW*.5+Math.sin(y/170)*60;y?g.lineTo(xx,y):g.moveTo(xx,y)}g.stroke()}
+  if(T.water){const n=Math.round(1+T.water*3);for(let i=0;i<n;i++){const x=300+R0()*(WW-600),y=300+R0()*(WH-600),rx=120+R0()*140,ry=rx*.55;const pg=g.createRadialGradient(x,y,10,x,y,rx);pg.addColorStop(0,'#5ec2f2');pg.addColorStop(1,'#2b7fc4');g.fillStyle='#7a5a32';g.beginPath();g.ellipse(x,y,rx+10,ry+10,0,0,7);g.fill();g.fillStyle=pg;g.beginPath();g.ellipse(x,y,rx,ry,0,0,7);g.fill()}}
+  if(T.lava){for(let i=0;i<7;i++){const x=200+R0()*(WW-400),y=200+R0()*(WH-400),rx=70+R0()*120,ry=rx*.5;const lg=g.createRadialGradient(x,y,5,x,y,rx);lg.addColorStop(0,'#ffe27a');lg.addColorStop(.45,'#ff8a1f');lg.addColorStop(1,'#b3260e');g.shadowColor='#ff6a00';g.shadowBlur=40;g.fillStyle=lg;g.beginPath();g.ellipse(x,y,rx,ry,R0()*2,0,7);g.fill()}g.shadowBlur=0;
+   g.strokeStyle='#ff7a1a';g.lineWidth=5;g.globalAlpha=.7;for(let i=0;i<14;i++){let x=R0()*WW,y=R0()*WH;g.beginPath();g.moveTo(x,y);for(let j=0;j<6;j++){x+=R0()*120-60;y+=R0()*90;g.lineTo(x,y)}g.stroke()}g.globalAlpha=1}
+  if(T.ice){g.fillStyle='#bfe6fb';g.globalAlpha=.75;for(let i=0;i<8;i++){const x=R0()*WW,y=R0()*WH;g.beginPath();g.ellipse(x,y,90+R0()*140,40+R0()*60,R0()*2,0,7);g.fill()}g.globalAlpha=1}
+  if(T.dunes){g.strokeStyle='#a8743a';g.globalAlpha=.35;g.lineWidth=6;for(let i=0;i<40;i++){const x=R0()*WW,y=R0()*WH,w=160+R0()*220;g.beginPath();g.moveTo(x,y);g.quadraticCurveTo(x+w/2,y-40,x+w,y);g.stroke()}g.globalAlpha=1}
+  /* caminos */if(!T.sea){g.strokeStyle=T.path;g.globalAlpha=.55;g.lineWidth=46;g.lineCap='round';for(let i=0;i<3;i++){let x=R0()*WW,y=0;g.beginPath();g.moveTo(x,y);while(y<WH){x+=R0()*260-130;y+=150;g.lineTo(x,y)}g.stroke()}g.globalAlpha=1}
+  /* decoración */g.textAlign='center';g.textBaseline='middle';const props=[],GAP=120;/* menos decoración y bien repartida: cada adorno guarda distancia con los demás */
+  T.props.forEach(([e,sz,n])=>{const want=Math.max(1,Math.round(n*.85));for(let i=0,t=0;i<want&&t<want*30;t++){const x=60+R0()*(WW-120),y=60+R0()*(WH-120),s2=sz*(.8+R0()*.45);if(T.sea&&x<WW*.56)continue;if(props.some(p=>Math.hypot(p[2]-x,p[3]-y)<(GAP+(p[1]+s2)*.5)))continue;props.push([e,s2,x,y]);i++}});props.sort((a,b)=>a[3]-b[3]);
+  props.forEach(([e,sz,x,y])=>{if(T.sea&&x<WW*.55)return;g.font=`${sz|0}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;g.globalAlpha=.25;g.fillStyle='#000';g.beginPath();g.ellipse(x,y+sz*.42,sz*.38,sz*.12,0,0,7);g.fill();g.globalAlpha=1;g.fillText(e,x,y)})}
+ const BZ_={};const BD=()=>{const r=live();return r?(r.bz=r.bz||{}):{}};let bzBusy=new Set(),cur=null,lastCam={},lastZ={};
+ async function genBiome(k){const r=live();if(!r||!window.__herd)return null;if(bzBusy.has(k))return null;bzBusy.add(k);
+  try{const i=BI(k),lv=window.zoneLv&&i>=0?zoneLv(i):__herd.avgLv(),cl=v=>Math.max(2,Math.min(typeof MAXL!='undefined'?MAXL:200,v)),R0=Math.random,SH=1/120;
+   const G=(await Promise.all(Array.from({length:7},()=>__herd.gen(k).catch(()=>null)))).filter(Boolean);const seen=new Set(),uniq=G.filter(g=>{if(seen.has(g.sp))return false;seen.add(g.sp);return true}),src=uniq.length>=4?uniq:G;
+   let u=1;const groups=[],cen=[];const pos=()=>{for(let t=0;t<60;t++){const p=[260+R0()*(WW-520),260+R0()*(WH-520)];if(k==='wat'&&p[0]<WW*.45&&R0()<.4)continue;if(cen.every(c=>Math.hypot(c[0]-p[0],c[1]-p[1])>420)){cen.push(p);return p}}const p=[260+R0()*(WW-520),260+R0()*(WH-520)];cen.push(p);return p};
+   const mem=(b,n)=>Array.from({length:n},()=>({u:u++,id:b.id,name:b.name,sh:R0()<SH?1:0,lvl:cl(lv-3+(R0()*4|0))}));
+   src.forEach((g,j)=>{const b=g.members[0];let m;
+    if(j<2){m=mem(b,j?3+(R0()*3|0):4+(R0()*3|0));if(j===0||R0()<.6)m.push({u:u++,id:g.alpha.id,name:g.alpha.name,sh:R0()<SH?1:0,lvl:cl(lv+5+(R0()*3|0)),alpha:1})}
+    else if(j<4)m=mem(b,2+(R0()*2|0));
+    else{const ev=R0()<.25&&g.alpha.id!==b.id;m=[{u:u++,id:ev?g.alpha.id:b.id,name:ev?g.alpha.name:b.name,sh:R0()<SH?1:0,lvl:cl(lv-2+(R0()*5|0)+(ev?3:0))}]}
+    const c=pos();m.forEach((x,q)=>{if(x.alpha){x.x=c[0];x.y=c[1];return}const a=q/m.length*Math.PI*2+R0(),rr=m.length>1?90+R0()*90:0;x.x=Math.round(c[0]+Math.cos(a)*rr*1.3);x.y=Math.round(c[1]+Math.sin(a)*rr*.8)});groups.push({sp:b.id,m})});
+   BD()[k]={t:r.round,seed:(Math.random()*1e9)|0,g:groups};try{saveRun()}catch(e){}return BD()[k]}catch(e){console.error('bioma',k,e);return null}finally{bzBusy.delete(k)}}
+ const needGen=(k)=>{const r=live(),d=BD()[k];return!d||(d.cl!=null&&r.round>d.cl)||(d.t!=null&&r.round-d.t>=8)||(!d.cl&&!(d.g||[]).some(g=>g.m.length))};
+ const allMons=d=>d&&d.g?d.g.flatMap(g=>g.m):[];
+ const bzSize=m=>m.alpha?190:118;
+ function pkH(m){const s=bzSize(m);return`<button type="button" class="bzp${m.sh?' sh':''}${m.alpha?' al':''}" data-u="${m.u}" style="left:${m.x}px;top:${m.y}px;width:${s}px;height:${s}px;--dl:${(-(m.u*.53)%3).toFixed(2)}s" aria-label="${esc((m.sh?'Shiny ':'')+(m.alpha?'Alfa ':'')+nmS(m))}"><span class="bzr"><img src="${art(m.id,m.sh)}" alt="" draggable="false" loading="lazy" onerror="this.onerror=null;this.src='${mini(m.id,m.sh)}'"></span>${m.sh?'<i class="hds"></i><i class="hds b"></i><i class="hds c"></i>':''}</button>`}
+ async function enterBiome(k,cam,fresh){const r=live();if(!r)return;let d=BD()[k];if(fresh){delete lastCam[k]}const hadCam=!!cam;
+  close2();const o=D.createElement('div');o.id='bzv';o.className='bz-'+k;const i=BI(k),lv=window.zoneLv&&i>=0?zoneLv(i):0;
+  o.innerHTML=`<div class="bz-vp"><div class="bz-w" style="width:${WW}px;height:${WH}px"><canvas class="bz-bg" width="${WW}" height="${WH}"></canvas><div class="bz-pk"></div></div></div>
+   <div class="bz-hud"><button type="button" class="bz-back" data-b="back">← Isla</button><span class="bz-n"></span><button type="button" class="bz-i" data-b="guide" aria-label="Guía del bioma">i</button></div>
+   <div class="bz-zoom"><button type="button" data-b="zi" aria-label="Acercar">＋</button><span class="bz-zl">100%</span><button type="button" data-b="zo" aria-label="Alejar">－</button><button type="button" data-b="zf" aria-label="Ver todo" title="Ver todo">⤢</button></div><div class="bz-card" hidden></div><div class="bz-tip">Arrastra para explorar · pellizca o usa ＋/－ para el zoom · toca un Pokémon</div><div class="bz-load"><i></i><span>Explorando ${esc(ZN[k].n)}…</span></div>`;
+  D.body.append(o);cur={k,o,cam:cam||lastCam[k]||{x:(WW-innerWidth)/2,y:(WH-innerHeight)/2},z:(()=>{try{const v=parseFloat(localStorage.getItem('pa_bzz'));if(v>0)return v}catch(e){}return innerWidth<600?.8:1})(),sel:null,wt:0};bindDrag(o);apply();
+  if(fresh||needGen(k)){d=await genBiome(k)}if(!cur||cur.o!==o)return;d=BD()[k];o.querySelector('.bz-load').remove();
+  if(!d||d.cl!=null){o.querySelector('.bz-pk').innerHTML='';o.querySelector('.bz-tip').textContent=d&&d.cl!=null?'¡Has despejado la zona! Sal y vuelve a entrar para encontrar más Pokémon':'No se pudo explorar la zona. Revisa tu conexión';}
+  try{drawBG(o.querySelector('.bz-bg'),k,(d&&d.seed)||7)}catch(e){console.error(e)}
+  if(!hadCam&&d&&d.g&&d.g.length){const g0=d.g[0].m,cx=g0.reduce((a,m)=>a+m.x,0)/g0.length,cy=g0.reduce((a,m)=>a+m.y,0)/g0.length,vp=o.querySelector('.bz-vp');cur.cam={x:cx-vp.clientWidth/2/cur.z,y:cy-vp.clientHeight/2/cur.z};apply()}
+  paintPk();cur.wt=setInterval(wander,2600);setTimeout(()=>{const t=o.querySelector('.bz-tip');if(t)t.classList.add('off')},3500)}
+ function paintPk(){if(!cur)return;const d=BD()[cur.k],L=allMons(d);cur.o.querySelector('.bz-pk').innerHTML=L.map(pkH).join('');cur.o.querySelector('.bz-n').textContent=`🐾 ${L.length}`}
+ const EMO=['♪','❤️','❗','💢','🍃','💧','❓','😊'];
+ function act(b){const r=Math.random(),night=ph()==='night';if(r<.4){b.classList.remove('hop');void b.offsetWidth;b.classList.add('hop');setTimeout(()=>b.classList.remove('hop'),700)}else{const e=D.createElement('i');e.className='bze';e.textContent=night&&Math.random()<.6?'💤':EMO[Math.random()*EMO.length|0];b.append(e);setTimeout(()=>e.remove(),1900)}}
+ function wander(){if(!cur||D.hidden)return;cur.o.querySelectorAll('.bzp').forEach(b=>{if(!b.classList.contains('sel')&&Math.random()<.12)act(b);if(Math.random()<.45||b.classList.contains('sel'))return;const dx=Math.round(Math.random()*120-60),dy=Math.round(Math.random()*70-35);b.style.translate=`${dx}px ${dy}px`;const im=b.querySelector('.bzr');if(im)im.style.scale=dx<0?'1 1':'-1 1'})}
+ const zMin=()=>{const vp=cur.o.querySelector('.bz-vp');return Math.min(1,Math.max(vp.clientWidth/WW,vp.clientHeight/WH)*.98)},Z_MAX=1.7;
+ function apply(){if(!cur)return;const vp=cur.o.querySelector('.bz-vp'),z=cur.z=Math.max(zMin(),Math.min(Z_MAX,cur.z||1)),w=vp.clientWidth/z,h=vp.clientHeight/z,c=cur.cam;
+  c.x=w>=WW?(WW-w)/2:Math.max(0,Math.min(WW-w,c.x));c.y=h>=WH?(WH-h)/2:Math.max(0,Math.min(WH-h,c.y));cur.o.querySelector('.bz-w').style.transform=`scale(${z}) translate3d(${-c.x}px,${-c.y}px,0)`;lastCam[cur.k]={x:c.x,y:c.y};lastZ[cur.k]=z;if(cur.zs!==z){cur.zs=z;clearTimeout(cur.zt);cur.zt=setTimeout(()=>{try{localStorage.setItem('pa_bzz',String(Math.round(z*1000)/1000))}catch(e){}},250)}const zl=cur.o.querySelector('.bz-zl');if(zl)zl.textContent=Math.round(z*100)+'%'}
+ function zoomAt(nz,fx,fy){if(!cur)return;const vp=cur.o.querySelector('.bz-vp'),r=vp.getBoundingClientRect();fx=fx==null?r.width/2:fx-r.left;fy=fy==null?r.height/2:fy-r.top;const z0=cur.z,wx=cur.cam.x+fx/z0,wy=cur.cam.y+fy/z0;cur.z=Math.max(zMin(),Math.min(Z_MAX,nz));cur.cam.x=wx-fx/cur.z;cur.cam.y=wy-fy/cur.z;apply()}
+ function bindDrag(o){const vp=o.querySelector('.bz-vp');let st=null,vx=0,vy=0,raf=0,lt=0;const PT=new Map();let pin=null;
+  vp.addEventListener('pointerdown',e=>{if(e.button)return;PT.set(e.pointerId,{x:e.clientX,y:e.clientY});cancelAnimationFrame(raf);
+   if(PT.size===2){const [a,b]=[...PT.values()];pin={d:Math.hypot(a.x-b.x,a.y-b.y)||1,z:cur.z};st=null;cur.drag=performance.now();return}
+   st={x:e.clientX,y:e.clientY,cx:cur.cam.x,cy:cur.cam.y,mv:0,id:e.pointerId};lt=performance.now();vx=vy=0});
+  vp.addEventListener('pointermove',e=>{if(PT.has(e.pointerId))PT.set(e.pointerId,{x:e.clientX,y:e.clientY});
+   if(pin&&PT.size>=2){const [a,b]=[...PT.values()],d=Math.hypot(a.x-b.x,a.y-b.y)||1;zoomAt(pin.z*d/pin.d,(a.x+b.x)/2,(a.y+b.y)/2);cur.drag=performance.now();return}
+   if(!st||e.pointerId!==st.id)return;const dx=e.clientX-st.x,dy=e.clientY-st.y;if(!st.mv&&Math.hypot(dx,dy)>8){st.mv=1;try{vp.setPointerCapture(e.pointerId)}catch(_){}vp.classList.add('drag')}if(!st.mv)return;const t=performance.now(),nx=st.cx-dx/cur.z,ny=st.cy-dy/cur.z;vx=(nx-cur.cam.x)/Math.max(1,t-lt);vy=(ny-cur.cam.y)/Math.max(1,t-lt);lt=t;cur.cam.x=nx;cur.cam.y=ny;apply()});
+  const up=e=>{PT.delete(e.pointerId);if(PT.size<2)pin=null;if(!st)return;const moved=st.mv;st=null;vp.classList.remove('drag');if(moved){cur.drag=performance.now();let x=vx*16,y=vy*16;const go=()=>{x*=.92;y*=.92;if(Math.abs(x)+Math.abs(y)<.5||!cur)return;cur.cam.x+=x;cur.cam.y+=y;apply();raf=requestAnimationFrame(go)};raf=requestAnimationFrame(go)}};
+  vp.addEventListener('pointerup',up);vp.addEventListener('pointercancel',up);
+  vp.addEventListener('wheel',e=>{e.preventDefault();if(e.ctrlKey||e.metaKey||!e.deltaX&&Math.abs(e.deltaY)>=50&&e.deltaMode===0&&!e.shiftKey&&Number.isInteger(e.deltaY)){zoomAt(cur.z*Math.exp(-e.deltaY*(e.ctrlKey?.01:.0018)),e.clientX,e.clientY);return}cur.cam.x+=(e.deltaX||(e.shiftKey?e.deltaY:0))/cur.z;cur.cam.y+=(e.shiftKey?0:e.deltaY)/cur.z;apply()},{passive:false});
+  o.addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b){if(b.dataset.b==='guide'){const i=BI(cur.k);if(i>=0&&window.openBiomeDex)openBiomeDex(i);return}if(b.dataset.b==='zi')zoomAt(cur.z*1.25);else if(b.dataset.b==='zo')zoomAt(cur.z/1.25);else if(b.dataset.b==='zf')zoomAt(0);else if(b.dataset.b==='back')close2(true);else if(b.dataset.b==='fight')fightSel();else if(b.dataset.b==='x')desel();return}
+   const p=e.target.closest('.bzp');if(p){if(cur.drag&&performance.now()-cur.drag<250)return;const m=allMons(BD()[cur.k]).find(x=>x.u===+p.dataset.u);if(!m)return;if(cur.sel===m.u)return fightSel();selMon(p,m);return}
+   if(!(cur.drag&&performance.now()-cur.drag<250))desel()});
+  addEventListener('resize',apply)}
+ function selMon(p,m){cur.sel=m.u;cur.o.querySelectorAll('.bzp.sel').forEach(x=>x.classList.remove('sel'));p.classList.add('sel');p.style.translate='0 0';bp(m.sh?1175:m.alpha?520:700);
+  const c=cur.o.querySelector('.bz-card');c.hidden=false;c.innerHTML=`<img src="${mini(m.id,m.sh)}" alt=""><div><b>${m.sh?'✨ ':''}${esc(nmS(m))}${m.alpha?' <em class="bzca">Alfa</em>':''}</b><small>Nv. ${m.lvl}${m.sh?' · ¡Shiny!':''}${m.alpha?' · más fuerte':''}</small></div><button type="button" data-b="fight">⚔️ Combatir</button><button type="button" class="bz-cx" data-b="x" aria-label="Cerrar">✕</button>`}
+ function desel(){if(!cur)return;cur.sel=null;cur.o.querySelectorAll('.bzp.sel').forEach(x=>x.classList.remove('sel'));const c=cur.o.querySelector('.bz-card');if(c)c.hidden=true}
+ function close2(back){if(!cur)return;clearInterval(cur.wt);try{cur.o.remove()}catch(e){}cur=null;if(back)bp(520)}
+ async function fightSel(){if(!cur||cur.sel==null)return;const k=cur.k,d=BD()[k],m=allMons(d).find(x=>x.u===cur.sel);if(!m)return;const r=live();if(!r||R.lock)return;
+  if(!r.team.some(x=>x.hp>0))return tst('Tu equipo está debilitado: cúralo en el Centro Pokémon');if(!window.__herd||__herd.busy())return;
+  const cam={...cur.cam};lastZ[k]=cur.z;close2();R.lock=1;const res=await __herd.fight(Object.assign({},m,{bio:k}),ZN[k].n);window.__lastHerd=res&&{won:res.won,caught:res.caught,err:res.err,fled:res.fled};
+  const d2=BD()[k];if(res&&res.won&&d2&&d2.g){d2.g.forEach(g=>g.m=g.m.filter(x=>x.u!==m.u));d2.g=d2.g.filter(g=>g.m.length);if(!d2.g.length){BD()[k]={cl:r.round};tst(`🌿 ¡Has despejado ${ZN[k].n}! Sal y vuelve a entrar para encontrar más Pokémon`)}try{saveRun()}catch(e){}}
+  if(res&&res.err)R.lock=0;
+  if(D.body.dataset.v==='map'){try{if(tab!=='bio'){tab='bio';try{localStorage.setItem('pa_mtab','bio')}catch(_){}}showMap()}catch(e){}enterBiome(k,cam)}}
+ window.__mtab={get:()=>tab,set:setTab,ZN,enter:(k,f)=>enterBiome(k,null,f!==0),gen:genBiome,cur:()=>cur};
+})();
+/* ===== v47.6: formas regionales (Alola, Galar, Hisui y Paldea): Pokédex, guías de bioma, biomas, evoluciones y nombres ===== */
+(()=>{
+ /* [id, especie base (nº Pokédex), nombre, región, tipos, evoluciona a [nivel, id]] */
+ const L=[[10091,19,'rattata','Alola','dark/normal',[20,10092]],[10092,20,'raticate','Alola','dark/normal'],[10100,26,'raichu','Alola','electric/psychic'],[10101,27,'sandshrew','Alola','ice/steel',[22,10102]],[10102,28,'sandslash','Alola','ice/steel'],
+  [10103,37,'vulpix','Alola','ice',[34,10104]],[10104,38,'ninetales','Alola','ice/fairy'],[10105,50,'diglett','Alola','ground/steel',[26,10106]],[10106,51,'dugtrio','Alola','ground/steel'],[10107,52,'meowth','Alola','dark',[28,10108]],[10108,53,'persian','Alola','dark'],
+  [10109,74,'geodude','Alola','rock/electric',[25,10110]],[10110,75,'graveler','Alola','rock/electric',[36,10111]],[10111,76,'golem','Alola','rock/electric'],[10112,88,'grimer','Alola','poison/dark',[38,10113]],[10113,89,'muk','Alola','poison/dark'],
+  [10114,103,'exeggutor','Alola','grass/dragon'],[10115,105,'marowak','Alola','fire/ghost'],
+  [10161,52,'meowth','Galar','steel',[28,863]],[10162,77,'ponyta','Galar','psychic',[40,10163]],[10163,78,'rapidash','Galar','psychic/fairy'],[10164,79,'slowpoke','Galar','psychic',[37,10165]],[10165,80,'slowbro','Galar','poison/psychic'],
+  [10166,83,'farfetchd','Galar','fighting',[40,865]],[10167,110,'weezing','Galar','poison/fairy'],[10168,122,'mr-mime','Galar','ice/psychic',[42,866]],[10169,144,'articuno','Galar','psychic/flying'],[10170,145,'zapdos','Galar','fighting/flying'],[10171,146,'moltres','Galar','dark/flying'],
+  [10172,199,'slowking','Galar','poison/psychic'],[10173,222,'corsola','Galar','ghost',[38,864]],[10174,263,'zigzagoon','Galar','dark/normal',[20,10175]],[10175,264,'linoone','Galar','dark/normal',[35,862]],[10176,554,'darumaka','Galar','ice',[35,10177]],[10177,555,'darmanitan','Galar','ice'],
+  [10179,562,'yamask','Galar','ground/ghost',[34,867]],[10180,618,'stunfisk','Galar','ground/steel'],
+  [10229,58,'growlithe','Hisui','fire/rock',[36,10230]],[10230,59,'arcanine','Hisui','fire/rock'],[10231,100,'voltorb','Hisui','electric/grass',[30,10232]],[10232,101,'electrode','Hisui','electric/grass'],[10233,157,'typhlosion','Hisui','fire/ghost'],
+  [10234,211,'qwilfish','Hisui','dark/poison',[35,904]],[10235,215,'sneasel','Hisui','fighting/poison',[35,903]],[10236,503,'samurott','Hisui','water/dark'],[10237,549,'lilligant','Hisui','grass/fighting'],[10238,570,'zorua','Hisui','normal/ghost',[30,10239]],
+  [10239,571,'zoroark','Hisui','normal/ghost'],[10240,628,'braviary','Hisui','psychic/flying'],[10241,705,'sliggoo','Hisui','steel/dragon',[50,10242]],[10242,706,'goodra','Hisui','steel/dragon'],[10243,713,'avalugg','Hisui','ice/rock'],[10244,724,'decidueye','Hisui','grass/fighting'],
+  [10250,128,'tauros','Paldea','fighting'],[10251,128,'tauros','Paldea','fighting/fire'],[10252,128,'tauros','Paldea','fighting/water'],[10253,194,'wooper','Paldea','poison/ground',[20,980]]];
+ const TX={10250:' (combate)',10251:' (llamas)',10252:' (agua)'};
+ const REG=window.REG=L.map(([id,sp,n,r,ty,ev])=>({id,sp,n,r,ty:ty.split('/'),ev,dn:`${n.replace(/-/g,' ')} de ${r}${TX[id]||''}`}));
+ const RI={};REG.forEach(x=>RI[x.id]=x);window.REGI=RI;
+ const RB={};REG.forEach(x=>(RB[x.sp]=RB[x.sp]||[]).push(x.id));window.REGBY=RB;
+ /* las evoluciones regionales parten de la especie normal cuando la forma base no existe (Rowlet→Dartrix→Decidueye de Hisui sale en los biomas como Alfa) */
+ const PRE={10100:25,10114:102,10115:104,10167:109,10172:79,10233:156,10236:502,10237:548,10240:627,10243:712,10244:723,10241:704};
+ window.REGPRE=PRE;
+ function names(){try{REG.forEach(x=>{NAMES[x.id]=x.dn})}catch(e){}try{if(typeof DEX!='undefined'&&Array.isArray(DEX))REG.forEach(x=>{if(!DEX.some(d=>d.id===x.id))DEX.push({id:x.id,name:x.dn,reg:1})})}catch(e){}}
+ function evos(){try{REG.forEach(x=>{if(x.ev&&!EVO[x.id])EVO[x.id]=x.ev})}catch(e){}try{[10169,10170,10171].forEach(i=>{TAGS[i]='leg'})}catch(e){}}
+ function types(){try{const K='pa_bio_types_v1',c=JSON.parse(localStorage.getItem(K)||'null');if(c&&c.t&&!c.t[10244]){REG.forEach(x=>c.t[x.id]=x.ty);localStorage.setItem(K,JSON.stringify(c))}}catch(e){}}
+ window.__regFix=()=>{names();evos();types()};
+ __regFix();setTimeout(__regFix,1500);setTimeout(__regFix,8000);
+ const _bd=window.openBiomeDex;if(_bd)window.openBiomeDex=function(){__regFix();return _bd.apply(this,arguments)};
+})();
+
+/* v47.6: cortina desplegable desde arriba (como la de un móvil) en el mapa: ronda, dinero, avisos, fijar mapa, equipos, amigos, menú y ajustes. La mochila se queda fuera */
+(()=>{const D=document,B=D.body,Q=s=>D.querySelector(s);
+ try{if(!localStorage.getItem('pa_shmig')){localStorage.removeItem('pr_mappos');localStorage.setItem('pa_shmig','1')}}catch(e){}
+ const sh=D.createElement('div');sh.id='shade';sh.setAttribute('aria-hidden','true');sh.innerHTML='<div class="sh-in"><div class="sh-top"></div><div class="sh-fab"></div><div class="sh-chips"></div><div class="sh-tools"></div><button type="button" class="sh-close" aria-label="Cerrar">⌃</button></div>';
+ const bar=D.createElement('button');bar.id='shbar';bar.type='button';bar.setAttribute('aria-label','Abrir el panel');bar.innerHTML='<span class="sb-t"></span><i class="sb-h"></i>';
+ const sc=D.createElement('div');sc.id='shscrim';
+ B.append(sc,sh,bar);
+ const SLOTS=[['#rd','.sh-top'],['#mn','.sh-top'],['#fab','.sh-fab'],['#chips2','.sh-chips'],['#mappin','.sh-tools'],['#teamq','.sh-tools']];
+ const home=new Map();let on=false;
+ function enable(){if(on)return;on=true;SLOTS.forEach(([s,t])=>{const e=Q(s);if(!e||e.closest('#shade'))return;home.set(s,{p:e.parentNode,n:e.nextSibling});sh.querySelector(t).append(e)});B.classList.add('shon');label()}
+ function disable(){if(!on)return;close();on=false;[...SLOTS].reverse().forEach(([s])=>{const e=Q(s),h=home.get(s);if(!e||!h||!e.closest('#shade'))return;try{h.p.insertBefore(e,h.n&&h.n.parentNode===h.p?h.n:null)}catch(_){h.p.append(e)}});B.classList.remove('shon')}
+ function label(){const r=Q('#rd'),m=Q('#mn');const t=bar.querySelector('.sb-t');const h=(r?r.textContent:'')+(m?'  ·  '+m.innerHTML:'');if(t._h!==h){t._h=h;t.innerHTML=(r?`<b>${r.textContent}</b>`:'')+(m?`<span>${m.innerHTML}</span>`:'')+(Q('#chips2')&&Q('#chips2').children.length?`<em>${Q('#chips2').children.length}</em>`:'')}}
+ function open(){if(!on)return;sh.classList.add('op');sc.classList.add('op');B.classList.add('shop');sh.setAttribute('aria-hidden','false');try{beep(660,.05,'triangle')}catch(_){}}
+ function close(){sh.classList.remove('op');sc.classList.remove('op');B.classList.remove('shop');sh.setAttribute('aria-hidden','true')}
+ bar.onclick=()=>sh.classList.contains('op')?close():open();sc.onclick=close;sh.querySelector('.sh-close').onclick=close;
+ /* deslizar: hacia abajo desde la barrita abre, hacia arriba en el panel cierra */
+ let y0=null;bar.addEventListener('pointerdown',e=>{y0=e.clientY});addEventListener('pointerup',e=>{if(y0!=null&&e.clientY-y0>30)open();y0=null});
+ let y1=null;sh.addEventListener('pointerdown',e=>{y1=e.clientY});sh.addEventListener('pointerup',e=>{if(y1!=null&&y1-e.clientY>40)close();y1=null});
+ /* al tocar un botón del panel que abre otra pantalla, la cortina se recoge */
+ const tapClose=e=>{const b=e.target.closest&&e.target.closest('button,[role=button],[data-a],#chips2>*');if(b&&!b.closest('.sh-close')&&!b.closest('#mappin'))setTimeout(close,90)};sh.addEventListener('click',tapClose,true);sh.addEventListener('pointerup',tapClose,true);
+ addEventListener('keydown',e=>{if(e.key==='Escape'&&sh.classList.contains('op')){e.stopPropagation();close()}},true);
+ const sync=()=>{if(B.dataset.v==='map')enable();else disable()};
+ const OVS=['#bzv','#pcbox','#frp','#pcas','#homeov','#mktov','#vitov','#safov','#lan','#mrd','#mpa','#coop','#pvp','#bdx','#pfpk','#ntf','#eqov','#cookov','#specov','#mgov','#cmpov','#rkov','#exov','#chov','#colov','#msov','#rnov','#tcgov','#tutov','#stov','#shinf','#evoa'];
+ const busy=()=>{const m=Q('#mod');if(m&&getComputedStyle(m).display!=='none')return true;for(const s of OVS){const e=Q(s);if(e&&e.isConnected){const c=getComputedStyle(e);if(c.display!=='none'&&c.visibility!=='hidden'&&+c.opacity!==0&&e.getBoundingClientRect().height>100)return true}}return false};
+ setInterval(()=>{if(!on)return;const b=busy();if(B.classList.contains('shhide')!==b){B.classList.toggle('shhide',b);if(b)close()}},250);
+ new MutationObserver(sync).observe(B,{attributes:true,attributeFilter:['data-v']});setInterval(()=>{sync();if(on)label()},700);sync();
+ window.__shade={open,close};
 })();
 
 })();</script>
