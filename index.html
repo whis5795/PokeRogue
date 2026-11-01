@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.3</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.4</div>
 </section>
 
 <section id="team" class="scr">
@@ -4352,7 +4352,10 @@ window.boxUse=async mon=>{
     /* el Pokémon elegido sale primero (ya marcado) y después tu equipo y el resto de la Caja, para poder marcar varios */
     R.team=[mon,...T0.filter(x=>x!==mon),...(R.box||[]).filter(x=>x!==mon)];window.saveRun=()=>{};
     ask=function(t){if(typeof t=='string'&&/^¿(En quién usar|Quién lleva)/.test(t))return Promise.resolve(0);return ra.apply(this,arguments)};
-    try{return await f()}finally{R.team=T0;ask=ra;window.saveRun=sv0;try{saveRun()}catch(e){}try{const pb=D.getElementById('pcbox');if(pb)pb.dispatchEvent(new Event('bxref'))}catch(e){}}};
+    /* v47.4: al usar un objeto desde la Caja solo pueden evolucionar los Pokémon que lo han recibido (antes evolucionaba toda la Caja, con una animación por cada uno) */
+    const K0=new Map(R.team.map(x=>[x,x.lvl+'|'+x.xp])),ce0=checkEvo;
+    checkEvo=async function(){const T=R.team;R.team=T.filter(x=>K0.get(x)!==x.lvl+'|'+x.xp);try{return await ce0.apply(this,arguments)}finally{R.team=T}};
+    try{return await f()}finally{checkEvo=ce0;R.team=T0;ask=ra;window.saveRun=sv0;try{saveRun()}catch(e){}try{const pb=D.getElementById('pcbox');if(pb)pb.dispatchEvent(new Event('bxref'))}catch(e){}}};
   window.useItem=k=>solo(()=>useI(k));
   window.useTM=i=>solo(()=>useT(i));
   try{toast('🎒 Objeto para '+nm(mon)+' · también puedes marcar a otros');await bag()}
@@ -8583,7 +8586,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'47.3',t:'Vitrina pública',s:'cur',l:[
+ {v:'47.4',t:'Evoluciones temáticas y arreglo de caramelos',s:'cur',l:[
+  '🍬 Arreglo: al dar un caramelo (u otro objeto) a un Pokémon desde la Caja ya no evolucionan también todos los demás de la Caja que tenían nivel para hacerlo. Solo puede evolucionar el que recibe el objeto',
+  '🦋 Evoluciones con decoración temática según el tipo del nuevo Pokémon: hada con brillitos, mariposas y flores; fuego con llamas; agua con gotas y burbujas; planta con hojas; eléctrico con rayos; hielo con copos; fantasma con fantasmas y velas; dragón, psíquico, acero, siniestro…',
+  'El fondo y el brillo de la animación toman el color del tipo, y si el Pokémon tiene dos tipos se mezclan sus decoraciones. Los shinys llevan estrellas extra',
+  'Con «Efectos visuales» desactivado o en calidad Calculadora salen menos partículas'
+]},
+{v:'47.3',t:'Vitrina pública',s:'prev',l:[
   '🏛️ Nueva Vitrina: expón hasta 12 de tus Pokémon en vitrinas de cristal. Ábrela desde Amigos → «🏛️ Mi vitrina» o con el botón 🏛️ de la Caja',
   '✨ Los shinys brillan: marco dorado, destellos y cinta «Shiny». El primero es tu Pokémon destacado 👑, y también se ven sus estrellas ⭐ y tipos',
   '✎ «Organizar»: toca un hueco para añadir un Pokémon de tu equipo o Caja (los shinys salen primero) y toca uno expuesto para destacarlo, moverlo o quitarlo. «🔄 Actualizar fotos» refresca nivel, evolución y estrellas',
@@ -16816,16 +16825,29 @@ mount();setInterval(()=>{mount();badge()},1500);
 #evoa .ev-tx{position:absolute;left:50%;bottom:calc(12% + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(560px,calc(100% - 32px));padding:14px 18px;border-radius:18px;background:#0b0720e6;border:2px solid #c4b5fd88;text-align:center;font:900 clamp(16px,4.6vw,22px)/1.35 system-ui;color:#fff;box-shadow:0 12px 30px #000c}
 #evoa .ev-tx b{color:#fde68a}
 @keyframes evIn{from{opacity:0}}
+#evoa.th .ev-glow{background:radial-gradient(circle,#fff 0,var(--evc) 30%,color-mix(in srgb,var(--evc) 25%,transparent) 55%,#0000 70%)}
+#evoa.th{background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--evc) 45%,#1e1b4b) 0,#0b0720 62%,#000 100%);transition:background .6s}
+#evoa .ev-thl{position:absolute;left:50%;top:45%;width:0;height:0;pointer-events:none;z-index:2}
+#evoa .ev-th{position:absolute;left:0;top:0;transform:translate(-50%,-50%);line-height:1;filter:drop-shadow(0 0 8px var(--evc,#fff));will-change:transform,opacity}
 @keyframes evRot{to{transform:translate(-50%,-50%) rotate(360deg)}}
 </style>
 <script id="evoajs">(()=>{
 const D=document,sl=ms=>new Promise(r=>setTimeout(r,ms)),bp=(f,d,t)=>{try{beep(f,d,t||'triangle')}catch(e){}};
 let busy=Promise.resolve();
 const load=src=>new Promise(r=>{const i=new Image();i.onload=i.onerror=()=>r(i);i.src=src;setTimeout(()=>r(i),1200)});
+/* v47.4: decoración temática según el tipo del Pokémon al que evoluciona */
+const EVT={fairy:['#f9a8d4',['✨','🦋','🌸','💖','✨','🦋']],fire:['#fb923c',['🔥','🔥','✨','💥']],water:['#38bdf8',['💧','🫧','💧','🌊']],grass:['#4ade80',['🍃','🌿','🌸','🍃','🌱']],electric:['#facc15',['⚡','⚡','✨','💛']],ice:['#a5f3fc',['❄️','❄️','✨','🧊']],fighting:['#f97316',['💥','💢','✨','💥']],poison:['#c084fc',['☠️','🫧','💜','🫧']],ground:['#d6a35c',['🪨','🟤','✨','🪨']],flying:['#93c5fd',['🪶','☁️','🪶','✨']],psychic:['#f472b6',['🔮','✨','💫','🔮']],bug:['#a3e635',['🐞','🍃','🦋','🐝']],rock:['#d4b483',['🪨','💎','🪨','✨']],ghost:['#a78bfa',['👻','🕯️','💜','👻']],dragon:['#818cf8',['🐉','✨','💫','🔥']],dark:['#64748b',['🌑','✦','🦇','🌙']],steel:['#cbd5e1',['⚙️','✦','🔩','✨']],normal:['#fde68a',['⭐','✨','💫','⭐']]};
+const evTypes=async id=>{try{const d=await Promise.race([getD(id),sl(800).then(()=>null)]);return d&&Array.isArray(d.types)?d.types:[]}catch(e){return[]}};
+const evLite=()=>{try{return S.fx===false||S.gfx==='calc'||matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}};
+function evDeco(o,ty,sh,fast){const t1=EVT[ty[0]]||EVT.normal,t2=EVT[ty[1]],em=[...t1[1],...(t2?t2[1].slice(0,2):[])];o.style.setProperty('--evc',t1[0]);o.classList.add('th');if(sh)em.push('✨','🌟','✨');
+ const lay=D.createElement('div');lay.className='ev-thl';o.append(lay);const n=evLite()?10:34;
+ for(let i=0;i<n;i++){const e=D.createElement('span');e.className='ev-th';e.textContent=em[i%em.length];const a=Math.random()*Math.PI*2,r0=40+Math.random()*60,r1=150+Math.random()*190,sz=18+Math.random()*22;
+  e.style.cssText=`font-size:${sz}px`;lay.append(e);const dx=Math.cos(a),dy=Math.sin(a),rot=(Math.random()*2-1)*220;
+  e.animate([{transform:`translate(${dx*r0}px,${dy*r0}px) scale(.2) rotate(0deg)`,opacity:0},{transform:`translate(${dx*(r0+r1)/2}px,${dy*(r0+r1)/2-30}px) scale(1) rotate(${rot/2}deg)`,opacity:1,offset:.35},{transform:`translate(${dx*r1}px,${dy*r1-80}px) scale(.8) rotate(${rot}deg)`,opacity:0}],{duration:(fast?700:2300)+Math.random()*1000,delay:Math.random()*(fast?80:300),easing:'cubic-bezier(.2,.7,.3,1)',fill:'both'})}}
 /* evoAnim(id anterior, id nuevo, shiny, nombre anterior, nombre nuevo) → ~4,8 s */
 window.evoAnim=(oid,nid,sh,on,nn)=>{const run=async()=>{
  const sa=(()=>{try{return art(oid,sh)}catch(e){return''}})(),sb=(()=>{try{return art(nid,sh)}catch(e){return''}})();
- await Promise.all([load(sa),load(sb)]);
+ const [,,ty]=await Promise.all([load(sa),load(sb),evTypes(nid)]);
  const o=D.createElement('div');o.id='evoa';o.setAttribute('role','dialog');o.setAttribute('aria-label','Evolución');
  o.innerHTML=`<div class="ev-skip">Toca para acelerar</div><div class="ev-rays"></div><div class="ev-glow"></div><div class="ev-mon"><img class="o" src="${sa}" alt=""><img class="n" src="${sb}" alt=""></div><div class="ev-fl"></div><div class="ev-tx">¿Eh? ¡<b>${on}</b> está evolucionando!</div>`;
  let fast=0;const stop=e=>{e.stopPropagation();e.preventDefault();if(e.type==='pointerdown'&&!fast){fast=1;o.classList.add('evfast')}};['click','pointerdown','touchstart','keydown'].forEach(t=>o.addEventListener(t,stop,true));const sl0=sl,slx=ms=>sl0(fast?Math.min(ms,40):ms);
@@ -16840,6 +16862,7 @@ window.evoAnim=(oid,nid,sh,on,nn)=>{const run=async()=>{
  A.style.opacity=0;B.style.opacity=1;const fl=o.querySelector('.ev-fl');fl.animate([{opacity:0},{opacity:1,offset:.35},{opacity:0}],{duration:650,easing:'ease-out'});
  await slx(220);o.classList.remove('sil');M.animate([{transform:'translate(-50%,-50%) scale(1.25)'},{transform:'translate(-50%,-50%) scale(.95)',offset:.6},{transform:'translate(-50%,-50%) scale(1)'}],{duration:600,easing:'ease-out'});M.style.transform='translate(-50%,-50%)';
  for(let i=0;i<22;i++){const s=D.createElement('i');s.className='ev-sp';o.append(s);const a=Math.random()*Math.PI*2,r=110+Math.random()*170;s.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${Math.cos(a)*r}px,${Math.sin(a)*r}px) scale(.2)`,opacity:0}],{duration:900+Math.random()*500,easing:'ease-out',fill:'forwards'})}
+ try{evDeco(o,ty,sh,fast)}catch(_){}
  [659,784,1046,1318].forEach((x,i)=>setTimeout(()=>bp(x,.16),i*110));
  tx.innerHTML=`¡Enhorabuena! ¡<b>${on}</b> ha evolucionado en <b>${nn}</b>!`;
  await slx(1500);
