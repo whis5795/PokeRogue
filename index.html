@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.0</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.1</div>
 </section>
 
 <section id="team" class="scr">
@@ -6059,13 +6059,13 @@ function pvField(){if(!P||!P.B)return'';const B2=P.B,o=[],me=PS(P.me);
     if(d.spk)o.push(`Púas ×${d.spk} (${w})`);if(d.tsp)o.push(`Púas Tóxicas ×${d.tsp} (${w})`);if(d.rock)o.push(`Trampa Rocas (${w})`);if(d.web)o.push(`Red Viscosa (${w})`)});
   const F2=B2.F||{},N2={tr:'Espacio Raro',grav:'Gravedad',wr:'Zona Extraña'};for(const k in N2)if(F2[k]>0)o.push(`${N2[k]} ${F2[k]}`);
   return o.map(x=>`<span>${x}</span>`).join('')}
-function pvSnap(){const f=s=>({a:P.a[s],m:P.t[s].map(m=>[m.hp,m.s||0,m.cf>0?1:0]),x:pvChips(P.t[s][P.a[s]])});return{h:f('h'),g:f('g'),f:pvField()}}
+function pvSnap(){const f=s=>({a:P.a[s],m:P.t[s].map(m=>[m.hp,m.s||0,m.cf>0?1:0,m.megaOn?1:0]),x:pvChips(P.t[s][P.a[s]])});return{h:f('h'),g:f('g'),f:pvField()}}
 function pvInit(hp,gp,lv,seed,ex){
   return Promise.all([Promise.all(hp.map(o=>rebuild({...o,lvl:lv||o.lvl}))),Promise.all(gp.map(o=>rebuild({...o,lvl:lv||o.lvl})))]).then(([H,G])=>{
-    [...H,...G].forEach(m=>{m.moves.forEach(v=>v.cp=v.mp);m.hp=m.max;m.s=0;m.cf=0;m.fl=0;m.sg=null;m.v=null;m.tox=0});
+    [...H,...G].forEach(m=>{if(m.megaOn){m.megaOn=false;m.megaK=null;stats(m)}m.mfs='';m.moves.forEach(v=>v.cp=v.mp);m.hp=m.max;m.s=0;m.cf=0;m.fl=0;m.sg=null;m.v=null;m.tox=0});
     const Bs={pl:H,en:G,pi:0,ei:0,turn:1,adv:0,pvp:1,_bid:'pv'+seed,fld:{p:{},e:{}},F:{},wx:null,tn:null,_moved:{},_dmgT:{},_skip:{}};
     Object.assign(P,{t:{h:H,g:G},B:Bs,rng:mulberry(seed>>>0),turn:1,phase:'act',ch:{h:null,g:null},need:{h:false,g:false},
-      ui:'main',busy:false,over:false,win:null,chain:Promise.resolve(),ready:true,msg:'¡Comienza la batalla!',lv,ex:{h:xClean(ex&&ex.h),g:xClean(ex&&ex.g)},xs:{p:{},e:{}}});
+      ui:'main',busy:false,over:false,win:null,chain:Promise.resolve(),ready:true,mg:{h:0,g:0},mgSel:null,msg:'¡Comienza la batalla!',lv,ex:{h:xClean(ex&&ex.h),g:xClean(ex&&ex.g)},xs:{p:{},e:{}}});
     P.a={get h(){return P.B.pi},set h(v){P.B.pi=v},get g(){return P.B.ei},set g(v){P.B.ei=v}};
     P.ctx=mkCtx();P.sn=pvSnap()})}
 /* ---- contexto de mensajes del motor ---- */
@@ -6247,12 +6247,19 @@ function endTurn(){
   if(P.B.tn&&--P.B.tn.t<=0){say('¡El campo se desvaneció!');P.B.tn=null}
   faintChk()}
 /* ---- resolver un turno entero (síncrono: ambos dispositivos obtienen exactamente lo mismo) ---- */
+/* v47.1: Megaevolución en PvP · una por jugador y batalla, ×1,5 de stats y vida (como los entrenadores rivales) hasta el final del combate */
+const PV_MK=1.5;
+function pvMegaOk(s){const m=P&&P.t[s]&&P.t[s][P.a[s]];return !!m&&m.hp>0&&!P.mg[s]&&!m.megaOn&&megaCap(m)}
+function pvMegaDo(side,c){const s=PS(side),m=actS(s);if(!m||m.hp<=0||m.megaOn||P.mg[side]||!megaCap(m))return;
+  const o0=m.max,n0=L1(m);m.mfs=c.mf||'';m.megaOn=true;m.megaK=PV_MK;m.megaLv=m.lvl;stats(m);m.hp=Math.max(1,Math.min(m.max,Math.round(m.hp*m.max/o0)));P.mg[side]=1;
+  say(`⚡ ¡${n0} ha megaevolucionado en ${nm(m)}! Sus estadísticas y su vida suben ×1,5.`)}
 function pvResolve(ch){
   const ev=[];EV=ev;
   try{shim(()=>{
     const B2=P.B;B2.turn=P.turn;B2._moved={};B2._dmgT={};B2._skip={};
     if(P.turn===1){for(const s of['p','e']){const X=xs(s),o=s==='p'?'e':'p';if(has(s,'shield'))X.shield=Math.round(actS(s).max*.3);if(has(s,'marea'))MX.stage(actS(s),'sp',1,null);if(has(s,'tormenta')&&window.__abt&&__abt.setWx){const t=actS(s).types||[],w=t.includes('fire')?'sun':t.includes('water')?'rain':(t.includes('rock')||t.includes('ground'))?'sand':t.includes('ice')?'hail':null;if(w&&!(P.B.wx&&P.B.wx.k===w)){__abt.setWx(w);const q=__abt.q6;while(q.length)say(q.shift())}}if(has(s,'chip')){const E=actS(o);MX.hurt(E,E.max*.12,`¡El Amuleto Garra hirió a ${P.ctx.lab(E)} al empezar!`,{direct:true})}}}
     for(const side of['h','g']){const c=ch[side];if(c&&c.k=='s'){const s=PS(side);if(MX.trapped(actS(s))){say(`¡${L1(actS(s))} no puede retirarse!`);continue}say(side==P.me?`¡${nm(actS(s))}, vuelve!`:`El rival retira a ${nm(actS(s))}.`);enter(s,c.i,null)}}
+    for(const side of['h','g']){const c=ch[side];if(c&&c.k=='m'&&c.mg)pvMegaDo(side,c)}
     const list=[];
     for(const side of['h','g']){const c=ch[side];if(!c||c.k!='m')continue;const s=PS(side),m=actS(s);if(m.hp<=0)continue;
       let mv=m.moves[c.i];if(!mv||mv.cp<=0||m.moves.every(x=>x.cp<=0))mv=STRUG;const lk=MX.lockMove(m);if(lk)mv=lk;
@@ -6277,7 +6284,7 @@ function pvLegal(s,c){
   if(P.phase=='fsw'){if(!P.need[s])return null;const i=c.i|0;return c.k=='s'&&P.t[s][i]&&P.t[s][i].hp>0&&i!==P.a[s]?{k:'s',i}:null}
   if(P.phase!='act')return null;
   if(c.k=='s'){const i=c.i|0;return P.t[s][i]&&P.t[s][i].hp>0&&i!==P.a[s]?{k:'s',i}:null}
-  const i=c.i|0,o={k:'m',i:i>=0&&i<m.moves.length?i:0};if(c.sw!=null){const j=c.sw|0;if(P.t[s][j]&&P.t[s][j].hp>0&&j!==P.a[s])o.sw=j}return o}
+  const i=c.i|0,o={k:'m',i:i>=0&&i<m.moves.length?i:0};if(c.mg&&pvMegaOk(s)){const fs=MEGAF[m.id]||[''];o.mg=1;o.mf=fs.includes(c.mf)?c.mf:fs[0]}if(c.sw!=null){const j=c.sw|0;if(P.t[s][j]&&P.t[s][j].hp>0&&j!==P.a[s])o.sw=j}return o}
 function pvSet(s,c,n){
   if(!P||!P.ready||P.over||n!==P.turn)return false;
   const g=pvLegal(s,c);if(!g)return false;if(P.ch[s])return false;P.ch[s]=g;pvTry();return true}
@@ -6302,7 +6309,8 @@ function pvPlay(ev){
     P.pend--;if(P.pend<=0){P.busy=false;P.sn=pvSnap()}pvDraw();if(P.over&&!P.busy)pvEnd()})}
 function pvChoose(c){
   if(!P||!P.ready||P.busy||P.over||P.ch[P.me])return;
-  const g=pvLegal(P.me,c);if(!g)return;
+  if(c&&c.k=='m'&&P.mgSel!=null&&P.phase=='act'){c={...c,mg:1,mf:P.mgSel}}
+  const g=pvLegal(P.me,c);if(!g)return;if(g.k=='m')P.mgSel=null;
   P.ch[P.me]=g;P.ui='main';send({t:'pact',n:P.turn,c:g});pvTry();pvDraw()}
 function pvForfeit(){
   if(!P||P.over)return;send({t:'pff'});P.over=true;P.win=oth(P.me);P.msg='🏳️ Te has rendido.';P.phase='end';pvDraw();pvEnd()}
@@ -6494,8 +6502,9 @@ function pvBuild(){
   pvBuilt=true;P._pv={};P._dk='';P._res=0}
 function pvUpd(s,sn,fx){
   const k=pvK(s),el=pvO.querySelector('.pvside.'+k),a=sn[s].a,m=P.t[s][a],st=sn[s].m[a],hp=Math.max(0,st[0]),q=Math.max(0,hp/m.max*100);
-  const img=el.querySelector('.pvg'),key=m.id+'|'+a+'|'+(m.sh?1:0);
-  if(img.dataset.k!==key){img.dataset.k=key;img.src=art(m.id,m.sh);img.onerror=function(){this.onerror=null;this.src=mini(m.id,m.sh)};img.classList.remove('hit');img.classList.add('in');setTimeout(()=>img.classList.remove('in'),560);el.classList.remove('ko')}
+  const mgx=!!st[3]&&megaCap(m),img=el.querySelector('.pvg'),key=m.id+'|'+a+'|'+(m.sh?1:0)+'|'+(mgx?'M'+(m.mfs||''):'');
+  if(img.dataset.k!==key){const wasMega=mgx&&img.dataset.k&&img.dataset.k.split('|')[1]===String(a);img.dataset.k=key;img.src=mgx?art(megaSpr(m),m.sh):art(m.id,m.sh);img.onerror=function(){this.onerror=null;this.src=mini(m.id,m.sh)};img.classList.remove('hit');img.classList.remove('in');img.classList.remove('mgin');void img.offsetWidth;img.classList.add(wasMega?'mgin':'in');setTimeout(()=>{img.classList.remove('in');img.classList.remove('mgin')},900);el.classList.remove('ko')}
+  el.classList.toggle('mega',mgx);
   el.querySelector('.pvn b').textContent=nm(m);el.querySelector('.pvn small').textContent='Nv.'+m.lvl;
   el.querySelector('.pvty').innerHTML=tyChips(m)+(st[1]?`<em class="${st[1]}">${SN[st[1]]||st[1]}</em>`:'')+(st[2]?'<em>confuso</em>':'')+(sn[s].a===a&&sn[s].x?sn[s].x:'');
   const bar=el.querySelector('.pvhp i');bar.style.width=q+'%';bar.style.background=q>50?'#4ade80':q>20?'#facc15':'#ef4444';
@@ -6519,7 +6528,7 @@ function pvDock(){
     c=`<div class="pvw" style="padding:4px 8px 10px">¿Quién entrará después de ${esc(mv?mv.n:'')}?</div><div class="pvsw">${P.t[me].map((m,i)=>m.hp>0&&i!==P.a[me]?`<button type="button" class="pvb" data-pv="pivs" data-i="${i}" style="--i:${i}">${pimg(m.id,m.sh)}<span><b>${esc(nm(m))}</b><span class="mt"><span>Nv.${m.lvl}</span><span>${m.hp}/${m.max}</span></span><span class="pp"><i style="width:${m.hp/m.max*100}%"></i></span></span></button>`:'').join('')}</div><div class="pvact"><button type="button" class="pvb sm" data-pv="back">↩ Volver</button></div>`}
   else{const m=P.t[me][P.a[me]],lk=shimRO(()=>MX.lockMove(m)),trp=shimRO(()=>MX.trapped(m)),allOut=m.moves.every(v=>v.cp<=0);
     if(lk){c=w(`⏳ ${esc(nm(m))} ${shimRO(()=>MX.V(m).rech)?'debe recuperarse':'continúa con '+esc(lk.n)}`);if(P._auto!==P.turn){P._auto=P.turn;setTimeout(()=>{if(P&&!P.ch[P.me]&&!P.busy)pvChoose({k:'m',i:0})},650)}}
-    else c=`<div class="pvmv">${allOut?`<button type="button" class="pvb" data-pv="m" data-i="0" style="--c:${COL.normal}"><b>Forcejeo</b><span class="mt"><span>Normal</span><span>Pod. 50</span></span><span class="mt"><span>Sin PP en ningún movimiento</span></span></button>`:m.moves.map((v,i)=>{const why=shimRO(()=>MX.restrictWhy(m,v,1))||(v.cp<=0?'Sin PP':''),ef=(window.MX&&MX.describe(v))||'';return`<button type="button" class="pvb${why?' no':''}" data-pv="m" data-i="${i}" style="--c:${COL[v.t]||'#6366f1'};--i:${i}" ${why?`disabled title="${esc(why)}"`:''}><span class="pvi" data-pv="info" data-i="${i}" title="Información">i</span><b>${esc(v.n)}</b><span class="mt"><span>${ES[v.t]||v.t}</span><span>${v.p?'Pod. '+v.p:'Estado'}</span></span><span class="pp"><i style="width:${v.mp?v.cp/v.mp*100:0}%"></i></span><span class="mt"><span>PP ${v.cp}/${v.mp}</span><span>${why?'🚫':''}</span></span>${ef?`<span class="pvef">${esc(ef)}</span>`:''}</button>`}).join('')}</div><div class="pvact"><button type="button" class="pvb sm" data-pv="sw" ${P.t[me].some((x,i)=>x.hp>0&&i!==P.a[me])&&!trp?'':'disabled'}>${trp?'⛓️ Atrapado':'🔄 Cambiar'}</button><button type="button" class="pvb sm dan" data-pv="ff">🏳️ Rendirse</button></div>`}
+    else c=`<div class="pvmv">${allOut?`<button type="button" class="pvb" data-pv="m" data-i="0" style="--c:${COL.normal}"><b>Forcejeo</b><span class="mt"><span>Normal</span><span>Pod. 50</span></span><span class="mt"><span>Sin PP en ningún movimiento</span></span></button>`:m.moves.map((v,i)=>{const why=shimRO(()=>MX.restrictWhy(m,v,1))||(v.cp<=0?'Sin PP':''),ef=(window.MX&&MX.describe(v))||'';return`<button type="button" class="pvb${why?' no':''}" data-pv="m" data-i="${i}" style="--c:${COL[v.t]||'#6366f1'};--i:${i}" ${why?`disabled title="${esc(why)}"`:''}><span class="pvi" data-pv="info" data-i="${i}" title="Información">i</span><b>${esc(v.n)}</b><span class="mt"><span>${ES[v.t]||v.t}</span><span>${v.p?'Pod. '+v.p:'Estado'}</span></span><span class="pp"><i style="width:${v.mp?v.cp/v.mp*100:0}%"></i></span><span class="mt"><span>PP ${v.cp}/${v.mp}</span><span>${why?'🚫':''}</span></span>${ef?`<span class="pvef">${esc(ef)}</span>`:''}</button>`}).join('')}</div>${pvMegaOk(me)?`<div class="pvmega">${(MEGAF[m.id]||['']).map(f=>`<button type="button" class="pvb sm pvmgb${P.mgSel===f?' on':''}" data-pv="mega" data-f="${esc(f)}"><span>⚡</span>${P.mgSel===f?'✔ ':''}${esc((()=>{try{return nm({...m,megaOn:true,mfs:f})}catch(_){return'Mega'}})())}</button>`).join('')}<small>${P.mgSel!=null?'Elige un ataque: megaevolucionará antes de atacar':'Una vez por batalla · ×1,5 stats y vida'}</small></div>`:P.mg[me]?'':''}<div class="pvact"><button type="button" class="pvb sm" data-pv="sw" ${P.t[me].some((x,i)=>x.hp>0&&i!==P.a[me])&&!trp?'':'disabled'}>${trp?'⛓️ Atrapado':'🔄 Cambiar'}</button><button type="button" class="pvb sm dan" data-pv="ff">🏳️ Rendirse</button></div>`}
   if(c===P._dk)return;P._dk=c;const dk=Q('#pvc');dk.className='pvdock'+cls;dk.innerHTML=c}
 function pvRes(){
   const r=Q('#pvres');if(!r)return;
@@ -6545,7 +6554,8 @@ pvO.addEventListener('click',e=>{
     pvChoose({k:'m',i})}
   else if(a=='pivs')pvChoose({k:'m',i:P.pivI|0,sw:+b.dataset.i});
   else if(a=='s')pvChoose({k:'s',i:+b.dataset.i});
-  else if(a=='sw'){P.ui='sw';pvDraw()}
+  else if(a=='mega'){const f=b.dataset.f||'';P.mgSel=P.mgSel===f?null:f;try{beep(P.mgSel!=null?990:520,.08,'triangle')}catch(_){}pvDraw()}
+  else if(a=='sw'){P.mgSel=null;P.ui='sw';pvDraw()}
   else if(a=='back'){P.ui='main';pvDraw()}
   else if(a=='ff'){P.ui='ff';pvDraw()}
   else if(a=='ffy')pvForfeit();
@@ -6605,7 +6615,7 @@ window.__LANX={L,NET,render,close:()=>close(),isOpen:()=>ov.style.display=='flex
  async joinFor(code,via){open();L.wan=1;L.via=via;await joinStart(code);if(L.stage!='join2'){L.via=null;render();return null}L.via=via;render();return L.code},
  cancel:()=>{cleanup();render()},
  startPvp(n){if(L.host&&L.stage=='hub'){L.pv={n,sel:[],myPack:null,theirPack:null};L.pq=[];L.err='';L.stage='pteam';send({t:'go',k:'pvp',n});render();return true}return false},
- stage:()=>L.stage};
+ stage:()=>L.stage,_wire:dc=>wire(dc),_P:()=>P};
 function close(){cleanup();ov.style.display='none';netSync()}
 D.addEventListener('keydown',e=>{if(e.key=='Escape'&&ov.style.display=='flex'){if(L.stage=='home')close();else if(L.stage=='codes'){L.stage='home';render()}}});
 
@@ -8573,7 +8583,14 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'47.0',t:'Arreglo en el 2 vs 2',s:'cur',l:[
+ {v:'47.1',t:'Megaevolución en PvP',s:'cur',l:[
+  '⚡ Batallas PvP (y torneos de amigos): los Pokémon con Megaevolución tienen un botón «⚡ Mega …» encima de sus ataques',
+  'Cada jugador puede megaevolucionar una vez por batalla. Toca el botón y luego elige un ataque: megaevoluciona antes de atacar',
+  'La Mega sube ×1,5 las estadísticas y la vida hasta el final del combate, lo mismo que los entrenadores rivales. No hace falta nivel 100 ni esperar rondas',
+  'Si el Pokémon tiene varias formas (Charizard X/Y, Mewtwo X/Y/Z, Gyarados Abisal…) eliges cuál en el propio botón',
+  'Los dos jugadores ven la megaevolución a la vez, con la imagen de su forma Mega'
+]},
+{v:'47.0',t:'Arreglo en el 2 vs 2',s:'prev',l:[
   '⚔️ Combates 2 vs 2: al empezar una ronda nueva, si a los rivales se les bajan las características (por ejemplo con la presencia estelar ⭐6), ya no aparecen como debilitados. Los ▼ se aplican sobre los Pokémon que acaban de salir',
   'Las bajadas de características de la entrada se ven subir paso a paso desde cero, en vez de saltar al valor final'
 ]},
@@ -20418,6 +20435,18 @@ body[data-v=menu] #potdm{display:flex}
 #frp .fr-av img.fr-avp,#frp .fr-av .fr-avp,#lan .lav .lavi,#lan .lav.lavp img{inset:0;width:100%!important;height:100%!important;object-fit:cover;image-rendering:auto}
 #frp .fr-dot{z-index:2}
 #frinv .fi-av,#pvp .pvpl .lav{position:relative}
+/* v47.1: Mega en PvP */
+#pvp .pvmega{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;padding:4px 6px 2px}
+#pvp .pvmega small{flex-basis:100%;text-align:center;font-size:11px;opacity:.8}
+#pvp .pvmgb{background:linear-gradient(135deg,#065f46,#0e7490)!important;border:2px solid #34d39999!important;color:#ecfdf5!important;font-weight:800}
+#pvp .pvmgb span{margin-right:4px}
+#pvp .pvmgb.on{background:linear-gradient(135deg,#34d399,#fde047)!important;color:#052e16!important;border-color:#fff!important;box-shadow:0 0 14px #34d399aa;animation:pvmgp 1s ease-in-out infinite}
+@keyframes pvmgp{50%{box-shadow:0 0 22px #fde047cc}}
+#pvp .pvst.pvmg{background:linear-gradient(135deg,#059669,#ca8a04)!important;color:#fff}
+#pvp .pvside.mega .pvg{filter:drop-shadow(0 0 10px #34d399aa) drop-shadow(0 4px 4px #0008)}
+#pvp .pvg.mgin{animation:pvmgin .9s ease-out}
+@keyframes pvmgin{0%{filter:brightness(6);transform:scale(1.35)}100%{filter:none;transform:none}}
+@media (prefers-reduced-motion:reduce){#pvp .pvmgb.on,#pvp .pvg.mgin{animation:none}}
 </style>
 <script id="v37js">
 (()=>{
