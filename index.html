@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v46.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -8573,7 +8573,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'46.9',t:'Banco sin intereses',s:'cur',l:[
+ {v:'47.0',t:'Arreglo en el 2 vs 2',s:'cur',l:[
+  '⚔️ Combates 2 vs 2: al empezar una ronda nueva, si a los rivales se les bajan las características (por ejemplo con la presencia estelar ⭐6), ya no aparecen como debilitados. Los ▼ se aplican sobre los Pokémon que acaban de salir',
+  'Las bajadas de características de la entrada se ven subir paso a paso desde cero, en vez de saltar al valor final'
+]},
+{v:'46.9',t:'Banco sin intereses',s:'prev',l:[
   '🏦 El banco ya no da intereses: lo que guardas se queda igual, ganes o no los combates',
   'Las medallas de gimnasio ya no suben ningún interés; siguen dando sus Pokémonedas, su objeto y su trofeo',
   'Los préstamos entre amigos no cambian: siguen con el interés que elija quien presta',
@@ -20748,7 +20752,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
      const w2=O.querySelector(`.cb-mon[data-s="${k}"] .cb-spr`);if(w2)w2.animate([{transform:'scale(.2)',opacity:0},{transform:'scale(1.08)',opacity:1,offset:.6},{transform:'scale(1)',opacity:1}],{duration:420});particles(k,'#fff',10);bp(740,.08);await sl(520)}
     else if(e.k==='item'){bp(820,.06);await sl(420)}
     else if(e.k==='clr'){['f0','f1'].forEach(f=>particles(f,'#fde047',14));bp(784,.1);setTimeout(()=>bp(988,.14),120);await banner('¡RONDA SUPERADA!','Tu equipo recupera fuerzas');}
-    else if(e.k==='rd'){await preAll(s.fo,1200);ST=s;paintAll(s);['f0','f1'].forEach(f=>{const w=O.querySelector(`.cb-mon[data-s="${f}"] .cb-spr`);if(w)w.animate([{transform:'translateX(120%)',opacity:0},{transform:'translateX(0)',opacity:1}],{duration:520,easing:'cubic-bezier(.2,.9,.3,1.1)'})});await banner(e.boss?'👑 JEFE DE LA TORRE':s.mode==='adv'?(e.rd>1?'¡SIGUIENTE PAREJA!':'⚔️⚔️ COMBATE DOBLE'):(s.mode&&s.mode!=='free'?'PISO ':'RONDA ')+(e.boss||s.mode==='adv'?'':e.rd),`${s.fo[0]?s.fo[0].n:''} y ${s.fo[1]?s.fo[1].n:''}`)}
+    else if(e.k==='rd'){await preAll(s.fo,1200);ST=s;/* v47.0: la copia de animación usa ya a los rivales nuevos (antes los cambios de características de la entrada se pintaban sobre los rivales debilitados de la ronda anterior) */try{show.fo=JSON.parse(JSON.stringify(s.fo)).map(m=>{m.stg={a:0,d:0,sa:0,sd:0,sp:0,ac:0,ev:0};return m})}catch(_){}paintAll(s);try{if(show.fo)['f0','f1'].forEach(f=>card(f,monOf(show,f)))}catch(_){}['f0','f1'].forEach(f=>{const w=O.querySelector(`.cb-mon[data-s="${f}"] .cb-spr`);if(w)w.animate([{transform:'translateX(120%)',opacity:0},{transform:'translateX(0)',opacity:1}],{duration:520,easing:'cubic-bezier(.2,.9,.3,1.1)'})});await banner(e.boss?'👑 JEFE DE LA TORRE':s.mode==='adv'?(e.rd>1?'¡SIGUIENTE PAREJA!':'⚔️⚔️ COMBATE DOBLE'):(s.mode&&s.mode!=='free'?'PISO ':'RONDA ')+(e.boss||s.mode==='adv'?'':e.rd),`${s.fo[0]?s.fo[0].n:''} y ${s.fo[1]?s.fo[1].n:''}`)}
     else if(e.k==='over'){bp(196,.4,'sawtooth');await sl(700)}
     else await sl(560)}}
   ST=s;if(s.ph==='ch'||s.ph==='sw'||s.ph==='over'||s.ph==='err')pend=s.ch&&s.ch[me]?pend:null;if(s.ph==='over'&&s.mode!=='adv')payOnce(s);paintAll(s)}
