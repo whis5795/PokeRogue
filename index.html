@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.1</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.2</div>
 </section>
 
 <section id="team" class="scr">
@@ -1185,7 +1185,7 @@ async function checkEvo(){
     while((await evoFill(m),e=pickEvo(m))&&m.lvl>=e[0]){
       const old=nm(m),oid=m.id;m.id=e[1];m.name=NAMES[m.id];const d=await getD(m.id);m.types=d.types;m.b=d.st;m.tera=d.types[0];
       m.ls=d.ls;
-      const o=m.max;stats(m);if(m.hp>0)m.hp+=m.max-o;
+      const o=m.max;stats(m);if(m.hp>0)m.hp+=m.max-o;try{window.dexMark&&dexMark(m)}catch(_){}
       const inBt=$('#battle').classList.contains('on');if(inBt&&m===act('p')){setMon('p');el('p').animate([{filter:'brightness(8)',transform:'scale(1.5)'},{filter:'none',transform:'none'}],{duration:1000/S.speed});burst(...ctr(el('p')),'#fff')}
       ach('e');try{if(window.evoAnim)await evoAnim(oid,m.id,m.sh,old,spn(m))}catch(_){}beep(700,.5,'triangle');if(inBt)await say(`¡${old} evolucionó a ${spn(m)}!`)}}}
 async function advEnd(w){
@@ -2664,7 +2664,7 @@ window.useStone=async k=>{
  if(j>=ls.length)return 0;
  const{m,s}=ls[j];R.bag[k]--;ach('i');await itemFx(k,m);
  const old=nm(m),oid=m.id;m.id=s.to;m.name=NAMES[m.id];const d=await getD(m.id);m.types=d.types;m.b=d.st;m.tera=d.types[0];m.ls=d.ls;
- const o=m.max;stats(m);if(m.hp>0)m.hp+=m.max-o;
+ const o=m.max;stats(m);if(m.hp>0)m.hp+=m.max-o;try{window.dexMark&&dexMark(m)}catch(_){}
  if($('#battle').classList.contains('on')&&m===act('p')){setMon('p');el('p').animate([{filter:'brightness(8)',transform:'scale(1.5)'},{filter:'none',transform:'none'}],{duration:1000/S.speed});burst(...ctr(el('p')),'#fff')}
  ach('e');try{if(window.evoAnim)await evoAnim(oid,m.id,m.sh,old,spn(m))}catch(_){}beep(700,.5,'triangle');await say(`¡${old} evolucionó a ${spn(m)}!`);return 1};
 })();
@@ -4366,7 +4366,7 @@ const seen=id=>{id=+id;if(id>0&&!DX.s[id]){DX.s[id]=1;sv()}};
 const caught=id=>{id=+id;if(id>0&&!DX.c[id]){DX.c[id]=DX.s[id]=1;sv()}};
 const shc=m=>{if(m&&m.sh&&m.id>0&&!DX.sh[m.id]){DX.sh[m.id]=1;sv()}};
 const sync=()=>{try{if(typeof R==='object'&&R&&R.team)[...R.team,...(R.box||[])].forEach(m=>{caught(m.id);shc(m)})}catch(e){}};
-window.dexSync=sync;
+window.dexSync=sync;window.dexMark=m=>{try{if(m){caught(m.id);shc(m)}}catch(e){}};
 {const _c=window.capHook;window.capHook=function(m){try{caught(m.id);shc(m)}catch(e){}return _c?_c.apply(this,arguments):undefined}}
 {const _sw=swap;swap=async function(s){const r=await _sw.apply(this,arguments);try{if(s=='e'&&B&&B.en)seen(B.en[B.ei||0].id)}catch(e){}return r}}
 {const _f=fight;fight=async function(){const r=await _f.apply(this,arguments);try{(B.en||[]).forEach(m=>seen(m.id))}catch(e){}sync();return r}}
@@ -5217,7 +5217,7 @@ const DEF=[
   {k:'lives',t:'Vidas',d:'Infinitas: al caer, tu equipo se cura y sigues sin perder vidas',o:[[3,'3 vidas'],['inf','∞ Infinitas']]},
   {k:'speed',t:'Velocidad de combate',o:[[1,'1×'],[2,'2×'],[3,'3×'],[4,'4×']]},
   {k:'autoheal',t:'Curar tras cada combate',d:'Al ganar un combate de la aventura usa solo las pociones justas de tu mochila para curar al equipo',b:1},
-  {k:'ntf',t:'Avisos automáticos',d:'Carteles que salen solos (hucha, banco, misiones, huevos, sobres…) y la campanita del menú. Desactivado: solo verás los avisos de lo que tocas tú',b:1},
+  {k:'ntf',t:'Avisos y notificaciones',d:'Todos los carteles del juego y la campanita del menú. Desactivado: no sale NINGÚN cartel ni aviso (las invitaciones de amigos sí siguen llegando)',b:1},
   {k:'pname',t:'Nombre de jugador',d:'Lo ven tus amigos, las salas multijugador, los torneos y las megaincursiones',x:1},
   {k:'gender',t:'Personaje',d:'Combates de gimnasio',o:[['m','Chico'],['f','Chica']]},
   {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
@@ -6339,7 +6339,7 @@ const myLead=()=>{try{const r=getRun(),m=r&&r.team&&r.team[0];let o=m?{id:m.id,s
 const ldS=l=>l?{id:l.id,sh:l.sh,lv:l.lv}:null;
 const myCount=()=>{try{const r=getRun();return r?r.team.length+(r.box||[]).length:0}catch(e){return 0}};
 const avatar=(ld,cls)=>`<span class="lav${cls?' '+cls:''}${ld&&ld.av?' lavp':''}">${ld&&ld.av?`<img src="${ld.av}" alt="" class="lavi">`:ld&&ld.id?pimg(ld.id,ld.sh):'<i>🎮</i>'}</span>`;
-const FB=(a,ic,lb,o)=>{o=o||{};return`<button type="button" class="fb ${o.c||''}" data-a="${a}"${o.d?' disabled':''}${o.x||''} style="--k:${o.k||0}"><i>${ic}</i><span>${lb}${o.s?`<small>${o.s}</small>`:''}</span></button>`};
+const FB=(a,ic,lb,o)=>{o=o||{};return`<button type="button" class="fb ${o.c||''}" data-a="${a}" title="${String(lb).replace(/<[^>]*>/g,'').replace(/"/g,'')}" aria-label="${String(lb).replace(/<[^>]*>/g,'').replace(/"/g,'')}"${o.d?' disabled':''}${o.x||''} style="--k:${o.k||0}"><i>${ic}</i><span>${lb}${o.s?`<small>${o.s}</small>`:''}</span></button>`};
 const tyChips=m=>(m.types||[]).map(t=>`<i style="background:${COL[t]||'#999'}">${ES[t]||t}</i>`).join('');
 const CONN=['hub','pmode','trade','gift','items','pteam','pwait','plvl','pex','pexw','pbattle'];
 const dots='<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
@@ -6474,7 +6474,7 @@ function render(){
     b=`${vsHTML()}<h2>🎒 Intercambio de objetos</h2><div class="sub center" style="margin-bottom:12px">Cada uno elige qué objetos, MT, reliquias y amuletos ofrece. Cuando los dos confirméis la misma oferta, se intercambian al instante.</div><div class="lgrid eq"><section class="lcard"><h4>🎒 Tu oferta</h4>${listH(mineE,true)}</section><section class="lcard"><h4>🎁 Oferta de ${esc(L.pname||'…')}</h4>${listH(thE,false)}</section></div><div class="ready"><span class="rd ${L.iRdy?'ok':''}">Tú: ${L.iRdy?'✔ listo':'…'}</span><span class="rd ${L.iThRdy?'ok':''}">${esc(L.pname||'Rival')}: ${L.iThRdy?'✔ listo':'…'}</span></div><div class="lcard"><h4>Tus objetos · toca para ofrecer</h4>${owned.length?`<div class="mgrid igrid">${owned.map((k,i)=>{const have=hv(run,k),n=L.io[k]|0;return`<button type="button" class="mc itc${n?' on':''}" style="--i:${i}" data-a="iadd" data-k="${esc(k)}" data-d="1">${n?`<span class="ord">${n}</span>`:''}<span class="itic">${iIcon(k)}</span><b>${esc(iName(k))}</b><small>Tienes ${have}</small></button>`}).join('')}</div>`:'<small>No tienes objetos, MT, reliquias ni amuletos.</small>'}</div>`;
     d=FB('iready',L.iRdy?'↩':'✅',L.iRdy?'Cancelar confirmación':'Confirmar intercambio',{c:'pri',d:!canR})+FB('tohub','↩','Menú',{k:1})+FB('bye','🔌','Desconectar',{c:'dan',k:2})}
   Q('#lmain').innerHTML=`<div class="lstage${st!=lastStage?' anim':''}">${err}${msg}${b}</div>`;lastStage=st;
-  Q('#ldock').innerHTML=d;renderInv();chipUpd();
+  Q('#ldock').innerHTML=d;Q('#ldock').classList.toggle('ico',['trade','items','gift'].includes(st));renderInv();chipUpd();
   const ta=Q('#lin');if(ta&&L.inTxt)ta.value=L.inTxt;
   if(gF){const g=Q('#lgamt');if(g&&!g.disabled){g.focus();try{g.setSelectionRange(g.value.length,g.value.length)}catch(e){}}}
   netSync()}
@@ -8583,7 +8583,16 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'47.1',t:'Megaevolución en PvP',s:'cur',l:[
+ {v:'47.2',t:'Caja, intercambios, avisos y mercado',s:'cur',l:[
+  '🧬 Caja: nuevo botón «Evolucionar» que evoluciona de una vez a todos los Pokémon de la Caja que ya tienen nivel para ello (los que llevan Piedra Eterna no se tocan). Antes te enseña quiénes son y al final el resultado',
+  '📖 Pokédex: si un Pokémon evoluciona dos veces seguidas, la forma intermedia también queda registrada como capturada (también con piedras evolutivas y en la Aventura Multiplayer)',
+  '🔄 Intercambios (de Pokémon, de objetos y regalos de dinero): los botones de abajo son solo el símbolo y están en una fila',
+  '🔕 Ajustes → «Avisos y notificaciones»: si lo desactivas ya no sale NINGÚN cartel, tampoco los de lo que acabas de tocar. Las invitaciones de amigos siguen llegando',
+  '🛒 Mercado entre amigos: el precio máximo sube a 1.000.000.000 Pokémonedas',
+  '🛒 Tu puesto ya no tiene límite de productos ni de Pokémon a la venta, y puedes poner a la venta todas las unidades que tengas de un objeto de una vez',
+  '🛒 Arreglo: los Pokémon comprados de más de nivel 100 ya no se quedan en nivel 100'
+]},
+{v:'47.1',t:'Megaevolución en PvP',s:'prev',l:[
   '⚡ Batallas PvP (y torneos de amigos): los Pokémon con Megaevolución tienen un botón «⚡ Mega …» encima de sus ataques',
   'Cada jugador puede megaevolucionar una vez por batalla. Toca el botón y luego elige un ataque: megaevoluciona antes de atacar',
   'La Mega sube ×1,5 las estadísticas y la vida hasta el final del combate, lo mismo que los entrenadores rivales. No hace falta nivel 100 ni esperar rondas',
@@ -12955,7 +12964,8 @@ function clean(t){if(t.indexOf('<')<0)return t;try{if(typeof IC==='object')for(c
 const SPONT=/Logro|Nueva meta|tiempo cambia|Clima extremo|se ha ido|vuelve a estar despejado|ruinas|Combo de equipo|maestr[ií]a|Misi[oó]n de .* cumplida|para la cocina|con Recogida|l[ií]der te regala|meteorito|Amuleto (Alquimia|Estrella)|Moneda Suerte|incursi[oó]n desapareci|incursiones|Megaincursi[oó]n abierta|sale de la Leveleadora|eclosion|ha nacido|vuelve de|han vuelto|hucha|inter[eé]s|Desaf[ií]o|sobres? gratis|regalo diario|de rango|Nuevo r[eé]cord|rival cambi[oó] de Pok[eé]mon|notas lag|Premios de hoy|colecci[oó]n|se ha conectado|est[aá] en l[ií]nea/i;
 let lastIn=0;['pointerdown','keydown'].forEach(ev=>D.addEventListener(ev,()=>{lastIn=Date.now()},true));
 function show(t){t=clean(String(t==null?'':t));if(!t.trim())return;
- try{if(typeof S==='object'&&S&&S.ntf===false&&(Date.now()-lastIn>1500||SPONT.test(t)))return}catch(e){}
+ /* v47.2: «Avisos» desactivado = no sale ningún cartel, ni siquiera los de lo que acabas de tocar */
+ try{if(typeof S==='object'&&S&&S.ntf===false)return}catch(e){}
  /* sin aviso de experiencia tras los combates */
  if(/^PE: /.test(t))return;
  /* el aviso de rendimiento (FPS) sale como mucho 2 veces en total */
@@ -16493,7 +16503,7 @@ async function lvUp(m,n,seat,raw){if(!raw){m.xpf=(m.xpf||0)+n*1.25;n=Math.floor(
    if(m.moves.length<4){m.moves.push(nv);tst(`${pname(m)} aprendió ${v.n}`)}
    else if(v.p){let w=-1,wp=1e9;m.moves.forEach((o,i)=>{const p=o.p||0;if(p<wp){wp=p;w=i}});if(w>=0&&v.p>wp){const old=m.moves[w].n;m.moves[w]=nv;tst(`${pname(m)} olvidó ${old} y aprendió ${v.n}`)}}}}catch(e){}
  try{let e;if(CK(m)){const K=CK(m),ch=[K.base,...K.evo.map(x=>x[1])],j=ch.indexOf(m.id);e=j>=0?K.evo[j]:null}else{await evoFill(m);e=pickEvo(m)}if(e&&m.lvl>=e[0]){const d=await getD(e[1]),old=pname(m),oid=m.id;m.id=e[1];m.name=dexName(e[1]);m.types=d.types;m.b=d.st;m.ls=d.ls;m.tera=d.types[0];const q2=m.max?m.hp/m.max:1;stats(m);m.hp=m.hp<=0?0:Math.max(1,Math.round(q2*m.max));
-  const ev={t:'evo',oid,nid:m.id,sh:m.sh?1:0,on:esc(old),nn:esc(pname(m))};bcast(ev);push();if(window.evoAnim)await evoAnim(oid,m.id,m.sh,ev.on,ev.nn)}}catch(e){console.error(e)}}
+  try{window.dexMark&&dexMark(m)}catch(_){}const ev={t:'evo',oid,nid:m.id,sh:m.sh?1:0,on:esc(old),nn:esc(pname(m))};bcast(ev);push();if(window.evoAnim)await evoAnim(oid,m.id,m.sh,ev.on,ev.nn)}}catch(e){console.error(e)}}
 /* ================= INVITADO ================= */
 function guestMsg(o){if(o.t==='toast'){tst(String(o.m||'').slice(0,160));return}
  if(o.t==='welcome'){MYSEAT=o.seat|0;if(RETRY){RETRY=0;tst('✅ ¡Reconectado!')}view='game';if(S)draw(S);return}
@@ -20447,6 +20457,15 @@ body[data-v=menu] #potdm{display:flex}
 #pvp .pvg.mgin{animation:pvmgin .9s ease-out}
 @keyframes pvmgin{0%{filter:brightness(6);transform:scale(1.35)}100%{filter:none;transform:none}}
 @media (prefers-reduced-motion:reduce){#pvp .pvmgb.on,#pvp .pvg.mgin{animation:none}}
+.evall{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px;max-height:44vh;overflow:auto}
+.evall span{display:flex;flex-direction:column;align-items:center;width:72px;font-size:11px;line-height:1.2;text-align:center}
+.evall img{width:52px;height:52px;image-rendering:pixelated}.evall small{opacity:.7;font-size:10px}
+#pcbox .bxbt #bxsort,#pcbox .bxbt #bxevo{padding:9px 14px;font-size:13px;background:linear-gradient(#0e7490,#164e63);border-color:#67e8f9aa}
+/* v47.2: intercambios · botones solo con símbolo y en fila */
+#lan .ldock.ico{flex-wrap:nowrap;align-items:center;gap:14px}
+#lan .ldock.ico .fb{flex:0 0 auto!important;width:58px!important;min-width:0!important;max-width:none!important;height:58px!important;min-height:0!important;padding:0!important;border-radius:50%!important;gap:0!important;transform:none!important;margin:0!important;position:relative!important;left:auto!important;right:auto!important;bottom:auto!important}
+#lan .ldock.ico .fb>span{display:none!important}
+#lan .ldock.ico .fb>i{font-size:25px;margin:0;font-style:normal}
 </style>
 <script id="v37js">
 (()=>{
@@ -22668,15 +22687,15 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const FR=()=>window.__FR,send=(id,o)=>{try{FR().send(id,o)}catch(e){}},H=window.__frx=window.__frx||{};
  const tst=t=>{try{toast(t)}catch(e){}},bp=(f,d)=>{try{beep(f,d||.08,'triangle')}catch(e){}};
  const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},st=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
- const K='pa_mkt',KT='pa_mkt_tx',MAXL=8,coin=()=>(window.IC&&IC.coin)||'🪙',fmt=n=>{try{return nf(Math.round(n))}catch(e){return String(Math.round(n))}};
+ const K='pa_mkt',KT='pa_mkt_tx',MKMAX=Infinity,PMAX=1000000000,PG=20,coin=()=>(window.IC&&IC.coin)||'🪙',fmt=n=>{try{return nf(Math.round(n))}catch(e){return String(Math.round(n))}};
  const M=()=>{const m=ld(K,{});m.l=m.l||[];m.sold=m.sold||{};m.hist=m.hist||[];m.pend=m.pend|0;m.out=m.out||[];return m},putM=m=>st(K,m);
  const TX=()=>ld(KT,{}),putTX=t=>st(KT,t);
  const uid=()=>now().toString(36)+Math.random().toString(36).slice(2,7);
  const live=()=>{try{return typeof R=='object'&&R&&R.team&&R.team.length&&!R.done?R:null}catch(e){return null}};
  const pm=()=>{try{Q('#mn').innerHTML=coin()+' '+fmt(R.money)}catch(e){}};
  const sv=()=>{try{saveRun()}catch(e){}};
- function addMoney(n){const r=live();if(r){r.money=(r.money|0)+n;sv();pm();return}const m=M();m.pend+=n;putM(m)}
- function flush(){const r=live();if(!r)return;const m=M();if(m.pend>0){const n=m.pend;m.pend=0;putM(m);r.money=(r.money|0)+n;sv();pm();setTimeout(()=>tst(`🛒 Has recibido ${fmt(n)} ${coin()} de tus ventas en el mercado`),1500)}}
+ function addMoney(n){const r=live();if(r){r.money=(+r.money||0)+n;sv();pm();return}const m=M();m.pend+=n;putM(m)}
+ function flush(){const r=live();if(!r)return;const m=M();if(m.pend>0){const n=m.pend;m.pend=0;putM(m);r.money=(+r.money||0)+n;sv();pm();setTimeout(()=>tst(`🛒 Has recibido ${fmt(n)} ${coin()} de tus ventas en el mercado`),1500)}}
  const itName=k=>(typeof ITEM=='object'&&ITEM[k]&&ITEM[k].n)||k,itIc=k=>{try{return IC[k]||'🎒'}catch(e){return'🎒'}};
  const monSum=m=>({id:m.id|0,sh:m.sh?1:0,lvl:m.lvl|0,n:String(nm(m)).replace(/^✨ /,'').slice(0,22),ty:(m.types||[]).slice(0,2)});
  const lName=x=>x.k==='it'?`${itName(x.key)}${x.q>1?' ×'+x.q:''}`:`${x.ms.n} Nv.${x.ms.lvl}${x.ms.sh?' ✨':''}`;
@@ -22686,10 +22705,10 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  function queue(fid,o){const m=M();m.out.push({fid,o,t:now()});putM(m);send(fid,o)}
  setInterval(()=>{const m=M();if(!m.out.length)return;m.out=m.out.filter(x=>now()-x.t<7*86400000);m.out.forEach(x=>send(x.fid,x.o));putM(m)},20000);
  /* ===== vendedor ===== */
- H.mkq=(o)=>{const m=M();send(o.f,{t:'mkl',l:m.l.map(pub),qid:o.qid})};
+ H.mkq=(o)=>{const m=M(),L=m.l.map(pub),np=Math.max(1,Math.ceil(L.length/PG));for(let i=0;i<np;i++)setTimeout(()=>send(o.f,{t:'mkl',l:L.slice(i*PG,(i+1)*PG),qid:o.qid,pg:i,np}),i*400)};
  H.mkb=(o,n)=>{const m=M(),tx=String(o.tx||'').slice(0,24);if(!tx)return;
   const done=m.sold[tx];if(done){send(o.f,{t:'mkok',tx,g:done.g,lid:done.lid});return}
-  const i=m.l.findIndex(x=>x.id===o.lid);const x=m.l[i];if(!x||x.p!==(o.p|0)){send(o.f,{t:'mkno',tx,why:x?'precio':'vendido'});return}
+  const i=m.l.findIndex(x=>x.id===o.lid);const x=m.l[i];if(!x||x.p!==Math.round(+o.p||0)){send(o.f,{t:'mkno',tx,why:x?'precio':'vendido'});return}
   m.l.splice(i,1);const g=x.k==='it'?{k:'it',key:x.key,q:x.q}:{k:'pk',mon:x.mon};m.sold[tx]={lid:x.id,g,t:now()};
   for(const t in m.sold)if(now()-m.sold[t].t>7*86400000)delete m.sold[t];
   m.hist.unshift({n,w:lName(x),p:x.p,t:now()});m.hist=m.hist.slice(0,20);putM(m);addMoney(x.p);
@@ -22698,16 +22717,16 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  H.mkack=o=>{const m=M();m.out=m.out.filter(x=>!(x.fid===o.f&&x.o.tx===o.tx));putM(m)};
  /* ===== comprador ===== */
  function deliver(g){const r=live();if(!r)return false;
-  if(g.k==='it'){const k=String(g.key);if(typeof ITEM!='object'||!ITEM[k])return false;r.bag=r.bag||{};r.bag[k]=(r.bag[k]|0)+Math.max(1,Math.min(99,g.q|0));return true}
-  const mon=g.mon;if(!mon||typeof mon!=='object'||!(mon.id>0)||!Array.isArray(mon.moves))return false;mon.lvl=Math.max(1,Math.min(100,mon.lvl|0));mon.hp=Math.max(0,Math.min(mon.max,+mon.hp||0));
+  if(g.k==='it'){const k=String(g.key);if(typeof ITEM!='object'||!ITEM[k])return false;r.bag=r.bag||{};r.bag[k]=(r.bag[k]|0)+Math.max(1,Math.min(1e6,g.q|0));return true}
+  const mon=g.mon;if(!mon||typeof mon!=='object'||!(mon.id>0)||!Array.isArray(mon.moves))return false;mon.lvl=Math.max(1,Math.min(250,mon.lvl|0));mon.hp=Math.max(0,Math.min(mon.max,+mon.hp||0));
   if(r.team.length<6)r.team.push(mon);else(r.box=r.box||[]).push(mon);try{teamBar()}catch(e){}return true}
  H.mkok=(o,n)=>{const T=TX(),tx=String(o.tx||''),t=T[tx];send(o.f,{t:'mkack',tx});if(!t||t.st==='done')return;
-  if(t.st==='ref'){const r=live();if(r)r.money=Math.max(0,(r.money|0)-t.p)}
+  if(t.st==='ref'){const r=live();if(r)r.money=Math.max(0,(+r.money||0)-t.p)}
   if(!deliver(o.g||{})){addMoney(t.p);t.st='done';putTX(T);tst('No se pudo recibir la compra: te devolvemos el dinero');return}
   t.st='done';putTX(T);sv();pm();const g=o.g;tst(`🛍️ ¡Compra completada! ${g.k==='it'?itIc(g.key)+' '+itName(g.key)+(g.q>1?' ×'+g.q:''):'🐾 '+(g.mon&&nm(g.mon))+' se une a tu '+(R.team.includes(g.mon)?'equipo':'caja')}`);bp(988,.12);
   if(view==='shop'&&shopId===o.f){shopL=shopL.filter(x=>x.id!==o.lid);busy='';render()}};
  H.mkno=(o)=>{const T=TX(),t=T[o.tx];if(!t||t.st!=='wait')return;t.st='ref';putTX(T);addMoney(t.p);busy='';tst(o.why==='precio'?'El precio ha cambiado: vuelve a mirar el puesto':'¡Vaya! Alguien se te adelantó y ya está vendido');if(view==='shop'){ask2()}};
- H.mkl=(o)=>{if(view!=='shop'||o.f!==shopId)return;shopL=(Array.isArray(o.l)?o.l:[]).filter(x=>x&&typeof x==='object'&&(x.k==='it'||x.k==='pk')&&(x.p|0)>0).slice(0,MAXL);loaded=true;render()};
+ let mklQ='';H.mkl=(o)=>{if(view!=='shop'||o.f!==shopId)return;const L=(Array.isArray(o.l)?o.l:[]).filter(x=>x&&typeof x==='object'&&(x.k==='it'||x.k==='pk')&&(+x.p||0)>0&&(+x.p||0)<=PMAX);const k=String(o.qid||'')+'|'+o.f;if(!o.pg||mklQ!==k){mklQ=k;shopL=L}else{const ids=new Set(shopL.map(x=>x.id));shopL=shopL.concat(L.filter(x=>!ids.has(x.id)))}loaded=true;render()};
  setInterval(()=>{const T=TX();let ch=0;for(const k in T){const t=T[k];if(t.st==='wait'&&now()-t.t>25000){t.st='ref';addMoney(t.p);ch=1;tst('⌛ El vendedor no ha respondido: te devolvemos el dinero');if(busy===k)busy=''}else if(t.st!=='wait'&&now()-t.t>14*86400000){delete T[k];ch=1}}if(ch){putTX(T);if(ov&&ov.classList.contains('on'))render()}},5000);
  /* ===== interfaz ===== */
  let ov=null,view='mine',shopId='',shopN='',shopL=[],loaded=false,busy='',pick=null,qT=0;
@@ -22723,23 +22742,23 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   else if(pick){b=pickHTML(r)}
   else{b=`<p class="mk-p">Pon a la venta objetos de tu mochila y Pokémon de tu caja. Tus amigos podrán comprarlos desde su lista de amigos (⋯ → Ver su puesto) mientras tengas el juego abierto.</p>
    <div class="mk-list">${m.l.length?m.l.map(x=>`<div class="mk-row">${lIcon(x)}<span class="mk-t"><b>${esc(lName(x))}</b><small>${fmt(x.p)} ${coin()}</small></span><button type="button" class="mk-del" data-m="del:${esc(x.id)}">Retirar</button></div>`).join(''):'<div class="mk-empty">🧺<b>Tu puesto está vacío</b></div>'}</div>
-   ${r?`<div class="mk-add"><button type="button" data-m="add:it" ${m.l.length>=MAXL?'disabled':''}>🎒 Vender objeto</button><button type="button" data-m="add:pk" ${m.l.length>=MAXL||!(r.box||[]).length?'disabled':''}>🐾 Vender Pokémon</button></div>`:'<p class="mk-p">Empieza una aventura para poner cosas a la venta.</p>'}
+   ${r?`<div class="mk-add"><button type="button" data-m="add:it" ${m.l.length>=MKMAX?'disabled':''}>🎒 Vender objeto</button><button type="button" data-m="add:pk" ${m.l.length>=MKMAX||!(r.box||[]).length?'disabled':''}>🐾 Vender Pokémon</button></div>`:'<p class="mk-p">Empieza una aventura para poner cosas a la venta.</p>'}
    ${m.pend?`<p class="mk-p">💰 Pendiente de cobrar: <b>${fmt(m.pend)} ${coin()}</b> (se suma al empezar una aventura)</p>`:''}
    ${m.hist.length?`<h4 class="mk-h4">Últimas ventas</h4><div class="mk-hist">${m.hist.slice(0,8).map(h=>`<div><span>${esc(h.n)} compró <b>${esc(h.w)}</b></span><em>+${fmt(h.p)}</em></div>`).join('')}</div>`:''}`}
   o.innerHTML=`<div class="mk-box"><div class="mk-hd"><span class="mk-aw"></span><b>${view==='shop'?'🛒 Puesto de '+esc(shopN):pick?(pick.k==='it'?'🎒 Vender objeto':'🐾 Vender Pokémon'):'🛒 Mi puesto'}</b><button type="button" class="mk-x" data-m="${pick?'back':'x'}" aria-label="Cerrar">${pick?'←':'✕'}</button></div><div class="mk-body">${b}</div></div>`;o.classList.add('on')}
  function pickHTML(r){const P=pick;
   if(P.k==='it'){const ks=Object.keys(r.bag||{}).filter(k=>(r.bag[k]|0)>0&&ITEM[k]);
    if(P.key==null)return ks.length?`<div class="mk-grid">${ks.map(k=>`<button type="button" data-m="pi:${esc(k)}">${itIc(k)}<b>${esc(itName(k))}</b><small>×${r.bag[k]}</small></button>`).join('')}</div>`:'<div class="mk-empty">🎒<b>Tu mochila está vacía</b></div>';
-   const mx=Math.min(r.bag[P.key]|0,20);return`<div class="mk-form"><div class="mk-sel">${itIc(P.key)}<b>${esc(itName(P.key))}</b></div><label>Cantidad <input data-in="q" type="number" min="1" max="${mx}" value="${P.q}"></label><label>Precio total (${coin()}) <input data-in="p" type="number" min="1" max="99999" value="${P.p}"></label><small class="mk-hint">Precio en tienda: ${fmt(((ITEM[P.key]||{}).p||10))} ${coin()} cada uno</small><button type="button" class="mk-ok" data-m="put">Poner a la venta</button></div>`}
+   const mx=Math.max(1,r.bag[P.key]|0);return`<div class="mk-form"><div class="mk-sel">${itIc(P.key)}<b>${esc(itName(P.key))}</b></div><label>Cantidad <input data-in="q" type="number" min="1" max="${mx}" value="${P.q}"></label><label>Precio total (${coin()}) <input data-in="p" type="number" min="1" max="1000000000" value="${P.p}"></label><small class="mk-hint">Precio en tienda: ${fmt(((ITEM[P.key]||{}).p||10))} ${coin()} cada uno</small><button type="button" class="mk-ok" data-m="put">Poner a la venta</button></div>`}
   const bx=r.box||[];if(P.i==null)return`<div class="mk-grid">${bx.map((m,i)=>`<button type="button" data-m="pp:${i}"><img src="${mini(m.id,m.sh)}" alt=""><b>${esc(nm(m))}</b><small>Nv.${m.lvl}</small></button>`).join('')}</div>`;
-  const m=bx[P.i];return`<div class="mk-form"><div class="mk-sel"><img src="${mini(m.id,m.sh)}" alt=""><b>${esc(nm(m))} · Nv.${m.lvl}</b></div><label>Precio (${coin()}) <input data-in="p" type="number" min="1" max="99999" value="${P.p}"></label><small class="mk-hint">Mientras esté a la venta, sale de tu caja. Si lo retiras, vuelve.</small><button type="button" class="mk-ok" data-m="put">Poner a la venta</button></div>`}
- function upd(){if(!pick)return;const q=ov.querySelector('[data-in="q"]'),p=ov.querySelector('[data-in="p"]');if(q){const n=Math.max(1,Math.min(+q.max||1,q.value|0));if(n!==pick.q){pick.q=n;p.value=pick.p=Math.max(1,((ITEM[pick.key]||{}).p||10)*n)}}if(p)pick.p=Math.max(1,Math.min(99999,p.value|0))}
+  const m=bx[P.i];return`<div class="mk-form"><div class="mk-sel"><img src="${mini(m.id,m.sh)}" alt=""><b>${esc(nm(m))} · Nv.${m.lvl}</b></div><label>Precio (${coin()}) <input data-in="p" type="number" min="1" max="1000000000" value="${P.p}"></label><small class="mk-hint">Mientras esté a la venta, sale de tu caja. Si lo retiras, vuelve.</small><button type="button" class="mk-ok" data-m="put">Poner a la venta</button></div>`}
+ function upd(){if(!pick)return;const q=ov.querySelector('[data-in="q"]'),p=ov.querySelector('[data-in="p"]');if(q){const n=Math.max(1,Math.min(+q.max||1,q.value|0));if(n!==pick.q){pick.q=n;p.value=pick.p=Math.max(1,((ITEM[pick.key]||{}).p||10)*n)}}if(p)pick.p=Math.max(1,Math.min(PMAX,Math.round(+p.value||0)))}
  async function click(e){if(e.target===ov){close();return}const b=e.target.closest('[data-m]');if(!b||b.disabled)return;const a=b.dataset.m,r=live();
   if(a==='x')return close();if(a==='back'){pick=null;return render()}if(a==='reload')return ask2();
   if(a==='add:it'){pick={k:'it'};return render()}if(a==='add:pk'){pick={k:'pk'};return render()}
   if(a.startsWith('pi:')){const k=a.slice(3);pick={k:'it',key:k,q:1,p:Math.max(1,(ITEM[k]||{}).p||10)};return render()}
   if(a.startsWith('pp:')){const i=+a.slice(3),m=(r.box||[])[i];if(!m)return;pick={k:'pk',i,p:Math.max(50,m.lvl*40+(m.sh?800:0))};return render()}
-  if(a==='put'){if(!r)return;upd();const m=M();if(m.l.length>=MAXL)return tst('Tu puesto está lleno ('+MAXL+')');
+  if(a==='put'){if(!r)return;upd();const m=M();if(m.l.length>=MKMAX)return tst("Tu puesto está lleno");
    if(pick.k==='it'){const have=r.bag[pick.key]|0;if(have<pick.q)return tst('No tienes tantos');r.bag[pick.key]=have-pick.q;m.l.push({id:uid(),k:'it',key:pick.key,q:pick.q,p:pick.p,t:now()})}
    else{const bx=r.box||[],mon=bx[pick.i];if(!mon)return;bx.splice(pick.i,1);const cp=JSON.parse(JSON.stringify(mon));m.l.push({id:uid(),k:'pk',mon:cp,ms:monSum(cp),p:pick.p,t:now()})}
    putM(m);sv();pick=null;bp(880);tst('🛒 ¡Puesto actualizado!');return render()}
@@ -22747,7 +22766,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
    if(x.k==='it'){r.bag[x.key]=(r.bag[x.key]|0)+x.q}else(r.box=r.box||[]).push(x.mon);m.l.splice(i,1);putM(m);sv();try{teamBar()}catch(_){}tst('↩ '+lName(x)+' vuelve contigo');return render()}
   if(a.startsWith('buy:')){if(!r||busy)return;const x=shopL.find(y=>y.id===a.slice(4));if(!x)return;
    const j=await ask('🛒 Comprar',`${lIcon(x)} <b>${esc(lName(x))}</b><br>por <b>${fmt(x.p)} ${coin()}</b> a ${esc(shopN)}`,['Comprar','Cancelar']);if(j!==0||busy)return;
-   if((r.money|0)<x.p)return tst('No tienes suficientes Pokémonedas');r.money-=x.p;sv();pm();const tx=uid(),T=TX();T[tx]={f:shopId,lid:x.id,p:x.p,st:'wait',t:now()};putTX(T);busy=x.id;render();send(shopId,{t:'mkb',tx,lid:x.id,p:x.p})}}
+   if((+r.money||0)<x.p)return tst('No tienes suficientes Pokémonedas');r.money-=x.p;sv();pm();const tx=uid(),T=TX();T[tx]={f:shopId,lid:x.id,p:x.p,st:'wait',t:now()};putTX(T);busy=x.id;render();send(shopId,{t:'mkb',tx,lid:x.id,p:x.p})}}
  const _sm=window.showMap;window.showMap=function(){const r=_sm.apply(this,arguments);try{flush()}catch(e){}return r};
  window.__mktOpen=open;window.__mkt={M,TX,flush};
 })();
@@ -23391,7 +23410,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  const SORTS=[['lvl','📈 Nivel (mayor primero)',(a,b)=>b.lvl-a.lvl],['dex','🔢 Nº de Pokédex',(a,b)=>a.id-b.id],['name','🔤 Nombre',(a,b)=>String(a.nick||a.name).localeCompare(String(b.nick||b.name))],['rb','⭐ Estrellas',(a,b)=>(b.rb|0)-(a.rb|0)||b.lvl-a.lvl],['sh','✨ Shiny primero',(a,b)=>(b.sh?1:0)-(a.sh?1:0)||b.lvl-a.lvl],['fav','⭐ Favoritos primero',(a,b)=>(b.fav?1:0)-(a.fav?1:0)||b.lvl-a.lvl]];
  async function sortBox(){if(!R||!R.box||R.box.length<2)return toast('No hay suficientes Pokémon en la Caja');const p=Q('#pcbox');if(p)p.style.visibility='hidden';let i;try{i=await ask('↕ Ordenar la Caja','<small>Elige cómo ordenar los Pokémon de la Caja.</small>',[...SORTS.map(x=>x[1]),'Cancelar'])}finally{if(p)p.style.visibility=''}
   if(!(i>=0&&i<SORTS.length))return;R.box.sort(SORTS[i][2]);try{saveRun()}catch(e){}try{p&&p.__rr&&p.__rr()}catch(e){}toast('↕ Caja ordenada por '+SORTS[i][1].replace(/^\S+\s/,'').toLowerCase())}
- new MutationObserver(()=>{const bt=Q('#pcbox .bxbt');if(!bt||bt.querySelector('#bxsort'))return;const b=D.createElement('button');b.className='act';b.id='bxsort';b.type='button';b.textContent='↕ Ordenar Caja';b.onclick=sortBox;bt.prepend(b)}).observe(D.body,{childList:true,subtree:true});
+ new MutationObserver(()=>{const bt=Q('#pcbox .bxbt');if(!bt||bt.querySelector('#bxsort'))return;const b=D.createElement('button');b.className='act';b.id='bxsort';b.type='button';b.textContent='↕ Ordenar';b.title='Ordenar la Caja';b.onclick=sortBox;bt.prepend(b)}).observe(D.body,{childList:true,subtree:true});
 })();
 /* ===== v46.5: más calidad de vida ===== */
 (()=>{const D=document,Q=s=>D.querySelector(s);
@@ -23412,6 +23431,24 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  D.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('#pcbox .bxc'))e.preventDefault()},true);
  /* 3) Escape cierra la Caja */
  D.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const p=Q('#pcbox');if(!p||p.style.visibility==='hidden')return;const m=Q('#mod');if(m&&getComputedStyle(m).display!=='none')return;const x=p.querySelector('#bxx');if(x){e.stopPropagation();x.click()}},true);
+})();
+/* ===== v47.2: Caja · evolucionar a todos los que puedan ===== */
+(()=>{const D=document,Q=s=>D.querySelector(s);let busy=false;
+ const can=async m=>{try{await evoFill(m)}catch(e){}let e;try{e=pickEvo(m)}catch(_){e=null}return e&&m.lvl>=e[0]?e:null};
+ async function step(m,e){const d=await getD(e[1]);m.id=e[1];m.name=NAMES[m.id]||m.name;m.types=d.types;m.b=d.st;m.tera=d.types[0];m.ls=d.ls;const o=m.max;stats(m);if(m.hp>0)m.hp=Math.min(m.max,m.hp+m.max-o);try{window.dexMark&&dexMark(m)}catch(_){}try{ach('e')}catch(_){}}
+ async function evoAll(){if(busy)return;const box=(R&&R.box)||[];if(!box.length)return toast('La Caja está vacía');busy=true;const p=Q('#pcbox'),btn=Q('#bxevo');if(btn){btn.disabled=true;btn.textContent='🧬 Buscando…'}
+  try{const L=[];for(const m of box){if(m.ev)continue;const e=await can(m);if(e)L.push(m)}
+   if(!L.length){toast('🧬 Ningún Pokémon de la Caja puede evolucionar ahora mismo');return}
+   if(p)p.style.visibility='hidden';let k;try{k=await ask('🧬 Evolucionar a todos',`<small>${L.length} Pokémon de la Caja pueden evolucionar por nivel. Los que lleven Piedra Eterna no se tocan.</small><div class="evall">${L.slice(0,30).map(m=>`<span><img src="${mini(m.id,m.sh)}" alt="" loading="lazy">${nm(m)}</span>`).join('')}${L.length>30?`<span>+${L.length-30} más</span>`:''}</div>`,['🧬 Evolucionar','Cancelar'])}finally{if(p)p.style.visibility=''}
+   if(k!==0)return;
+   if(btn)btn.textContent='🧬 Evolucionando…';const out=[];
+   for(const m of L){const o=nm(m),sh=m.sh;let e,n=0;while((e=await can(m))&&n<3){try{await step(m,e)}catch(err){console.error(err);break}n++}if(n)out.push([o,m,n])}
+   try{saveRun()}catch(_){}try{p&&p.__rr&&p.__rr()}catch(_){}try{beep(700,.3,'triangle');setTimeout(()=>beep(1046,.3,'triangle'),160)}catch(_){}
+   if(p)p.style.visibility='hidden';try{await ask('🧬 ¡Evoluciones completadas!',`<small>${out.length} Pokémon han evolucionado.</small><div class="evall">${out.slice(0,30).map(([o,m,n])=>`<span><img src="${mini(m.id,m.sh)}" alt="" loading="lazy"><b>${spn(m)}</b><small>${o}${n>1?' · ×'+n:''}</small></span>`).join('')}${out.length>30?`<span>+${out.length-30} más</span>`:''}</div>`,['Genial'])}finally{if(p)p.style.visibility=''}}
+  catch(e){console.error(e);toast('No se pudo completar: revisa tu conexión')}
+  finally{busy=false;const b=Q('#bxevo');if(b){b.disabled=false;b.textContent='🧬 Evolucionar'}}}
+ window.__evoAllBox=evoAll;
+ new MutationObserver(()=>{const bt=Q('#pcbox .bxbt');if(!bt||bt.querySelector('#bxevo'))return;const b=D.createElement('button');b.className='act';b.id='bxevo';b.type='button';b.textContent='🧬 Evolucionar';b.title='Evolucionar a todos los que puedan';b.onclick=evoAll;const s=bt.querySelector('#bxsort');if(s)s.after(b);else bt.prepend(b)}).observe(D.body,{childList:true,subtree:true});
 })();
 
 })();</script>
