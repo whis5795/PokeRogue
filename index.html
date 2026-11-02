@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.5</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.6</div>
 </section>
 
 <section id="team" class="scr">
@@ -8589,7 +8589,15 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'48.5',t:'Combates más limpios y jefe más claro',s:'cur',l:[
+ {v:'48.6',t:'Optimización y arreglos',s:'cur',l:[
+  '⚡ Más fluido: varias partes del juego vigilaban toda la página en cada cambio (botones de la Caja, historial de avisos, vitrina); ahora comparten un solo vigilante que trabaja como mucho una vez por fotograma',
+  '⚡ La cortina del mapa revisa menos a menudo si hay otra ventana abierta y no trabaja con el juego en segundo plano',
+  '⚡ En calidad gráfica baja, los Pokémon de los biomas no hacen la animación de respirar (menos trabajo para móviles lentos)',
+  '🔧 Arreglado: con el mapa simple, los botones de los biomas desde las pestañas Pueblo o Biomas abrían el combate salvaje antiguo en vez de entrar al bioma',
+  '📖 Tutorial actualizado con el mapa nuevo (Ruta, Pueblo y Biomas), los biomas por dentro, los Alfas y los shinys',
+  '🔍 Revisadas todas las pantallas (mapa, pestañas, biomas, cortina, vitrina, mercado, casino, Caja, mochila, tienda, combates, megaincursiones…) en móvil y PC sin errores'
+]},
+{v:'48.5',t:'Combates más limpios y jefe más claro',s:'prev',l:[
   '🧹 Sin narrador: los combates 2 contra 2 y las megaincursiones ya no muestran el texto que contaba cada acción (ni el botón de registro del 2c2). Todo se sigue viendo con las animaciones y los números',
   '⏳ Megaincursiones: el jefe tiene una barrita bajo sus efectos de estado que se llena hasta su próximo ataque, como la recarga de tu Pokémon (se pone dorada si está aturdido y parpadea cuando está a punto de atacar)',
   '📋 Megaincursiones: debajo se ven los movimientos del jefe con su tipo y si son físicos 💥 o especiales ✨'
@@ -20919,10 +20927,14 @@ html.vm-pc body[data-v=menu] #menu h1{margin-top:34px}
 #mrd .mr-bmv span{display:flex;align-items:center;gap:4px;padding:2px 7px 2px 4px;border-radius:8px;background:color-mix(in srgb,var(--c) 70%,#0b0720);border:1px solid #ffffff40;font:800 10px system-ui;color:#fff;line-height:1.1}
 #mrd .mr-bmv span small{font-size:8.5px;opacity:.85;padding:1px 4px;border-radius:5px;background:#0005}
 #mrd .mr-bmv span i{font-style:normal;font-size:10px}
+body.lowfx .bzp .bzr,body.lowfx .bzp .hds{animation:none!important}
+body.lowfx .bzp img{filter:drop-shadow(0 4px 3px #0007)!important}
 </style>
 <script id="v37js">
 (()=>{
 const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
+/* v48.6: un solo observador del DOM compartido (antes había varios mirando toda la página en cada cambio) */
+(()=>{const H=[];let q=0;const run=()=>{q=0;for(const f of H){try{f()}catch(e){}}};new MutationObserver(()=>{if(!q)q=requestAnimationFrame(run)}).observe(D.body,{childList:true,subtree:true});window.__onDom=f=>H.push(f)})();
 /* ---------- Casa: botón «🎨 Color» en la barra de Mover muebles (color propio para cada mueble y cada copia) ---------- */
 (()=>{const bar=D.getElementById('hedbar');if(!bar||!window.__htint)return;
  const row=bar.querySelector('[data-e=del]');if(!row)return;
@@ -23376,10 +23388,10 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  {e:'🗺️',n:'El mapa y las rondas',c:'#22c55e',p:[
   {e:'🃏',t:'Elegir carta',h:`<p>En el mapa pulsa ${b('▶ Continuar la ruta')} (o toca la casilla de la ronda) y elige una de las <b>cartas</b>:</p><ul><li>⚔️ ${b('Entrenador')}: combate con premio en dinero. Algunos luchan en <b>dobles</b>.</li><li>🌿 ${b('Salvaje')}: combate contra un Pokémon que puedes <b>capturar</b>.</li><li>🛒 ${b('Tienda')} y ❓ ${b('Evento')}: compras o un encuentro misterioso.</li><li>👑 ${b('Líder / Jefe')}: los combates importantes.</li></ul><p>Las ⭐ de la carta indican la dificultad: más estrellas, más premio.</p>`},
   {e:'🏅',t:'Líderes, medallas y Campeón',h:`<p>Cada <b>20 rondas</b> hay un líder de gimnasio de un tipo concreto (lo ves marcado en el mapa unas rondas antes). Al ganarle consigues su <b>medalla</b>.</p><p>Los líderes llevan objetos y a veces <b>reglas especiales</b>; toca el cartel del combate para leerlas.</p><p>En la última ronda espera el <b>Campeón</b>. En modo infinito aparece cada 100 rondas.</p>`},
-  {e:'📍',t:'Lugares del mapa',h:`<ul><li>🌲 ${b('Biomas')}: zonas de captura (siguiente capítulo).</li><li>🛒 ${b('Tienda')}: siempre abierta.</li><li>🏥 ${b('Centro Pokémon')}: cura a todo tu equipo y abre la Caja.</li><li>🏦 ${b('Banco')}: guarda tus Pokémonedas aparte del bolsillo (no da intereses).</li><li>🏠 ${b('Mi casa')}: tu base personal.</li><li>🌋 ${b('Megaincursiones')}: jefes legendarios con otros jugadores.</li></ul><p>En el mapa ilustrado se entra tocando <b>dos veces</b> un lugar. Con ${b('📌 Fijar mapa')} se queda quieto. Si prefieres botones grandes, activa ${b('Mapa simple')} en Ajustes.</p>`},
+  {e:'📍',t:'El mapa: Ruta, Pueblo y Biomas',h:`<p>El mapa tiene tres pestañas:</p><ul><li>🗺️ ${b('Ruta')}: el teatro con las rondas. Toca la ronda que brilla para seguir.</li><li>🏘️ ${b('Pueblo')}: 🏥 Centro Pokémon (cura y abre la Caja), 🏦 Banco (guarda Pokémonedas, sin intereses), 🛒 Tienda, 🏠 Mi casa, 🎰 Casino, 🧺 Mercado entre amigos y 👥 la casa de un amigo.</li><li>🌿 ${b('Biomas')}: la isla con sus zonas de captura (siguiente capítulo) y el 🌋 altar de las megaincursiones.</li></ul><p>Toca un sitio para ver qué es y pulsa <b>Entrar ▶</b>. Arriba hay una cortina con la ronda, el dinero, los avisos, ${b('📌 Fijar mapa')} y ${b('↕ Mover mapa')} para elegir la altura de cada mapa.</p>`},
   {e:'🏷️',t:'Chips de arriba',h:`<p>Arriba a la izquierda ves la ronda, tu dinero y unos <b>chips</b> que se pueden tocar:</p><ul><li>🌧️ ${b('Clima')} y 🌙 ${b('fase del día')}.</li><li>📜 ${b('Misiones')}: encargos de la gente de la región.</li><li>🧩 ${b('Combos')} activos de tu equipo.</li><li>🎃 ${b('Eventos festivos')} según la fecha (Halloween, Navidad…).</li><li>🏆 ${b('Desafío')} activo y avisos de deudas o huevos de los eventos.</li></ul>`}]},
  {e:'🌲',n:'Biomas y captura',c:'#16a34a',p:[
-  {e:'🌲',t:'Los biomas',h:`<p>Bosque, Pradera, Montaña helada, Volcán, Costa y Cueva son <b>zonas de captura</b>. Cada una tiene sus propios Pokémon y un nivel que sube contigo.</p><ul><li>Se van <b>desbloqueando</b> según la ronda.</li><li>Puedes entrar en ellas todas las veces que quieras.</li><li>Toca la <b>ⓘ</b> de un bioma para ver qué Pokémon salen ahí ahora mismo, según la hora del día y el clima.</li></ul><p>Entrar en un bioma no gasta ronda: es la forma de buscar Pokémon concretos.</p>`},
+  {e:'🌲',t:'Los biomas',h:`<p>En la pestaña <b>Biomas</b> toca una zona de la isla para entrar: Bosque, Pradera, Montaña helada, Volcán, Costa o Desierto rocoso. Dentro hay un plano enorme que recorres arrastrando y con zoom (pellizcando).</p><ul><li>Los Pokémon pasean solos, en parejas o en manadas, viven sus propias historias y a veces una manada trae un <b>Alfa</b> (su evolución, más fuerte y con aura roja).</li><li>Toca un Pokémon para ver su nivel y pulsa <b>⚔️ Combatir</b>. Si lo debilitas, puedes capturarlo. Perder no cuesta vidas.</li><li>Cada vez que entras hay Pokémon distintos; la hora, el clima y el Pokémon del día cambian quién sale.</li><li>Los shinys (1/300) brillan, pero nadie te avisa: ¡hay que encontrarlos!</li><li>Toca la <b>ⓘ</b> de un bioma para ver todos los Pokémon que pueden salir ahí.</li></ul><p>Entrar en un bioma no gasta ronda.</p>`},
   {e:'🔴',t:'Capturar Pokémon',h:`<p>Al <b>debilitar</b> a un Pokémon salvaje se abre la ventana de captura. Desliza para elegir Ball; siempre empieza en la que más probabilidad tiene.</p><ul><li>Poké Ball 20%, Súper Ball 40%, Ultra Ball 60%.</li><li>${b('Nidoball')}: 75% con Pokémon de Nv.15 o menos.</li><li>${b('Balls de tipo')} (Redball, OceanoBall…): 75% contra su tipo.</li></ul><p>Cada vez que se escapa de la Ball aumenta el riesgo de que <b>huya</b>. Si tu equipo está lleno (6), el nuevo va a la <b>Caja</b>.</p>`},
   {e:'📦',t:'La Caja',h:`<p>Desde el Centro Pokémon abres la <b>Caja</b>: toca un Pokémon del equipo y otro de la Caja para intercambiarlos.</p><ul><li>⭐ ${b('Favorito')}: evita liberarlo por error.</li><li>⚖️ ${b('Comparar')} dos Pokémon, 🎒 ${b('Usar objeto')} en varios a la vez, 🕊️ ${b('Liberar')} (con unos segundos para deshacer).</li><li>🔄 ${b('Renacer')} y ⭐ ${b('Sumar estrellas')} (capítulo de estrellas).</li></ul>`}]},
  {e:'⚔️',n:'Combate',c:'#ef4444',p:[
@@ -23857,14 +23869,14 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  wrapT();setTimeout(wrapT,1500);setTimeout(wrapT,5000);
  const ago=d=>{const s=(Date.now()-d)/1000;return s<60?'ahora':s<3600?Math.round(s/60)+' min':s<86400?Math.round(s/3600)+' h':Math.round(s/86400)+' d'};
  function logHTML(){const L=lg();return`<div class="ntsec">🕓 Últimos avisos</div>${L.length?`<div class="tlog">${L.slice(0,25).map(x=>`<div><span>${esc(x.t)}</span><small>${ago(x.d)}</small></div>`).join('')}</div>`:'<div class="nte">Aún no hay avisos.</div>'}`}
- new MutationObserver(()=>{const w=Q('#ntf .ntw');if(w&&!w.querySelector('.tlogw')){const d=D.createElement('div');d.className='tlogw';d.innerHTML=logHTML();const sec=[...w.querySelectorAll('.ntsec')].find(x=>/Avisarme/.test(x.textContent));if(sec)sec.before(d);else w.append(d)}}).observe(D.body,{childList:true,subtree:true});
+ __onDom(()=>{const w=Q('#ntf .ntw');if(w&&!w.querySelector('.tlogw')){const d=D.createElement('div');d.className='tlogw';d.innerHTML=logHTML();const sec=[...w.querySelectorAll('.ntsec')].find(x=>/Avisarme/.test(x.textContent));if(sec)sec.before(d);else w.append(d)}});
  /* 2) curar automáticamente al ganar un combate */
  const _ae=window.advEnd;if(_ae)window.advEnd=advEnd=async function(w){const r=await _ae.apply(this,arguments);try{if(w&&S&&S.autoheal&&B&&B.adv&&!B.prac&&!(B.c&&B.c.raid)&&window.__healAuto){const n=__healAuto();if(n)setTimeout(()=>{try{toast(`💊 Curación automática: ${n} objeto${n>1?'s':''} usado${n>1?'s':''}`)}catch(_){}},600)}}catch(e){}return r};
  /* 3) ordenar la Caja */
  const SORTS=[['lvl','📈 Nivel (mayor primero)',(a,b)=>b.lvl-a.lvl],['dex','🔢 Nº de Pokédex',(a,b)=>a.id-b.id],['name','🔤 Nombre',(a,b)=>String(a.nick||a.name).localeCompare(String(b.nick||b.name))],['rb','⭐ Estrellas',(a,b)=>(b.rb|0)-(a.rb|0)||b.lvl-a.lvl],['sh','✨ Shiny primero',(a,b)=>(b.sh?1:0)-(a.sh?1:0)||b.lvl-a.lvl],['fav','⭐ Favoritos primero',(a,b)=>(b.fav?1:0)-(a.fav?1:0)||b.lvl-a.lvl]];
  async function sortBox(){if(!R||!R.box||R.box.length<2)return toast('No hay suficientes Pokémon en la Caja');const p=Q('#pcbox');if(p)p.style.visibility='hidden';let i;try{i=await ask('↕ Ordenar la Caja','<small>Elige cómo ordenar los Pokémon de la Caja.</small>',[...SORTS.map(x=>x[1]),'Cancelar'])}finally{if(p)p.style.visibility=''}
   if(!(i>=0&&i<SORTS.length))return;R.box.sort(SORTS[i][2]);try{saveRun()}catch(e){}try{p&&p.__rr&&p.__rr()}catch(e){}toast('↕ Caja ordenada por '+SORTS[i][1].replace(/^\S+\s/,'').toLowerCase())}
- new MutationObserver(()=>{const bt=Q('#pcbox .bxbt');if(!bt||bt.querySelector('#bxsort'))return;const b=D.createElement('button');b.className='act';b.id='bxsort';b.type='button';b.textContent='↕ Ordenar';b.title='Ordenar la Caja';b.onclick=sortBox;bt.prepend(b)}).observe(D.body,{childList:true,subtree:true});
+ __onDom(()=>{const bt=Q('#pcbox .bxbt');if(!bt||bt.querySelector('#bxsort'))return;const b=D.createElement('button');b.className='act';b.id='bxsort';b.type='button';b.textContent='↕ Ordenar';b.title='Ordenar la Caja';b.onclick=sortBox;bt.prepend(b)});
 })();
 /* ===== v46.5: más calidad de vida ===== */
 (()=>{const D=document,Q=s=>D.querySelector(s);
@@ -23908,7 +23920,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
   catch(e){console.error(e);toast('No se pudo completar: revisa tu conexión')}
   finally{busy=false;const b=Q('#bxevo');if(b){b.disabled=false;b.textContent='🧬 Evolucionar'}}}
  window.__evoAllBox=evoAll;
- new MutationObserver(()=>{const bt=Q('#pcbox .bxbt');if(!bt||bt.querySelector('#bxevo'))return;const b=D.createElement('button');b.className='act';b.id='bxevo';b.type='button';b.textContent='🧬 Evolucionar';b.title='Evolucionar a todos los que puedan';b.onclick=evoAll;const s=bt.querySelector('#bxsort');if(s)s.after(b);else bt.prepend(b)}).observe(D.body,{childList:true,subtree:true});
+ __onDom(()=>{const bt=Q('#pcbox .bxbt');if(!bt||bt.querySelector('#bxevo'))return;const b=D.createElement('button');b.className='act';b.id='bxevo';b.type='button';b.textContent='🧬 Evolucionar';b.title='Evolucionar a todos los que puedan';b.onclick=evoAll;const s=bt.querySelector('#bxsort');if(s)s.after(b);else bt.prepend(b)});
 })();
 /* ===== v47.3: 🏛️ Vitrina pública · tus Pokémon favoritos expuestos para que los vean tus amigos ===== */
 (()=>{const D=document,Q=s=>D.querySelector(s),now=()=>Date.now(),K='pa_vit',KC='pa_vitc',MAX=12;
@@ -23959,7 +23971,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
   if(ov&&ov.classList.contains('on')&&mode==='friend'&&fid===o.f){fl=l;wait=0;clearTimeout(wt);render()}};
  window.__vitOpen=open;window.__vit={get:VIT,snap,clean};
 })();
-(()=>{const D=document;new MutationObserver(()=>{const p=D.querySelector('#pcbox .bxpr');if(!p||p.querySelector('#bxvit'))return;const b=D.createElement('button');b.className='act';b.id='bxvit';b.type='button';b.title='Mi vitrina';b.setAttribute('aria-label','Mi vitrina');b.textContent='🏛️';b.onclick=()=>{window.__vitOpen&&__vitOpen()};p.append(b)}).observe(D.body,{childList:true,subtree:true})})();
+(()=>{const D=document;__onDom(()=>{const p=D.querySelector('#pcbox .bxpr');if(!p||p.querySelector('#bxvit'))return;const b=D.createElement('button');b.className='act';b.id='bxvit';b.type='button';b.title='Mi vitrina';b.setAttribute('aria-label','Mi vitrina');b.textContent='🏛️';b.onclick=()=>{window.__vitOpen&&__vitOpen()};p.append(b)})})();
 /* ===== v47.5: 🌿 Captura en grupo (1-4 jugadores) · cada uno captura sus propios Pokémon y ve a sus amigos al fondo ===== */
 (()=>{const D=document,Q=s=>D.querySelector(s),now=()=>Date.now();
  const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -24192,7 +24204,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  const _s=showMap;showMap=function(){const r=_s.apply(this,arguments);try{post()}catch(e){console.error(e)}return r};
  function post(){const c=Q('#cards');if(!c)return;
   if(tab!=='ruta'){const s=Q('#smap');if(s)s.remove();const d=Q('#dmap');if(d)d.style.display=''}
-  if(tab==='ruta'){/* los biomas de siempre ahora llevan a la pestaña Biomas */const zs=zst();zs.forEach((z,i)=>{const g=Q('#mz'+i);if(g)g.onclick=()=>{if(R.lock)return;if(R.round<z.u)return tst(`${BIO[i].n}: se desbloquea en la ronda ${z.u}`);setTab('bio',BIO[i].k);enterBiome(BIO[i].k,null,1)}})}
+  {/* los biomas de siempre (mapa simple incluido) llevan a la pestaña Biomas desde cualquier pestaña */const zs=zst();zs.forEach((z,i)=>{const g=Q('#mz'+i);if(g)g.onclick=()=>{if(R.lock)return;if(R.round<z.u)return tst(`${BIO[i].n}: se desbloquea en la ronda ${z.u}`);setTab('bio',BIO[i].k);enterBiome(BIO[i].k,null,1)}})}
   if(tab==='town'){const fr=Q('#mfr2');if(fr)fr.onclick=visit;const mk=Q('#mmkt');if(mk)mk.onclick=()=>{if(!R.lock&&window.__mktOpen)__mktOpen()};const cs=Q('#mcas');if(cs)cs.onclick=()=>{if(!R.lock&&window.openCasino)openCasino()}}
   const w=Q('#dmap.xmap .imw');if(w){const fx=focus&&ZN[focus]?ZN[focus].l[0]:768;w.scrollLeft=fx/W*w.scrollWidth-w.clientWidth/2;if(focus){const z=Q(`.xlab.z`);}focus=null}
   try{c.scrollTop=0}catch(e){}}
@@ -24430,7 +24442,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  const sync=()=>{if(B.dataset.v==='map')enable();else disable()};
  const OVS=['#bzv','#pcbox','#frp','#pcas','#homeov','#mktov','#vitov','#safov','#lan','#mrd','#mpa','#coop','#pvp','#bdx','#pfpk','#ntf','#eqov','#cookov','#specov','#mgov','#cmpov','#rkov','#exov','#chov','#colov','#msov','#rnov','#tcgov','#tutov','#stov','#shinf','#evoa'];
  const busy=()=>{const m=Q('#mod');if(m&&getComputedStyle(m).display!=='none')return true;for(const s of OVS){const e=Q(s);if(e&&e.isConnected){const c=getComputedStyle(e);if(c.display!=='none'&&c.visibility!=='hidden'&&+c.opacity!==0&&e.getBoundingClientRect().height>100)return true}}return false};
- setInterval(()=>{if(!on)return;const b=busy();if(B.classList.contains('shhide')!==b){B.classList.toggle('shhide',b);if(b)close()}},250);
+ setInterval(()=>{if(!on||D.hidden)return;const b=busy();if(B.classList.contains('shhide')!==b){B.classList.toggle('shhide',b);if(b)close()}},400);
  new MutationObserver(sync).observe(B,{attributes:true,attributeFilter:['data-v']});setInterval(()=>{sync();if(on)label()},700);sync();
  window.__shade={open,close};
 })();
