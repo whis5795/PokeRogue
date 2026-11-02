@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.2</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.3</div>
 </section>
 
 <section id="team" class="scr">
@@ -1291,7 +1291,7 @@ async function capture(m){
   if(toTeam){await ask('¡Captura exitosa!',`<i>«¡${nm(m)} se une a tu equipo!»</i>`,['Genial'])}
   else for(;;){
     const j=await ask('Equipo completo',`<div class="ecw"><img src="${art(m.id,m.sh)}" alt=""></div><small>Ya llevas 6 Pokémon. ${nm(m)} ya está a salvo en la Caja. Puedes dejarlo ahí, cambiarlo por alguien de tu equipo o liberarlo.</small>`,['📦 Dejar a '+nm(m)+' en la Caja','🔄 Intercambiar con alguien del equipo','Liberar a '+nm(m)]);
-    if(j==2){const z=bx.indexOf(m);if(z>=0)bx.splice(z,1);try{saveRun()}catch(e){}break}
+    if(j==2){const cf=await ask('🕊️ ¿Liberar a '+nm(m)+'?',`<img src="${art(m.id,m.sh)}" alt="" style="width:110px;display:block;margin:auto"><small>${nm(m)} (Nv.${m.lvl}) volverá a la naturaleza y no podrás recuperarlo.</small>`,['🕊️ Sí, liberar','Cancelar']);if(cf!==0)continue;const z=bx.indexOf(m);if(z>=0)bx.splice(z,1);try{saveRun()}catch(e){}toast('🕊️ '+nm(m)+' ha vuelto a la naturaleza');break}
     if(j==1){
       const q=await ask('Intercambiar','¿Quién pasa a la Caja?',[...R.team.map(x=>`${nm(x)} Nv.${x.lvl}`),'Volver']);
       if(q<R.team.length&&q>=0){const old=R.team[q],z=bx.indexOf(m);R.team[q]=m;if(z>=0)bx[z]=old;else bx.push(old);try{saveRun()}catch(e){}toast(nm(old)+' fue enviado a la Caja');break}
@@ -8589,7 +8589,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'48.2',t:'Clima y horario en los biomas',s:'cur',l:[
+ {v:'48.3',t:'Historias con memoria',s:'cur',l:[
+  '🥊 Biomas: las peleas entre Pokémon ahora se ven de verdad: se encaran, se lanzan golpes con impactos 💥 y polvo, y uno gana mientras el otro sale despedido y mareado 😵',
+  '🧠 Las historias tienen memoria durante la visita: el que pierde lleva una tirita 🩹, se mueve menos y puede huir del ganador o pedirle la revancha; el ganador lleva una corona 👑; los que se hacen amigos se buscan y pasean juntos',
+  '📝 Al tocar un Pokémon, su tarjeta cuenta su historia: «🤝 Amigo de…», «🏆 Ganó a…», «🩹 Perdió contra…»',
+  '🕊️ Liberar a un Pokémon recién capturado con el equipo lleno ahora pide confirmación, como en la Caja'
+]},
+{v:'48.2',t:'Clima y horario en los biomas',s:'prev',l:[
   '🌦️ Arreglado: con los biomas nuevos el clima, el clima extremo, el ciclo de día y noche y las fiestas (como Halloween) habían dejado de influir. Ahora vuelven a hacer más frecuentes a sus Pokémon dentro de cada bioma (los de noche de noche, los de día de día, los del clima con su clima…), siempre respetando los Pokémon propios de cada bioma'
 ]},
 {v:'48.1',t:'Biomas más cómodos en el móvil',s:'prev',l:[
@@ -20878,6 +20884,19 @@ html.vm-pc body[data-v=menu] #menu h1{margin-top:34px}
  #bzv .bz-back{box-shadow:0 4px 12px #0009}
  #bzv .bz-hud span,#bzv .bz-i{box-shadow:0 3px 8px #0008}
 }
+/* v48.3: peleas y relaciones en los biomas */
+.bzfx{position:absolute;left:50%;top:30%;transform:translate(-50%,-50%);font-style:normal;font-size:34px;pointer-events:none;z-index:6;animation:bzfx .65s ease-out forwards;filter:drop-shadow(0 2px 3px #0009)}
+.bzfx.dust{top:88%;font-size:26px;animation:bzdust .8s ease-out forwards}.bzfx.win{top:10%;font-size:30px;animation:bzwin .9s ease-out forwards}
+@keyframes bzfx{0%{opacity:0;transform:translate(calc(-50% + var(--rx)),-50%) scale(.3)}25%{opacity:1;transform:translate(calc(-50% + var(--rx)),-60%) scale(1.25)}100%{opacity:0;transform:translate(calc(-50% + var(--rx)),-90%) scale(1)}}
+@keyframes bzdust{0%{opacity:.9;transform:translate(-50%,-50%) scale(.5)}100%{opacity:0;transform:translate(calc(-50% + var(--rx)*3),-80%) scale(1.6)}}
+@keyframes bzwin{0%{opacity:0;transform:translate(-50%,0) scale(.4) rotate(0)}40%{opacity:1;transform:translate(-50%,-30%) scale(1.3) rotate(25deg)}100%{opacity:0;transform:translate(-50%,-80%) scale(1) rotate(60deg)}}
+.bzp.hurt::before{content:'🩹';position:absolute;left:8%;top:6%;font-size:20px;z-index:3;filter:drop-shadow(0 1px 2px #000a)}
+.bzp.hurt .bzr{animation-duration:3.4s;filter:saturate(.75)}
+.bzp.champ:not(.al)::before{content:'👑';position:absolute;left:50%;top:-6%;transform:translateX(-50%);font-size:20px;z-index:3;filter:drop-shadow(0 1px 2px #000a)}
+.bzp.champ.hurt::before{content:'🩹'}
+.bzp.friend::after{background:radial-gradient(#f472b655,transparent 70%)}
+#bzv .bz-card .bzrel{display:block;margin-top:2px;color:#fde68a;opacity:1;font-size:11px;line-height:1.3}
+@media (prefers-reduced-motion:reduce){.bzfx{animation-duration:.01s}}
 </style>
 <script id="v37js">
 (()=>{
@@ -24251,7 +24270,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
   try{drawBG(o.querySelector('.bz-bg'),k,(d&&d.seed)||7)}catch(e){console.error(e)}
   if(!hadCam&&d&&d.g&&d.g.length){const g0=d.g[0].m,cx=g0.reduce((a,m)=>a+m.x,0)/g0.length,cy=g0.reduce((a,m)=>a+m.y,0)/g0.length,vp=o.querySelector('.bz-vp');cur.cam={x:cx-vp.clientWidth/2/cur.z,y:cy-vp.clientHeight/2/cur.z};apply()}
   paintPk();cur.wt=setInterval(wander,2600);setTimeout(()=>{const t=o.querySelector('.bz-tip');if(t)t.classList.add('off')},3500)}
- function paintPk(){if(!cur)return;const d=BD()[cur.k],L=allMons(d);cur.o.querySelector('.bz-pk').innerHTML=L.map(pkH).join('');cur.o.querySelector('.bz-n').textContent=`🐾 ${L.length}`}
+ function paintPk(){if(!cur)return;const d=BD()[cur.k],L=allMons(d);cur.o.querySelector('.bz-pk').innerHTML=L.map(pkH).join('');cur.o.querySelectorAll('.bzp').forEach(tag);cur.o.querySelector('.bz-n').textContent=`🐾 ${L.length}`}
  const EMO=['♪','❤️','❗','💢','🍃','💧','❓','😊'];
  const bub=(b,t,ms,cls)=>{if(!b||!b.isConnected)return;b.querySelectorAll('.bze').forEach(e=>e.remove());const e=D.createElement('i');e.className='bze'+(cls?' '+cls:'');e.textContent=t;e.style.animationDuration=(ms||1900)+'ms';b.append(e);setTimeout(()=>e.remove(),ms||1900)};
  const hop=b=>{if(!b)return;b.classList.remove('hop');void b.offsetWidth;b.classList.add('hop');setTimeout(()=>b.classList.remove('hop'),700)};
@@ -24261,21 +24280,49 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  function act(b){const r=Math.random(),night=ph()==='night';if(r<.035){say(b);return}if(r<.4)hop(b);else bub(b,night&&Math.random()<.6?'💤':EMO[Math.random()*EMO.length|0])}
  /* pequeñas historias entre Pokémon cercanos */
  const W8=ms=>new Promise(r=>setTimeout(r,ms));let story=0;
+ /* v48.3: historias con memoria: amistades y rivalidades que se recuerdan durante la visita */
+ const MD=b=>{try{return allMons(BD()[cur.k]).find(x=>x.u===+b.dataset.u)||null}catch(e){return null}};
+ const NM=b=>(b&&b.dataset.n||'').replace(/ de (Alola|Galar|Hisui|Paldea).*/,'');
+ const tag=b=>{const m=MD(b);if(!m)return;b.classList.toggle('hurt',!!m.hurt);b.classList.toggle('champ',(m.wins|0)>0);b.classList.toggle('friend',m.fr!=null)};
+ const fxAt=(b,t,cls,ms)=>{if(!b||!b.isConnected)return;const e=D.createElement('i');e.className='bzfx'+(cls?' '+cls:'');e.textContent=t;e.style.setProperty('--rx',(Math.random()*40-20).toFixed(0)+'px');b.append(e);setTimeout(()=>e.remove(),ms||700)};
+ const spr=b=>b&&b.querySelector('.bzr');
+ const lunge=(b,dx,dy)=>{const s2=spr(b);if(!s2)return;const n=Math.hypot(dx,dy)||1;s2.animate([{transform:'translate(0,0)'},{transform:`translate(${-dx/n*14}px,${-dy/n*14}px)`,offset:.25},{transform:`translate(${dx/n*46}px,${dy/n*30}px) scale(1.08)`,offset:.55},{transform:'translate(0,0)'}],{duration:520,easing:'ease-in-out'})};
+ const hurtFx=b=>{const s2=spr(b);if(!s2)return;s2.animate([{filter:'brightness(1)',transform:'translateX(0)'},{filter:'brightness(3) saturate(0)',transform:'translateX(-8px)',offset:.2},{filter:'brightness(1)',transform:'translateX(8px)',offset:.45},{transform:'translateX(-5px)',offset:.7},{transform:'translateX(0)'}],{duration:420})};
+ const dust=(a,b)=>{for(let i=0;i<3;i++)setTimeout(()=>{fxAt(Math.random()<.5?a:b,'💨','dust',800)},i*160)};
  const STORIES=[
-  async(a,b,d)=>{bub(a,'❗');await W8(700);mv(a,d.x*.55,d.y*.55);await W8(1400);bub(a,'♪');await W8(500);bub(b,'♪');await W8(1100);hop(a);hop(b);bub(a,'❤️');bub(b,'❤️');await W8(1600)},
-  async(a,b,d)=>{mv(a,d.x*.5,d.y*.5);await W8(1200);bub(a,'💢');await W8(600);bub(b,'💢');await W8(800);hop(a);hop(b);await W8(500);hop(a);hop(b);await W8(700);bub(b,'💨');mv(b,-d.x*.6,-d.y*.6);await W8(1500);bub(a,'😤');await W8(1200)},
+  async(a,b,d)=>befriend(a,b,d),
+  async(a,b,d)=>brawl(a,b,d),
   async(a,b,d)=>{bub(a,'😆');mv(a,d.x*.6,d.y*.6);await W8(900);bub(b,'❗');mv(b,-d.x*.5+40,-d.y*.5);await W8(1100);mv(a,-d.x*.1,-d.y*.1);await W8(1100);mv(b,d.x*.1,d.y*.1);bub(a,'😆');bub(b,'😆');await W8(1500)},
   async(a,b,d)=>{bub(a,'🍎');await W8(900);bub(b,'❓');mv(b,-d.x*.45,-d.y*.45);await W8(1300);bub(a,'🍎');await W8(700);bub(b,'😋');hop(b);await W8(900);bub(a,'😊');await W8(1200)},
   async(a,b,d)=>{mv(a,d.x*.5,d.y*.5);await W8(1300);bub(a,'💤',2600);await W8(500);bub(b,'💤',2600);await W8(2400)},
   async(a,b,d)=>{bub(a,'🎵',2200);await W8(900);hop(a);await W8(500);bub(b,'❤️');hop(b);await W8(1000);hop(a);hop(b);await W8(1000)},
   async(a,b,d)=>{bub(a,'❓');await W8(800);bub(b,'❓');await W8(800);mv(a,d.x*.3,d.y*.3);mv(b,-d.x*.3,-d.y*.3);await W8(1300);say(a);await W8(1300);say(b);await W8(1500)}];
+ async function befriend(a,b,d){const A=MD(a),Bm=MD(b);bub(a,'❗');await W8(700);mv(a,d.x*.55,d.y*.55);await W8(1400);bub(a,'♪');await W8(500);bub(b,'♪');await W8(1100);hop(a);hop(b);bub(a,'❤️');bub(b,'❤️');
+  if(A&&Bm&&A.fr==null&&Bm.fr==null){A.fr=Bm.u;Bm.fr=A.u;tag(a);tag(b);try{saveRun()}catch(e){}}await W8(1600)}
+ async function brawl(a,b,d,re){const A=MD(a),Bm=MD(b);if(!A||!Bm)return;
+  /* se miran, se acercan y se enfrentan */
+  bub(a,re?'😠':'💢',1400);await W8(500);bub(b,'💢',1400);mv(a,d.x*.42,d.y*.42);mv(b,-d.x*.12,-d.y*.12);await W8(1300);
+  const pw=m=>(m.lvl|0)+(m.alpha?25:0)+(m.wins|0)*3-(m.hurt?6:0)+Math.random()*14;let ha=3,hb=3;const ddx=d.x,ddy=d.y;
+  /* intercambio de golpes */
+  for(let r=0;r<5&&ha>0&&hb>0;r++){const aHit=pw(A)>=pw(Bm),att=aHit?a:b,def=aHit?b:a,sx=aHit?ddx:-ddx,sy=aHit?ddy:-ddy;
+   lunge(att,sx,sy);await W8(260);hurtFx(def);fxAt(def,Math.random()<.25?'⭐':'💥','hit',650);if(r%2)dust(a,b);if(aHit)hb--;else ha--;await W8(560)}
+  const aw=hb<=0||(ha>0&&ha>=hb),win=aw?a:b,los=aw?b:a,W0=aw?A:Bm,L0=aw?Bm:A,k=aw?1:-1;
+  /* el que pierde sale despedido, mareado, y se va; el que gana lo celebra */
+  const ax=k*ddx,ay=k*ddy,an=Math.hypot(ax,ay)||1,ux=ax/an,uy=ay/an;/* dirección: del ganador hacia el perdedor */
+  const ls=spr(los);if(ls)ls.animate([{transform:'rotate(0)'},{transform:`translate(${ux*40}px,-34px) rotate(${(ux>=0?1:-1)*35}deg)`,offset:.4},{transform:`translate(${ux*60}px,0) rotate(${(ux>=0?1:-1)*15}deg)`,offset:.75},{transform:'rotate(0)'}],{duration:800,easing:'ease-out'});
+  if(aw)mv(b,ddx*.3+ux*50,ddy*.3+uy*30);else mv(a,-ddx*.25+ux*50,-ddy*.25+uy*30);bub(los,'😵',1600);await W8(900);hop(win);bub(win,'😤');await W8(700);hop(win);fxAt(win,'✨','win',900);bub(win,(W0.wins|0)>=1?'👑':'💪',1500);await W8(900);bub(los,'💧',1500);
+  L0.hurt=1;L0.lost=W0.u;W0.wins=(W0.wins|0)+1;W0.beat=L0.u;if(W0.hurt&&Math.random()<.5)delete W0.hurt;if(L0.fr===W0.u){delete L0.fr;delete W0.fr}tag(win);tag(los);try{saveRun()}catch(e){}await W8(1300)}
+ window.__bzStory=async(ua,ub)=>{const a=cur.o.querySelector(`.bzp[data-u="${ua}"]`),b=cur.o.querySelector(`.bzp[data-u="${ub}"]`);story=1;a.classList.add('st');b.classList.add('st');try{await brawl(a,b,{x:b.dataset.x-a.dataset.x,y:b.dataset.y-a.dataset.y})}finally{a.classList.remove('st');b.classList.remove('st');story=0}};
  async function tell(){if(!cur||story||D.hidden)return;const L=[...cur.o.querySelectorAll('.bzp')].filter(b=>!b.classList.contains('sel'));if(L.length<2)return;
   /* el Alfa reúne a su manada */
   const al=L.find(b=>b.classList.contains('al'));if(al&&Math.random()<.18){story=1;try{bub(al,'❗');hop(al);await W8(500);L.filter(b=>b!==al&&Math.hypot(b.dataset.x-al.dataset.x,b.dataset.y-al.dataset.y)<420).forEach(b=>{mv(b,(al.dataset.x-b.dataset.x)*.35,(al.dataset.y-b.dataset.y)*.35);setTimeout(()=>bub(b,'❗',1200),300)});await W8(2200)}finally{story=0}return}
   for(let t=0;t<10;t++){const a=L[Math.random()*L.length|0],nb=L.filter(b=>b!==a&&Math.hypot(b.dataset.x-a.dataset.x,b.dataset.y-a.dataset.y)<560);if(!nb.length)continue;const b=nb[Math.random()*nb.length|0];
-   const d={x:b.dataset.x-a.dataset.x,y:b.dataset.y-a.dataset.y};story=1;a.classList.add('st');b.classList.add('st');
-   try{await STORIES[Math.random()*STORIES.length|0](a,b,d)}catch(e){}finally{a.classList.remove('st');b.classList.remove('st');story=0}return}}
- function wander(){if(!cur||D.hidden)return;if(Math.random()<.35)tell();cur.o.querySelectorAll('.bzp').forEach(b=>{if(b.classList.contains('st'))return;if(!b.classList.contains('sel')&&Math.random()<.12)act(b);if(Math.random()<.45||b.classList.contains('sel'))return;const dx=Math.round(Math.random()*120-60),dy=Math.round(Math.random()*70-35);mv(b,dx,dy)})}
+   const d={x:b.dataset.x-a.dataset.x,y:b.dataset.y-a.dataset.y};story=1;a.classList.add('st');b.classList.add('st');const A=MD(a),Bm=MD(b);
+   try{if(A&&Bm&&(A.lost===Bm.u||Bm.lost===A.u)){/* rivales: el que perdió huye o pide la revancha */const lo=A.lost===Bm.u?a:b,wi=lo===a?b:a,dd=lo===a?d:{x:-d.x,y:-d.y};
+     if(Math.random()<.45){bub(lo,'❗');await W8(400);bub(lo,'😰');mv(lo,-dd.x*.8,-dd.y*.8);await W8(500);bub(wi,'😤');await W8(1500)}else{bub(lo,'😠');await W8(500);bub(lo,'¡Revancha!',1500,'say');await W8(900);await brawl(lo,wi,dd,1)}}
+    else if(A&&Bm&&A.fr===Bm.u){const F=[STORIES[2],STORIES[3],STORIES[4],STORIES[5]];await F[Math.random()*F.length|0](a,b,d)}
+    else await STORIES[Math.random()*STORIES.length|0](a,b,d)}catch(e){}finally{a.classList.remove('st');b.classList.remove('st');story=0}return}}
+ function wander(){if(!cur||D.hidden)return;if(Math.random()<.35)tell();cur.o.querySelectorAll('.bzp').forEach(b=>{if(b.classList.contains('st'))return;if(!b.classList.contains('sel')&&Math.random()<.12)act(b);if(Math.random()<(b.classList.contains('hurt')?.75:.45)||b.classList.contains('sel'))return;const m=MD(b);if(m&&m.fr!=null){const f=cur.o.querySelector(`.bzp[data-u="${m.fr}"]`);if(f&&Math.random()<.6){const fx=f.dataset.x-b.dataset.x,fy=f.dataset.y-b.dataset.y,dl=Math.hypot(fx,fy)||1,k2=Math.max(0,(dl-110)/dl);mv(b,fx*k2+(Math.random()*40-20),fy*k2+(Math.random()*30-15));return}}const sc=b.classList.contains('hurt')?.5:1,dx=Math.round((Math.random()*120-60)*sc),dy=Math.round((Math.random()*70-35)*sc);mv(b,dx,dy)})}
  const zMin=()=>{const vp=cur.o.querySelector('.bz-vp');return Math.min(1,Math.max(vp.clientWidth/WW,vp.clientHeight/WH)*.98)},Z_MAX=3;
  function apply(){if(!cur)return;const vp=cur.o.querySelector('.bz-vp'),z=cur.z=Math.max(zMin(),Math.min(Z_MAX,cur.z||1)),w=vp.clientWidth/z,h=vp.clientHeight/z,c=cur.cam;
   c.x=w>=WW?(WW-w)/2:Math.max(0,Math.min(WW-w,c.x));c.y=h>=WH?(WH-h)/2:Math.max(0,Math.min(WH-h,c.y));cur.o.querySelector('.bz-w').style.transform=`scale(${z}) translate3d(${-c.x}px,${-c.y}px,0)`;lastCam[cur.k]={x:c.x,y:c.y};lastZ[cur.k]=z;if(cur.zs!==z){cur.zs=z;clearTimeout(cur.zt);cur.zt=setTimeout(()=>{try{localStorage.setItem('pa_bzz',String(Math.round(z*1000)/1000))}catch(e){}},250)}const zl=cur.o.querySelector('.bz-zl');if(zl)zl.textContent=Math.round(z*100)+'%'}
@@ -24296,7 +24343,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
   addEventListener('resize',apply)}
  function selMon(p,m){cur.sel=m.u;cur.o.querySelectorAll('.bzp.sel').forEach(x=>x.classList.remove('sel'));p.classList.add('sel');p.style.translate='0 0';bp(m.sh?1175:m.alpha?520:700);
   const c=cur.o.querySelector('.bz-card');c.hidden=false;const own=(()=>{try{if([...(R.team||[]),...(R.box||[])].some(x=>x&&x.id==m.id))return 1}catch(e){}try{return !!JSON.parse(localStorage.getItem('pokerogue_pokedex_v1')||'{}').c[m.id]}catch(e){return 0}})();
-  c.innerHTML=`<img src="${mini(m.id,m.sh)}" alt=""><div><b>${m.sh?'✨ ':''}${esc(nmS(m))}${own?`<span class="own" title="Ya capturado" aria-label="Ya capturado">${(typeof IC==='object'&&IC.ball)||'⚪'}</span>`:''}${m.alpha?' <em class="bzca">Alfa</em>':''}</b><small>Nv. ${m.lvl}${m.sh?' · ¡Shiny!':''}${m.alpha?' · más fuerte':''}</small></div><button type="button" data-b="fight">⚔️ Combatir</button><button type="button" class="bz-cx" data-b="x" aria-label="Cerrar">✕</button>`}
+  c.innerHTML=`<img src="${mini(m.id,m.sh)}" alt=""><div><b>${m.sh?'✨ ':''}${esc(nmS(m))}${own?`<span class="own" title="Ya capturado" aria-label="Ya capturado">${(typeof IC==='object'&&IC.ball)||'⚪'}</span>`:''}${m.alpha?' <em class="bzca">Alfa</em>':''}</b><small>Nv. ${m.lvl}${m.sh?' · ¡Shiny!':''}${m.alpha?' · más fuerte':''}</small>${(()=>{const L=allMons(BD()[cur.k]),f=u=>{const x=L.find(y=>y.u===u);return x?esc(nmS(x)):null},o=[];if(m.fr!=null&&f(m.fr))o.push('🤝 Amigo de '+f(m.fr));if(m.beat!=null&&f(m.beat))o.push('🏆 Ganó a '+f(m.beat)+((m.wins|0)>1?' (×'+m.wins+')':''));if(m.lost!=null&&f(m.lost))o.push('🩹 Perdió contra '+f(m.lost));return o.length?`<small class="bzrel">${o.join(' · ')}</small>`:''})()}</div><button type="button" data-b="fight">⚔️ Combatir</button><button type="button" class="bz-cx" data-b="x" aria-label="Cerrar">✕</button>`}
  function desel(){if(!cur)return;cur.sel=null;cur.o.querySelectorAll('.bzp.sel').forEach(x=>x.classList.remove('sel'));const c=cur.o.querySelector('.bz-card');if(c)c.hidden=true}
  function close2(back){if(!cur)return;clearInterval(cur.wt);try{cur.o.remove()}catch(e){}cur=null;if(back)bp(520)}
  async function fightSel(){if(!cur||cur.sel==null)return;const k=cur.k,d=BD()[k],m=allMons(d).find(x=>x.u===cur.sel);if(!m)return;const r=live();if(!r||R.lock)return;
