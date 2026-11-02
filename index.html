@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v49.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -366,8 +366,8 @@ const RAW={normal:'rock.5 steel.5 ghost0',fire:'fire.5 water.5 grass2 ice2 bug2 
 const CH={};T.forEach(t=>{CH[t]={};RAW[t].split(' ').forEach(x=>{const m=x.match(/^([a-z]+)(.*)$/);CH[t][m[1]]=+m[2]})});
 const eff=(t,d)=>d.reduce((m,x)=>m*(CH[t][x]??1),1);
 
-const art=(id,sh)=>(window.CART&&CART[id])||`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${sh?'shiny/':''}${id}.png`;
-const mini=(id,sh)=>(window.CART&&CART[id])||`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${sh?'shiny/':''}${id}.png`;
+const art=(id,sh)=>(window.CART&&(sh&&CART[id+'_s']||CART[id]))||`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${sh?'shiny/':''}${id}.png`;
+const mini=(id,sh)=>(window.CART&&(sh&&CART[id+'_s']||CART[id]))||`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${sh?'shiny/':''}${id}.png`;
 const SHINY_RATE=1/64; /* probabilidad de que cualquier Pokémon generado sea shiny */
 const sn=n=>n.replace(/[^a-z0-9]/g,'');
 /* ---------- Megaevoluciones: especies que pueden megaevolucionar (id → formas) ---------- */
@@ -8594,7 +8594,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'48.9',t:'Mochila, tienda y combates más cómodos',s:'cur',l:[
+ {v:'49.0',t:'Mega Haxorus',s:'cur',l:[
+  '🐉 Nueva megaevolución inventada: Mega Haxorus, con ilustración propia y su versión shiny (negra) para los Haxorus shiny',
+  '🔧 Arreglado: con el botón Mega en medio de los ataques, la eficacia (▲ ×2, ▼ ×½, ✖ No afecta…) quedaba tapada; ahora va en su propia línea, hacia el lado de fuera de cada botón'
+]},
+{v:'48.9',t:'Mochila, tienda y combates más cómodos',s:'prev',l:[
   '🧺 Tienda: botón «Reponer básicos» en Objetos y Poké Balls: de un toque completa hasta 10 Pociones pequeñas, 5 medianas, 3 Revivir, 10 Poké Balls y 5 Súper Balls (solo compra lo que falta y lo que puedes pagar, y te dice el precio antes)',
   '🎒 Mochila: los objetos que ahora mismo no harían nada (pociones con el equipo sano, Revivir sin nadie debilitado, Éter con los PP llenos, antídotos sin nadie envenenado…) se ven apagados con «Sin efecto»',
   '💊 Combates: el botón Mochila muestra una píldora cuando tu Pokémon está en las últimas o tienes a alguien debilitado y llevas con qué curarlo'
@@ -20971,6 +20975,11 @@ body.lowfx .bzp img{filter:drop-shadow(0 4px 3px #0007)!important}
 .box.shop .srs{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:1px;margin:6px 0 4px;width:100%;background:linear-gradient(180deg,#14532d,#166534);border-color:#4ade80}
 .box.shop .srs small{font-size:10px;opacity:.85;font-weight:600;line-height:1.2}
 .box.shop .srs:disabled{opacity:.55;filter:grayscale(.5)}
+/* v49.0: con el botón Mega en medio, la eficacia de cada ataque va en su propia línea y hacia fuera (no queda tapada) */
+#opts .mvg.mg .mvb small{display:block!important}
+#opts .mvg.mg .mvb small .mcat{margin-right:3px}
+#opts .mvg.mg .mvb small .eff,#opts .mvg.mg .mvb small .mvimm{display:table!important;margin:3px auto 0 0!important}
+#opts .mvg.mg .mvb:nth-child(even) small .eff,#opts .mvg.mg .mvb:nth-child(even) small .mvimm{margin:3px 0 0 auto!important}
 </style>
 <script id="v37js">
 (()=>{
@@ -23581,6 +23590,12 @@ CART.mgengarz='assets/7b3bf9b656e0.webp';
 const cur=MEGAF[94]||[''];if(!cur.includes('z'))cur.push('z');MEGAF[94]=cur;
 window.MEGART=window.MEGART||{};MEGART['94|z']='mgengarz';
 window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
+})();
+
+/* ---------- v49.0: Mega Haxorus (con su versión shiny) ---------- */
+(()=>{if(typeof MEGAF!=='object')return;window.CART=window.CART||{};CART.mhaxorus='assets/d85e72f5f3da.webp';CART.mhaxorus_s='assets/3e1461577ab5.webp';
+const cur=MEGAF[612]||[];if(!cur.includes(''))cur.push('');MEGAF[612]=cur;
+window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
 })();
 
 /* ---------- v45.2: 2 contra 2: los sprites se colocan en los huecos libres, sin quedar tapados por las tarjetas ---------- */
