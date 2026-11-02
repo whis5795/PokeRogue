@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.6</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.7</div>
 </section>
 
 <section id="team" class="scr">
@@ -4414,6 +4414,7 @@ window.openPokedex=async function(){
       {let sh=!!DX.sh[id];const im=Z('#dpimg'),bt=Z('#dpsh'),ap=()=>{im.src=art(id,sh);bt.textContent=sh?'↩ Ver normal':'✨ Ver shiny'};ap();bt.onclick=()=>{sh=!sh;ap()}}
       try{const d=await getD(id);if(!Z('#dpx'))return;
         Z('#dpy').innerHTML=d.types.map(t=>typeof tyi=='function'?tyi(t):ES[t]).join('')+tgb(id);
+        try{const bk=(TAGS[id]||id===201)?null:biomeOf(d.types),bb=bk&&BIO.find(x=>x.k===bk),bn=bb?(bb.k==='cav'?'Desierto rocoso':bb.n):'';Z('#dpy').insertAdjacentHTML('afterend',`<small class="dpbio">${bb?`🌿 Sale en: <b>${bb.ic} ${bn}</b>`:id===201?'🏛️ Solo en las ruinas':'✨ No sale en los biomas'}</small>`)}catch(e){}
         const mx=Math.max(...d.st);Z('#dps').innerHTML=d.st.map((v,i)=>`<span>${STL[i]}</span><span class="bar"><i style="width:${Math.min(100,v/180*100)}%;background:${STC[i]}"></i></span><b>${v}</b>`).join('')+`<small style="grid-column:1/-1;margin-top:4px">Total base: <b>${d.st.reduce((a,b)=>a+b,0)}</b></small>`}
       catch(e){if(Z('#dps'))Z('#dps').innerHTML='<small style="grid-column:1/-1">No se pudieron cargar los datos.</small>'}};
     const close=()=>{o.remove();res()};
@@ -8589,7 +8590,15 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'48.6',t:'Optimización y arreglos',s:'cur',l:[
+ {v:'48.7',t:'Mucha calidad de vida',s:'cur',l:[
+  '🗺️ Biomas: minimapa en la esquina con todos los Pokémon de la zona (los Alfas en rojo) y el trozo que estás viendo. Tócalo para ir directo a ese sitio',
+  '🔎 Biomas: nuevo botón para saltar de grupo en grupo de Pokémon sin tener que buscarlos arrastrando',
+  '🏷️ Biomas: la tarjeta de cada Pokémon muestra sus tipos, si es 🆕 nuevo para tu Pokédex y cómo le va a tu primer Pokémon (▲ tu mejor ataque eficaz, ▼ si tus ataques no son muy eficaces o ✖ si no le afectan)',
+  '💔 Biomas: si tu equipo está débil al ir a combatir, te avisa y te deja curarlo con las pociones justas de tu mochila en un toque',
+  '⌨️ PC: en el mapa, las teclas 1, 2 y 3 cambian entre Ruta, Pueblo y Biomas. Dentro de un bioma: flechas o WASD para moverte, +/− zoom, Tab siguiente grupo, Enter para combatir con el elegido y Esc para volver a la isla',
+  '📖 Pokédex: la ficha de cada Pokémon dice en qué bioma sale (o si solo sale en las ruinas o en ningún bioma)'
+]},
+{v:'48.6',t:'Optimización y arreglos',s:'prev',l:[
   '⚡ Más fluido: varias partes del juego vigilaban toda la página en cada cambio (botones de la Caja, historial de avisos, vitrina); ahora comparten un solo vigilante que trabaja como mucho una vez por fotograma',
   '⚡ La cortina del mapa revisa menos a menudo si hay otra ventana abierta y no trabaja con el juego en segundo plano',
   '⚡ En calidad gráfica baja, los Pokémon de los biomas no hacen la animación de respirar (menos trabajo para móviles lentos)',
@@ -20929,6 +20938,20 @@ html.vm-pc body[data-v=menu] #menu h1{margin-top:34px}
 #mrd .mr-bmv span i{font-style:normal;font-size:10px}
 body.lowfx .bzp .bzr,body.lowfx .bzp .hds{animation:none!important}
 body.lowfx .bzp img{filter:drop-shadow(0 4px 3px #0007)!important}
+/* v48.7: minimapa, buscar, tarjeta ampliada */
+#bzv .bz-mm{position:absolute;right:10px;top:calc(10px + env(safe-area-inset-top));width:108px;height:117px;border-radius:12px;overflow:hidden;border:2px solid #fde68acc;box-shadow:0 6px 16px #000a;background:#0b0720;cursor:pointer;z-index:4;touch-action:none}
+#bzv .bz-mm canvas{width:100%;height:100%;display:block;opacity:.85}
+#bzv .bz-mmd{position:absolute;inset:0;pointer-events:none}#bzv .bz-mmd i{position:absolute;width:5px;height:5px;margin:-2.5px;border-radius:50%;background:#fff;box-shadow:0 0 2px #000}#bzv .bz-mmd i.a{width:8px;height:8px;margin:-4px;background:#ef4444;border:1px solid #fff}
+#bzv .bz-mmv{position:absolute;border:2px solid #fde047;border-radius:3px;pointer-events:none;box-shadow:0 0 0 999px #0003}
+#bzv .bz-seek{width:30px;height:30px;border-radius:50%;border:2px solid #fde68a;background:#1e1b4bdd;color:#fff;font-size:14px;cursor:pointer;padding:0}
+#bzv .bz-card .bzty{display:flex;flex-wrap:wrap;align-items:center;gap:3px;margin-top:3px;opacity:1}
+#bzv .bz-card .bzm{font-style:normal;font-size:10px;font-weight:800;padding:1px 6px;border-radius:6px;margin-left:2px}#bzv .bz-card .bzm.up{background:#16a34a}#bzv .bz-card .bzm.dn{background:#b91c1c}
+#bzv .bz-card .bznew{color:#86efac}
+.dpbio{display:block;margin-top:4px;font-size:12px;color:#bbf7d0}
+@media (max-width:820px){#bzv .bz-mm{width:90px;height:98px}}
+@media (max-width:820px){#bzv:has(.bz-card:not([hidden])) .bz-hud{bottom:calc(140px + env(safe-area-inset-bottom))}}
+#bzv .bz-card .bzty .vt-ty{font-size:9.5px}
+#bzv .bz-card small{white-space:nowrap}
 </style>
 <script id="v37js">
 (()=>{
@@ -24296,15 +24319,23 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  async function enterBiome(k,cam,fresh){const r=live();if(!r)return;let d=BD()[k];if(fresh){delete lastCam[k]}const hadCam=!!cam;
   close2();const o=D.createElement('div');o.id='bzv';o.className='bz-'+k;const i=BI(k),lv=window.zoneLv&&i>=0?zoneLv(i):0;
   o.innerHTML=`<div class="bz-vp"><div class="bz-w" style="width:${WW}px;height:${WH}px"><canvas class="bz-bg" width="${WW}" height="${WH}"></canvas><div class="bz-pk"></div></div></div>
-   <div class="bz-hud"><button type="button" class="bz-back" data-b="back">← Isla</button><span class="bz-n"></span><button type="button" class="bz-i" data-b="guide" aria-label="Guía del bioma">i</button></div>
+   <div class="bz-hud"><button type="button" class="bz-back" data-b="back">← Isla</button><span class="bz-n"></span><button type="button" class="bz-i" data-b="guide" aria-label="Guía del bioma">i</button><button type="button" class="bz-seek" data-b="seek" aria-label="Ir al siguiente Pokémon" title="Siguiente Pokémon">🔎</button></div><div class="bz-mm" aria-label="Minimapa"><canvas width="120" height="130"></canvas><div class="bz-mmd"></div><i class="bz-mmv"></i></div>
    <div class="bz-zoom"><button type="button" data-b="zi" aria-label="Acercar">＋</button><span class="bz-zl">100%</span><button type="button" data-b="zo" aria-label="Alejar">－</button><button type="button" data-b="zf" aria-label="Ver todo" title="Ver todo">⤢</button></div><div class="bz-card" hidden></div><div class="bz-tip">Arrastra para explorar · pellizca o usa ＋/－ para el zoom · toca un Pokémon</div><div class="bz-load"><i></i><span>Explorando ${esc(ZN[k].n)}…</span></div>`;
   D.body.append(o);cur={k,o,cam:cam||lastCam[k]||{x:(WW-innerWidth)/2,y:(WH-innerHeight)/2},z:(()=>{try{const v=parseFloat(localStorage.getItem('pa_bzz'));if(v>0)return v}catch(e){}return innerWidth<600?.8:1})(),sel:null,wt:0};bindDrag(o);apply();
   if(fresh||needGen(k)){d=await genBiome(k)}if(!cur||cur.o!==o)return;d=BD()[k];o.querySelector('.bz-load').remove();
   if(!d||d.cl!=null){o.querySelector('.bz-pk').innerHTML='';o.querySelector('.bz-tip').textContent=d&&d.cl!=null?'¡Has despejado la zona! Sal y vuelve a entrar para encontrar más Pokémon':'No se pudo explorar la zona. Revisa tu conexión';}
-  try{drawBG(o.querySelector('.bz-bg'),k,(d&&d.seed)||7)}catch(e){console.error(e)}
+  try{drawBG(o.querySelector('.bz-bg'),k,(d&&d.seed)||7)}catch(e){console.error(e)}mmBg();
   if(!hadCam&&d&&d.g&&d.g.length){const g0=d.g[0].m,cx=g0.reduce((a,m)=>a+m.x,0)/g0.length,cy=g0.reduce((a,m)=>a+m.y,0)/g0.length,vp=o.querySelector('.bz-vp');cur.cam={x:cx-vp.clientWidth/2/cur.z,y:cy-vp.clientHeight/2/cur.z};apply()}
   paintPk();cur.wt=setInterval(wander,2600);setTimeout(()=>{const t=o.querySelector('.bz-tip');if(t)t.classList.add('off')},3500)}
- function paintPk(){if(!cur)return;const d=BD()[cur.k],L=allMons(d);cur.o.querySelector('.bz-pk').innerHTML=L.map(pkH).join('');cur.o.querySelectorAll('.bzp').forEach(tag);cur.o.querySelector('.bz-n').textContent=`🐾 ${L.length}`}
+ /* v48.7: minimapa (toca para ir) y botón para saltar al siguiente Pokémon */
+ function mmBg(){if(!cur)return;try{const c=cur.o.querySelector('.bz-mm canvas'),bg=cur.o.querySelector('.bz-bg');c.getContext('2d').drawImage(bg,0,0,c.width,c.height)}catch(e){}}
+ function mmDots(){if(!cur)return;const L=allMons(BD()[cur.k]),el=cur.o.querySelector('.bz-mmd');if(el)el.innerHTML=L.map(m=>`<i class="${m.alpha?'a':''}" style="left:${(m.x/WW*100).toFixed(1)}%;top:${(m.y/WH*100).toFixed(1)}%"></i>`).join('')}
+ function mmView(){if(!cur)return;const v=cur.o.querySelector('.bz-mmv'),vp=cur.o.querySelector('.bz-vp');if(!v||!vp)return;const z=cur.z||1,w=vp.clientWidth/z,h=vp.clientHeight/z;v.style.left=(Math.max(0,cur.cam.x)/WW*100)+'%';v.style.top=(Math.max(0,cur.cam.y)/WH*100)+'%';v.style.width=Math.min(100,w/WW*100)+'%';v.style.height=Math.min(100,h/WH*100)+'%'}
+ function flyTo(x,y){if(!cur)return;const vp=cur.o.querySelector('.bz-vp'),z=cur.z||1,tx=x-vp.clientWidth/2/z,ty=y-vp.clientHeight/2/z,sx=cur.cam.x,sy=cur.cam.y,t0=performance.now(),D0=450;const st=t=>{if(!cur)return;const k=Math.min(1,(t-t0)/D0),e=1-Math.pow(1-k,3);cur.cam.x=sx+(tx-sx)*e;cur.cam.y=sy+(ty-sy)*e;apply();if(k<1)requestAnimationFrame(st)};requestAnimationFrame(st)}
+ function seek(){if(!cur)return;const L=allMons(BD()[cur.k]);if(!L.length)return;const vp=cur.o.querySelector('.bz-vp'),z=cur.z||1,cx=cur.cam.x+vp.clientWidth/2/z,cy=cur.cam.y+vp.clientHeight/2/z;
+  /* recorre los grupos por orden: el siguiente que no estés viendo */const G=(BD()[cur.k].g||[]).filter(g=>g.m.length).map(g=>({x:g.m.reduce((a,m)=>a+m.x,0)/g.m.length,y:g.m.reduce((a,m)=>a+m.y,0)/g.m.length}));
+  cur.si=((cur.si==null?-1:cur.si)+1)%G.length;let g=G[cur.si];if(Math.hypot(g.x-cx,g.y-cy)<80&&G.length>1){cur.si=(cur.si+1)%G.length;g=G[cur.si]}flyTo(g.x,g.y);bp(700)}
+ function paintPk(){if(!cur)return;const d=BD()[cur.k],L=allMons(d);cur.o.querySelector('.bz-pk').innerHTML=L.map(pkH).join('');cur.o.querySelectorAll('.bzp').forEach(tag);mmDots();cur.o.querySelector('.bz-n').textContent=`🐾 ${L.length}`}
  const EMO=['♪','❤️','❗','💢','🍃','💧','❓','😊'];
  const bub=(b,t,ms,cls)=>{if(!b||!b.isConnected)return;b.querySelectorAll('.bze').forEach(e=>e.remove());const e=D.createElement('i');e.className='bze'+(cls?' '+cls:'');e.textContent=t;e.style.animationDuration=(ms||1900)+'ms';b.append(e);setTimeout(()=>e.remove(),ms||1900)};
  const hop=b=>{if(!b)return;b.classList.remove('hop');void b.offsetWidth;b.classList.add('hop');setTimeout(()=>b.classList.remove('hop'),700)};
@@ -24359,7 +24390,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  function wander(){if(!cur||D.hidden)return;if(Math.random()<.35)tell();cur.o.querySelectorAll('.bzp').forEach(b=>{if(b.classList.contains('st'))return;if(!b.classList.contains('sel')&&Math.random()<.12)act(b);if(Math.random()<(b.classList.contains('hurt')?.75:.45)||b.classList.contains('sel'))return;const m=MD(b);if(m&&m.fr!=null){const f=cur.o.querySelector(`.bzp[data-u="${m.fr}"]`);if(f&&Math.random()<.6){const fx=f.dataset.x-b.dataset.x,fy=f.dataset.y-b.dataset.y,dl=Math.hypot(fx,fy)||1,k2=Math.max(0,(dl-110)/dl);mv(b,fx*k2+(Math.random()*40-20),fy*k2+(Math.random()*30-15));return}}const sc=b.classList.contains('hurt')?.5:1,dx=Math.round((Math.random()*120-60)*sc),dy=Math.round((Math.random()*70-35)*sc);mv(b,dx,dy)})}
  const zMin=()=>{const vp=cur.o.querySelector('.bz-vp');return Math.min(1,Math.max(vp.clientWidth/WW,vp.clientHeight/WH)*.98)},Z_MAX=3;
  function apply(){if(!cur)return;const vp=cur.o.querySelector('.bz-vp'),z=cur.z=Math.max(zMin(),Math.min(Z_MAX,cur.z||1)),w=vp.clientWidth/z,h=vp.clientHeight/z,c=cur.cam;
-  c.x=w>=WW?(WW-w)/2:Math.max(0,Math.min(WW-w,c.x));c.y=h>=WH?(WH-h)/2:Math.max(0,Math.min(WH-h,c.y));cur.o.querySelector('.bz-w').style.transform=`scale(${z}) translate3d(${-c.x}px,${-c.y}px,0)`;lastCam[cur.k]={x:c.x,y:c.y};lastZ[cur.k]=z;if(cur.zs!==z){cur.zs=z;clearTimeout(cur.zt);cur.zt=setTimeout(()=>{try{localStorage.setItem('pa_bzz',String(Math.round(z*1000)/1000))}catch(e){}},250)}const zl=cur.o.querySelector('.bz-zl');if(zl)zl.textContent=Math.round(z*100)+'%'}
+  c.x=w>=WW?(WW-w)/2:Math.max(0,Math.min(WW-w,c.x));c.y=h>=WH?(WH-h)/2:Math.max(0,Math.min(WH-h,c.y));cur.o.querySelector('.bz-w').style.transform=`scale(${z}) translate3d(${-c.x}px,${-c.y}px,0)`;lastCam[cur.k]={x:c.x,y:c.y};lastZ[cur.k]=z;mmView();if(cur.zs!==z){cur.zs=z;clearTimeout(cur.zt);cur.zt=setTimeout(()=>{try{localStorage.setItem('pa_bzz',String(Math.round(z*1000)/1000))}catch(e){}},250)}const zl=cur.o.querySelector('.bz-zl');if(zl)zl.textContent=Math.round(z*100)+'%'}
  function zoomAt(nz,fx,fy){if(!cur)return;const vp=cur.o.querySelector('.bz-vp'),r=vp.getBoundingClientRect();fx=fx==null?r.width/2:fx-r.left;fy=fy==null?r.height/2:fy-r.top;const z0=cur.z,wx=cur.cam.x+fx/z0,wy=cur.cam.y+fy/z0;cur.z=Math.max(zMin(),Math.min(Z_MAX,nz));cur.cam.x=wx-fx/cur.z;cur.cam.y=wy-fy/cur.z;apply()}
  function bindDrag(o){const vp=o.querySelector('.bz-vp');let st=null,vx=0,vy=0,raf=0,lt=0;const PT=new Map();let pin=null;
   vp.addEventListener('pointerdown',e=>{if(e.button)return;PT.set(e.pointerId,{x:e.clientX,y:e.clientY});cancelAnimationFrame(raf);
@@ -24371,21 +24402,34 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
   const up=e=>{PT.delete(e.pointerId);if(PT.size<2)pin=null;if(!st)return;const moved=st.mv;st=null;vp.classList.remove('drag');if(moved){cur.drag=performance.now();let x=vx*16,y=vy*16;const go=()=>{x*=.92;y*=.92;if(Math.abs(x)+Math.abs(y)<.5||!cur)return;cur.cam.x+=x;cur.cam.y+=y;apply();raf=requestAnimationFrame(go)};raf=requestAnimationFrame(go)}};
   vp.addEventListener('pointerup',up);vp.addEventListener('pointercancel',up);
   vp.addEventListener('wheel',e=>{e.preventDefault();if(e.ctrlKey||e.metaKey||!e.deltaX&&Math.abs(e.deltaY)>=50&&e.deltaMode===0&&!e.shiftKey&&Number.isInteger(e.deltaY)){zoomAt(cur.z*Math.exp(-e.deltaY*(e.ctrlKey?.01:.0018)),e.clientX,e.clientY);return}cur.cam.x+=(e.deltaX||(e.shiftKey?e.deltaY:0))/cur.z;cur.cam.y+=(e.shiftKey?0:e.deltaY)/cur.z;apply()},{passive:false});
-  o.addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b){if(b.dataset.b==='guide'){const i=BI(cur.k);if(i>=0&&window.openBiomeDex)openBiomeDex(i);return}if(b.dataset.b==='zi')zoomAt(cur.z*1.25);else if(b.dataset.b==='zo')zoomAt(cur.z/1.25);else if(b.dataset.b==='zf')zoomAt(0);else if(b.dataset.b==='back')close2(true);else if(b.dataset.b==='fight')fightSel();else if(b.dataset.b==='x')desel();return}
+  o.addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b){if(b.dataset.b==='seek'){seek();return}if(b.dataset.b==='guide'){const i=BI(cur.k);if(i>=0&&window.openBiomeDex)openBiomeDex(i);return}if(b.dataset.b==='zi')zoomAt(cur.z*1.25);else if(b.dataset.b==='zo')zoomAt(cur.z/1.25);else if(b.dataset.b==='zf')zoomAt(0);else if(b.dataset.b==='back')close2(true);else if(b.dataset.b==='fight')fightSel();else if(b.dataset.b==='x')desel();return}
    const p=e.target.closest('.bzp');if(p){if(cur.drag&&performance.now()-cur.drag<250)return;const m=allMons(BD()[cur.k]).find(x=>x.u===+p.dataset.u);if(!m)return;if(cur.sel===m.u)return fightSel();selMon(p,m);return}
    if(!(cur.drag&&performance.now()-cur.drag<250))desel()});
+  const mm=o.querySelector('.bz-mm');if(mm){const go=e=>{e.preventDefault();e.stopPropagation();const r=mm.getBoundingClientRect();flyTo((e.clientX-r.left)/r.width*WW,(e.clientY-r.top)/r.height*WH)};mm.addEventListener('pointerdown',go)}
   addEventListener('resize',apply)}
+ /* teclado (PC): flechas/WASD mueven, +/- zoom, Esc vuelve a la isla, Enter combate con el elegido, Tab salta al siguiente Pokémon */
+ addEventListener('keydown',e=>{if(!cur||!cur.o.isConnected)return;const m=Q('#mod');if(m&&getComputedStyle(m).display!=='none')return;const t=e.target;if(t&&/^(INPUT|TEXTAREA)$/.test(t.tagName))return;const k=e.key,st=60/(cur.z||1);let h=1;
+  if(k==='ArrowLeft'||k==='a'||k==='A')cur.cam.x-=st;else if(k==='ArrowRight'||k==='d'||k==='D')cur.cam.x+=st;else if(k==='ArrowUp'||k==='w'||k==='W')cur.cam.y-=st;else if(k==='ArrowDown'||k==='s'||k==='S')cur.cam.y+=st;
+  else if(k==='+'||k==='=')zoomAt(cur.z*1.2);else if(k==='-'||k==='_')zoomAt(cur.z/1.2);else if(k==='Escape'){close2(true);try{showMap()}catch(_){}}else if(k==='Enter'&&cur.sel!=null)fightSel();else if(k==='Tab'){seek()}else h=0;
+  if(h){e.preventDefault();e.stopPropagation();apply()}},true);
  function selMon(p,m){cur.sel=m.u;cur.o.querySelectorAll('.bzp.sel').forEach(x=>x.classList.remove('sel'));p.classList.add('sel');p.style.translate='0 0';bp(m.sh?1175:m.alpha?520:700);
-  const c=cur.o.querySelector('.bz-card');c.hidden=false;const own=(()=>{try{if([...(R.team||[]),...(R.box||[])].some(x=>x&&x.id==m.id))return 1}catch(e){}try{return !!JSON.parse(localStorage.getItem('pokerogue_pokedex_v1')||'{}').c[m.id]}catch(e){return 0}})();
-  c.innerHTML=`<img src="${mini(m.id,m.sh)}" alt=""><div><b>${m.sh?'✨ ':''}${esc(nmS(m))}${own?`<span class="own" title="Ya capturado" aria-label="Ya capturado">${(typeof IC==='object'&&IC.ball)||'⚪'}</span>`:''}${m.alpha?' <em class="bzca">Alfa</em>':''}</b><small>Nv. ${m.lvl}${m.sh?' · ¡Shiny!':''}${m.alpha?' · más fuerte':''}</small>${(()=>{const L=allMons(BD()[cur.k]),f=u=>{const x=L.find(y=>y.u===u);return x?esc(nmS(x)):null},o=[];if(m.fr!=null&&f(m.fr))o.push('🤝 Amigo de '+f(m.fr));if(m.beat!=null&&f(m.beat))o.push('🏆 Ganó a '+f(m.beat)+((m.wins|0)>1?' (×'+m.wins+')':''));if(m.lost!=null&&f(m.lost))o.push('🩹 Perdió contra '+f(m.lost));return o.length?`<small class="bzrel">${o.join(' · ')}</small>`:''})()}</div><button type="button" data-b="fight">⚔️ Combatir</button><button type="button" class="bz-cx" data-b="x" aria-label="Cerrar">✕</button>`}
+  const c=cur.o.querySelector('.bz-card');c.hidden=false;const tok=c._tok=(c._tok|0)+1;const own=(()=>{try{if([...(R.team||[]),...(R.box||[])].some(x=>x&&x.id==m.id))return 1}catch(e){}try{return !!JSON.parse(localStorage.getItem('pokerogue_pokedex_v1')||'{}').c[m.id]}catch(e){return 0}})();
+  c.innerHTML=`<img src="${mini(m.id,m.sh)}" alt=""><div><b>${m.sh?'✨ ':''}${esc(nmS(m))}${own?`<span class="own" title="Ya capturado" aria-label="Ya capturado">${(typeof IC==='object'&&IC.ball)||'⚪'}</span>`:''}${m.alpha?' <em class="bzca">Alfa</em>':''}</b><small>Nv. ${m.lvl}${m.sh?' · ¡Shiny!':''}${m.alpha?' · más fuerte':''}${own?'':' · <b class="bznew">🆕 Nuevo</b>'}</small><small class="bzty"></small>${(()=>{const L=allMons(BD()[cur.k]),f=u=>{const x=L.find(y=>y.u===u);return x?esc(nmS(x)):null},o=[];if(m.fr!=null&&f(m.fr))o.push('🤝 Amigo de '+f(m.fr));if(m.beat!=null&&f(m.beat))o.push('🏆 Ganó a '+f(m.beat)+((m.wins|0)>1?' (×'+m.wins+')':''));if(m.lost!=null&&f(m.lost))o.push('🩹 Perdió contra '+f(m.lost));return o.length?`<small class="bzrel">${o.join(' · ')}</small>`:''})()}</div><button type="button" data-b="fight">⚔️ Combatir</button><button type="button" class="bz-cx" data-b="x" aria-label="Cerrar">✕</button>`;
+  /* tipos del salvaje y cómo le va a tu primer Pokémon */
+  (async()=>{try{const dd=await getD(m.id);if(c._tok!==tok||!c.querySelector('.bzty'))return;const ty=dd.types||[],ld=R.team[R.li||0]||R.team[0];let best=0,bn='';if(ld&&ld.moves)ld.moves.forEach(v=>{if(!v.p)return;const e=eff(v.t,ty);if(e>best){best=e;bn=v.n}});
+   const tag=best>=2?`<em class="bzm up">▲ ${esc(bn)} ×${best}</em>`:best>0&&best<1?`<em class="bzm dn">▼ tus ataques ×${best}</em>`:best===0&&ld?'<em class="bzm dn">✖ no le afectan</em>':'';
+   c.querySelector('.bzty').innerHTML=ty.map(t=>`<i class="vt-ty" style="--c:${(typeof COL!=='undefined'&&COL[t])||'#64748b'}">${esc((typeof ES!=='undefined'&&ES[t])||t)}</i>`).join('')+tag}catch(e){}})()}
  function desel(){if(!cur)return;cur.sel=null;cur.o.querySelectorAll('.bzp.sel').forEach(x=>x.classList.remove('sel'));const c=cur.o.querySelector('.bz-card');if(c)c.hidden=true}
  function close2(back){if(!cur)return;clearInterval(cur.wt);try{cur.o.remove()}catch(e){}cur=null;if(back)bp(520)}
  async function fightSel(){if(!cur||cur.sel==null)return;const k=cur.k,d=BD()[k],m=allMons(d).find(x=>x.u===cur.sel);if(!m)return;const r=live();if(!r||R.lock)return;
+  /* v48.7: aviso si tu equipo está débil antes de combatir */
+  {const T=r.team,hp=T.reduce((a,x)=>a+Math.max(0,x.hp),0),mx=T.reduce((a,x)=>a+x.max,0),ld=T[R.li||0];if(T.some(x=>x.hp>0)&&(hp/mx<.35||(ld&&ld.hp<=0))){const q=await ask('💔 Tu equipo está débil',`<small>Tu equipo tiene un ${Math.round(hp/mx*100)}% de vida${ld&&ld.hp<=0?' y tu primer Pokémon está debilitado':''}.</small>`,['💊 Curar con la mochila y combatir','⚔️ Combatir igual','Cancelar']);if(q===2||q<0)return;if(q===0){const n=window.__healAuto?__healAuto():0;tst(n?`💊 ${n} objeto${n>1?'s':''} usado${n>1?'s':''}`:'No tienes pociones que sirvan')}}}
   if(!r.team.some(x=>x.hp>0))return tst('Tu equipo está debilitado: cúralo en el Centro Pokémon');if(!window.__herd||__herd.busy())return;
   const cam={...cur.cam};lastZ[k]=cur.z;close2();R.lock=1;const res=await __herd.fight(Object.assign({},m,{bio:k}),ZN[k].n);window.__lastHerd=res&&{won:res.won,caught:res.caught,err:res.err,fled:res.fled};
   const d2=BD()[k];if(res&&res.won&&d2&&d2.g){d2.g.forEach(g=>g.m=g.m.filter(x=>x.u!==m.u));d2.g=d2.g.filter(g=>g.m.length);if(!d2.g.length){BD()[k]={cl:r.round};tst(`🌿 ¡Has despejado ${ZN[k].n}! Sal y vuelve a entrar para encontrar más Pokémon`)}try{saveRun()}catch(e){}}
   if(res&&res.err)R.lock=0;
   if(D.body.dataset.v==='map'){try{if(tab!=='bio'){tab='bio';try{localStorage.setItem('pa_mtab','bio')}catch(_){}}showMap()}catch(e){}enterBiome(k,cam)}}
+ addEventListener('keydown',e=>{if(D.body.dataset.v!=='map'||Q('#bzv')||e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target;if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))return;const m=Q('#mod');if(m&&getComputedStyle(m).display!=='none')return;const i='123'.indexOf(e.key);if(i<0||!live()||R.lock)return;const k=TABS[i][0];if(k!==tab){e.preventDefault();setTab(k)}});
  window.__mtab={get:()=>tab,set:setTab,ZN,enter:(k,f)=>enterBiome(k,null,f!==0),gen:genBiome,cur:()=>cur};
 })();
 /* ===== v47.6: formas regionales (Alola, Galar, Hisui y Paldea): Pokédex, guías de bioma, biomas, evoluciones y nombres ===== */
