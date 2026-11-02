@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.8</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.9</div>
 </section>
 
 <section id="team" class="scr">
@@ -857,7 +857,7 @@ function chooseSwitch(forced){
 function menu(){
   B.busy=0;const p=act('p'),e=act('e'),mvs=p.moves.every(v=>v.cp<=0)?[STR]:p.moves;
   $('#msg').textContent=`¿Qué hará ${nm(p)}?`;
-  $('#opts').innerHTML='<div class="g mvg'+(megaCap(p)?(mvs.length>=3?' mg':' mg solo'):'')+'">'+mvs.map((m,i)=>{const x=((()=>{try{return MX.isSt(m)}catch(_){return !m.p}})())?1:ultraEff(p,m,eff(m.t,e.types));return`<button class="mvb${x===0?' imm':''}" data-i="${i}" ${m.cp<=0?'disabled':''} style="background:${COL[m.t]}">${m.n}<span class="ib" data-i="${i}">i</span><small>${ES[m.t]} · ${m.p||'Estado'} · PP ${m.cp}/${m.mp} ${x>1?'<b style="color:#15803d">▲</b>':x===0?'<b class="mvimm">✖ No afecta</b>':x<1?'<b style="color:#b91c1c">▼</b>':''}</small></button>`}).join('')+megaBtn(p)+`</div><div class="g" style="margin-top:7px"><button class="act ${B.free?'free':''}" id="bsw">🔄 Cambiar${B.free?' · gratis':''}</button><button class="act ${B.wt?'on':''}" id="bt" ${B.tu.p||p.teraOn||(B.adv&&p.lvl<30&&!CHT.tera)?'disabled':''}>${B.adv&&p.lvl<30&&!CHT.tera?'🔒 Tera (Nv.30)':IC.tera+' Tera '+ES[p.tera]}</button><button class="act" id="bg">${IC.bag} Mochila</button><button class="act" id="fl">Huir</button></div>`;
+  $('#opts').innerHTML='<div class="g mvg'+(megaCap(p)?(mvs.length>=3?' mg':' mg solo'):'')+'">'+mvs.map((m,i)=>{const x=((()=>{try{return MX.isSt(m)}catch(_){return !m.p}})())?1:ultraEff(p,m,eff(m.t,e.types));return`<button class="mvb${x===0?' imm':''}" data-i="${i}" ${m.cp<=0?'disabled':''} style="background:${COL[m.t]}">${m.n}<span class="ib" data-i="${i}">i</span><small>${ES[m.t]} · ${m.p||'Estado'} · PP ${m.cp}/${m.mp} ${x>1?'<b style="color:#15803d">▲</b>':x===0?'<b class="mvimm">✖ No afecta</b>':x<1?'<b style="color:#b91c1c">▼</b>':''}</small></button>`}).join('')+megaBtn(p)+`</div><div class="g" style="margin-top:7px"><button class="act ${B.free?'free':''}" id="bsw">🔄 Cambiar${B.free?' · gratis':''}</button><button class="act ${B.wt?'on':''}" id="bt" ${B.tu.p||p.teraOn||(B.adv&&p.lvl<30&&!CHT.tera)?'disabled':''}>${B.adv&&p.lvl<30&&!CHT.tera?'🔒 Tera (Nv.30)':IC.tera+' Tera '+ES[p.tera]}</button><button class="act${window.__bagHint&&__bagHint()?' bgn':''}" id="bg">${IC.bag} Mochila${window.__bagHint&&__bagHint()?'<i class="bgnb" aria-label="Puedes curar">💊</i>':''}</button><button class="act" id="fl">Huir</button></div>`;
   $$('.mvb').forEach(b=>b.onclick=ev=>{const m=mvs[+b.dataset.i];if(ev.target.classList.contains('ib'))mvInfo(m);else if(b.classList.contains('imm')&&!b.classList.contains('arm')){$$('.mvb.arm').forEach(z=>z.classList.remove('arm'));b.classList.add('arm');toast('✖ '+m.n+' no afecta a '+nm(e)+'. Tócalo otra vez si quieres usarlo igual')}else turn({mv:m})});
   {const bgb=$('#bg');if(bgb&&p.hp>0&&p.hp/p.max<=.25)bgb.classList.add('lowhp')}
   $('#bsw').onclick=async()=>{const i=await chooseSwitch(false);if(i==null)menu();else if(B.free){B.free=0;await swap('p',i);menu()}else turn({sw:i})};
@@ -1248,7 +1248,7 @@ async function bag(){R.team.forEach(m=>{try{evoFill(m)}catch(e){}});
     const N=Math.max(12,Math.ceil(it.length/4)*4);
     const x=await new Promise(res=>{
       const m=$('#mod');
-      m.innerHTML=`<div class="box bagb"><h3>${IC.bag} Mochila</h3>${hearts()}<small>${IC.coin} ${nf(R.money)} Pokémonedas</small><div class="sg">${Array.from({length:N},(_,i)=>it[i]?`<button class="sl" data-s="${i}" data-c="${bagCat(it[i])}">${it[i].ic}<b>${it[i].c}</b><small>${it[i].t}</small></button>`:'<div class="sl e"></div>').join('')}</div><div id="sd"><small>Toca un objeto para ver qué hace.</small></div>${R.ach?'<button class="act" id="ac">🏆 Logros y recompensas'+(achReady()?' · 🎁 '+achReady():'')+'</button>':''}<button class="act" id="pd">Pokédex</button><button class="act" id="gd">Guías (PDF)</button><button class="act" id="cl">Cerrar</button></div>`;
+      m.innerHTML=`<div class="box bagb"><h3>${IC.bag} Mochila</h3>${hearts()}<small>${IC.coin} ${nf(R.money)} Pokémonedas</small><div class="sg">${Array.from({length:N},(_,i)=>it[i]?`<button class="sl${!it[i].r&&window.__itUseful&&!__itUseful(it[i].k)?' nu':''}" data-s="${i}" data-k="${it[i].k||''}" data-c="${bagCat(it[i])}">${it[i].ic}<b>${it[i].c}</b><small>${it[i].t}</small></button>`:'<div class="sl e"></div>').join('')}</div><div id="sd"><small>Toca un objeto para ver qué hace.</small></div>${R.ach?'<button class="act" id="ac">🏆 Logros y recompensas'+(achReady()?' · 🎁 '+achReady():'')+'</button>':''}<button class="act" id="pd">Pokédex</button><button class="act" id="gd">Guías (PDF)</button><button class="act" id="cl">Cerrar</button></div>`;
       m.style.display='flex';let sel=-1;m.addEventListener('bagtab',()=>{sel=-1});m.addEventListener('chestrefresh',()=>{m.style.display='none';res('r')},{once:true});if(!MM.classList.contains('keep')){const bx=m.firstElementChild;if(bx)bx.addEventListener('animationend',e=>{if(e.animationName=='bxin')MM.classList.add('keep')})}
       $$('.sl[data-s]').forEach(b=>b.onclick=()=>{const i=+b.dataset.s,o=it[i];
         if(sel==i&&!o.r){m.style.display='none';res(o.k)}
@@ -1819,12 +1819,13 @@ window.shop=async function(){
    const L=lists(),old=M.querySelector('.sgrid'),sc=old?old.scrollTop:0,E=L[tab],ot=M.querySelector('.stabs'),sl=ot?ot.scrollLeft:0;
    M.innerHTML=`<div class="box shop"><div class="awn"></div><h3>Tienda</h3><div class="wal"><i>«¡Bienvenido! Todo a buen precio.»</i>${IC.coin} <span class="wn">${nf(R.money)}</span> Pokémonedas</div>
 <div class="stabs">${SHT.map((t,i)=>`<button type="button" class="stab${i==tab?' on':''}" data-t="${i}"><i>${t[0]}</i>${t[1]}<em>${L[i].length}</em></button>`).join('')}</div>
-<div class="sgrid">${E.length?E.map((e,i)=>`<div class="itw"><button type="button" class="act it ${e.cls}" data-i="${i}" ${e.off||R.money<e.p?'disabled':''}>${e.h}<span class="pr">${e.q&&qn(e)>1?'×'+qn(e)+' · ':''}${IC.coin}${nf(e.p*(e.q?qn(e):1))}</span></button><button type="button" class="sinf" data-inf="${i}" aria-label="Información de ${String(e.t||'objeto').replace(/"/g,'')}">i</button></div>`).join(''):'<div class="sempty">No queda nada de este tipo por hoy.</div>'}</div>
+<div class="sgrid">${tab<=1&&window.__rsPlan?(()=>{const P=__rsPlan();return`<button type="button" class="act srs" id="srs" ${P.L.length?'':'disabled'}><b>🧺 Reponer básicos${P.L.length?' · '+IC.coin+nf(P.c):''}</b><small>${P.L.length?P.L.map(([k,n])=>n+'× '+ITEM[k].n).join(' · '):(P.short?'No te alcanzan las Pokémonedas para reponer más':'Ya tienes suficientes pociones, Revivir y Poké Balls')}</small></button>`})():''}${E.length?E.map((e,i)=>`<div class="itw"><button type="button" class="act it ${e.cls}" data-i="${i}" ${e.off||R.money<e.p?'disabled':''}>${e.h}<span class="pr">${e.q&&qn(e)>1?'×'+qn(e)+' · ':''}${IC.coin}${nf(e.p*(e.q?qn(e):1))}</span></button><button type="button" class="sinf" data-inf="${i}" aria-label="Información de ${String(e.t||'objeto').replace(/"/g,'')}">i</button></div>`).join(''):'<div class="sempty">No queda nada de este tipo por hoy.</div>'}</div>
 <button type="button" class="act sexit" id="sx">Salir de la tienda</button></div>`;
    M.style.display='flex';qtyUI();{M.querySelectorAll('.frr').forEach(e=>e.remove());const h=rrBtn(tab);if(h){const w=document.createElement('div');w.className='frr';w.innerHTML=h;const bb=w.firstElementChild;bb.onclick=ev=>{ev.stopPropagation();if(!bb.disabled)doRR(tab)};M.append(w)}}
    const box=M.querySelector('.box'),g=M.querySelector('.sgrid');g.scrollTop=sc;const nt=M.querySelector('.stabs');if(nt)nt.scrollLeft=sl;
    box.onclick=e=>{
     const t=e.target.closest('[data-t]'),b=e.target.closest('.it[data-i]'),rrb=e.target.closest('.rr[data-rr]');
+     {const rs=e.target.closest('#srs');if(rs){if(!rs.disabled&&window.__rsBuy){const n=__rsBuy();if(n){try{ach('buy')}catch(_){}beep(600,.1);try{toast('🧺 Repuesto: '+n+' objeto'+(n>1?'s':''))}catch(_){}draw()}}return}}
      if(rrb){if(!rrb.disabled)doRR(+rrb.dataset.rr);return}
     if(t){tab=+t.dataset.t;try{localStorage.setItem('pa_shtab',tab)}catch(_){}draw();const s=M.querySelector('.sgrid');if(s)s.scrollTop=0;return}
     const inf=e.target.closest('[data-inf]');if(inf){e.stopPropagation();sInfo(+inf.dataset.inf);return}
@@ -8593,7 +8594,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'48.8',t:'Modos rápidos',s:'cur',l:[
+ {v:'48.9',t:'Mochila, tienda y combates más cómodos',s:'cur',l:[
+  '🧺 Tienda: botón «Reponer básicos» en Objetos y Poké Balls: de un toque completa hasta 10 Pociones pequeñas, 5 medianas, 3 Revivir, 10 Poké Balls y 5 Súper Balls (solo compra lo que falta y lo que puedes pagar, y te dice el precio antes)',
+  '🎒 Mochila: los objetos que ahora mismo no harían nada (pociones con el equipo sano, Revivir sin nadie debilitado, Éter con los PP llenos, antídotos sin nadie envenenado…) se ven apagados con «Sin efecto»',
+  '💊 Combates: el botón Mochila muestra una píldora cuando tu Pokémon está en las últimas o tienes a alguien debilitado y llevas con qué curarlo'
+]},
+{v:'48.8',t:'Modos rápidos',s:'prev',l:[
   '⏩ Ajustes nuevos: Victoria rápida (la pantalla de premios se cierra sola), Captura rápida (la Ball se lanza en un instante) y Evolución rápida (la animación va a toda velocidad)',
   '🧹 Biomas más limpios: se quitan el minimapa, el botón de buscar y los atajos de teclado'
 ]},
@@ -20956,6 +20962,15 @@ body.lowfx .bzp img{filter:drop-shadow(0 4px 3px #0007)!important}
 @media (max-width:820px){#bzv:has(.bz-card:not([hidden])) .bz-hud{bottom:calc(140px + env(safe-area-inset-bottom))}}
 #bzv .bz-card .bzty .vt-ty{font-size:9.5px}
 #bzv .bz-card small{white-space:nowrap}
+/* v48.9 QoL */
+.sl.nu{opacity:.42;filter:grayscale(.7)}
+.sl.nu::after{content:'Sin efecto';position:absolute;left:50%;bottom:2px;transform:translateX(-50%);font-size:7.5px;font-weight:800;background:#0009;color:#fff;padding:0 4px;border-radius:4px;white-space:nowrap;pointer-events:none}
+#bg.bgn{position:relative}
+#bg .bgnb{position:absolute;top:3px;right:5px;font-style:normal;font-size:14px;line-height:1;animation:bgnp 1.1s ease-in-out infinite;pointer-events:none}
+@keyframes bgnp{50%{transform:scale(1.25)}}
+.box.shop .srs{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:1px;margin:6px 0 4px;width:100%;background:linear-gradient(180deg,#14532d,#166534);border-color:#4ade80}
+.box.shop .srs small{font-size:10px;opacity:.85;font-weight:600;line-height:1.2}
+.box.shop .srs:disabled{opacity:.55;filter:grayscale(.5)}
 </style>
 <script id="v37js">
 (()=>{
@@ -24512,6 +24527,31 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  /* botón en la cortina, junto a «Fijar mapa» */
  setInterval(()=>{const t=Q('#shade .sh-tools');if(t&&!Q('#mmove')){const b=D.createElement('button');b.id='mmove';b.type='button';b.innerHTML='<span>↕</span> Mover mapa';b.onclick=e=>{e.stopPropagation();start()};const mp=Q('#mappin');if(mp&&mp.parentNode===t)mp.after(b);else t.append(b)}},700);
  window.__mapY={start,stop,apply};
+})();
+
+/* ---------- v48.9: QoL de mochila, tienda y combates ---------- */
+(()=>{
+ const T=()=>(typeof R=='object'&&R&&R.team)?R.team:[];
+ const HP={pot:1,sup:1,hyp:1,max:1,ptn:1},ST={ant:'psn',apa:'par',aqu:'brn',ahi:'frz',des:'slp',cut:'all'};
+ const stOf=(m,s)=>s==='all'?!!(m.s||m.cf>0):s==='psn'?/^(psn|tox|p|h)$/.test(m.s||'')||m.s===s:m.s===s;
+ /* ¿el objeto haría algo ahora mismo? (solo se atenúan los que seguro no sirven) */
+ window.__itUseful=k=>{try{k=String(k||'');const t=T();if(!t.length)return true;
+  if(HP[k])return t.some(m=>m.hp>0&&m.hp<m.max);
+  if(k==='frs')return t.some(m=>m.hp>0&&(m.hp<m.max||m.s||m.cf>0));
+  if(k==='rev'||k==='rvm')return t.some(m=>m.hp<=0);
+  if(ST[k])return t.some(m=>m.hp>0&&stOf(m,ST[k]));
+  if(k==='eth'||k==='emx')return t.some(m=>(m.moves||[]).some(v=>v.cp<v.mp));
+  if(typeof CL=='object'&&CL[k])return t.some(m=>m.lvl<(typeof MAXL!='undefined'?MAXL:200));
+  return true}catch(e){return true}};
+ /* combate: aviso en «Mochila» si tu Pokémon está en las últimas o hay alguien debilitado y llevas cómo curarlo */
+ window.__bagHint=()=>{try{if(typeof B!='object'||!B||!R||!R.bag)return false;const p=typeof act=='function'?act('p'):null,bg=R.bag,hv=k=>(bg[k]|0)>0;
+  if(p&&p.hp>0&&p.hp/p.max<=.3&&['pot','sup','hyp','max','ptn','frs'].some(hv))return true;
+  if(T().some(m=>m.hp<=0)&&(hv('rev')||hv('rvm')))return true;return false}catch(e){return false}};
+ /* tienda: reponer lo básico de un toque */
+ const RST=[['pot',10],['sup',5],['rev',3],['pb',10],['gb',5]];
+ window.__rsPlan=()=>{let m=(typeof CHT=='object'&&CHT.money)?1e15:R.money,c=0,short=0;const L=[];
+  for(const[k,q]of RST){if(!ITEM[k])continue;const p=ITEM[k].p,need=Math.max(0,q-(R.bag[k]|0)),n=Math.min(need,Math.floor(m/p));if(n>0){L.push([k,n]);m-=n*p;c+=n*p}if(n<need)short=1}return{L,c,short}};
+ window.__rsBuy=()=>{const{L,c}=__rsPlan();if(!L.length)return 0;if(!(typeof CHT=='object'&&CHT.money))R.money-=c;let n=0;for(const[k,q]of L){R.bag[k]=(R.bag[k]|0)+q;n+=q}try{saveRun()}catch(e){}return n};
 })();
 
 })();</script>
