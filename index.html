@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.7</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.8</div>
 </section>
 
 <section id="team" class="scr">
@@ -2823,7 +2823,7 @@ window.victory=function(c,g,it,f){return new Promise(res=>{
  rows.forEach(r=>{draw(r,r.x0,1);at(r.i*200+450,()=>{const t0=performance.now(),dur=cl(1400+(r.l1-r.l0)*300,1400,3600);(function s(t){if(!o.isConnected||o.classList.contains('skip'))return;const p=cl((t-t0)/dur),e=1-Math.pow(1-p,3);draw(r,r.x0+(r.x1-r.x0)*e);if(p<1)requestAnimationFrame(s);else draw(r,r.x1)})(t0)})});
  const endAt=iB*200+700;at(iK*200+400,()=>beep(rk[1]=='S+'?1568:rk[1]=='S'?1319:880,.45,'triangle'));
  if(rk[1]=='S+')at(iK*200+600,()=>[988,1319,1568].forEach((fr,k)=>setTimeout(()=>beep(fr,.3,'triangle'),k*110)));
- at(endAt,()=>o.classList.add('rdy'));
+ at(endAt,()=>{o.classList.add('rdy');/* v48.8: victoria rápida */if(typeof S!='undefined'&&S.qvic)setTimeout(()=>{const g=o.querySelector('#vgo');if(o.isConnected&&g)g.click()},900)});
  const fin=()=>{tk.forEach(clearTimeout);o.classList.add('skip','rdy');o.querySelector('.vpb').classList.add('go');vn.textContent=g;rows.forEach(r=>draw(r,r.x1,1))};
  o.onclick=e=>{if(e.target.id!='vgo'&&!o.classList.contains('rdy'))fin()};
  o.querySelector('#vgo').onclick=()=>{beep(660,.15,'triangle');o.classList.add('out');setTimeout(()=>{o.remove();res()},350)}})};
@@ -5073,7 +5073,7 @@ window.pickTarget=(k,ls,inB)=>new Promise(res=>{
  upd()});
 /* ===== animación de captura estilo Pokémon ===== */
 window.ballAnim=(m,k,ok)=>new Promise(async res=>{
- const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
+ const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'||S.qcap),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
  const o=document.createElement('div');o.className='bthr';
  o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt=""><div class="bt-sh"></div><div class="bt-ball">${IC[k]||IC.ball}</div><div class="bt-dots"><i></i><i></i><i></i></div><div class="bt-msg"></div>`;
  document.body.append(o);
@@ -5223,6 +5223,9 @@ const DEF=[
   {k:'rounds',t:'Rondas (aventura)',d:'Longitud de la aventura. Infinitas: no tiene final',o:[[20,'20 rondas'],[40,'40 rondas'],[60,'60 rondas'],[80,'80 rondas'],[100,'100 rondas'],[120,'120 rondas'],['inf','∞ Infinitas']]},
   {k:'lives',t:'Vidas',d:'Infinitas: al caer, tu equipo se cura y sigues sin perder vidas',o:[[3,'3 vidas'],['inf','∞ Infinitas']]},
   {k:'speed',t:'Velocidad de combate',o:[[1,'1×'],[2,'2×'],[3,'3×'],[4,'4×']]},
+  {k:'qvic',t:'Victoria rápida',d:'La pantalla de premios de cada combate ganado se cierra sola',b:1},
+  {k:'qcap',t:'Captura rápida',d:'Lanzar la Ball dura un instante en vez de la animación larga',b:1},
+  {k:'qevo',t:'Evolución rápida',d:'La animación de evolución va a toda velocidad',b:1},
   {k:'autoheal',t:'Curar tras cada combate',d:'Al ganar un combate de la aventura usa solo las pociones justas de tu mochila para curar al equipo',b:1},
   {k:'ntf',t:'Avisos y notificaciones',d:'Todos los carteles del juego y la campanita del menú. Desactivado: no sale NINGÚN cartel ni aviso (las invitaciones de amigos sí siguen llegando)',b:1},
   {k:'pname',t:'Nombre de jugador',d:'Lo ven tus amigos, las salas multijugador, los torneos y las megaincursiones',x:1},
@@ -5313,7 +5316,7 @@ window.loseLife=async function(){
 const BC={pb:'#ef4444',gb:'#3b82f6',ub:'#facc15',nb:'#a855f7',rb:'#ef4444',ob:'#0ea5e9',ab:'#f472b6'};
 const colOf=k=>BC[k]||(k&&k.startsWith('bt_')&&typeof COL!='undefined'&&COL[k.slice(3)])||'#ef4444';
 window.ballAnim=(m,k,ok)=>new Promise(async res=>{
- const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
+ const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'||S.qcap),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
  const o=document.createElement('div');o.className='bthr';
  o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt=""><div class="bt-sh"></div><div class="bt-ball">${IC[k]||IC.ball}</div><div class="bt-dots"><i></i><i></i><i></i></div><div class="bt-msg"></div>`;
  document.body.append(o);
@@ -8590,12 +8593,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'48.7',t:'Mucha calidad de vida',s:'cur',l:[
-  '🗺️ Biomas: minimapa en la esquina con todos los Pokémon de la zona (los Alfas en rojo) y el trozo que estás viendo. Tócalo para ir directo a ese sitio',
-  '🔎 Biomas: nuevo botón para saltar de grupo en grupo de Pokémon sin tener que buscarlos arrastrando',
+ {v:'48.8',t:'Modos rápidos',s:'cur',l:[
+  '⏩ Ajustes nuevos: Victoria rápida (la pantalla de premios se cierra sola), Captura rápida (la Ball se lanza en un instante) y Evolución rápida (la animación va a toda velocidad)',
+  '🧹 Biomas más limpios: se quitan el minimapa, el botón de buscar y los atajos de teclado'
+]},
+{v:'48.7',t:'Mucha calidad de vida',s:'prev',l:[
   '🏷️ Biomas: la tarjeta de cada Pokémon muestra sus tipos, si es 🆕 nuevo para tu Pokédex y cómo le va a tu primer Pokémon (▲ tu mejor ataque eficaz, ▼ si tus ataques no son muy eficaces o ✖ si no le afectan)',
   '💔 Biomas: si tu equipo está débil al ir a combatir, te avisa y te deja curarlo con las pociones justas de tu mochila en un toque',
-  '⌨️ PC: en el mapa, las teclas 1, 2 y 3 cambian entre Ruta, Pueblo y Biomas. Dentro de un bioma: flechas o WASD para moverte, +/− zoom, Tab siguiente grupo, Enter para combatir con el elegido y Esc para volver a la isla',
   '📖 Pokédex: la ficha de cada Pokémon dice en qué bioma sale (o si solo sale en las ruinas o en ningún bioma)'
 ]},
 {v:'48.6',t:'Optimización y arreglos',s:'prev',l:[
@@ -10565,7 +10569,7 @@ if(typeof _rs==='function')window.renderSet=function(){const r=_rs.apply(this,ar
 const BC={pb:'#ef4444',gb:'#3b82f6',ub:'#facc15',nb:'#a855f7',rb:'#ef4444',ob:'#0ea5e9',ab:'#f472b6'};
 const colOf=k=>BC[k]||(k&&String(k).startsWith('bt_')&&typeof COL!='undefined'&&COL[String(k).slice(3)])||'#ef4444';
 window.ballAnim=(m,k,ok)=>new Promise(async res=>{
- const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
+ const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'||S.qcap),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
  const o=D.createElement('div');o.className='bthr';
  o.innerHTML=`<div class="bt-vig"></div><div class="bt-red"></div><img class="bt-mon" src="${art(m.id,m.sh)}" alt=""><div class="bt-sh"></div><div class="bt-ball">${IC[k]||IC.ball}</div><div class="bt-dots"><i></i><i></i><i></i></div><div class="bt-msg"></div><div class="bt-flash"></div><div class="bt-hint">Toca para acelerar</div>`;
  D.body.append(o);
@@ -10759,7 +10763,7 @@ D.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#cl'))hide
 const D=document,pick=a=>a[Math.random()*a.length|0];
 const PH=['¡Nyeh, nyeh, nyeh!','¡Chao, cazador!','¡Atrápame si puedes!','¡Fallaste otra vez!','¡Qué lento eres!','¡Ni con mil balls!','¡Ahí te quedas!','¡Quién fuera tan torpe!'];
 window.escapeTaunt=(m,k)=>new Promise(async res=>{
- const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
+ const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'||S.qcap),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
  const o=D.createElement('div');o.className='bthr tz';
  o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt="" style="animation:none"><div class="bt-sh on"></div><div class="bt-ball">${IC[k]||IC.ball}</div><div class="bt-msg"></div><div class="bt-hint">Toca para acelerar</div>`;
  D.body.append(o);
@@ -16957,7 +16961,7 @@ window.evoAnim=(oid,nid,sh,on,nn)=>{const run=async()=>{
  const [,,ty]=await Promise.all([load(sa),load(sb),evTypes(nid)]);
  const o=D.createElement('div');o.id='evoa';o.setAttribute('role','dialog');o.setAttribute('aria-label','Evolución');
  o.innerHTML=`<div class="ev-skip">Toca para acelerar</div><div class="ev-rays"></div><div class="ev-glow"></div><div class="ev-mon"><img class="o" src="${sa}" alt=""><img class="n" src="${sb}" alt=""></div><div class="ev-fl"></div><div class="ev-tx">¿Eh? ¡<b>${on}</b> está evolucionando!</div>`;
- let fast=0;const stop=e=>{e.stopPropagation();e.preventDefault();if(e.type==='pointerdown'&&!fast){fast=1;o.classList.add('evfast')}};['click','pointerdown','touchstart','keydown'].forEach(t=>o.addEventListener(t,stop,true));const sl0=sl,slx=ms=>sl0(fast?Math.min(ms,40):ms);
+ let fast=(typeof S!='undefined'&&S.qevo)?1:0;if(fast)o.classList.add('evfast');const stop=e=>{e.stopPropagation();e.preventDefault();if(e.type==='pointerdown'&&!fast){fast=1;o.classList.add('evfast')}};['click','pointerdown','touchstart','keydown'].forEach(t=>o.addEventListener(t,stop,true));const sl0=sl,slx=ms=>sl0(fast?Math.min(ms,40):ms);
  const kd=e=>{e.stopPropagation();e.preventDefault()};D.addEventListener('keydown',kd,true);window.__evkd=kd;
  D.body.append(o);bp(523,.15);
  const A=o.querySelector('.o'),B=o.querySelector('.n'),M=o.querySelector('.ev-mon'),tx=o.querySelector('.ev-tx');
@@ -18525,7 +18529,7 @@ const D=document,pick=a=>a[Math.random()*a.length|0],R=Math.random;
 let last=-1;
 window.TAUNTS=['Lengua y baile','Bostezo aburrido','Muecas','Pose de campeón','Pedorreta','Patada a la ball','Reverencia burlona','Saltos de conejo','Selfie','Peonza mareada','Sentado en la ball','Malabares con la ball','Marcador'];
 window.escapeTaunt=(m,k,force,stay)=>new Promise(async res=>{
- const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
+ const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'||S.qcap),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
  const o=D.createElement('div');o.className='bthr tz';
  o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt="" style="animation:none"><div class="bt-sh on"></div><div class="bt-ball">${IC[k]||IC.ball}</div><div class="bt-msg"></div><div class="bt-hint">Toca para acelerar</div>`;
  D.body.append(o);
@@ -24319,7 +24323,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
  async function enterBiome(k,cam,fresh){const r=live();if(!r)return;let d=BD()[k];if(fresh){delete lastCam[k]}const hadCam=!!cam;
   close2();const o=D.createElement('div');o.id='bzv';o.className='bz-'+k;const i=BI(k),lv=window.zoneLv&&i>=0?zoneLv(i):0;
   o.innerHTML=`<div class="bz-vp"><div class="bz-w" style="width:${WW}px;height:${WH}px"><canvas class="bz-bg" width="${WW}" height="${WH}"></canvas><div class="bz-pk"></div></div></div>
-   <div class="bz-hud"><button type="button" class="bz-back" data-b="back">← Isla</button><span class="bz-n"></span><button type="button" class="bz-i" data-b="guide" aria-label="Guía del bioma">i</button><button type="button" class="bz-seek" data-b="seek" aria-label="Ir al siguiente Pokémon" title="Siguiente Pokémon">🔎</button></div><div class="bz-mm" aria-label="Minimapa"><canvas width="120" height="130"></canvas><div class="bz-mmd"></div><i class="bz-mmv"></i></div>
+   <div class="bz-hud"><button type="button" class="bz-back" data-b="back">← Isla</button><span class="bz-n"></span><button type="button" class="bz-i" data-b="guide" aria-label="Guía del bioma">i</button></div>
    <div class="bz-zoom"><button type="button" data-b="zi" aria-label="Acercar">＋</button><span class="bz-zl">100%</span><button type="button" data-b="zo" aria-label="Alejar">－</button><button type="button" data-b="zf" aria-label="Ver todo" title="Ver todo">⤢</button></div><div class="bz-card" hidden></div><div class="bz-tip">Arrastra para explorar · pellizca o usa ＋/－ para el zoom · toca un Pokémon</div><div class="bz-load"><i></i><span>Explorando ${esc(ZN[k].n)}…</span></div>`;
   D.body.append(o);cur={k,o,cam:cam||lastCam[k]||{x:(WW-innerWidth)/2,y:(WH-innerHeight)/2},z:(()=>{try{const v=parseFloat(localStorage.getItem('pa_bzz'));if(v>0)return v}catch(e){}return innerWidth<600?.8:1})(),sel:null,wt:0};bindDrag(o);apply();
   if(fresh||needGen(k)){d=await genBiome(k)}if(!cur||cur.o!==o)return;d=BD()[k];o.querySelector('.bz-load').remove();
@@ -24407,11 +24411,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
    if(!(cur.drag&&performance.now()-cur.drag<250))desel()});
   const mm=o.querySelector('.bz-mm');if(mm){const go=e=>{e.preventDefault();e.stopPropagation();const r=mm.getBoundingClientRect();flyTo((e.clientX-r.left)/r.width*WW,(e.clientY-r.top)/r.height*WH)};mm.addEventListener('pointerdown',go)}
   addEventListener('resize',apply)}
- /* teclado (PC): flechas/WASD mueven, +/- zoom, Esc vuelve a la isla, Enter combate con el elegido, Tab salta al siguiente Pokémon */
- addEventListener('keydown',e=>{if(!cur||!cur.o.isConnected)return;const m=Q('#mod');if(m&&getComputedStyle(m).display!=='none')return;const t=e.target;if(t&&/^(INPUT|TEXTAREA)$/.test(t.tagName))return;const k=e.key,st=60/(cur.z||1);let h=1;
-  if(k==='ArrowLeft'||k==='a'||k==='A')cur.cam.x-=st;else if(k==='ArrowRight'||k==='d'||k==='D')cur.cam.x+=st;else if(k==='ArrowUp'||k==='w'||k==='W')cur.cam.y-=st;else if(k==='ArrowDown'||k==='s'||k==='S')cur.cam.y+=st;
-  else if(k==='+'||k==='=')zoomAt(cur.z*1.2);else if(k==='-'||k==='_')zoomAt(cur.z/1.2);else if(k==='Escape'){close2(true);try{showMap()}catch(_){}}else if(k==='Enter'&&cur.sel!=null)fightSel();else if(k==='Tab'){seek()}else h=0;
-  if(h){e.preventDefault();e.stopPropagation();apply()}},true);
+
  function selMon(p,m){cur.sel=m.u;cur.o.querySelectorAll('.bzp.sel').forEach(x=>x.classList.remove('sel'));p.classList.add('sel');p.style.translate='0 0';bp(m.sh?1175:m.alpha?520:700);
   const c=cur.o.querySelector('.bz-card');c.hidden=false;const tok=c._tok=(c._tok|0)+1;const own=(()=>{try{if([...(R.team||[]),...(R.box||[])].some(x=>x&&x.id==m.id))return 1}catch(e){}try{return !!JSON.parse(localStorage.getItem('pokerogue_pokedex_v1')||'{}').c[m.id]}catch(e){return 0}})();
   c.innerHTML=`<img src="${mini(m.id,m.sh)}" alt=""><div><b>${m.sh?'✨ ':''}${esc(nmS(m))}${own?`<span class="own" title="Ya capturado" aria-label="Ya capturado">${(typeof IC==='object'&&IC.ball)||'⚪'}</span>`:''}${m.alpha?' <em class="bzca">Alfa</em>':''}</b><small>Nv. ${m.lvl}${m.sh?' · ¡Shiny!':''}${m.alpha?' · más fuerte':''}${own?'':' · <b class="bznew">🆕 Nuevo</b>'}</small><small class="bzty"></small>${(()=>{const L=allMons(BD()[cur.k]),f=u=>{const x=L.find(y=>y.u===u);return x?esc(nmS(x)):null},o=[];if(m.fr!=null&&f(m.fr))o.push('🤝 Amigo de '+f(m.fr));if(m.beat!=null&&f(m.beat))o.push('🏆 Ganó a '+f(m.beat)+((m.wins|0)>1?' (×'+m.wins+')':''));if(m.lost!=null&&f(m.lost))o.push('🩹 Perdió contra '+f(m.lost));return o.length?`<small class="bzrel">${o.join(' · ')}</small>`:''})()}</div><button type="button" data-b="fight">⚔️ Combatir</button><button type="button" class="bz-cx" data-b="x" aria-label="Cerrar">✕</button>`;
@@ -24429,7 +24429,7 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
   const d2=BD()[k];if(res&&res.won&&d2&&d2.g){d2.g.forEach(g=>g.m=g.m.filter(x=>x.u!==m.u));d2.g=d2.g.filter(g=>g.m.length);if(!d2.g.length){BD()[k]={cl:r.round};tst(`🌿 ¡Has despejado ${ZN[k].n}! Sal y vuelve a entrar para encontrar más Pokémon`)}try{saveRun()}catch(e){}}
   if(res&&res.err)R.lock=0;
   if(D.body.dataset.v==='map'){try{if(tab!=='bio'){tab='bio';try{localStorage.setItem('pa_mtab','bio')}catch(_){}}showMap()}catch(e){}enterBiome(k,cam)}}
- addEventListener('keydown',e=>{if(D.body.dataset.v!=='map'||Q('#bzv')||e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target;if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))return;const m=Q('#mod');if(m&&getComputedStyle(m).display!=='none')return;const i='123'.indexOf(e.key);if(i<0||!live()||R.lock)return;const k=TABS[i][0];if(k!==tab){e.preventDefault();setTab(k)}});
+
  window.__mtab={get:()=>tab,set:setTab,ZN,enter:(k,f)=>enterBiome(k,null,f!==0),gen:genBiome,cur:()=>cur};
 })();
 /* ===== v47.6: formas regionales (Alola, Galar, Hisui y Paldea): Pokédex, guías de bioma, biomas, evoluciones y nombres ===== */
