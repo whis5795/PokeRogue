@@ -8589,7 +8589,8 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'48.4',t:'Salvajes sin monedas',s:'cur',l:[
+ {v:'48.4',t:'Salvajes sin monedas y General Supremo',s:'cur',l:[
+  '👑 Kingambit · General Supremo: ahora funciona como en los juegos: al entrar cuenta los compañeros debilitados (máx. 5) y sus ataques suben un 10% por cada uno durante todo el tiempo que esté en combate, con un aviso de cuánto sube',
   '🪙 Arreglado: los Pokémon salvajes de los biomas daban Pokémonedas al vencerlos. Ahora no dan dinero, como los salvajes de siempre'
 ]},
 {v:'48.3',t:'Historias con memoria',s:'prev',l:[
@@ -10017,7 +10018,7 @@ function entryFx(s){const m=act(s),o=foe(s),A=abOf(m);if(!A||!o)return;const OA=
     case 'cloud-nine':case 'air-lock':show();Q6('¡Los efectos del tiempo atmosférico desaparecen!');break;
     case 'fairy-aura':case 'dark-aura':case 'aura-break':show();Q6(`¡${nm(m)} ${A==='fairy-aura'?'irradia un aura feérica':A==='dark-aura'?'irradia un aura oscura':'invierte las auras'}!`);break;
     case 'sword-of-ruin':case 'beads-of-ruin':case 'tablets-of-ruin':case 'vessel-of-ruin':show();Q6(`¡${es(A)} de ${nm(m)} debilita a los demás!`);break;
-    case 'supreme-overlord':show();Q6(`¡${nm(m)} entra en combate con ${es(A)}!`);break;
+    case 'supreme-overlord':{const dead=Math.min(5,(sd(m)==='p'?B.pl:B.en).filter(x=>x!==m&&x.hp<=0).length);m._so=dead;show();Q6(dead?`¡${nm(m)} hereda la fuerza de ${dead} ${dead>1?'compañeros caídos':'compañero caído'}! Sus ataques suben un ${dead*10}%`:`¡${nm(m)} entra en combate con ${es(A)}!`);break}
     case 'curious-medicine':show();sgo(o);Object.keys(SG).forEach(k=>{sgo(m)[k]=0});Q6(`¡${nm(m)} elimina los cambios de característica!`);break;
     case 'screen-cleaner':case 'costar':case 'hospitality':case 'supersweet-syrup':case 'embody-aspect':case 'tera-shift':show();Q6(`¡${es(A)} de ${nm(m)} se activó!`);break}}
 async function battleInit(){
@@ -10116,7 +10117,7 @@ function dmg6(at,df,mv){
     case 'protosynthesis':if(wx==='sun'&&(ph?at.a>=at.sa:at.sa>at.a))k*=1.3;break;
     case 'quark-drive':if(tn==='electric'&&(ph?at.a>=at.sa:at.sa>at.a))k*=1.3;break;
     case 'flower-gift':if(wx==='sun'&&ph)k*=1.5;break;
-    case 'supreme-overlord':{const dead=(sd(at)==='p'?B.pl:B.en).filter(x=>x.hp<=0).length;k*=1+.1*Math.min(5,dead);break}
+    case 'supreme-overlord':{const dead=at._so!=null?at._so:Math.min(5,(sd(at)==='p'?B.pl:B.en).filter(x=>x!==at&&x.hp<=0).length);k*=1+.1*dead;break}
     case 'electromorphosis':case 'wind-power':if(at._chg&&mv2.t==='electric'){k*=2;if(real)at._chg=0}break}
   if(A==='flash-fire'&&at._ff&&mv2.t==='fire')k*=1.5;
   for(const s of['p','e']){const M=act(s),MA=M&&abOf(M);if(!MA)continue;
