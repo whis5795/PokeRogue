@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v47.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v48.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -8589,7 +8589,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'47.9',t:'Evolucionar todos, mucho más rápido',s:'cur',l:[
+ {v:'48.0',t:'Pokémon del día en los biomas',s:'cur',l:[
+  '🌟 Arreglado: con los biomas nuevos el Pokémon del día había dejado de aparecer. Ahora sale a menudo en su bioma (más de la mitad de las visitas), sigue teniendo 10 veces más probabilidad de ser shiny y da un Caramelo Raro al capturarlo',
+  '🌟 En el menú principal, el Pokémon del día está ahora centrado arriba, sin tapar nada'
+]},
+{v:'47.9',t:'Evolucionar todos, mucho más rápido',s:'prev',l:[
   '⚡ Caja → «🧬 Evolucionar»: ahora es mucho más rápido. Las especies se comprueban todas a la vez (antes una por una) y el botón muestra el progreso en %; luego las evoluciones también se hacen de varias en varias'
 ]},
 {v:'47.8',t:'Poké Ball de capturado y efectos de Ball centrados',s:'prev',l:[
@@ -20855,6 +20859,9 @@ body.madj #tm{opacity:.35}
 #madj::before{content:'↕ Arrastra el mapa o usa las flechas';position:fixed;left:50%;top:calc(58px + env(safe-area-inset-top));transform:translateX(-50%);padding:6px 14px;border-radius:999px;background:#0b0720ee;border:1px solid #fde68a88;color:#fde68a;font:800 12px system-ui;white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis}
 #bzv .bz-tip{display:none!important}
 #bzv .bz-card .own{display:inline-block;width:1.05em;height:1.05em;vertical-align:-.15em;margin-left:5px;line-height:0}#bzv .bz-card .own svg,#bzv .bz-card .own img{width:100%!important;height:100%!important;display:block;filter:drop-shadow(0 1px 1px #000a)}
+#potdm{left:50%!important;right:auto!important;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top))!important;max-width:calc(100% - 150px)}
+html.vm-pc body[data-v=menu] #menu h1{margin-top:34px}
+@media (max-width:400px){#potdm{max-width:calc(100% - 200px)}}
 </style>
 <script id="v37js">
 (()=>{
@@ -24201,6 +24208,8 @@ window.MEGARTN=window.MEGARTN||{};MEGARTN['768|z']='mgolisopodzn';
    for(let j=0;j<plan.length;j++){const sp=sps[j],pl=plan[j];if(!sp)continue;let m=Array.from({length:pl.n},()=>mon(sp.id));
     if(pl.al){const a=await evoOf(sp.id);if(a)m.push(mon(a,{alpha:1,lvl:cl(lv+5+(R0()*3|0))}))}
     const c=pos(pl.n>1?420:300);m.forEach((x,q)=>{if(x.alpha){x.x=Math.round(c[0]);x.y=Math.round(c[1]);return}const a=q/m.length*Math.PI*2+R0(),rr=m.length>1?90+R0()*90:0;x.x=Math.round(c[0]+Math.cos(a)*rr*1.3);x.y=Math.round(c[1]+Math.sin(a)*rr*.8)});groups.push({sp:sp.id,m})}
+   /* 🌟 Pokémon del día: sale a menudo en su bioma (shiny ×10) */
+   try{const PD=window.__potd&&__potd();if(PD&&PD.id&&PD.bio===k&&R0()<.6){const st=await H.stage(PD.id);const n=st>1?1:1+(R0()*2|0),c=pos(300);for(let q=0;q<n;q++){const x=mon(PD.id,{sh:R0()<1/30?1:0,potd:1});if(st>1){x.alpha=1;x.lvl=cl(lv+5)}x.x=Math.round(c[0]+(q?110:0));x.y=Math.round(c[1]+(q?40:0));groups.push({sp:PD.id,m:[x]})}}}catch(e){}
    if(!groups.length)throw new Error('vacío');
    BD()[k]={t:r.round,seed:(Math.random()*1e9)|0,g:groups};try{saveRun()}catch(e){}return BD()[k]}catch(e){console.error('bioma',k,e);return null}finally{bzBusy.delete(k)}}
  const needGen=(k)=>{const r=live(),d=BD()[k];return!d||(d.cl!=null&&r.round>d.cl)||(d.t!=null&&r.round-d.t>=8)||(!d.cl&&!(d.g||[]).some(g=>g.m.length))};
