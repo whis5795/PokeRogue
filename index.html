@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.5</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.6</div>
 </section>
 
 <section id="team" class="scr">
@@ -8621,7 +8621,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'52.5',t:'Deseo de muerte y protección al revivir',s:'cur',l:[
+ {v:'52.6',t:'Aventura multiplayer: interfaces que no saltan, mochila nueva y menos atajos',s:'cur',l:[
+  '📌 Las listas, el mapa y las ventanas de la Aventura multiplayer ya no vuelven arriba ni a su posición original cada vez que pasa algo: se quedan donde las dejaste',
+  '🎒 Mochila mejorada: objetos iguales apilados (×n), separados por secciones (curación, combate, caramelos, MT y amuletos), tu oro y número de objetos arriba, amuletos activos a la vista y el motivo cuando un objeto no se puede usar todavía',
+  '🌿 Los atajos salen bastante menos (15% en lugar de 35%) y ya nunca aparecen dos seguidos'
+ ]},
+ {v:'52.5',t:'Deseo de muerte y protección al revivir',s:'prev',l:[
   '💀 Aventura multiplayer: «Deseo de muerte» ahora siempre hace algo: maldice a un enemigo al azar y le quita un 10% de su vida máxima (4% a jefes, élites y guardianes). Además tiene un 8% de fulminarlo (los jefes no caen de golpe, pero a veces reciben el triple)',
   '🛡️ Quien vuelve al combate (Revivir, Deseo Cura…) queda protegido: los rivales no pueden atacarle hasta su siguiente turno'
 ]},
@@ -16600,7 +16605,9 @@ const avgLv=()=>{const a=G.seats.filter(s=>s.hero).map(s=>s.hero.lvl);return Mat
 async function genFoes(lv,ids,boss){const out=[];const AS=(G&&G.asc)|0;for(const id of ids){try{const m=await mk({id,name:dexName(id)},Math.max(1,lv+(boss?0:ri(2))+(AS>=6?1:0)));if(boss){m.max=Math.round(m.max*1.3);m.hp=m.max;m.boss=1}if(AS){m.max=Math.round(m.max*(1+.12*AS));m.hp=m.max;['d','sd'].forEach(k=>m[k]=Math.round(m[k]*(1+.05*AS)))}out.push(m)}catch(e){}}return out}
 async function level(nd){const np=G.seats.length;
  for(let h=0;h<3;h++){V.horde=h+1;
-  if(R0()<.35){V.ph='skip';V.foes=[];V.turn=null;V.skipT=now()+15000;V.log='';V.msg=`Horda ${h+1} de 3: encontráis un atajo escondido. Podéis evitar el combate y llevaros una recompensa aleatoria cada uno (pero sin experiencia).`;push();
+  /* v52.6: atajos menos frecuentes (15%) y nunca dos seguidos */
+  const skOk=!G._sk&&R0()<.15;G._sk=skOk?1:0;
+  if(skOk){V.ph='skip';V.foes=[];V.turn=null;V.skipT=now()+15000;V.log='';V.msg=`Horda ${h+1} de 3: encontráis un atajo escondido. Podéis evitar el combate y llevaros una recompensa aleatoria cada uno (pero sin experiencia).`;push();
    V.evv={};const sk=await new Promise(res=>{SKIPW=res});V.evv=null;SKIPW=null;if(!G||ROLE!=='host')return false;
    if(sk){V.ph='reward';banner('🎁 ¡Atajo!');const got=[];for(let i=0;i<G.seats.length;i++){const it=await randItem();(G.bags[i]=G.bags[i]||[]).push(it);got.push({s:i,it})}V.rew=got;V.log='🎁 Atajo: '+got.map(g=>`${G.seats[g.s].n}: ${itIc(g.it)} ${itName(g.it)}`).join(' · ');push();bp(880,.15);await sl(2800);V.rew=null;save();continue}}
   V.ph='walk';V.foes=[];V.turn=null;V.order=[];V.log=`Horda ${h+1} de 3: el equipo avanza…`;push();await sl(1800);if(!G||ROLE!=='host')return false;
@@ -16922,7 +16929,13 @@ function tmrPaint(){const q=Q('#mapnl [data-tmr]');if(!q)return;const l=TMRE?Mat
 setInterval(()=>{if(TMRE)tmrPaint()},500);
 function statsH(s){const st=s.st||[];if(!st.length)return'';const sc=st.map(x=>x?x.d+x.h*1.2+x.k*40:0),best=Math.max(...sc);
  return`<div class="ma-stt"><h4>📊 Estadísticas de la aventura</h4><table><tr><th></th><th>⚔️ Daño</th><th>💚 Cura</th><th>🛡️ Recibido</th><th>💀 KO</th></tr>${s.seats.map((x,i)=>{const q=st[i]||{d:0,h:0,t:0,k:0};return`<tr><td><em style="--c:${PC[i]}">${esc(x.n)}</em>${best>0&&sc[i]===best?' 👑':''}</td><td>${q.d}</td><td>${q.h}</td><td>${q.t}</td><td>${q.k}</td></tr>`}).join('')}</table></div>`}
-function draw(s){if(!el)return;S=s;setTimeout(()=>{try{if(S===s)mvwPaint(s)}catch(_){}},0);
+/* v52.6: al redibujar no se pierde dónde estabas (scroll de listas, mapa, ventanas…) */
+const scKey=(e,root)=>{const p=[];for(let x=e;x&&x!==root&&p.length<6;x=x.parentElement){p.push((x.id?'#'+x.id:'')+'.'+String(x.className||'').split(' ').filter(c=>c&&!/^(on|sel|ch|go|r|full|low)$/.test(c)).join('.'))}return p.join('<')};
+function scCap(root){const o={};if(!root)return o;root.querySelectorAll('*').forEach(e=>{if(e.scrollTop>0||e.scrollLeft>0){const k=scKey(e,root);if(!(k in o))o[k]=[e.scrollTop,e.scrollLeft]}});return o}
+function scRes(root,o,skip){if(!root)return;const ks=Object.keys(o);if(!ks.length)return;root.querySelectorAll('*').forEach(e=>{if(!(e.scrollHeight>e.clientHeight||e.scrollWidth>e.clientWidth))return;const k=scKey(e,root);const v=o[k];if(!v||(skip&&skip(e)))return;e.scrollTop=v[0];e.scrollLeft=v[1]})}
+let SCPOS=null;
+function draw(s){if(!el)return;const posCh=s&&s.pos!==SCPOS;SCPOS=s&&s.pos;const o=scCap(el);draw0(s);scRes(el,o,e=>posCh&&e.closest&&e.closest('#mamap,.ma-mapw'))}
+function draw0(s){if(!el)return;S=s;setTimeout(()=>{try{if(S===s)mvwPaint(s)}catch(_){}},0);
  if(s.ph==='lobby'){SEL=null;curBio=-1;UN={};el.className='on';const b=el.querySelector('.ma-body'),sc=b?b.scrollTop:0,ae=D.activeElement,ki=ae&&ae.id==='mamyname'?{v:ae.value,p:ae.selectionStart}:null;el.innerHTML=lobbyHTML(s);if(ki){const i=Q('#mamyname');if(i){i.value=ki.v;i.focus();try{i.setSelectionRange(ki.p,ki.p)}catch(e){}}}const b2=el.querySelector('.ma-body');if(b2)b2.scrollTop=sc;badge();return}
  const bi=biomeOf(Math.max(0,s.depth));if(!el.classList.contains('game')||curBio!==bi||!Q('#masc'))gameShell(bi);
  const sc=Q('#masc');if(s.ph==='walk'&&!sc.classList.contains('walk')){setTimeout(fitLayers,30);setTimeout(fitLayers,320)}sc.classList.toggle('walk',s.ph==='walk');sc.classList.toggle('center',s.ph==='center');sc.classList.toggle('mapph',s.ph==='map');
@@ -16970,11 +16983,20 @@ const myBag=s=>(s&&s.bags&&s.bags[mySeatIx()])||[];
 function req(o){if(ROLE==='host')handleReq(0,o).catch(e=>console.error(e));else dsend(NET.dc,{t:'req',...o})}
 const toolsH=s=>`<div class="ma-acts">${s.st&&s.st.length?'<button class="ma-b sm" data-a="stats" aria-label="Estadísticas">📊</button>':''}<button class="ma-b sm" data-a="center">🏥 Centro · 50 ${COIN()}</button><button class="ma-b sm v" data-a="shop">🛒 Tienda</button><button class="ma-b sm" data-a="bag">🎒 Mochila${myBag(s).length?' ('+myBag(s).length+')':''}</button></div>`;
 let MOD=null;
-function modal(){const s=S;let g=Q('#mamod');if(!MOD||!s){if(g)g.remove();return}
+function modal(){const g0=Q('#mamod'),o=scCap(g0);modal0();scRes(Q('#mamod'),o)}
+function modal0(){const s=S;let g=Q('#mamod');if(!MOD||!s){if(g)g.remove();return}
  if(!g){g=D.createElement('div');g.id='mamod';g.className='ma-pop';g.addEventListener('click',e=>{if(e.target===g){MOD=null;g.remove()}});el.append(g)}
  const me=mySeatIx(),calm=['map','walk','reward','center','skip'].includes(s.ph),bag=myBag(s),hero=s.seats[me]&&s.seats[me].hero;let h='';
  if(MOD.k==='shop'){const sh=s.shop,rc=sh?25+15*(sh.rr|0):0;h=`<h4>🛒 Tienda <span style="--c:#a16207">${COIN()} ${s.gold}</span></h4><p class="ma-note" style="margin-bottom:8px">Se paga con las Pokémonedas del grupo. Lo que compres va a tu mochila.${calm?'':' Solo se puede comprar en el mapa.'}</p>${sh&&s.ph==='map'?`<button class="ma-b sm v ma-rr" data-mo="reroll" ${s.gold<rc?'disabled':''}>🔄 Renovar tienda · ${rc} ${COIN()}</button>`:''}<div class="ma-it">${sh?sh.items.map((x,i)=>`<div class="ma-itr ${x.price>=150?'ep':x.price>=90?'ra':'co'}${x.sale?' sale':''}">${x.sale?'<span class="ma-sale">OFERTA</span>':''}<i>${itIc(x.it)}</i><div><b>${esc(itName(x.it))}</b><small>${esc(itDesc(x.it))}</small></div><button class="ma-b sm p" data-mo="buy:${i}" ${x.sold||!calm||s.gold<x.price?'disabled':''}>${x.sold?'Vendido':x.price+' '+COIN()}</button></div>`).join(''):'<p class="ma-note">La tienda abrirá en la próxima casilla.</p>'}</div>`}
- else if(MOD.k==='bag'){h=`<h4>🎒 Tu mochila</h4><p class="ma-note" style="margin-bottom:8px">Los amuletos funcionan solos mientras estén en tu mochila. Puedes dárselos a otro jugador cuando quieras.${calm?'':' En combate solo puedes usar pociones, en tu turno.'}</p><div class="ma-it">${bag.length?bag.map((it,i)=>`<div class="ma-itr"><i>${itIc(it)}</i><div><b>${esc(itName(it))}</b><small>${esc(itDesc(it))}</small></div><div class="ma-itb">${it.k!=='amu'?`<button class="ma-b sm g" data-mo="use:${i}" ${hero&&(BATT(it)?myTurnNow(s):(calm||((it.k==='pot'||it.k==='rev')&&myTurnNow(s))))?'':'disabled'}>${it.k==='mt'?'Enseñar':'Usar'}</button>`:''}${s.seats.length>1?`<button class="ma-b sm" data-mo="give:${i}">Dar</button>`:''}</div></div>`).join(''):'<p class="ma-note">Aún no tienes objetos. Consíguelos en las casillas 🎁 o en la tienda.</p>'}</div>`}
+ else if(MOD.k==='bag'){/* v52.6: mochila mejorada: objetos apilados, por secciones y con el motivo si no se puede usar */
+  const canUse=it=>hero&&(BATT(it)?myTurnNow(s):(calm||((it.k==='pot'||it.k==='rev')&&myTurnNow(s))));
+  const why=it=>!hero?'':it.k==='amu'?'':canUse(it)?'':BATT(it)?'Solo en tu turno de combate':(it.k==='pot'||it.k==='rev')?'En combate, en tu turno':'Fuera de combate';
+  const keyOf=it=>it.k+'|'+(it.l||'')+'|'+(it.a||'')+'|'+(it.n||'');const G0=[];const map={};bag.forEach((it,i)=>{const k=keyOf(it);if(!map[k]){map[k]={it,ix:[]};G0.push(map[k])}map[k].ix.push(i)});
+  const SEC=[['cur','💗 Curación',it=>it.k==='pot'||it.k==='rev'],['bat','⚔️ Para el combate',it=>it.k==='x'||it.k==='bomb'],['cdy','🍬 Caramelos',it=>it.k==='cdy'],['mt','💿 MT',it=>it.k==='mt'],['amu','🧿 Amuletos (activos mientras los lleves)',it=>it.k==='amu']];
+  const card=g=>{const it=g.it,i=g.ix[0],n=g.ix.length,w=why(it);return`<div class="ma-itr mbg"><i>${itIc(it)}${n>1?`<em class="mbn">×${n}</em>`:''}</i><div><b>${esc(itName(it))}</b><small>${esc(itDesc(it))}</small>${w?`<small class="mbw">⏳ ${esc(w)}</small>`:''}</div><div class="ma-itb">${it.k!=='amu'?`<button class="ma-b sm g" data-mo="use:${i}" ${canUse(it)?'':'disabled'}>${it.k==='mt'?'Enseñar':'Usar'}</button>`:''}${s.seats.length>1?`<button class="ma-b sm" data-mo="give:${i}">Dar</button>`:''}</div></div>`};
+  const amus=G0.filter(g=>g.it.k==='amu');
+  h=`<h4>🎒 Tu mochila <span class="mbh">${bag.length} objeto${bag.length===1?'':'s'} · ${COIN()} ${s.gold|0}</span></h4>${amus.length?`<div class="mbam">${amus.map(g=>`<span title="${esc(itDesc(g.it))}">${itIc(g.it)} ${esc(itName(g.it))}${g.ix.length>1?' ×'+g.ix.length:''}</span>`).join('')}</div>`:''}<p class="ma-note" style="margin-bottom:6px">${calm?'Usa, enseña o da objetos a tus compañeros.':'En combate: las pociones no gastan el turno; Revivir, los objetos de combate y las bombas sí.'}</p>
+   ${bag.length?SEC.map(([k,t,f])=>{const L=G0.filter(g=>f(g.it));return L.length?`<div class="mbs">${t}</div><div class="ma-it">${L.map(card).join('')}</div>`:''}).join(''):'<p class="ma-note">Aún no tienes objetos. Consíguelos en las casillas 🎁, en los eventos o en la tienda.</p>'}`}
  else if(MOD.k==='give'){const it=bag[MOD.idx];if(!it){MOD={k:'bag'};return modal()}h=`<h4>Dar ${itIc(it)} ${esc(itName(it))}</h4><div class="ma-it">${s.seats.map((x,i)=>i===me?'':`<button class="ma-b" data-mo="to:${i}" style="border-color:${PC[i]}">${x.hero?`<img src="${mini(x.hero.id,x.hero.sh)}" alt="" style="width:32px;height:32px;vertical-align:middle;image-rendering:pixelated">`:''} ${esc(x.n)}</button>`).join('')}</div>`}
  else if(MOD.k==='rv'){h=`<h4>💎 ¿A quién reanimas?</h4><div class="ma-it">${s.seats.map((x,i)=>x.hero&&x.hero.hp<=0?`<button class="ma-b" data-mo="rv:${i}" style="border-color:${PC[i]}"><img src="${mini(x.hero.id,x.hero.sh)}" alt="" style="width:32px;height:32px;vertical-align:middle;image-rendering:pixelated"> ${esc(x.hero.nm)} · ${esc(x.n)}</button>`:'').join('')}</div>`}
  else if(MOD.k==='mt'){const it=bag[MOD.idx];if(!it||!hero){MOD={k:'bag'};return modal()}h=`<h4>💿 ${esc(it.n)}: ¿qué movimiento olvida ${esc(hero.nm)}?</h4><div class="ma-it">${hero.moves.map((v,i)=>`<button class="ma-b" data-mo="slot:${i}" ${v.lk?'disabled':''} style="text-align:left;border-color:${COL[v.t]||'#fff'}">${v.lk?'🔒 ':''}${esc(v.n)} <small style="opacity:.75">· ${ES[v.t]||v.t}${v.p?' · '+v.p:' · apoyo'}${v.lk?' · fijo, no se puede olvidar':''}</small></button>`).join('')}</div>`}
@@ -21436,6 +21458,14 @@ body:has(#mpa.on) #svl{z-index:100050!important}
 #mpa .ma-mvw{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top));transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:8px;max-width:calc(100% - 24px);padding:9px 14px;border-radius:999px;background:linear-gradient(90deg,#4c1d95,#1e3a8a);border:1px solid #c4b5fd88;color:#fff;font:800 12.5px system-ui;box-shadow:0 8px 20px #000a;animation:emIn .3s}
 #mpa .ma-mvw i{flex:none;width:14px;height:14px;border-radius:50%;border:2px solid #fff;border-top-color:transparent;animation:mvwSp .8s linear infinite}
 @keyframes mvwSp{to{transform:rotate(360deg)}}
+/* v52.6: mochila de la Aventura multiplayer */
+#mpa .mbh{font:800 11.5px system-ui;opacity:.85;margin-left:6px}
+#mpa .mbam{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 6px}
+#mpa .mbam span{font:800 11px system-ui;padding:3px 8px;border-radius:999px;background:#7c3aed33;border:1px solid #c4b5fd55}
+#mpa .mbs{font:900 12px system-ui;color:#fde68a;margin:10px 2px 5px}
+#mpa .mbg>i{position:relative}
+#mpa .mbg .mbn{position:absolute;right:-6px;bottom:-4px;font-style:normal;font:900 10px system-ui;background:#fde047;color:#111;border-radius:8px;padding:0 4px}
+#mpa .mbg .mbw{display:block;color:#fca5a5;font-size:10.5px;margin-top:2px}
 </style>
 <script id="v37js">
 (()=>{
