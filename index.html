@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v53.1</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v53.2</div>
 </section>
 
 <section id="team" class="scr">
@@ -8624,7 +8624,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'53.1',t:'Botones de la mochila arreglados de verdad',s:'cur',l:[
+ {v:'53.2',t:'Combate doble y botón de empezar arreglados',s:'cur',l:[
+  '⚔️ Aventura multiplayer: arreglado que el botón «Empezar/Continuar la aventura» no hiciera nada si ya habías jugado otra partida antes sin recargar el juego',
+  '🎯 Combate doble con amigos (Torre 2 vs 2): al elegir a qué rival atacas, la elección ya no se borra cada vez que tu compañero hace algo, así que se puede tocar al Pokémon sin problemas',
+  '✨ Combate doble: al empezar una ronda, los botones esperan a que terminen las animaciones de entrada (antes salían a mitad y todo parpadeaba)',
+  '🖤 Se quita un arreglo de la v52.9 que podía hacer parpadear otras pantallas (se veía el menú de debajo); ahora solo actúa al cerrar el teclado en el intercambio'
+ ]},
+ {v:'53.1',t:'Botones de la mochila arreglados de verdad',s:'prev',l:[
   '🎒 Aventura multiplayer: arreglados los botones Usar, Enseñar y Dar de la mochila, que no se podían pulsar (una capa invisible de la mochila nueva tapaba los objetos)'
  ]},
  {v:'53.0',t:'Arreglos de la mochila y de aprender movimientos (Aventura multiplayer)',s:'prev',l:[
@@ -17156,7 +17162,7 @@ async function onClick(ev){const t=ev.target;
  if(a.startsWith('hero:')){if(b&&b.classList&&b.classList.contains('tk'))return;const id=+a.slice(5);if(ROLE==='host'){if(G.seats.some((s,k)=>k!==0&&s.pick===id))return;G.seats[0].pick=G.seats[0].pick===id?null:id;bp(640,.03);push()}else{dsend(NET.dc,{t:'pick',id});bp(640,.03)}return}
  if(a.startsWith('len:')&&ROLE==='host'&&G&&newGame()){const v=+a.slice(4);G.len=[20,40,60,100].includes(v)?v:20;push();try{render()}catch(_){}return}
  if(a.startsWith('asc:')&&ROLE==='host'&&G&&newGame()){G.asc=Math.max(0,Math.min(meta().asc|0,10,+a.slice(4)|0));push();try{render()}catch(_){}return}
- if(a==='start'&&ROLE==='host'){if(busy)return;busy=true;startGame().catch(e=>console.error(e)).finally(()=>{busy=false});return}}
+ if(a==='start'&&ROLE==='host'){/* v53.2: el bloqueo antidoble toque ya no se queda puesto para siempre (startGame dura toda la partida) */if(busy&&now()-busy<4000)return;busy=now();startGame().catch(e=>console.error(e)).finally(()=>{busy=0});return}}
 /* ---------- botón en el menú principal ---------- */
 function mount(){const mb=Q('.mb');if(!mb||Q('#mmpa'))return;const base=[...mb.querySelectorAll('button')].find(b=>/Modo aventura/i.test(b.textContent));if(!base)return;
  const b=base.cloneNode(true);b.id='mmpa';b.removeAttribute('onclick');
@@ -17401,7 +17407,7 @@ function drawV(){const g=Q('#tvg');if(!g)return;if(!THEIR){g.innerHTML='<div cla
  const q=norm(VQ.trim()),L2=THEIR.filter(x=>(!q||norm(x.n).includes(q))&&(!VT||x.ty.includes(VT)));
  g.innerHTML=L2.length?L2.map(x=>{const k=x.w+':'+x.i+':'+x.id;return`<button class="tvc${MYW.has(k)?' on':''}${window.__wishHas&&__wishHas(x.id)?' wsh':''}" data-k="${k}"><img src="${mini(x.id,x.sh)}" alt="" loading="lazy" decoding="async"><b>${esc(x.n)}${x.sh?' ✨':''}</b><small>Nv.${x.lv} · ${x.w==='team'?'Equipo':'Caja'}</small></button>`}).join(''):'<div class="tvl">No hay Pokémon con este filtro.</div>'}
 /* v52.9: al cerrar el teclado el navegador del móvil a veces deja el intercambio en negro: se fuerza un repintado */
-if(window.visualViewport){let vt;visualViewport.addEventListener('resize',()=>{clearTimeout(vt);vt=setTimeout(()=>{const l=Q('#lan');if(!l||getComputedStyle(l).display==='none')return;if(D.scrollingElement&&D.scrollingElement.scrollTop)D.scrollingElement.scrollTop=0;l.style.transform='translateZ(0)';requestAnimationFrame(()=>requestAnimationFrame(()=>{l.style.transform=''}))},150)})}
+if(window.visualViewport){let vt,lh=visualViewport.height;visualViewport.addEventListener('resize',()=>{const h=visualViewport.height,grew=h-lh>120;lh=h;if(!grew)return;clearTimeout(vt);vt=setTimeout(()=>{/* v53.2: solo al cerrar el teclado en el intercambio, y sin tocar las capas (antes podía hacer parpadear otras pantallas) */if(stage()!=='trade')return;if(D.scrollingElement&&D.scrollingElement.scrollTop)D.scrollingElement.scrollTop=0;const l=Q('#lan');if(l){l.style.opacity='.999';requestAnimationFrame(()=>{l.style.opacity=''})}},150)})}
 setInterval(sync,500);
 {const lm=()=>Q('#lmain');const t=setInterval(()=>{const m=lm();if(!m)return;clearInterval(t);new MutationObserver(()=>{if(stage()==='trade')decorate()}).observe(m,{childList:true})},500)}
 })();</script>
@@ -21844,10 +21850,10 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
      const w2=O.querySelector(`.cb-mon[data-s="${k}"] .cb-spr`);if(w2)w2.animate([{transform:'scale(.2)',opacity:0},{transform:'scale(1.08)',opacity:1,offset:.6},{transform:'scale(1)',opacity:1}],{duration:420});particles(k,'#fff',10);bp(740,.08);await sl(520)}
     else if(e.k==='item'){bp(820,.06);await sl(420)}
     else if(e.k==='clr'){['f0','f1'].forEach(f=>particles(f,'#fde047',14));bp(784,.1);setTimeout(()=>bp(988,.14),120);await banner('¡RONDA SUPERADA!','Tu equipo recupera fuerzas');}
-    else if(e.k==='rd'){await preAll(s.fo,1200);ST=s;/* v47.0: la copia de animación usa ya a los rivales nuevos (antes los cambios de características de la entrada se pintaban sobre los rivales debilitados de la ronda anterior) */try{show.fo=JSON.parse(JSON.stringify(s.fo)).map(m=>{m.stg={a:0,d:0,sa:0,sd:0,sp:0,ac:0,ev:0};return m})}catch(_){}paintAll(s);try{if(show.fo)['f0','f1'].forEach(f=>card(f,monOf(show,f)))}catch(_){}['f0','f1'].forEach(f=>{const w=O.querySelector(`.cb-mon[data-s="${f}"] .cb-spr`);if(w)w.animate([{transform:'translateX(120%)',opacity:0},{transform:'translateX(0)',opacity:1}],{duration:520,easing:'cubic-bezier(.2,.9,.3,1.1)'})});await banner(e.boss?'👑 JEFE DE LA TORRE':s.mode==='adv'?(e.rd>1?'¡SIGUIENTE PAREJA!':'⚔️⚔️ COMBATE DOBLE'):(s.mode&&s.mode!=='free'?'PISO ':'RONDA ')+(e.boss||s.mode==='adv'?'':e.rd),`${s.fo[0]?s.fo[0].n:''} y ${s.fo[1]?s.fo[1].n:''}`)}
+    else if(e.k==='rd'){await preAll(s.fo,1200);ST=s;/* v47.0: la copia de animación usa ya a los rivales nuevos (antes los cambios de características de la entrada se pintaban sobre los rivales debilitados de la ronda anterior) */try{show.fo=JSON.parse(JSON.stringify(s.fo)).map(m=>{m.stg={a:0,d:0,sa:0,sd:0,sp:0,ac:0,ev:0};return m})}catch(_){}paintAll(s);panel(true);/* v53.2: el panel sigue bloqueado hasta que terminen las animaciones de la ronda */try{if(show.fo)['f0','f1'].forEach(f=>card(f,monOf(show,f)))}catch(_){}['f0','f1'].forEach(f=>{const w=O.querySelector(`.cb-mon[data-s="${f}"] .cb-spr`);if(w)w.animate([{transform:'translateX(120%)',opacity:0},{transform:'translateX(0)',opacity:1}],{duration:520,easing:'cubic-bezier(.2,.9,.3,1.1)'})});await banner(e.boss?'👑 JEFE DE LA TORRE':s.mode==='adv'?(e.rd>1?'¡SIGUIENTE PAREJA!':'⚔️⚔️ COMBATE DOBLE'):(s.mode&&s.mode!=='free'?'PISO ':'RONDA ')+(e.boss||s.mode==='adv'?'':e.rd),`${s.fo[0]?s.fo[0].n:''} y ${s.fo[1]?s.fo[1].n:''}`)}
     else if(e.k==='over'){bp(196,.4,'sawtooth');await sl(700)}
     else await sl(560)}}
-  ST=s;if(s.ph==='ch'||s.ph==='sw'||s.ph==='over'||s.ph==='err')pend=s.ch&&s.ch[me]?pend:null;if(s.ph==='over'&&s.mode!=='adv')payOnce(s);paintAll(s)}
+  ST=s;if(s.ph==='sw'||s.ph==='over'||s.ph==='err'||(s.ph==='ch'&&s.ch&&s.ch[me]))pend=null;if(s.ph==='over'&&s.mode!=='adv')payOnce(s);paintAll(s)}
  /* ---------- mochila: lo usado se descuenta de tu partida ---------- */
  function syncBag(s){const u=s.used&&s.used[me];if(!u)return;const run=getRun();if(!run||!run.bag)return;let ch=0;for(const k in u){const d=(u[k]|0)-(applied[k]|0);if(d>0){run.bag[k]=Math.max(0,(run.bag[k]|0)-d);applied[k]=u[k]|0;ch=1}}if(ch)putRun(run)}
  const reward=r=>r*150+(r>=5?500:0)+(r>=10?1500:0)+(r>=20?5000:0);
