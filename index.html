@@ -8618,10 +8618,7 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'51.7',t:'Nueva evolución de Kingambit',s:'cur',l:[
-  '👑 Kingambit tiene una forma nueva (y única) de conseguirse: tu Bisharp, llevando la Roca del Rey, tiene que derrotar a un Bisharp Alfa en un bioma dando el golpe final con un ataque supereficaz. Entonces evoluciona',
-  '👑 Bisharp ya no evoluciona por nivel (ni con caramelos ni desde la Caja), y Kingambit ya no aparece salvaje en ningún sitio (ni en biomas, ni como Pokémon del día). Los Bisharp Alfa salen en los grupos de Pawniard',
-  '📖 La ficha de Bisharp explica la nueva forma de evolucionar',
+ {v:'51.7',t:'Equipo en los biomas',s:'cur',l:[
   '👥 Biomas: la pestaña de tu equipo pasa arriba a la derecha y se despliega hacia abajo en columna, con animación'
 ]},
 {v:'51.6',t:'Megaincursiones más difíciles',s:'prev',l:[
@@ -25489,7 +25486,7 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
  const _ae=window.advEnd;if(_ae)window.advEnd=advEnd=async function(w){const a=typeof B=='object'&&B&&B._kgGo;if(a&&w){try{await say(`👑 ¡El Bisharp Alfa reconoce la fuerza de ${nm(a)}! La Roca del Rey empieza a brillar…`)}catch(e){}}const r=await _ae.apply(this,arguments);
   try{if(a){if(a.id===BI&&w&&typeof checkEvo=='function')await checkEvo();delete a._kg;if(a.id===KG){try{toast('👑 ¡Bisharp ha evolucionado a Kingambit!')}catch(_){}}try{saveRun()}catch(_){}}}catch(e){console.error('kingambit',e)}return r};
  /* el texto de evolución en la ficha */
- window.__kgEvoTxt='Evoluciona venciendo a un Bisharp Alfa de un bioma con un ataque supereficaz, llevando la Roca del Rey';
+ window.__kgEvoTxt='❓ Evoluciona de una forma misteriosa…';
 })();
 
 })();</script>
