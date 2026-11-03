@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.6</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.7</div>
 </section>
 
 <section id="team" class="scr">
@@ -3443,7 +3443,7 @@ new MutationObserver(()=>{if(A.className=='bg-gym'&&typeof B!='undefined'&&B&&B.
 info=async function(m,lead){
  try{await evoFill(m)}catch(e){}
  const ev=EVO[m.id],q=Math.min(100,(m.xp-XPT(m.lvl))/(XPT(m.lvl+1)-XPT(m.lvl))*100),first=R.team.indexOf(m)==(R.li||0),tn=ev&&NAMES[ev[1]]?NAMES[ev[1]].replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()):'',
- evb=ev?`<div class="evb"><span>🔄 Evolución</span><u>Evoluciona al Nv.${ev[0]}</u>${tn?`<b>→ ${tn}</b>${typeof mini=='function'?`<img src="${mini(ev[1])}" alt="">`:''}`:''}</div>`:'';
+ evb=m.id===625?`<div class="evb"><span>🔄 Evolución</span><u>${window.__kgEvoTxt||''}</u><b>→ Kingambit</b>${typeof mini=='function'?`<img src="${mini(983)}" alt="">`:''}</div>`:ev?`<div class="evb"><span>🔄 Evolución</span><u>Evoluciona al Nv.${ev[0]}</u>${tn?`<b>→ ${tn}</b>${typeof mini=='function'?`<img src="${mini(ev[1])}" alt="">`:''}`:''}</div>`:'';
  const p=ask(`${nm(m)}${m.nick?' ('+spn(m)+')':''} · Nv.${m.lvl}`,`<div class="ty">${m.types.map(t=>`<i style="background:${COL[t]}">${ES[t]}</i>`).join('')}</div><div class="xb"><i style="width:${q}%"></i></div><small>Faltan ${Math.max(0,XPT(m.lvl+1)-m.xp)} PE para el nivel ${m.lvl+1}</small><div class="stt"><span>PS ${m.hp}/${m.max}</span><span>Atq ${m.a}</span><span>Def ${m.d}</span><span>At.Esp ${m.sa}</span><span>D.Esp ${m.sd}</span><span>Vel ${m.sp}</span></div>${evb}<small>${critTag((100/16).toFixed(1))}</small>`+m.moves.map(x=>`<div class="mi"><i style="background:${COL[x.t]}">${ES[x.t]}</i> <b>${x.n}</b><br><small>${x.p?'Poder '+x.p+' · '+(x.ph?'Físico':'Especial'):'Estado'} · PP ${x.cp}/${x.mp}${x.pr?' · Prioridad '+(x.pr>0?'+':'')+x.pr:''}</small></div>`).join(''),lead?['✖ Cerrar','✏️ Apodo',{t:'📦 Enviar a caja',off:R.team.length<=1}]:['✖ Cerrar','✏️ Apodo']);
  const md=document.querySelector('#mod'),bx=md.querySelector('.box');
  if(bx){const bar=document.createElement('div');bar.className='fbar';bx.querySelectorAll('[data-i]').forEach(b=>bar.append(b));md.append(bar);bx.classList.add('hasfb')}
@@ -8618,7 +8618,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'51.6',t:'Megaincursiones más difíciles',s:'cur',l:[
+ {v:'51.7',t:'Nueva evolución de Kingambit',s:'cur',l:[
+  '👑 Kingambit tiene una forma nueva (y única) de conseguirse: tu Bisharp, llevando la Roca del Rey, tiene que derrotar a un Bisharp Alfa en un bioma dando el golpe final con un ataque supereficaz. Entonces evoluciona',
+  '👑 Bisharp ya no evoluciona por nivel (ni con caramelos ni desde la Caja), y Kingambit ya no aparece salvaje en ningún sitio (ni en biomas, ni como Pokémon del día). Los Bisharp Alfa salen en los grupos de Pawniard',
+  '📖 La ficha de Bisharp explica la nueva forma de evolucionar'
+]},
+{v:'51.6',t:'Megaincursiones más difíciles',s:'prev',l:[
   '🌋 Megaincursiones más difíciles: el jefe ataca más a menudo (unos 3,8 s, 3 s con escudo), pega bastante más fuerte (y aún más cuando le queda poca vida), aguanta más golpes y tardas 20 s en volver si te debilitan'
 ]},
 {v:'51.5',t:'Arreglo de la captura rápida',s:'prev',l:[
@@ -24110,7 +24115,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  /* v47.7: el Pokémon del día cambia a las 18:00 */
  const day=()=>{const d=new Date(Date.now()-18*3600000);return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()};
  const hsh=n=>{let h=2166136261;for(const c of String(n)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
- const ok=id=>{try{return !(typeof TAGS!=='undefined'&&TAGS[id])&&id!==132&&id!==201}catch(e){return true}};
+ const ok=id=>{try{return !(typeof TAGS!=='undefined'&&TAGS[id])&&id!==132&&id!==201&&id!==983}catch(e){return true}};
  let cache=null;
  function potd(){const k=day();if(cache&&cache.k===k)return cache;let h=hsh('potd'+k),id=0;for(let i=0;i<40;i++){const c=1+(h%1025);if(ok(c)){id=c;break}h=hsh(h+':'+i)}if(!id)id=25;
   cache={k,id,name:(()=>{try{return(typeof NAMES!=='undefined'&&NAMES[id])||(DEX.find(x=>x.id===id)||{}).name||''}catch(e){return''}})(),bio:null};
@@ -24508,7 +24513,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
    (j.pokemon||[]).forEach(p=>{const m=String(p.pokemon&&p.pokemon.url||'').match(/\/pokemon\/(\d+)\/?$/);if(!m)return;const id=+m[1];if(id>1025)return;(t[id]=t[id]||[])[p.slot-1]=ty})}));
    try{(window.REG||[]).forEach(x=>t[x.id]=x.ty)}catch(e){}const n=Object.keys(t).length;try{localStorage.setItem(TK,JSON.stringify({n,t}))}catch(e){}TT=t;return t})().finally(()=>{TP=null});
   return TP}
- const POOL={},NOPOOL=new Set([201,132,10093,10250,10251,10252]);/* Unown solo en las ruinas; Ditto y formas raras fuera */
+ const POOL={},NOPOOL=new Set([201,132,10093,10250,10251,10252,983]);/* v51.7: Kingambit nunca sale salvaje *//* Unown solo en las ruinas; Ditto y formas raras fuera */
  /* fase evolutiva de cada especie (0 base, 1 primera evolución, 2 segunda), se guarda para no volver a preguntar */
  const SKS='pa_stage1',STG=(()=>{try{return JSON.parse(localStorage.getItem(SKS)||'{}')||{}}catch(e){return{}}})();let stT=0;const stSave=()=>{clearTimeout(stT);stT=setTimeout(()=>{try{localStorage.setItem(SKS,JSON.stringify(STG))}catch(e){}},800)};
  async function from(id){const j=await(await fetch('https://pokeapi.co/api/v2/pokemon-species/'+id)).json();const u=j.evolves_from_species&&j.evolves_from_species.url;return u?+u.match(/\/(\d+)\/?$/)[1]:0}
@@ -25457,6 +25462,21 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
   w.classList.toggle('op',open);if(open)fill(w)}
  function fill(w){const c=w.querySelector('.bzt-col'),h=html();if(c._h!==h){c._h=h;c.innerHTML=h}}
  if(window.__onDom)__onDom(paint);setInterval(()=>{if(open)paint()},1500);
+})();
+
+/* ---------- v51.7: 👑 Kingambit: solo se consigue con un Bisharp que lleve la Roca del Rey y derrote a un Bisharp Alfa de un bioma con un ataque supereficaz ---------- */
+(()=>{const KG=983,BI=625;
+ /* Bisharp ya no evoluciona por nivel (ni con caramelos, ni desde la Caja) */
+ const _pe=window.pickEvo;window.pickEvo=pickEvo=function(m){if(m&&m.id===BI){return m._kg?[1,KG]:undefined}return _pe.apply(this,arguments)};
+ /* Kingambit no aparece salvaje en ningún sitio */
+ const _pk=window.pickEnemies;if(typeof _pk==='function')window.pickEnemies=pickEnemies=async function(n,w,bio){const r=await _pk.apply(this,arguments);try{if(Array.isArray(r)&&(w||bio))return r.map(p=>p&&(+p.id===KG)?{id:BI,name:(typeof NAMES!='undefined'&&NAMES[BI])||'bisharp'}:p)}catch(e){}return r};
+ /* el golpe final: Bisharp con Roca del Rey + supereficaz contra un Bisharp Alfa de bioma */
+ const _hit=window.hit;window.hit=async function(s,r,mv){try{if(s==='e'&&r&&r.d>0&&typeof B=='object'&&B&&B.c&&B.c.herd){const e=act('e'),a=act('p');
+  if(e&&a&&e.id===BI&&e.alpha&&e.hp-r.d<=0&&a.id===BI&&a.item==='krock'&&r.e>1&&B.en.every(x=>x===e||x.hp<=0)){a._kg=1;B._kgGo=a}}}catch(e){}return _hit.apply(this,arguments)};
+ const _ae=window.advEnd;if(_ae)window.advEnd=advEnd=async function(w){const a=typeof B=='object'&&B&&B._kgGo;if(a&&w){try{await say(`👑 ¡El Bisharp Alfa reconoce la fuerza de ${nm(a)}! La Roca del Rey empieza a brillar…`)}catch(e){}}const r=await _ae.apply(this,arguments);
+  try{if(a){if(a.id===BI&&w&&typeof checkEvo=='function')await checkEvo();delete a._kg;if(a.id===KG){try{toast('👑 ¡Bisharp ha evolucionado a Kingambit!')}catch(_){}}try{saveRun()}catch(_){}}}catch(e){console.error('kingambit',e)}return r};
+ /* el texto de evolución en la ficha */
+ window.__kgEvoTxt='Evoluciona venciendo a un Bisharp Alfa de un bioma con un ataque supereficaz, llevando la Roca del Rey';
 })();
 
 })();</script>
