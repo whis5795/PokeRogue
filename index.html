@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.3</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.4</div>
 </section>
 
 <section id="team" class="scr">
@@ -8621,7 +8621,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'52.3',t:'Aviso de movimiento nuevo',s:'cur',l:[
+ {v:'52.4',t:'Arreglo al aprender movimientos',s:'cur',l:[
+  '🔧 Aventura multiplayer: al aprender un movimiento (por nivel o con MT) se podía elegir olvidar un movimiento fijo 🔒 y entonces no se aprendía nada. Ahora los fijos salen bloqueados o no se ofrecen',
+  '🔧 Las MT avisan antes si tu clase no puede aprenderlas o si ya conoces el movimiento, en vez de dejarte elegir qué olvidar para luego no aprenderlo'
+]},
+{v:'52.3',t:'Aviso de movimiento nuevo',s:'prev',l:[
   '📚 Aventura multiplayer: mientras un jugador decide si su Pokémon aprende un movimiento, a los demás les sale un cartel avisándolo'
 ]},
 {v:'52.2',t:'Arreglos de la Aventura multiplayer',s:'prev',l:[
@@ -16798,8 +16802,9 @@ let MVQ=Promise.resolve();const MVP=new Map();
 const mvLite=v=>({n:v.n,t:v.t,p:v.p|0,ph:v.ph?1:0,acc:v.acc|0,mp:v.mp|0,cp:v.cp|0,pr:v.pr|0,lk:v.lk?1:0});
 function mvwPaint(s){let b=el.querySelector('.ma-mvw');const w=s&&s.mvw;if(!w||w.seat===MYSEAT){if(b)b.remove();return}
  if(!b){b=document.createElement('div');b.className='ma-mvw';el.append(b)}const t=`📚 ${esc(w.n)} está decidiendo si ${esc(w.p)} aprende ${esc(w.mv)}…`;if(b._t!==t){b._t=t;b.innerHTML=`<i></i><span>${t}</span>`}}
-function mvLocal(m,nv,nm0){const run=()=>new Promise(async res=>{try{const opts=[...m.moves.map(o=>o.lk?{t:`🔒 ${o.n} (fijo)`,off:1}:`Olvidar ${o.n}${o.p?' (Poder '+o.p+')':''}`),'No aprender'];
-  const k=await ask('Nuevo movimiento',mvBox(m,nv,`${esc(nm0||pname(m))} quiere aprender ${esc(nv.n)}. ¿Qué movimiento olvida?`),opts);res(k>=0&&k<m.moves.length&&!m.moves[k].lk?k:-1)}catch(e){res(-1)}});const p=MVQ.then(run);MVQ=p.catch(()=>{});return p}
+function mvLocal(m,nv,nm0){const run=()=>new Promise(async res=>{try{/* los movimientos fijos (🔒) no se pueden olvidar: no se ofrecen */const free=m.moves.map((o,i)=>({o,i})).filter(x=>!x.o.lk);if(!free.length){tst(`${nm0||pname(m)} no puede olvidar ningún movimiento (todos son fijos)`);return res(-1)}
+  const m2=Object.assign({},m,{moves:free.map(x=>x.o)}),opts=[...free.map(x=>`Olvidar ${x.o.n}${x.o.p?' (Poder '+x.o.p+')':''}`),'No aprender'];
+  const k=await ask('Nuevo movimiento',mvBox(m2,nv,`${esc(nm0||pname(m))} quiere aprender ${esc(nv.n)}. ¿Qué movimiento olvida?${free.length<m.moves.length?' (Los movimientos fijos 🔒 no se pueden olvidar.)':''}`),opts);res(k>=0&&k<free.length?free[k].i:-1)}catch(e){res(-1)}});const p=MVQ.then(run);MVQ=p.catch(()=>{});return p}
 function mvAsk(seat,m,nv){const st=G&&G.seats[seat];if(!st)return Promise.resolve(-1);V.mvw={seat,n:st.n,p:pname(m),mv:nv.n};push();const done=v=>{V.mvw=null;push();return v};return mvAsk0(seat,m,nv,st).then(done,()=>done(-1))}
 function mvAsk0(seat,m,nv,st){
  if(seat===0||st.pid===NET.id)return mvLocal(m,nv);
@@ -16964,7 +16969,7 @@ function modal(){const s=S;let g=Q('#mamod');if(!MOD||!s){if(g)g.remove();return
  else if(MOD.k==='bag'){h=`<h4>🎒 Tu mochila</h4><p class="ma-note" style="margin-bottom:8px">Los amuletos funcionan solos mientras estén en tu mochila. Puedes dárselos a otro jugador cuando quieras.${calm?'':' En combate solo puedes usar pociones, en tu turno.'}</p><div class="ma-it">${bag.length?bag.map((it,i)=>`<div class="ma-itr"><i>${itIc(it)}</i><div><b>${esc(itName(it))}</b><small>${esc(itDesc(it))}</small></div><div class="ma-itb">${it.k!=='amu'?`<button class="ma-b sm g" data-mo="use:${i}" ${hero&&(BATT(it)?myTurnNow(s):(calm||((it.k==='pot'||it.k==='rev')&&myTurnNow(s))))?'':'disabled'}>${it.k==='mt'?'Enseñar':'Usar'}</button>`:''}${s.seats.length>1?`<button class="ma-b sm" data-mo="give:${i}">Dar</button>`:''}</div></div>`).join(''):'<p class="ma-note">Aún no tienes objetos. Consíguelos en las casillas 🎁 o en la tienda.</p>'}</div>`}
  else if(MOD.k==='give'){const it=bag[MOD.idx];if(!it){MOD={k:'bag'};return modal()}h=`<h4>Dar ${itIc(it)} ${esc(itName(it))}</h4><div class="ma-it">${s.seats.map((x,i)=>i===me?'':`<button class="ma-b" data-mo="to:${i}" style="border-color:${PC[i]}">${x.hero?`<img src="${mini(x.hero.id,x.hero.sh)}" alt="" style="width:32px;height:32px;vertical-align:middle;image-rendering:pixelated">`:''} ${esc(x.n)}</button>`).join('')}</div>`}
  else if(MOD.k==='rv'){h=`<h4>💎 ¿A quién reanimas?</h4><div class="ma-it">${s.seats.map((x,i)=>x.hero&&x.hero.hp<=0?`<button class="ma-b" data-mo="rv:${i}" style="border-color:${PC[i]}"><img src="${mini(x.hero.id,x.hero.sh)}" alt="" style="width:32px;height:32px;vertical-align:middle;image-rendering:pixelated"> ${esc(x.hero.nm)} · ${esc(x.n)}</button>`:'').join('')}</div>`}
- else if(MOD.k==='mt'){const it=bag[MOD.idx];if(!it||!hero){MOD={k:'bag'};return modal()}h=`<h4>💿 ${esc(it.n)}: ¿qué movimiento olvida ${esc(hero.nm)}?</h4><div class="ma-it">${hero.moves.map((v,i)=>`<button class="ma-b" data-mo="slot:${i}" style="text-align:left;border-color:${COL[v.t]||'#fff'}">${esc(v.n)} <small style="opacity:.75">· ${ES[v.t]||v.t}${v.p?' · '+v.p:' · apoyo'}</small></button>`).join('')}</div>`}
+ else if(MOD.k==='mt'){const it=bag[MOD.idx];if(!it||!hero){MOD={k:'bag'};return modal()}h=`<h4>💿 ${esc(it.n)}: ¿qué movimiento olvida ${esc(hero.nm)}?</h4><div class="ma-it">${hero.moves.map((v,i)=>`<button class="ma-b" data-mo="slot:${i}" ${v.lk?'disabled':''} style="text-align:left;border-color:${COL[v.t]||'#fff'}">${v.lk?'🔒 ':''}${esc(v.n)} <small style="opacity:.75">· ${ES[v.t]||v.t}${v.p?' · '+v.p:' · apoyo'}${v.lk?' · fijo, no se puede olvidar':''}</small></button>`).join('')}</div>`}
  h+=`<button class="ma-b" data-mo="${MOD.k==='bag'||MOD.k==='shop'?'x':'bag'}" style="width:100%;margin-top:10px">${MOD.k==='bag'||MOD.k==='shop'?'Cerrar':'← Volver'}</button>`;
  g.innerHTML=`<div>${h}</div>`}
 function modalAct(a){const s=S,bag=myBag(s);
@@ -16974,7 +16979,7 @@ function modalAct(a){const s=S,bag=myBag(s);
  if(k==='buy'){req({k:'buy',idx:n});bp(700,.05);return}
  if(k==='give'){MOD={k:'give',idx:n};return modal()}
  if(k==='to'){req({k:'give',idx:MOD.idx,to:n});MOD={k:'bag'};return modal()}
- if(k==='use'){const it=bag[n],hero=s.seats[mySeatIx()].hero;if(!it||!hero)return;if(it.k==='rev'){const ko=s.seats.map((x,j)=>({x,j})).filter(z=>z.x.hero&&z.x.hero.hp<=0);if(!ko.length)return tst('No hay ningún compañero debilitado');if(ko.length>1){MOD={k:'rv',idx:n};return modal()}req({k:'use',idx:n,to:ko[0].j});MOD=null;return modal()}if(it.k==='mt'&&hero.moves.length>=4){MOD={k:'mt',idx:n};return modal()}req({k:'use',idx:n});MOD=null;return modal()}
+ if(k==='use'){const it=bag[n],hero=s.seats[mySeatIx()].hero;if(!it||!hero)return;if(it.k==='rev'){const ko=s.seats.map((x,j)=>({x,j})).filter(z=>z.x.hero&&z.x.hero.hp<=0);if(!ko.length)return tst('No hay ningún compañero debilitado');if(ko.length>1){MOD={k:'rv',idx:n};return modal()}req({k:'use',idx:n,to:ko[0].j});MOD=null;return modal()}if(it.k==='mt'){const K=hero.cls&&CLS[hero.cls];if(K&&!K.mt(it))return tst(`${hero.nm||'Tu Pokémon'} (${K.n}) ${K.mtx}.`);if(hero.moves.some(x=>x.n===it.n))return tst((hero.nm||'Tu Pokémon')+' ya conoce '+it.n);if(hero.moves.length>=4){if(hero.moves.every(x=>x.lk))return tst('Todos sus movimientos son fijos: no puede olvidar ninguno');MOD={k:'mt',idx:n};return modal()}}req({k:'use',idx:n});MOD=null;return modal()}
  if(k==='slot'){req({k:'use',idx:MOD.idx,slot:n});MOD=null;return modal()}
  if(k==='rv'){req({k:'use',idx:MOD.idx,to:n});MOD=null;return modal()}}
 /* ---------- minijuego para los debilitados: atrapa Poké Balls mientras cargan los deseos ---------- */
