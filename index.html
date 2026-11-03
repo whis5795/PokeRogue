@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.7</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.8</div>
 </section>
 
 <section id="team" class="scr">
@@ -6028,7 +6028,8 @@ async function onMsg(raw){
     pvCheck();render()}
   else if(o.t=='pstart'){
     if(L.host||!['plvl','pex','pexw'].includes(L.stage))return;const lv=+o.lv;
-    pvBegin(PVL.includes(lv)?lv:0,num(o.seed,0,2147483647,1),o.ex&&typeof o.ex=='object'?{h:xClean(o.ex.h),g:xClean(o.ex.g)}:null)}
+    pvBegin(PVL.includes(lv)?lv:0,num(o.seed,0,2147483647,1),o.ex&&typeof o.ex=='object'?{h:xClean(o.ex.h),g:xClean(o.ex.g)}:null,o.rbs!=null?num(o.rbs,-1,8,-1):-1)}
+  else if(o.t=='prbs'){if(L.pv&&!L.host){L.pv.rbs=num(o.v,-1,8,-1);render()}}
   else if(o.t=='pxopt'){if(L.pv&&!L.host){L.pv.extra=!!o.v;render()}}
   else if(o.t=='pxgo'){if(L.pv&&!L.host&&L.stage=='plvl'){L.pv.extra=true;L.pv.lv=num(o.lv,0,250,0);L.pv.xsel=[];L.pv.xmine=null;L.pv.xtheirs=null;L.stage='pex';render()}}
   else if(o.t=='pxpick'){if(L.pv&&L.stage=='pex'||L.pv&&L.stage=='pexw'){L.pv.xtheirs=xClean(o.ids);pxCheck();render()}}
@@ -6048,7 +6049,7 @@ function pvConfirm(){
 function pvHostStart(lv){
   if(!L.host||!L.pv||!L.pv.myPack||!L.pv.theirPack)return;
   if(L.pv.extra&&!(L.pv.xmine&&L.pv.xtheirs)){L.pv.lv=lv;L.pv.xsel=[];L.pv.xmine=null;L.pv.xtheirs=null;L.stage='pex';send({t:'pxgo',lv});render();return}
-  const seed=(Math.random()*2147483647)|0,ex=L.pv.extra?{h:L.pv.xmine,g:L.pv.xtheirs}:null;send({t:'pstart',lv,seed,ex});pvBegin(lv,seed,ex)}
+  const seed=(Math.random()*2147483647)|0,ex=L.pv.extra?{h:L.pv.xmine,g:L.pv.xtheirs}:null;const rbs=L.pv.rbs==null?-1:L.pv.rbs;send({t:'pstart',lv,seed,ex,rbs});pvBegin(lv,seed,ex,rbs)}
 function pxCheck(){if(!L.pv||!L.pv.extra)return;if(L.pv.xmine&&L.pv.xtheirs&&L.host)pvHostStart(L.pv.lv||0);else if(L.pv.xmine&&L.stage=='pex'){L.stage='pexw'}}
 function pxPick(id){const pv=L.pv;if(!pv||L.stage!='pex')return;const s=pv.xsel=pv.xsel||[],i=s.indexOf(id);if(i>=0)s.splice(i,1);else if(s.length<3)s.push(id);render()}
 function pxConfirm(){const pv=L.pv;if(!pv||L.stage!='pex'||(pv.xsel||[]).length!==3)return;pv.xmine=xClean(pv.xsel);send({t:'pxpick',ids:pv.xmine});L.stage='pexw';pxCheck();render()}
@@ -6093,8 +6094,8 @@ function pvField(){if(!P||!P.B)return'';const B2=P.B,o=[],me=PS(P.me);
   const F2=B2.F||{},N2={tr:'Espacio Raro',grav:'Gravedad',wr:'Zona Extraña'};for(const k in N2)if(F2[k]>0)o.push(`${N2[k]} ${F2[k]}`);
   return o.map(x=>`<span>${x}</span>`).join('')}
 function pvSnap(){const f=s=>({a:P.a[s],m:P.t[s].map(m=>[m.hp,m.s||0,m.cf>0?1:0,m.megaOn?1:0]),x:pvChips(P.t[s][P.a[s]])});return{h:f('h'),g:f('g'),f:pvField()}}
-function pvInit(hp,gp,lv,seed,ex){
-  return Promise.all([Promise.all(hp.map(o=>rebuild({...o,lvl:lv||o.lvl}))),Promise.all(gp.map(o=>rebuild({...o,lvl:lv||o.lvl})))]).then(([H,G])=>{
+function pvInit(hp,gp,lv,seed,ex,rbs){const RB=o=>(rbs!=null&&rbs>=0)?Math.min(8,rbs|0):o.rb;
+  return Promise.all([Promise.all(hp.map(o=>rebuild({...o,lvl:lv||o.lvl,rb:RB(o)}))),Promise.all(gp.map(o=>rebuild({...o,lvl:lv||o.lvl,rb:RB(o)})))]).then(([H,G])=>{
     [...H,...G].forEach(m=>{if(m.megaOn){m.megaOn=false;m.megaK=null;stats(m)}m.mfs='';m.moves.forEach(v=>v.cp=v.mp);m.hp=m.max;m.s=0;m.cf=0;m.fl=0;m.sg=null;m.v=null;m.tox=0});
     const Bs={pl:H,en:G,pi:0,ei:0,turn:1,adv:0,pvp:1,_bid:'pv'+seed,fld:{p:{},e:{}},F:{},wx:null,tn:null,_moved:{},_dmgT:{},_skip:{}};
     Object.assign(P,{t:{h:H,g:G},B:Bs,rng:mulberry(seed>>>0),turn:1,phase:'act',ch:{h:null,g:null},need:{h:false,g:false},
@@ -6348,12 +6349,12 @@ function pvChoose(c){
 function pvForfeit(){
   if(!P||P.over)return;send({t:'pff'});P.over=true;P.win=oth(P.me);P.msg='🏳️ Te has rendido.';P.phase='end';pvDraw();pvEnd()}
 function pvEnd(){pvDraw();try{if(P&&!P._tcb){P._tcb=1;window.__pvEndCb&&__pvEndCb(P.win===P.me,P.win==='d')}}catch(e){}}
-async function pvBegin(lv,seed,ex){
+async function pvBegin(lv,seed,ex,rbs){
   const mine=L.pv&&L.pv.myPack,their=L.pv&&L.pv.theirPack;
   if(!mine||!their){return}
   const me=L.host?'h':'g',hp=L.host?mine:their,gp=L.host?their:mine;
   P={ready:false,me,lv};L.stage='pbattle';Q('#lan').style.display='none';pvShow();
-  try{await pvInit(hp,gp,lv,seed,ex);}
+  try{await pvInit(hp,gp,lv,seed,ex,rbs);}
   catch(e){console.error(e);P=null;pvHide();L.stage='hub';L.err='No se pudo preparar la batalla: '+(e&&e.message||e);send({t:'hub'});Q('#lan').style.display='flex';render();return}
   /* habilidades de entrada al empezar (el más rápido primero) */
   const ev=[];EV=ev;
@@ -6483,6 +6484,7 @@ function render(){
   else if(st=='plvl'){
     b=`<h2>¡Equipos listos!</h2><div class="lgrid eq"><div class="lcard"><h4>🛡️ Tu equipo</h4><div class="mgrid">${(L.pv.myPack||[]).map(tcard).join('')}</div></div><div class="lcard"><h4>⚔️ ${esc(L.pname||'Rival')}</h4><div class="mgrid">${(L.pv.theirPack||[]).map(tcard).join('')}</div></div></div>`+
       (L.host?`<div class="lcard"><h4>📊 ¿Con qué nivel combatís?</h4><div class="modes" style="grid-template-columns:repeat(auto-fill,minmax(78px,1fr))">${PVL.map((v,i)=>`<button type="button" class="bcard" data-a="plv" data-v="${v}" style="min-height:58px;padding:8px;--a:#0891b2;--b:#1e3a8a;animation-delay:${i*35}ms"><b style="font-size:15px">Nv.${v}</b></button>`).join('')}</div></div>`:`<div class="lcard center"><div class="loadb" style="margin:6px auto 10px"></div><small>Esperando a que el anfitrión elija los niveles${dots}</small></div>`)+
+      (()=>{const rv=L.pv.rbs==null?-1:L.pv.rbs,lb=v=>v<0?'Las suyas':'⭐'+v;return`<div class="lcard"><h4>⭐ Estrellas de todos los Pokémon</h4><small>${rv<0?'Cada Pokémon combate con las estrellas que tenga.':'Todos los Pokémon de los dos equipos combaten con '+rv+' estrella'+(rv===1?'':'s')+' (+'+(typeof rbPct=='function'?rbPct(rv):rv*5)+'% a todas sus características).'}</small>${L.host?`<div class="modes" style="grid-template-columns:repeat(auto-fill,minmax(64px,1fr));margin-top:8px">${[-1,0,1,2,3,4,5,6,7,8].map((v,i)=>`<button type="button" class="bcard${v===rv?' on':''}" data-a="prbs" data-v="${v}" style="min-height:46px;padding:6px;--a:${v===rv?'#ca8a04':'#7c2d12'};--b:${v===rv?'#854d0e':'#431407'};animation-delay:${i*30}ms;${v===rv?'outline:2px solid #fde047;':''}"><b style="font-size:13px">${lb(v)}</b></button>`).join('')}</div>`:`<small class="pxwho">El anfitrión elige: <b>${lb(rv)}</b></small>`}</div>`})()+
       `<div class="lcard pxopt ${L.pv.extra?'on':''}"><h4>✨ Adicional · amuletos y reliquias</h4><small>${L.pv.extra?'Activado: cada jugador elegirá 3 amuletos o reliquias de combate que surtirán efecto durante la batalla.':'Desactivado: se combate sin amuletos ni reliquias.'}</small>${L.host?`<button type="button" class="pxtog" data-a="pxtog">${L.pv.extra?'✔ Activado':'Activar'}</button>`:`<small class="pxwho">${L.pv.extra?'El anfitrión lo ha activado':'Solo el anfitrión puede cambiarlo'}</small>`}</div>`;
     d=(L.host?FB('plv','📋','Respetar niveles guardados',{c:'pri',x:' data-v="0"'}):'')+FB('tohub','↩','Volver al menú',{k:1})}
   else if(st=='pex'||st=='pexw'){const pv=L.pv,sel=pv.xsel||[],cat=xCat(),wait=st=='pexw';
@@ -6635,6 +6637,7 @@ ov.addEventListener('click',e=>{
   else if(a=='ppick')pvPick(b.dataset.w,+b.dataset.i);
   else if(a=='pconf')pvConfirm();
   else if(a=='plv')pvHostStart(+b.dataset.v);
+  else if(a=='prbs'){if(L.host&&L.pv){L.pv.rbs=+b.dataset.v;send({t:'prbs',v:L.pv.rbs});render()}}
   else if(a=='pxtog'){if(L.host&&L.pv){L.pv.extra=!L.pv.extra;send({t:'pxopt',v:L.pv.extra?1:0});render()}}
   else if(a=='pxpk')pxPick(b.dataset.id);
   else if(a=='pxok')pxConfirm();
@@ -8618,7 +8621,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'51.7',t:'Equipo en los biomas',s:'cur',l:[
+ {v:'51.8',t:'Estrellas en el PvP',s:'cur',l:[
+  '⭐ PvP: al elegir el nivel del combate, el anfitrión también puede elegir cuántas estrellas tienen todos los Pokémon de los dos equipos (de 0 a 8) o dejar las suyas. Cada estrella sube sus características como en la aventura'
+]},
+{v:'51.7',t:'Equipo en los biomas',s:'prev',l:[
   '👥 Biomas: la pestaña de tu equipo pasa arriba a la derecha y se despliega hacia abajo en columna, con animación'
 ]},
 {v:'51.6',t:'Megaincursiones más difíciles',s:'prev',l:[
