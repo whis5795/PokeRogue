@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.4</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.5</div>
 </section>
 
 <section id="team" class="scr">
@@ -8618,7 +8618,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'51.4',t:'Deseados y equipo en los biomas',s:'cur',l:[
+ {v:'51.5',t:'Arreglo de la captura rápida',s:'cur',l:[
+  '🔧 Arreglado: con «Captura rápida», el efecto final de la captura salía descolocado (arriba a la izquierda). Ahora sale centrado en la Poké Ball, que se queda a la vista al capturar'
+]},
+{v:'51.4',t:'Deseados y equipo en los biomas',s:'prev',l:[
   '⭐ Perfil: nueva lista de Pokémon deseados (hasta 30). Añádelos por su nombre y tócalos para quitarlos; los que ya tienes en la Pokédex salen con ✓. En los biomas, su tarjeta dice «⭐ En tu lista de deseados»',
   '👥 Biomas: nueva pestaña a la izquierda que despliega una columna con tu equipo. Toca un Pokémon y será el que empiece los combates (⚔️)',
   '🔧 Arreglado: en los retos, «Capturar un Pokémon concreto» no encontraba el Pokémon escrito, y no se podían enviar retos sin apuesta si no había una aventura en curso'
@@ -10724,7 +10727,7 @@ window.ballAnim=(m,k,ok)=>new Promise(async res=>{
   hold=async(ms,gap,amp)=>{let t=0;while(t<ms){beat(amp);const w=Math.min(gap,ms-t);await wait(w);t+=w}},
   sus=async n=>{say('· '.repeat(n).trim(),'bt-susp')};
  try{
-  if(lite){if(ok){mon.style.opacity=0;ball.style.display='none';say('¡Capturado!');await wait(900)}else{ball.style.transform=`translate(0,${G}px) rotate(18deg) scale(.85)`;sh.classList.add('on');await wait(300)}}
+  if(lite){if(ok){mon.style.opacity=0;ball.style.transform=`translate(0,${G}px) scale(.85)`;sh.classList.add('on');say('¡Capturado!');await wait(900)}else{ball.style.transform=`translate(0,${G}px) rotate(18deg) scale(.85)`;sh.classList.add('on');await wait(300)}}
   else{
    /* 1. Lanzamiento en parábola con estela */
    const N=16,x0=-W*.38,y0=H*.34,hx=0,hy=-34,kf=[];
@@ -24156,7 +24159,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   const loop=now=>{if(done)return;if(!o||!o.isConnected){find();if(!o){if(now-t0<1500)requestAnimationFrame(loop);return}}
    if(!o.isConnected){done=true;return}const H=o.getBoundingClientRect(),kx=(H.width/(o.offsetWidth||H.width))||1,ky=(H.height/(o.offsetHeight||H.height))||1;/* v47.8: la pantalla de captura hace zoom (scale), se pasan las coordenadas a las del propio overlay */
    if(ball&&now-lastE>(lite()?160:55)&&now-t0<1700){lastE=now;const r=ball.getBoundingClientRect();if(r.width)emit(o,(r.left+r.width/2-H.left)/kx,(r.top+r.height/2-H.top)/ky,f,{n:1,r:18,sz:14,d:600})}
-   if(!capd){const m=o.querySelector('.bt-msg');if(m&&/Gotcha|capturado/i.test(m.textContent)){capd=true;const r=ball?ball.getBoundingClientRect():{left:H.left+H.width/2,top:H.top+H.height*.5,width:0,height:0},x=(r.left+r.width/2-H.left)/kx,y=(r.top+r.height/2-H.top)/ky;ring(o,x,y,f);emit(o,x,y,f,{n:lite()?8:22,r:110,sz:22,list:f.cap,d:1300,up:f.s==='bubble'||f.s==='cosmic'});
+   if(!capd){const m=o.querySelector('.bt-msg');if(m&&/Gotcha|capturado/i.test(m.textContent)){capd=true;const r0=ball?ball.getBoundingClientRect():null,r=r0&&r0.width?r0:null,x=r?(r.left+r.width/2-H.left)/kx:(o.offsetWidth||innerWidth)/2,y=r?(r.top+r.height/2-H.top)/ky:(o.offsetHeight||innerHeight)*.36+150;/* v51.5: con la Ball oculta (captura rápida) se usa su sitio de reposo */ring(o,x,y,f);emit(o,x,y,f,{n:lite()?8:22,r:110,sz:22,list:f.cap,d:1300,up:f.s==='bubble'||f.s==='cosmic'});
      const b=D.createElement('div');b.className='bfxn';b.style.setProperty('--c',f.c[0]);b.textContent=`✨ ${f.n}`;o.append(b);setTimeout(()=>b.remove(),1800);try{beep(1320,.08,'triangle');setTimeout(()=>beep(1760,.1,'triangle'),90)}catch(_){}}}
    requestAnimationFrame(loop)};
   requestAnimationFrame(loop);return()=>{done=true}}
