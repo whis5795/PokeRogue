@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.2</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.3</div>
 </section>
 
 <section id="team" class="scr">
@@ -8618,7 +8618,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'51.2',t:'Megaincursiones: ataque iluminado',s:'cur',l:[
+ {v:'51.3',t:'Supremacía (Kingambit) mejorada',s:'cur',l:[
+  '👑 Supremacía (Kingambit…): al entrar en combate, TODAS sus características (Ataque, Defensa, At. Esp., Def. Esp., Velocidad, Precisión y Evasión) suben un nivel por cada compañero debilitado (hasta +5). Ahora se ve con las etiquetas ATQ+n, DEF+n, EVA+n…'
+]},
+{v:'51.2',t:'Megaincursiones: ataque iluminado',s:'prev',l:[
   '🎯 Megaincursiones: de vez en cuando aparece un botón con el icono del tipo de tu Pokémon en un sitio al azar de la pantalla y se desvanece en 0,9 segundos. Si lo tocas a tiempo, tu próximo ataque hace ×1,5 de daño',
   '💫 ¡Cuidado! Algunos botones son trampas (borde oscuro y un poco distintos): si tocas uno, tu próximo ataque hace solo ×0,5',
   '🎁 Cofres del asalto más difíciles: salen menos cofres raros, épicos y legendarios, y traen menos Pokémonedas y objetos',
@@ -10156,7 +10159,10 @@ function entryFx(s){const m=act(s),o=foe(s),A=abOf(m);if(!A||!o)return;const OA=
     case 'cloud-nine':case 'air-lock':show();Q6('¡Los efectos del tiempo atmosférico desaparecen!');break;
     case 'fairy-aura':case 'dark-aura':case 'aura-break':show();Q6(`¡${nm(m)} ${A==='fairy-aura'?'irradia un aura feérica':A==='dark-aura'?'irradia un aura oscura':'invierte las auras'}!`);break;
     case 'sword-of-ruin':case 'beads-of-ruin':case 'tablets-of-ruin':case 'vessel-of-ruin':show();Q6(`¡${es(A)} de ${nm(m)} debilita a los demás!`);break;
-    case 'supreme-overlord':{const dead=Math.min(5,(sd(m)==='p'?B.pl:B.en).filter(x=>x!==m&&x.hp<=0).length);m._so=dead;show();Q6(dead?`¡${nm(m)} hereda la fuerza de ${dead} ${dead>1?'compañeros caídos':'compañero caído'}! Sus ataques suben un ${dead*10}%`:`¡${nm(m)} entra en combate con ${es(A)}!`);break}
+    case 'supreme-overlord':{const dead=Math.min(5,(sd(m)==='p'?B.pl:B.en).filter(x=>x!==m&&x.hp<=0).length);m._so=dead;show();
+      /* v51.3: sube TODAS sus características (Ataque, Defensa, At. Esp., Def. Esp., Velocidad, Precisión y Evasión) un nivel por cada compañero caído (máx. 5) */
+      if(dead){try{['a','d','sa','sd','sp','ac','ev'].forEach(k=>{if(window.MX&&MX.stage)MX.stage(m,k,dead,null,{q:1});else{const g=sgo(m);g[k]=Math.max(-6,Math.min(6,(g[k]|0)+dead))}})}catch(e){console.error('supreme',e)}}
+      Q6(dead?`¡${nm(m)} hereda la fuerza de ${dead} ${dead>1?'compañeros caídos':'compañero caído'}! ¡Todas sus características suben ${dead} nivel${dead>1?'es':''}!`:`¡${nm(m)} entra en combate con ${es(A)}!`);break}
     case 'curious-medicine':show();sgo(o);Object.keys(SG).forEach(k=>{sgo(m)[k]=0});Q6(`¡${nm(m)} elimina los cambios de característica!`);break;
     case 'screen-cleaner':case 'costar':case 'hospitality':case 'supersweet-syrup':case 'embody-aspect':case 'tera-shift':show();Q6(`¡${es(A)} de ${nm(m)} se activó!`);break}}
 async function battleInit(){
@@ -10255,7 +10261,7 @@ function dmg6(at,df,mv){
     case 'protosynthesis':if(wx==='sun'&&(ph?at.a>=at.sa:at.sa>at.a))k*=1.3;break;
     case 'quark-drive':if(tn==='electric'&&(ph?at.a>=at.sa:at.sa>at.a))k*=1.3;break;
     case 'flower-gift':if(wx==='sun'&&ph)k*=1.5;break;
-    case 'supreme-overlord':{const dead=at._so!=null?at._so:Math.min(5,(sd(at)==='p'?B.pl:B.en).filter(x=>x!==at&&x.hp<=0).length);k*=1+.1*dead;break}
+    case 'supreme-overlord':break; /* v51.3: ahora sube las características al entrar (se ven como ATQ+n, DEF+n…) */
     case 'electromorphosis':case 'wind-power':if(at._chg&&mv2.t==='electric'){k*=2;if(real)at._chg=0}break}
   if(A==='flash-fire'&&at._ff&&mv2.t==='fire')k*=1.5;
   for(const s of['p','e']){const M=act(s),MA=M&&abOf(M);if(!MA)continue;
