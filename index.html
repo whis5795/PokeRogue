@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -8621,7 +8621,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'51.9',t:'Lista de deseados mejorada',s:'cur',l:[
+ {v:'52.0',t:'Duración de partida en la Aventura multiplayer',s:'cur',l:[
+  '⏱️ Aventura multiplayer: nuevo ajuste «Duración de partida» al crear la aventura. Corta: 20 niveles (jefe en el 20) · Mediana: 40 (jefes en el 20 y el 40) · Larga: 60 (jefes en el 20, el 40 y el 60) · Ultra larga: 100 (un jefe cada 20)',
+  '👑 Al vencer a un jefe que no es el último, la aventura sigue y te dice cuántos jefes quedan. El mapa es más largo según la duración',
+  '🏅 Terminar una aventura más larga da más medallas del Gremio (×2 la mediana, ×3 la larga, ×5 la ultra larga)'
+]},
+{v:'51.9',t:'Lista de deseados mejorada',s:'prev',l:[
   '⭐ Deseados: nuevo selector visual con todos los Pokémon (buscar por nombre o número, filtrar por tipo y ocultar los que ya tienes); toca para añadir o quitar. Ahora caben 60',
   '⭐ Cada deseado dice dónde encontrarlo (en qué bioma sale, si sale como Alfa, si es legendario…) y se marca «✓ Conseguido» cuando lo capturas',
   '✨ Toca un deseado para quererlo shiny, marcarlo como prioritario (salen primero) o quitarlo',
@@ -16197,7 +16202,7 @@ const META=[{k:'gold',ic:'💰',n:'Bolsa inicial',d:l=>`Empezáis con ${40*l} Po
 function meta(){try{const m=JSON.parse(localStorage.getItem(MK))||{};m.m=m.m|0;m.up=m.up||{};m.got=m.got||[];return m}catch(e){return{m:0,up:{},got:[]}}}
 const putMeta=m=>{try{localStorage.setItem(MK,JSON.stringify(m))}catch(e){}};
 function metaLv(k){return Math.min((META.find(x=>x.k===k)||{mx:0}).mx,meta().up[k]|0)}
-function metaAward(s){if(!s||!s.gid)return;const m=meta(),key=String(s.gid);if(m.got.includes(key))return;const n=Math.round((s.state==='won'?12+s.seats.length*2:Math.max(1,Math.floor((s.depth+1)/2)))*(1+.25*(s.asc|0)));m.m+=n;if(s.state==='won'&&(s.asc|0)>=(m.asc|0)&&(m.asc|0)<10){m.asc=(s.asc|0)+1;setTimeout(()=>{tst(`🔥 ¡Desbloqueada la Dificultad ${m.asc}! Elígela en la sala para más medallas`);bp(1319,.15)},3800)}m.got.push(key);m.got=m.got.slice(-30);putMeta(m);setTimeout(()=>{tst(`🏅 +${n} medallas del gremio (tienes ${m.m}). Úsalas en las mejoras del menú de la Aventura Multiplayer`);bp(1046,.15)},1800)}
+function metaAward(s){if(!s||!s.gid)return;const m=meta(),key=String(s.gid);if(m.got.includes(key))return;const n=Math.round((s.state==='won'?(12+s.seats.length*2)*Math.max(1,(s.len||20)/20):Math.max(1,Math.floor((s.depth+1)/2)))*(1+.25*(s.asc|0)));m.m+=n;if(s.state==='won'&&(s.asc|0)>=(m.asc|0)&&(m.asc|0)<10){m.asc=(s.asc|0)+1;setTimeout(()=>{tst(`🔥 ¡Desbloqueada la Dificultad ${m.asc}! Elígela en la sala para más medallas`);bp(1319,.15)},3800)}m.got.push(key);m.got=m.got.slice(-30);putMeta(m);setTimeout(()=>{tst(`🏅 +${n} medallas del gremio (tienes ${m.m}). Úsalas en las mejoras del menú de la Aventura Multiplayer`);bp(1046,.15)},1800)}
 async function metaApply(){const g=metaLv('gold'),po=metaLv('pot'),tr=metaLv('train');G.gold=(G.gold|0)+40*g;if(po)G.seats.forEach((x,i)=>{for(let k=0;k<po;k++)G.bags[i].push({k:'pot',l:1})});if(tr)for(const [i,x] of G.seats.entries()){if(x.hero)await lvUp(x.hero,tr,i,true)}}
 const HEROES=[821,440,280,304,255,172,447,92];
 const BIOS=[
@@ -16348,17 +16353,17 @@ function layers(bi){if(LCACHE[bi])return LCACHE[bi];const a=BIOS[bi],[c1,c2,c3,c
 const CENSVG=`<svg viewBox="0 0 120 100"><rect x="10" y="38" width="100" height="58" rx="6" fill="#fef2f2" stroke="#7f1d1d" stroke-width="3"/><path d="M4 42 L60 10 L116 42Z" fill="#dc2626" stroke="#7f1d1d" stroke-width="3"/><rect x="48" y="62" width="24" height="34" rx="3" fill="#7dd3fc" stroke="#0c4a6e" stroke-width="2"/><circle cx="60" cy="30" r="10" fill="#fff" stroke="#7f1d1d" stroke-width="2"/><path d="M60 24v12M54 30h12" stroke="#dc2626" stroke-width="4"/></svg>`;
 /* ---------- mapa en forma de raíz: se abre en ramas y siempre desemboca en el jefe ---------- */
 const PAT=['L','L','R','C','L','L','R','C','L','R','L','C','L','L','R','C','L','L','C','B'];
-function genMap(){const cols=[];let id=0;
- PAT.forEach((t,ci)=>{const n=t==='L'?(ci===0?2:2+ri(2)):t==='R'?1+ri(2):1;cols.push(Array.from({length:n},(_,k)=>({id:id++,t,c:ci,k,to:[]})))});
+function genMap(len){const cols=[];let id=0;const NB=Math.max(1,Math.round((len||20)/20)),PP=[];for(let b=0;b<NB;b++)PAT.forEach(t=>PP.push(t));/* v52.0: duración de partida: un jefe cada 20 */
+ PP.forEach((t,ci)=>{const n=t==='L'?(ci===0?2:2+ri(2)):t==='R'?1+ri(2):1;cols.push(Array.from({length:n},(_,k)=>({id:id++,t,c:ci,k,to:[]})))});
  for(let ci=0;ci<cols.length-1;ci++){const A=cols[ci],B=cols[ci+1];
   if(B.length===1)A.forEach(a=>a.to.push(B[0].id));
   else if(A.length===1)B.forEach(b=>A[0].to.push(b.id));
   else{A.forEach((a,i)=>{const j=Math.round(i*(B.length-1)/Math.max(1,A.length-1));a.to.push(B[j].id);if(R0()<.45){const j2=Math.min(B.length-1,Math.max(0,j+(R0()<.5?-1:1)));if(!a.to.includes(B[j2].id))a.to.push(B[j2].id)}});
    B.forEach(b=>{if(!A.some(a=>a.to.includes(b.id))){let best=A[0],d=99;A.forEach((a,i)=>{const dd=Math.abs(i/(A.length-1||1)-b.k/(B.length-1||1));if(dd<d){d=dd;best=a}});best.to.push(b.id)}})}}
- cols.forEach((c,ci)=>{if(ci===0||c.length<2||PAT[ci]!=='L')return;const k=ri(c.length);if(R0()<.55)c[k].t='E'});
+ cols.forEach((c,ci)=>{if(ci===0||c.length<2||PP[ci]!=='L')return;const k=ri(c.length);if(R0()<.55)c[k].t='E'});
  return{cols}}
 const nodeById=(map,id)=>{if(!map)return null;for(const c of map.cols)for(const n of c)if(n.id===id)return n;return null};
-const biomeOf=c=>c<=6?0:c<=12?1:2;
+const biomeOf=c=>{c=c%20;return c<=6?0:c<=12?1:2};
 /* ---------- estado ---------- */
 let el=null,view='slots',slot=-1,G=null,busy=false;
 /* G (solo el anfitrión): {v:2,name,created,upd,state:'lobby'|'play'|'lost'|'won',seats:[{n,hero,pick,pid,on}],map,pos,done,gold} */
@@ -16435,7 +16440,7 @@ function waitInput(seat){return new Promise(res=>{let done=false;const fin=v=>{i
 const MVD={};const mvDesc=v=>{if(v.ds)return v.ds;const k=v.n;if(MVD[k]!=null)return MVD[k];let d='';try{d=MX.describe(v)||''}catch(e){}return MVD[k]=d};
 const mvPub=v=>({n:v.n,t:v.t,p:v.p||0,ph:!!v.ph,acc:v.acc||100,ds:mvDesc(v),tg:v.tg||null,lk:v.lk?1:0});
 const monPub=m=>m?{id:m.id,sh:m.sh?1:0,nm:pname(m),lvl:m.lvl,hp:m.hp,max:m.max,boss:m.boss?1:0,el:m.el?1:0,gd:m.guard?1:0,cls:m.cls||null,shd:(m._b&&m._b.shd)|0,sts:m._sts?Object.keys(m._sts):[],fl:m._b?((m._b.amb?'🌑':'')+(m._b.inv?'👻':'')+(m._b.tnt>0?'😤':'')+(m._b.prt?'🛡️':'')+(m._b.cnt?'↩️':'')+(m._b.wg?'🪨':'')+(m._b.rg>0?'💧':'')+(m._b.wish?'⭐':'')+(m._b.foc?'🎯':'')):'',moves:(m.moves||[]).map(mvPub)}:null;
-function snap(){return{asc:G.asc|0,ascMax:(meta().asc|0),bl:G.bl||{},ph:V.ph,state:G.state,code:NET.code,newg:newGame(),depth:G.pos==null?-1:(nodeById(G.map,G.pos)||{c:-1}).c,gold:G.gold|0,
+function snap(){return{len:G.len||20,asc:G.asc|0,ascMax:(meta().asc|0),bl:G.bl||{},ph:V.ph,state:G.state,code:NET.code,newg:newGame(),depth:G.pos==null?-1:(nodeById(G.map,G.pos)||{c:-1}).c,gold:G.gold|0,
  seats:G.seats.map((s,i)=>({n:s.n,on:i===0||!!s.pid,pick:s.pick||null,hero:monPub(s.hero),kcd:V.ph==='battle'&&s.hero&&s.hero.hp<=0?Math.max(0,(V.kr&&V.kr[i]||0)-(V.bclock||0)):0})),kpause:!!V.wait&&now()-(V.waitT||0)>=3000,foes:V.foes.map(monPub),bags:(G.bags||[]).map(b=>b||[]),shop:G.shop||null,rew:V.rew||null,
  turn:V.turn,wait:V.wait,log:V.log,fx:V.fx.slice(-24),ban:V.ban,map:G.map,pos:G.pos,done:G.done||[],choices:V.choices,horde:V.horde,msg:V.msg,order:V.order,
  wt:V.wait&&V.waitT?Math.max(0,120000-(now()-V.waitT)):0,votes:V.ph==='map'&&V.votes?V.votes:null,ev:V.ph==='event'&&V.ev?Object.assign({},V.ev,{now:now()}):null,spd:SPD,st:G.st||null,ult:Math.floor(G.ult||0),gid:G.created||0,emo:V.emo||null}}
@@ -16460,7 +16465,7 @@ const banner=t=>{V.ban={t,id:++V.banid}};
 async function startGame(){
  if(newGame()){V.ph='load';V.msg='Preparando a los Pokémon…';push();
   try{await loadDex();for(const s of G.seats){if(!s.hero){const id=s.pick;const m=await mk({id,name:dexName(id)},1);delete m.sh;const k=clsOf(id);if(k){m.cls=k;const L0=k==='apoyo'&&G.seats.length===1?3:1;if(L0>1){m.lvl=L0;try{m.xp=XPT(L0)}catch(e){}stats(m);m.hp=m.max}m.moves=CLS[k].ls.filter(e=>e[0]<=L0).map(clsMv)}s.hero=m}}}catch(e){console.error(e);tst('No se pudieron cargar los Pokémon. Revisa tu conexión.');V.ph='lobby';push();return}
-  G.map=genMap();G.pos=null;G.done=[];G.gold=0}
+  G.map=genMap(G.len||20);G.pos=null;G.done=[];G.gold=0}
  G.seats.forEach((s,i)=>{if(s.hero){s.hero.hero=1;s.hero.seat=i}});G.bags=G.bags||[];const fresh=!G.potGiven;G.seats.forEach((s,i)=>{G.bags[i]=G.bags[i]||[];if(fresh)G.bags[i].push({k:'pot',l:1},{k:'pot',l:1})});G.potGiven=1;if(fresh){try{await metaApply()}catch(e){console.error(e)}}G.state='play';save();if(fresh&&!G.bl0){G.bl0=1;await bless('¡Empieza la aventura!')}await mainLoop()}
 async function mainLoop(){
  while(G&&G.state==='play'&&ROLE==='host'){
@@ -16475,7 +16480,8 @@ async function mainLoop(){
   else if(nd.t==='E'){const ok=await eventNode(nd);if(!G||ROLE!=='host')return;if(!ok){G.state='lost';V.ph='end';V.msg='💀 Todo el equipo ha caído. La expedición ha fracasado.';save();push();return}}
   else{const ok=nd.t==='B'?await bossFight():await level(nd);if(!G||ROLE!=='host')return;
    if(!ok){G.state='lost';V.ph='end';V.msg='💀 Todo el equipo ha caído. La expedición ha fracasado.';save();push();return}
-   if(nd.t==='B'){G.done.push(id);G.state='won';V.ph='end';V.msg='🏆 ¡Habéis derrotado al equipo del jefe final! La expedición es todo un éxito.';save();push();bp(1046,.3);return}}
+   if(nd.t==='B'&&nd.c>=G.map.cols.length-1){G.done.push(id);G.state='won';V.ph='end';V.msg='🏆 ¡Habéis derrotado al equipo del jefe final! La expedición es todo un éxito.';save();push();bp(1046,.3);return}
+   if(nd.t==='B'){const left=G.map.cols.filter((c,ci)=>ci>nd.c&&c.some(n=>n.t==='B')).length;banner(`👑 ¡Jefe derrotado! ${left>1?'Quedan '+left+' jefes':'Queda el jefe final'}`);bp(1046,.3)}}
   G.done.push(id);save()}}
 let MAPW=null,SKIPW=null;
 function waitMap(ch){V.votes={};return new Promise(res=>{MAPW={ch,res:v=>{V.votes=null;res(v)}}})}
@@ -16843,7 +16849,7 @@ function mapSVG(s,interactive){const cols=s.map.cols,W=Math.max(620,cols.length*
 const DECO={};
 function mapDeco(map,W,H,dx,pos){const key=W+'|'+map.cols.map(c=>c.map(n=>n.id+'-'+n.to.join('.')).join(',')).join('/');if(DECO.k===key)return DECO.v;
  let sd=0;for(const ch of key)sd=(sd*31+ch.charCodeAt(0))>>>0;const rnd=()=>{sd=(sd+0x6D2B79F5)>>>0;let t=sd;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296};
- const cols=map.cols.length,xb=c=>35+c*dx,bio=x=>{const c=(x-35)/dx;return c<=6.5?0:c<=12.5?1:2};
+ const cols=map.cols.length,xb=c=>35+c*dx,bio=x=>{const c=((x-35)/dx)%20;return c<=6.5?0:c<=12.5?1:2};
  const free=(x,y,r)=>{for(const k in pos){const[a,b]=pos[k];if((a-x)**2+(b-y)**2<(r+26)**2)return false}return x>6&&x<W-6&&y>6&&y<H-6};
  const z1=xb(6.5),z2=xb(12.5);let o=`<defs><linearGradient id="mzg" x1="0" x2="1"><stop offset="0" stop-color="#14532d"/><stop offset="${(z1/W).toFixed(3)}" stop-color="#166534"/><stop offset="${((z1+40)/W).toFixed(3)}" stop-color="#312e81"/><stop offset="${(z2/W).toFixed(3)}" stop-color="#3b0764"/><stop offset="${((z2+40)/W).toFixed(3)}" stop-color="#7c2d12"/><stop offset="1" stop-color="#450a0a"/></linearGradient>
  <radialGradient id="mzl"><stop offset="0" stop-color="#fde047"/><stop offset=".5" stop-color="#f97316"/><stop offset="1" stop-color="#7c2d12" stop-opacity="0"/></radialGradient></defs>
@@ -16991,7 +16997,7 @@ function slotsHTML(){const A=ls.get();
  <div class="ma-card"><h3>Tu nombre</h3><div class="ma-in"><input id="mamyname" maxlength="14" value="${esc(myName())}" autocomplete="off" style="letter-spacing:0;text-transform:none"><button class="ma-b v" data-a="myname">Guardar</button></div><p class="ma-note" style="margin-top:8px">Es el nombre que verán tus compañeros en la aventura.</p></div>
  ${guildH()}
  <div class="ma-card"><h3>Unirse a la partida de un amigo</h3><div class="ma-in"><input id="majc" maxlength="5" placeholder="CÓDIGO" autocomplete="off" spellcheck="false"><button class="ma-b v" data-a="join">Unirse</button></div><p class="ma-note" style="margin-top:8px">También puedes aceptar su invitación cuando te llegue.</p></div>
- ${A.map((g,i)=>g&&g.v===2?`<div class="ma-slot"><div class="ma-sn">${i+1}</div><div class="ma-si"><b>${esc(g.name)}</b><small>${g.state==='lost'?'💀 Expedición fracasada':g.state==='won'?'🏆 ¡Aventura completada!':`En el mapa · ${(g.done||[]).length}/${PAT.length} casillas`}</small><small>${g.seats.length} ${g.seats.length==1?'jugador':'jugadores'} · ${fmtD(g.upd)}</small><div class="ma-pt">${g.seats.map(s=>s.hero?`<img src="${mini(s.hero.id,s.hero.sh)}" alt="" style="${s.hero.hp<=0?'filter:grayscale(1);opacity:.5':''}">`:'').join('')}</div></div>
+ ${A.map((g,i)=>g&&g.v===2?`<div class="ma-slot"><div class="ma-sn">${i+1}</div><div class="ma-si"><b>${esc(g.name)}</b><small>${g.state==='lost'?'💀 Expedición fracasada':g.state==='won'?'🏆 ¡Aventura completada!':`En el mapa · ${(g.done||[]).length}/${g.map&&g.map.cols?g.map.cols.length:PAT.length} casillas`}</small><small>${g.seats.length} ${g.seats.length==1?'jugador':'jugadores'} · ${fmtD(g.upd)}</small><div class="ma-pt">${g.seats.map(s=>s.hero?`<img src="${mini(s.hero.id,s.hero.sh)}" alt="" style="${s.hero.hp<=0?'filter:grayscale(1);opacity:.5':''}">`:'').join('')}</div></div>
    <div class="ma-sb">${g.state==='play'?`<button class="ma-b p" data-a="load:${i}">▶ Continuar</button>`:''}<button class="ma-b sm" data-a="new:${i}">✎ Sobrescribir</button><button class="ma-b sm r" data-a="del:${i}">🗑 Borrar</button></div></div>`
   :g?`<div class="ma-slot"><div class="ma-sn">${i+1}</div><div class="ma-si"><b>${esc(g.name||'Partida antigua')}</b><small>Partida de una versión anterior del modo</small></div><div class="ma-sb"><button class="ma-b sm" data-a="new:${i}">✎ Sobrescribir</button><button class="ma-b sm r" data-a="del:${i}">🗑 Borrar</button></div></div>`
   :`<div class="ma-slot emp"><div class="ma-sn">${i+1}</div><div class="ma-si"><b>Casilla vacía</b><small>Empieza una nueva aventura aquí</small></div><div class="ma-sb"><button class="ma-b g" data-a="new:${i}">＋ Nueva partida</button></div></div>`).join('')}</div>`}
@@ -17002,6 +17008,7 @@ function lobbyHTML(s){const host=ROLE==='host',mySeat=host?0:MYSEAT,me=s.seats[m
  <div class="ma-card"><h3>Jugadores (${s.seats.length}/4)</h3><div class="ma-seats">${s.seats.map((x,i)=>{const id=x.hero?x.hero.id:x.pick;return`<div class="ma-seat" style="--c:${PC[i]}">${id?`<img src="${mini(id)}" alt="">`:'<span style="font-size:30px">❔</span>'}<div><b>${esc(x.n)}${i===0?' 👑':''}${i===mySeat?' (tú)':''}</b><small>${x.hero?esc(x.hero.nm)+' · Nv.'+x.hero.lvl:id?esc(cap(dexName(id))):'Eligiendo Pokémon…'}${x.on?'':' · 🔌 sin jugador'}</small></div></div>`}).join('')}</div></div>
  ${s.newg?`<div class="ma-card"><h3>Elige tu Pokémon</h3><p class="ma-note" style="margin-bottom:8px">Cada Pokémon es una clase con su papel en el equipo y sus propios movimientos. Toca la <b>i</b> para ver sus habilidades. Empieza a nivel 1, evoluciona al subir de nivel y cada jugador lleva uno distinto.</p><div class="ma-hg">${HEROES.map(id=>{const tk=taken.includes(id)&&mp!==id;const K=CLS[clsOf(id)];return`<button data-a="hero:${id}" class="${mp===id?'on':''}${tk?' tk':''}" style="--c:${PC[mySeat]||'#f5c84c'}" ${tk?'disabled':''}>${mp===id?'<em>TÚ</em>':''}${K?`<i class="ma-ci" data-cinfo="${clsOf(id)}" style="--c:${K.c}" role="button" aria-label="Ver habilidades">i</i>`:''}<img src="${mini(id)}" alt="">${esc(cap(dexName(id)))}${K?`<small class="ma-cl" style="--c:${K.c}">${K.ic} ${K.n}</small>`:''}</button>`}).join('')}</div></div>`:''}
  ${s.newg?`<div class="ma-card ma-asc"><h3>🔥 Dificultad ${s.asc|0}</h3><p class="ma-note" style="margin-bottom:8px">${(s.asc|0)?`Rivales con +${12*(s.asc|0)}% de vida y más daño. Recompensa: +${25*(s.asc|0)}% de medallas, +${10*(s.asc|0)}% de monedas.`:'Normal. Gana una aventura para desbloquear la Dificultad 1.'}</p><div class="ma-ascb">${Array.from({length:Math.min(10,(s.ascMax|0))+1},(_,k)=>`<button class="ma-b sm${k===(s.asc|0)?' on':''}" data-a="asc:${k}" ${host?'':'disabled'}>${k?'🔥'+k:'Normal'}</button>`).join('')}</div></div>`:''}
+ ${s.newg?`<div class="ma-card ma-asc"><h3>⏱️ Duración de partida</h3><p class="ma-note" style="margin-bottom:8px">${({20:'Corta: 20 niveles, con el jefe en el 20.',40:'Mediana: 40 niveles, con jefes en el 20 y el 40.',60:'Larga: 60 niveles, con jefes en el 20, el 40 y el 60.',100:'Ultra larga: 100 niveles, con un jefe cada 20.'})[s.len||20]}</p><div class="ma-ascb">${[[20,'Corta'],[40,'Mediana'],[60,'Larga'],[100,'Ultra larga']].map(([v,t])=>`<button class="ma-b sm${v===(s.len||20)?' on':''}" data-a="len:${v}" ${host?'':'disabled'}>${t}</button>`).join('')}</div></div>`:''}
  ${host?`<button class="ma-b p" data-a="start" ${ready?'':'disabled'} style="padding:14px;font-size:15px">⚔️ ${s.newg?'Empezar la aventura':'Continuar la aventura'}</button>${ready?'':'<p class="ma-note" style="text-align:center">Todos los jugadores tienen que elegir su Pokémon.</p>'}`:''}</div>`}
 function render(){if(!el)return;if(view==='slots'){el.className='on';el.innerHTML=slotsHTML();badge()}else if(view==='joining'){el.className='on';el.innerHTML=head('UNIÉNDOSE…','leave')+`<div class="ma-body"><div class="ma-load"><i></i>${RETRY?'🔌 Reconectando con tu partida… ('+RETRY+'/3)':'Conectando con la sala '+esc(NET.code)+'…'}</div><p class="ma-note" id="majt" style="text-align:center"></p></div>`}else if(S)draw(S)}
 /* ---------- abrir, crear, unirse ---------- */
@@ -17060,6 +17067,7 @@ async function onClick(ev){const t=ev.target;
  if(a.startsWith('load:'))return loadRoom(+a.slice(5));
  if(a.startsWith('up:')){const k=a.slice(3),x=META.find(y=>y.k===k),m=meta(),l=m.up[k]|0,c=(l+1)*5;if(!x||l>=x.mx||m.m<c)return;m.m-=c;m.up[k]=l+1;putMeta(m);bp(988,.12);setTimeout(()=>bp(1318,.14),110);tst(`${x.ic} ${x.n} sube a nivel ${l+1}`);return render()}
  if(a.startsWith('hero:')){const id=+a.slice(5);if(ROLE==='host'){if(G.seats.some((s,k)=>k!==0&&s.pick===id))return;G.seats[0].pick=G.seats[0].pick===id?null:id;bp(640,.03);push()}else{dsend(NET.dc,{t:'pick',id});bp(640,.03)}return}
+ if(a.startsWith('len:')&&ROLE==='host'&&G&&newGame()){const v=+a.slice(4);G.len=[20,40,60,100].includes(v)?v:20;push();try{render()}catch(_){}return}
  if(a.startsWith('asc:')&&ROLE==='host'&&G&&newGame()){G.asc=Math.max(0,Math.min(meta().asc|0,10,+a.slice(4)|0));push();try{render()}catch(_){}return}
  if(a==='start'&&ROLE==='host'){if(busy)return;busy=true;startGame().catch(e=>console.error(e)).finally(()=>{busy=false});return}}
 /* ---------- botón en el menú principal ---------- */
