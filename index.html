@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v53.7</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v53.8</div>
 </section>
 
 <section id="team" class="scr">
@@ -6601,7 +6601,7 @@ pvO.addEventListener('click',e=>{
 
 /* ---------- lobby ---------- */
 const ov=D.createElement('div');ov.id='lan';
-ov.innerHTML=`<div class="lbg">${Array.from({length:9},(_,i)=>`<i class="lbp" style="--x:${(i*11+5)%96}%;--s:${18+(i*7)%22}px;--d:${12+(i*5)%9}s;--dl:-${(i*3)%11}s"></i>`).join('')}</div><div class="lh"><div class="lt"><i>🌐</i><b>MULTIJUGADOR</b></div><span class="chip" id="lchip">Sin conexión</span></div><div class="lm" id="lmain"></div><div class="linv" id="linv"></div><div class="ldock" id="ldock"></div>`;
+ov.innerHTML=`<div class="lbg">${Array.from({length:9},(_,i)=>`<i class="lbp" style="--x:${(i*11+5)%96}%;--s:${18+(i*7)%22}px;--d:${12+(i*5)%9}s;--dl:-${(i*3)%11}s"></i>`).join('')}</div><div class="lh"><div class="lt"><i>🎮</i><b>SALA DE JUEGO</b></div><span class="chip" id="lchip">Sin conexión</span></div><div class="lm" id="lmain"></div><div class="linv" id="linv"></div><div class="ldock" id="ldock"></div>`;
 D.body.append(ov);
 function saveName(){const n=Q('#lnm');if(n){L.name=clean(n.value,16).trim()||L.name;try{localStorage.setItem('pa_lan_name',L.name)}catch(_){}}}
 function canStart(){
@@ -6648,7 +6648,7 @@ ov.addEventListener('click',e=>{
   else if(a=='jgo')joinStart(Q('#lin').value);
   else if(a=='host'||a=='join'){saveName();if(!canStart())return;if(a=='host')hostStart();else{cleanup();L.stage='join1';render()}}});
 function open(){cleanup();L.wan=0;L.msg='';L.err='';ov.style.display='flex';render()}
-window.__LANX={L,NET,render,close:()=>close(),isOpen:()=>ov.style.display=='flex',send:o=>send(o),isHost:()=>!!L.host,pname:()=>L.pname||'Tu amigo',pld:()=>L.plead||null,
+window.__LANX={L,NET,render,open:()=>open(),close:()=>close(),isOpen:()=>ov.style.display=='flex',send:o=>send(o),isHost:()=>!!L.host,pname:()=>L.pname||'Tu amigo',pld:()=>L.plead||null,
  busy:()=>CONN.includes(L.stage)||['gen','host','join1','join2'].includes(L.stage),
  me:()=>({n:L.name||'Jugador',ld:myLead(),tc:myCount()}),
  async hostFor(via){open();L.wan=1;await hostStart();if(L.stage!='host')return null;L.via=via;render();return L.code},
@@ -6663,8 +6663,8 @@ D.addEventListener('keydown',e=>{if(e.key=='Escape'&&ov.style.display=='flex'){i
 /* botón en el menú principal */
 const mb=Q('#menu .mb');
 if(mb&&!Q('#mlan')){const b=D.createElement('button');b.id='mlan';
-  b.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.8l7.6-3.6M8.2 13.2l7.6 3.6"/></svg><span>Multijugador</span>';
-  b.onclick=open;mb.append(b)}
+  b.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.8l7.6-3.6M8.2 13.2l7.6 3.6"/></svg><span>Multijugador</span><em class="mlbd"></em>';
+  b.onclick=()=>{if(window.__mpHub)__mpHub();else open()};mb.append(b)}
 })();
 </script>
 <style id="bxnohint">#pcbox .bxm:empty{display:none!important}</style>
@@ -8624,7 +8624,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'53.7',t:'Adiós a los mapas viejos',s:'cur',l:[
+ {v:'53.8',t:'Amigos y multijugador renovados',s:'cur',l:[
+  '🌐 Nuevo centro Multijugador (botón del menú principal): tu código de amigo, los amigos que están en línea con un botón «🎮 Jugar», y todos los modos a mano: Amigos, Aventura multiplayer, Megaincursiones (con el tiempo que falta para la próxima), Sala de juego y Torre 2 vs 2',
+  '🟢 El botón «Multijugador» del menú muestra cuántos amigos hay en línea (o tus solicitudes de amistad en rojo)',
+  '🎮 Amigos: el botón «🔄 Invitar» ahora es «🎮 Jugar» y abre una ficha nueva del amigo con todo junto: su perfil, «Jugar juntos» (Sala de juego con intercambio, PvP, Torre 2 vs 2, objetos y regalos; Aventura multiplayer; Megaincursión), «Su mundo» (casa, espectear, vitrina y puesto) y «Más» (préstamo y eliminar, con confirmación)',
+  '🎮 La pantalla de conexión se llama ahora «Sala de juego», porque ya no es solo para intercambiar'
+ ]},
+ {v:'53.7',t:'Adiós a los mapas viejos',s:'prev',l:[
   '🗺️ Los mapas antiguos (el camino vertical y el mapa ilustrado) ya no pueden aparecer nunca: antes, si algo fallaba al dibujar el mapa nuevo (pasaba en algunos iPhone), se mostraba el viejo',
   '🔄 Actualizaciones más fiables: si la conexión es lenta, el juego ya no se queda atascado en una versión antigua. Se abre la copia guardada mientras se descarga la nueva y, cuando termina, aparece un aviso «Hay una versión nueva» (en el menú se actualiza sola)'
  ]},
@@ -15554,7 +15560,7 @@ function draw0(full){if(!P||!P.classList.contains('on'))return;if(!P.querySelect
   if(!ids.length)h+=`<div class="fr-empty" data-k="e-list"><i>🫂</i><b>Aún no tienes amigos</b><small>Comparte tu código de amigo o añade el de otro jugador en la pestaña «Añadir».</small><div style="margin-top:12px"><button class="fr-b" data-a="tab" data-t="add">➕ Añadir amigo</button></div></div>`;
   else{const on=ids.filter(i=>online(L[i])),off=ids.filter(i=>!online(L[i]));
    const card=id=>{const f=L[id],o=online(f),sent=f.invT&&now()-f.invT<60000;
-    return`<div class="fr-card${o?' on':''}" data-k="f-${id}">${av(f.ld,'sm',o)}<div class="fr-ci"><b>${esc(f.n)}${f.rk!=null?`<em class="fr-rk">${["🌱","🎒","⚾","🎯","🔥","🛡️","💎","👑","🏆","🌟"][f.rk]||""} ${["Novato","Aprendiz","Entrenador","As","Experto","Veterano","Élite","Maestro","Campeón","Leyenda"][f.rk]||""}</em>`:""}</b>${f.tt&&f.tt!=='Entrenador novato'?`<small class="fr-tt">🎖️ ${esc(f.tt)}</small>`:''}<small class="${o?'on':''}">${o?'🟢 '+esc(f.st||'En línea'):'⚪ '+ago(f.seen)}</small><small style="opacity:.5">${fmtC(id)}${f.ld&&f.ld.lv?' · Nv.'+f.ld.lv:''}</small></div><div class="fr-act">${am?`<button class="fr-b g" data-a="ainv" data-id="${id}">${f.ainvT&&now()-f.ainvT<60000&&f.ainvRc===am.code?'⏳ Enviada':'🗺️ Invitar'}</button>`:mode==='invite'&&rm?`<button class="fr-b g" data-a="rinv" data-id="${id}">${sent&&f.invRc===rm.code?'⏳ Enviada':'🌋 Invitar'}</button>`:`<button class="fr-b" data-a="inv" data-id="${id}">🔄 Invitar</button><button class="fr-b gh fr-ic" data-a="more" data-id="${id}" aria-label="Más opciones">⋯</button>`}</div></div>`};
+    return`<div class="fr-card${o?' on':''}" data-k="f-${id}">${av(f.ld,'sm',o)}<div class="fr-ci"><b>${esc(f.n)}${f.rk!=null?`<em class="fr-rk">${["🌱","🎒","⚾","🎯","🔥","🛡️","💎","👑","🏆","🌟"][f.rk]||""} ${["Novato","Aprendiz","Entrenador","As","Experto","Veterano","Élite","Maestro","Campeón","Leyenda"][f.rk]||""}</em>`:""}</b>${f.tt&&f.tt!=='Entrenador novato'?`<small class="fr-tt">🎖️ ${esc(f.tt)}</small>`:''}<small class="${o?'on':''}">${o?'🟢 '+esc(f.st||'En línea'):'⚪ '+ago(f.seen)}</small><small style="opacity:.5">${fmtC(id)}${f.ld&&f.ld.lv?' · Nv.'+f.ld.lv:''}</small></div><div class="fr-act">${am?`<button class="fr-b g" data-a="ainv" data-id="${id}">${f.ainvT&&now()-f.ainvT<60000&&f.ainvRc===am.code?'⏳ Enviada':'🗺️ Invitar'}</button>`:mode==='invite'&&rm?`<button class="fr-b g" data-a="rinv" data-id="${id}">${sent&&f.invRc===rm.code?'⏳ Enviada':'🌋 Invitar'}</button>`:`<button class="fr-b fr-play" data-a="inv" data-id="${id}">🎮 Jugar</button><button class="fr-b gh fr-ic" data-a="more" data-id="${id}" aria-label="Su perfil y más opciones">⋯</button>`}</div></div>`};
    if(on.length)h+=`<div class="fr-sec" data-k="s-on">En línea · ${on.length}</div>`+on.map(card).join('');
    if(off.length)h+=`<div class="fr-sec" data-k="s-off">Desconectados · ${off.length}</div>`+off.map(card).join('');
    h+=`<div class="fr-hint" data-k="h-list" style="text-align:center;margin-top:10px">El estado se actualiza solo cada pocos segundos. Tus amigos necesitan tener el juego abierto para salir en línea y recibir invitaciones.</div>`}}
@@ -15568,15 +15574,39 @@ function draw0(full){if(!P||!P.classList.contains('on'))return;if(!P.querySelect
  if(lastTab!==tab){lastTab=tab;[...body.children].forEach(e=>e.remove());body.scrollTop=0;
   body.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:220,easing:'ease-out'})}
  patch(body,h)}
-function sheet(id){const f=F.list[id];if(!f)return;const rm=window.__mraidRoom&&__mraidRoom(),lanOk=!!window.__LANX,box=P.querySelector('.fr-box');
- const s=D.createElement('div');s.className='fr-sheet';s.innerHTML=`<div><h3>Invitar a ${esc(f.n)}</h3><p>${online(f)?'🟢 En línea ahora':'⚪ '+ago(f.seen)+' · puede que no vea la invitación'}</p>
- <button class="fr-opt" data-a="lan" style="--a:#0e7490;--b:#1e3a8a" ${lanOk?'':'disabled'}><i>🔄</i><span><b>Intercambiar Pokémon y objetos</b><small>También combates y regalos. Funciona aunque estéis en otra Wi‑Fi o con datos móviles</small></span></button>
- <button class="fr-opt" data-a="raid" style="--a:#9d174d;--b:#4c1d95" ${rm?'':'disabled'}><i>🌋</i><span><b>Megaincursión</b><small>${rm?'Se unirá a tu sala '+esc(rm.code):'Crea primero una sala de megaincursión para invitarle'}</small></span></button>
- <button class="fr-opt" data-a="cx" style="--a:#1f2937;--b:#111827"><i>↩</i><span><b>Cancelar</b></span></button></div>`;
- box.append(s);s.onclick=e=>{e.stopPropagation();const b=e.target.closest('[data-a]');if(e.target===s){s.remove();return}if(!b||b.disabled)return;s.remove();if(b.dataset.a==='lan')inviteLan(id);else if(b.dataset.a==='raid')inviteRaid(id)}}
-function more(id){const f=F.list[id];if(!f)return;const box=P.querySelector('.fr-box'),s=D.createElement('div');s.className='fr-sheet';
- s.innerHTML=`<div><h3>${esc(f.n)}</h3><p>${fmtC(id)} · amigos desde ${new Date(f.since||now()).toLocaleDateString()}</p><button class="fr-opt" data-a="loan" style="--a:#a16207;--b:#713f12"><i>💸</i><span><b>Prestarle dinero</b><small>Con el interés que tú elijas cada 6 horas</small></span></button><button class="fr-opt" data-a="visit" style="--a:#0e7490;--b:#164e63"><i>🏠</i><span><b>Visitar su casa</b><small>Necesita tener el juego abierto</small></span></button><button class="fr-opt" data-a="spec" style="--a:#6d28d9;--b:#312e81"><i>👁️</i><span><b>Espectear</b><small>Mira en directo su partida y sus combates</small></span></button><button class="fr-opt" data-a="vit" style="--a:#a16207;--b:#422006"><i>🏛️</i><span><b>Ver su vitrina</b><small>Los Pokémon que tiene expuestos, shinys incluidos</small></span></button><button class="fr-opt" data-a="mkt" style="--a:#c2410c;--b:#7c2d12"><i>🛒</i><span><b>Ver su puesto del mercado</b><small>Compra los objetos y Pokémon que vende</small></span></button><button class="fr-opt" data-a="del" style="--a:#9f1239;--b:#4c0519"><i>🗑️</i><span><b>Eliminar de amigos</b><small>Podréis volver a añadiros con el código</small></span></button><button class="fr-opt" data-a="cx" style="--a:#1f2937;--b:#111827"><i>↩</i><span><b>Cancelar</b></span></button></div>`;
- box.append(s);s.onclick=e=>{e.stopPropagation();const b=e.target.closest('[data-a]');if(e.target===s){s.remove();return}if(!b)return;s.remove();if(b.dataset.a==='visit'){if(window.__visitHouse){close();__visitHouse(id,f.n)}return}if(b.dataset.a==='spec'){if(window.__specStart){close();__specStart(id,f.n)}return}if(b.dataset.a==='mkt'){if(window.__mktOpen){close();__mktOpen(id,f.n)}return}if(b.dataset.a==='vit'){if(window.__vitOpen){close();__vitOpen(id,f.n)}return}if(b.dataset.a==='saf'){if(window.__safari){close();const g=__safari.G;if(!(g&&g.phase==='lobby'&&g.host)){if(!__safari.host())return}const g2=__safari.G;if(g2){sendTo(id,{t:'sfinv',code:g2.code});(g2.inv=g2.inv||{})[id]=1;say('🌿 Invitación enviada a '+f.n)}}return}if(b.dataset.a==='loan'){if(window.__loanOffer){close();__loanOffer(id)}return}if(b.dataset.a==='del'){remove(id);say('Has eliminado a '+f.n)}}}
+/* v53.8: una sola ficha por amigo con TODO lo que podéis hacer juntos (antes: «Intercambiar Pokémon y objetos» y un menú ⋯ aparte) */
+const RKI=["🌱","🎒","⚾","🎯","🔥","🛡️","💎","👑","🏆","🌟"],RKN=["Novato","Aprendiz","Entrenador","As","Experto","Veterano","Élite","Maestro","Campeón","Leyenda"];
+function sheet(id,focus){const f=F.list[id];if(!f)return;const o=online(f),rm=window.__mraidRoom&&__mraidRoom(),am=window.__mpaRoom&&__mpaRoom(),lanOk=!!window.__LANX,box=P.querySelector('.fr-box');
+ const old=box.querySelector('.fr-sheet');if(old)old.remove();
+ const T=(a,ic,t,d,c1,c2,dis,extra)=>`<button class="fr-opt fr-t2" data-a="${a}" style="--a:${c1};--b:${c2}" ${dis?'disabled':''}><i>${ic}</i><span><b>${t}</b><small>${d}</small>${extra||''}</span></button>`;
+ const tile=(a,ic,t,d)=>`<button class="fr-tile" data-a="${a}"><i>${ic}</i><b>${t}</b><small>${d}</small></button>`;
+ const s=D.createElement('div');s.className='fr-sheet fr-sheet2';
+ s.innerHTML=`<div><button class="fr-shx" data-a="cx" aria-label="Cerrar">✕</button>
+  <div class="fr-ph">${av(f.ld,'lg',o)}<div><b>${esc(f.n)}</b>${f.rk!=null?`<em class="fr-rk">${RKI[f.rk]||''} ${RKN[f.rk]||''}</em>`:''}${f.tt&&f.tt!=='Entrenador novato'?`<small>🎖️ ${esc(f.tt)}</small>`:''}<small class="${o?'on':''}">${o?'🟢 '+esc(f.st||'En línea'):'⚪ '+ago(f.seen)}</small><small style="opacity:.55">${fmtC(id)}${f.ld&&f.ld.lv?' · líder Nv.'+f.ld.lv:''} · amigos desde ${new Date(f.since||now()).toLocaleDateString()}</small></div></div>
+  ${o?'':'<p class="fr-warn">⚪ No está en línea: puede que no vea tu invitación hasta que abra el juego.</p>'}
+  <div class="fr-sec">🎮 Jugar juntos</div>
+  ${T('lan','🎮','Sala de juego','Os conectáis los dos y elegís qué hacer. Funciona en cualquier red.','#0e7490','#1e3a8a',!lanOk,'<span class="fr-chips"><em>🔄 Intercambio</em><em>⚔️ PvP</em><em>🗼 Torre 2 vs 2</em><em>🎒 Objetos</em><em>🎁 Regalos</em></span>')}
+  ${T('adv','🗺️','Aventura multiplayer',am?'Se unirá a tu partida (sala '+esc(am.code)+')':'Abre tu partida y después invítale desde la sala','#15803d','#14532d',false)}
+  ${T('raid','🌋','Megaincursión',rm?'Se unirá a tu sala '+esc(rm.code):'Crea primero una sala de megaincursión para invitarle','#9d174d','#4c1d95',!rm)}
+  <div class="fr-sec" data-f="world">🏡 Su mundo</div>
+  <div class="fr-tiles">${tile('visit','🏠','Su casa','Visítala')}${tile('spec','👁️','Espectear','Su partida en directo')}${tile('vit','🏛️','Vitrina','Sus Pokémon expuestos')}${tile('mkt','🛒','Su puesto','Compra lo que vende')}</div>
+  <div class="fr-sec">⚙️ Más</div>
+  <div class="fr-row2"><button class="fr-b gh" data-a="loan">💸 Prestarle dinero</button><button class="fr-b r" data-a="del">🗑️ Eliminar</button></div></div>`;
+ box.append(s);if(focus==='world')setTimeout(()=>{const w=s.querySelector('[data-f="world"]');if(w)w.scrollIntoView({block:'start',behavior:'smooth'})},120);
+ let armDel=0;
+ s.onclick=e=>{e.stopPropagation();const b=e.target.closest('[data-a]');if(e.target===s){s.remove();return}if(!b||b.disabled)return;const a=b.dataset.a;
+  if(a==='cx'){s.remove();return}
+  if(a==='del'){if(!armDel){armDel=1;b.textContent='¿Seguro? Toca otra vez';setTimeout(()=>{armDel=0;if(b.isConnected)b.textContent='🗑️ Eliminar'},3500);return}s.remove();remove(id);say('Has eliminado a '+f.n);return}
+  s.remove();
+  if(a==='lan')return inviteLan(id);
+  if(a==='raid')return inviteRaid(id);
+  if(a==='adv'){if(am)return inviteAdv(id);if(window.openMPAdv){close();openMPAdv();setTimeout(()=>{try{toast('🗺️ Crea o continúa una partida y pulsa «Invitar amigos» en la sala')}catch(_){}},400)}return}
+  if(a==='visit'){if(window.__visitHouse){close();__visitHouse(id,f.n)}return}
+  if(a==='spec'){if(window.__specStart){close();__specStart(id,f.n)}return}
+  if(a==='mkt'){if(window.__mktOpen){close();__mktOpen(id,f.n)}return}
+  if(a==='vit'){if(window.__vitOpen){close();__vitOpen(id,f.n)}return}
+  if(a==='loan'){if(window.__loanOffer){close();__loanOffer(id)}return}}}
+function more(id){sheet(id,'world')}
 async function click(e){if(e.target===P){close();return}const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const a=b.dataset.a,id=b.dataset.id;if(a==='mystall'){if(window.__mktOpen){close();__mktOpen()}return}if(a==='myvit'){if(window.__vitOpen){close();__vitOpen()}return}
  if(a==='close')return close();
  if(a==='tab'){tab=b.dataset.t;draw(true);return}
@@ -15604,7 +15634,7 @@ function mount(){if(!Q('#mfr')){const b=D.createElement('button');b.id='mfr';b.s
   const h=`<span class="fb-i">👥</span><span class="fb-t"><b>AMIGOS</b><small>${n?`${n} ${n==1?'amigo':'amigos'}${on?` · ${on} en línea`:''}`:'Añade amigos con su código e invítalos desde cualquier red'}${r?` · ${r} ${r==1?'solicitud':'solicitudes'}`:''}</small></span><span class="fb-c">${fmtC(FID)}</span>${r?`<span class="bd on">${r}</span>`:''}`;
   if(el._h!==h){el._h=h;el.innerHTML=h}};
  {const lm=Q('#lmain');if(lm)new MutationObserver(tryLan).observe(lm,{childList:true})}setInterval(tryLan,1500); setInterval(tryLan,700);badge()}
-window.__FR={msg:o=>onMsg(o),send:(id,o)=>sendTo(id,o),fid:()=>FID,open,close,request,list:()=>F.list,rin:()=>F.rin,online:()=>Object.values(F.list).filter(online).length,_msg:onMsg};
+window.__FR={msg:o=>onMsg(o),send:(id,o)=>sendTo(id,o),fid:()=>FID,open,close,play:id=>{open();setTimeout(()=>{try{sheet(id)}catch(e){}},60)},isOn:id=>online(F.list[id]),fmtC,request,list:()=>F.list,rin:()=>F.rin,online:()=>Object.values(F.list).filter(online).length,_msg:onMsg};
 listen();setTimeout(listen,2500);mount();
 setTimeout(()=>{listen();pingAll(true)},4000);setInterval(()=>{listen();if(!D.hidden&&Object.keys(F.list).length)pingAll()},180000);
 D.addEventListener('visibilitychange',()=>{if(!D.hidden){listen();setTimeout(()=>pingAll(),800)}});
@@ -19079,6 +19109,106 @@ setInterval(place,250);addEventListener('resize',()=>{place();if(want&&B.dataset
 /* al entrar al mapa se vuelve a fijar; al salir se suelta */
 new MutationObserver(()=>{if(B.dataset.v==='map'){if(want&&!B.classList.contains('mappin'))pin()}else unpin()}).observe(B,{attributes:true,attributeFilter:['data-v']});
 lab();if(B.dataset.v==='map')pin();place();
+})();</script>
+
+<style id="mphcss">
+/* ===== v53.8: centro Multijugador ===== */
+#mph{position:fixed;inset:0;z-index:8990;display:none;align-items:center;justify-content:center;padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom));background:radial-gradient(120% 80% at 50% 0,#4c1d9599,#0000 60%),#05030df2;color:#eef2ff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+#mph.on{display:flex;animation:mphIn .22s ease-out}@keyframes mphIn{from{opacity:0}}
+#mph .mh-w{width:min(560px,100%);max-height:100%;display:flex;flex-direction:column;border-radius:26px;overflow:hidden;background:linear-gradient(180deg,#1d1147,#0d0824 60%);border:1px solid #ffffff22;box-shadow:0 30px 80px #000c,0 0 70px #7c3aed33;animation:mphUp .3s cubic-bezier(.2,1.2,.4,1)}
+@keyframes mphUp{from{transform:translateY(20px) scale(.97);opacity:0}}
+#mph .mh-hd{display:flex;align-items:center;gap:10px;padding:16px 16px 8px}
+#mph .mh-hd h2{flex:1;margin:0;font:900 21px/1 system-ui;letter-spacing:.3px;background:linear-gradient(90deg,#fff,#c4b5fd 60%,#f9a8d4);-webkit-background-clip:text;background-clip:text;color:transparent}
+#mph .mh-x{width:40px;height:40px;border-radius:13px;border:1px solid #ffffff2e;background:#ffffff12;color:#fff;font:900 16px system-ui;cursor:pointer}
+#mph .mh-b{flex:1;overflow:auto;padding:4px 16px 18px;overscroll-behavior:contain}
+#mph .mh-me{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:linear-gradient(120deg,#4c1d95aa,#1e3a8aaa);border:1px solid #ffffff22}
+#mph .mh-me small{display:block;font:700 11px system-ui;opacity:.75}
+#mph .mh-me code{font:900 17px ui-monospace,Menlo,monospace;letter-spacing:2px;color:#fde68a}
+#mph .mh-me button{margin-left:auto;border:0;border-radius:10px;padding:8px 11px;font:800 12px system-ui;color:#1e1b4b;background:linear-gradient(180deg,#fde68a,#f59e0b);box-shadow:0 3px 0 #b45309;cursor:pointer}
+#mph .mh-sec{display:flex;align-items:center;gap:8px;margin:16px 2px 8px;font:900 11px system-ui;letter-spacing:1.4px;text-transform:uppercase;color:#a5b4fc}
+#mph .mh-sec::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#a5b4fc55,#0000)}
+#mph .mh-fr{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none}
+#mph .mh-fr::-webkit-scrollbar{display:none}
+#mph .mh-f{flex:none;width:92px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 6px;border-radius:16px;border:1px solid #22c55e44;background:linear-gradient(180deg,#14532d55,#ffffff06);color:#fff;cursor:pointer;font:inherit}
+#mph .mh-f img{width:48px;height:48px;image-rendering:pixelated}
+#mph .mh-f b{font:900 12px system-ui;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#mph .mh-f small{font:700 10px system-ui;opacity:.75;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#mph .mh-f em{font-style:normal;margin-top:3px;padding:3px 9px;border-radius:999px;font:900 10.5px system-ui;background:linear-gradient(180deg,#22c55e,#15803d)}
+#mph .mh-none{padding:12px;border-radius:14px;background:#ffffff0a;border:1px dashed #ffffff2a;font:700 12.5px/1.4 system-ui;opacity:.85;text-align:center}
+#mph .mh-g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#mph .mh-c{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:112px;padding:13px;border-radius:20px;border:1px solid #ffffff22;color:#fff;text-align:left;cursor:pointer;font:inherit;background:linear-gradient(150deg,var(--a),var(--b));box-shadow:0 10px 24px #0007,inset 0 1px 0 #ffffff33;overflow:hidden;transition:transform .12s,filter .2s}
+#mph .mh-c::after{content:"";position:absolute;right:-24px;bottom:-24px;width:90px;height:90px;border-radius:50%;background:#ffffff14}
+#mph .mh-c:active{transform:scale(.97)}
+#mph .mh-c i{font-style:normal;font-size:30px;line-height:1;filter:drop-shadow(0 4px 6px #0008)}
+#mph .mh-c b{font:900 15px system-ui}
+#mph .mh-c small{font:700 11.5px/1.3 system-ui;opacity:.9}
+#mph .mh-c .mh-tag{position:absolute;top:10px;right:10px;padding:2px 8px;border-radius:999px;font:900 10.5px system-ui;background:#0007;border:1px solid #ffffff33}
+#mph .mh-c .mh-tag.hot{background:#f43f5e;border-color:#fecdd3;animation:mphP 1.4s ease-in-out infinite}
+@keyframes mphP{50%{transform:scale(1.08)}}
+#mph .mh-c.wide{grid-column:1/-1;min-height:96px}
+#mph .mh-tip{margin-top:14px;font:700 11.5px/1.45 system-ui;opacity:.7;text-align:center}
+#menu #mlan{position:relative}
+#menu #mlan .mlbd{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 6px;border-radius:10px;font:900 11px/20px system-ui;font-style:normal;color:#052e16;background:#4ade80;box-shadow:0 0 0 2px #1e1b4b,0 0 10px #4ade8099;display:none}
+#menu #mlan .mlbd.on{display:block}
+#menu #mlan .mlbd.rq{background:#f43f5e;color:#fff;box-shadow:0 0 0 2px #1e1b4b}
+/* ficha de amigo (v53.8) */
+#frp .fr-play{background:linear-gradient(180deg,#22c55e,#15803d)!important;box-shadow:0 3px 0 #14532d!important}
+#frp .fr-sheet2>div{max-height:88%;overflow:auto;position:relative}
+#frp .fr-shx{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:11px;border:1px solid #ffffff2e;background:#ffffff12;color:#fff;font:900 14px system-ui;cursor:pointer}
+#frp .fr-ph{display:flex;align-items:center;gap:12px;margin:2px 40px 6px 0}
+#frp .fr-ph b{display:block;font:900 18px system-ui}
+#frp .fr-ph small{display:block;font:700 11.5px system-ui;opacity:.8;margin-top:1px}
+#frp .fr-ph small.on{color:#86efac;opacity:1}
+#frp .fr-av.lg{width:64px;height:64px}
+#frp .fr-warn{margin:6px 0 2px!important;padding:8px 10px;border-radius:12px;background:#f59e0b22;border:1px solid #f59e0b55;font-size:11.5px!important;opacity:1!important;text-align:left!important}
+#frp .fr-t2{align-items:flex-start}
+#frp .fr-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+#frp .fr-chips em{font-style:normal;padding:2px 7px;border-radius:999px;background:#0006;border:1px solid #ffffff2a;font:800 10.5px system-ui}
+#frp .fr-tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#frp .fr-tile{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:11px;border-radius:15px;border:1px solid #ffffff1f;background:#ffffff0d;color:#fff;text-align:left;cursor:pointer;font:inherit}
+#frp .fr-tile i{font-style:normal;font-size:22px}
+#frp .fr-tile b{font:900 13px system-ui}
+#frp .fr-tile small{font:700 10.5px system-ui;opacity:.75}
+#frp .fr-row2{display:flex;gap:8px}#frp .fr-row2 .fr-b{flex:1}
+</style>
+<script id="mphjs">(()=>{
+const D=document,Q=s=>D.querySelector(s);
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const clk=ms=>{ms=Math.max(0,ms);const h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000);return h?h+' h '+m+' min':m+' min'};
+let el=null,T=null;
+function list(){try{const L=__FR.list();return Object.keys(L).map(id=>Object.assign({id},L[id]))}catch(e){return[]}}
+function raidTag(){try{const r=window.__mraidNext&&__mraidNext();const m=r&&r.find(x=>x.k==='mega');if(!m)return'';return m.open?'<span class="mh-tag hot">¡ABIERTA!</span>':m.next?`<span class="mh-tag">en ${clk(m.next-Date.now())}</span>`:''}catch(e){return''}}
+function html(){const L=list(),on=L.filter(f=>{try{return __FR.isOn(f.id)}catch(e){return false}}),rq=(()=>{try{return Object.keys(__FR.rin()).length}catch(e){return 0}})(),fid=(()=>{try{return __FR.fmtC(__FR.fid())}catch(e){return''}})();
+ const mp=(()=>{try{return window.__mpaRoom&&__mpaRoom()}catch(e){return null}})();
+ return`<div class="mh-w" role="dialog" aria-label="Multijugador"><div class="mh-hd"><span style="font-size:24px">🌐</span><h2>Multijugador</h2><button class="mh-x" data-h="x" aria-label="Cerrar">✕</button></div><div class="mh-b">
+ <div class="mh-me"><div><small>Tu código de amigo</small><code>${esc(fid)}</code></div><button data-h="copy">📋 Copiar</button></div>
+ <div class="mh-sec">🟢 Amigos en línea · ${on.length}</div>
+ ${on.length?`<div class="mh-fr">${on.map(f=>`<button class="mh-f" data-h="play" data-id="${f.id}">${f.ld&&f.ld.id?`<img src="${mini(+f.ld.id,f.ld.sh?1:0)}" alt="">`:'<span style="font-size:34px">👤</span>'}<b>${esc(f.n)}</b><small>${esc(f.st||'En línea')}</small><em>🎮 Jugar</em></button>`).join('')}</div>`:`<div class="mh-none">${L.length?'Ninguno de tus amigos está conectado ahora mismo. Cuando abran el juego aparecerán aquí.':'Aún no tienes amigos: comparte tu código o añade el de alguien en «Amigos».'}</div>`}
+ <div class="mh-sec">🎮 Modos</div>
+ <div class="mh-g">
+  <button class="mh-c wide" data-h="fr" style="--a:#7c3aed;--b:#312e81">${rq?`<span class="mh-tag hot">${rq} solicitud${rq>1?'es':''}</span>`:`<span class="mh-tag">${L.length} amigo${L.length===1?'':'s'}</span>`}<i>👥</i><b>Amigos</b><small>Invítales a la Sala de juego, a tu aventura o a una megaincursión. Visita su casa, su vitrina o su puesto.</small></button>
+  <button class="mh-c" data-h="mpa" style="--a:#16a34a;--b:#14532d">${mp?'<span class="mh-tag hot">sala abierta</span>':''}<i>🗺️</i><b>Aventura multiplayer</b><small>Hasta 4 jugadores, por un mapa con jefes</small></button>
+  <button class="mh-c" data-h="raid" style="--a:#be185d;--b:#4c1d95">${raidTag()}<i>🌋</i><b>Megaincursiones</b><small>Hasta 6 contra un megapokémon</small></button>
+  <button class="mh-c" data-h="lan" style="--a:#0891b2;--b:#1e3a8a"><i>📡</i><b>Sala de juego</b><small>Con alguien de tu Wi‑Fi o con un código: 🔄 intercambio, ⚔️ PvP, 🗼 Torre 2 vs 2, 🎒 objetos y 🎁 regalos</small></button>
+  <button class="mh-c" data-h="tower" style="--a:#ca8a04;--b:#78350f"><i>🗼</i><b>Torre 2 vs 2</b><small>En equipo con un amigo: invítale a la Sala de juego y elegid «Torre»</small></button>
+ </div>
+ <p class="mh-tip">💡 Para jugar con alguien de otra red, añadidos como amigos y usad «🎮 Jugar» en su ficha.</p></div></div>`}
+function draw(){if(!el||!el.classList.contains('on'))return;const sc=el.querySelector('.mh-b'),y=sc?sc.scrollTop:0,fy=(el.querySelector('.mh-fr')||{}).scrollLeft||0;const h=html();if(el._h===h)return;el._h=h;el.innerHTML=h;const b=el.querySelector('.mh-b');if(b)b.scrollTop=y;const f=el.querySelector('.mh-fr');if(f)f.scrollLeft=fy}
+function close(){if(el)el.classList.remove('on');clearInterval(T)}
+function open(){if(!el){el=D.createElement('div');el.id='mph';D.body.append(el);
+  el.onclick=async e=>{if(e.target===el)return close();const b=e.target.closest('[data-h]');if(!b)return;const a=b.dataset.h;try{beep(660,.04,'triangle')}catch(_){}
+   if(a==='x')return close();
+   if(a==='copy'){const t=__FR.fmtC(__FR.fid());try{await navigator.clipboard.writeText(t);toast('📋 Código copiado: '+t)}catch(_){toast('Tu código: '+t)}return}
+   if(a==='play'){close();return __FR.play(b.dataset.id)}
+   if(a==='fr'){close();return __FR.open()}
+   if(a==='mpa'){close();return window.openMPAdv&&openMPAdv()}
+   if(a==='raid'){close();return window.openMegaRaid&&openMegaRaid()}
+   if(a==='lan'){close();return window.__LANX&&__LANX.open()}
+   if(a==='tower'){close();if(list().length)return __FR.open();return window.__LANX&&__LANX.open()}}}
+ el._h='';el.classList.add('on');draw();clearInterval(T);T=setInterval(draw,4000)}
+window.__mpHub=open;
+/* insignia del botón del menú: amigos en línea (verde) o solicitudes pendientes (rojo) */
+setInterval(()=>{const b=Q('#mlan .mlbd');if(!b||!window.__FR)return;let rq=0,on=0;try{rq=Object.keys(__FR.rin()).length;on=__FR.online()}catch(e){}const t=rq?String(rq):on?String(on):'';b.textContent=t;b.classList.toggle('on',!!t);b.classList.toggle('rq',!!rq);b.title=rq?'Solicitudes de amistad':on?'Amigos en línea':''},3000);
 })();</script>
 <style id="v37css">
 /* ===== v37 ===== */
