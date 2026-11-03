@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v49.7</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v49.8</div>
 </section>
 
 <section id="team" class="scr">
@@ -5872,6 +5872,22 @@ async function apply(){
   catch(e){console.error(e);L.err='No se pudo completar el intercambio: '+(e&&e.message||e);resetAgree()}
   L.busy=false;render()}
 
+/* ---------- v49.8: regalar un Pokémon durante el intercambio (sin recibir nada a cambio) ---------- */
+const PGSEEN=new Set();let pgArmT=0,pgT=0;
+function pgiftTap(){if(L.stage!='trade'||!L.sel||L.busy||L.pgPend)return;const run=getRun();if(!run)return;const list=run[L.sel.w],cur=list&&list[L.sel.i];if(!cur)return;
+ if(L.sel.w=='team'&&list.length<=1){L.err='No puedes regalar a tu único Pokémon del equipo.';render();return}
+ if(!L.pgArm){L.pgArm=1;L.err='';L.msg=`🎁 ¿Regalar a ${nm(cur)} a ${L.pname||'tu amigo'} sin recibir nada? Toca 🎁 otra vez para confirmar.`;clearTimeout(pgArmT);pgArmT=setTimeout(()=>{if(L.pgArm){L.pgArm=0;L.msg='';render()}},5000);render();return}
+ L.pgArm=0;clearTimeout(pgArmT);const id=Date.now().toString(36)+Math.random().toString(36).slice(2,6);L.pgPend={id,sel:{...L.sel},key:hash(mkey(cur)),n:nm(cur)};L.msg='🎁 Enviando el regalo…';
+ send({t:'pgift',id,m:pack(cur)});clearTimeout(pgT);pgT=setTimeout(()=>{if(L.pgPend&&L.pgPend.id===id){L.pgPend=null;L.msg='';L.err='El regalo no llegó (¿se cortó la conexión?). Tu Pokémon sigue contigo.';render()}},15000);render()}
+async function pgiftRecv(o){const id=/^[0-9a-z]{1,24}$/.test(String(o.id))?String(o.id):'';if(!id||!o.m)return;if(PGSEEN.has(id)){send({t:'pgack',id,ok:1});return}
+ try{const m=await rebuild(o.m);const run=getRun();if(!run)throw new Error('sin partida');(run.box=run.box||[]).push(m);putRun(run);PGSEEN.add(id);send({t:'pgack',id,ok:1});L.msg=`🎁 ¡${L.pname||'Tu amigo'} te ha regalado a ${nm(m)}! Está en tu Caja.`;L.err='';tst('🎁 ¡Has recibido a '+nm(m)+'!');try{beep(1046,.2,'triangle')}catch(_){}render()}
+ catch(e){console.error(e);send({t:'pgack',id,ok:0})}}
+function pgiftAck(o){const p=L.pgPend;if(!p||p.id!==o.id)return;L.pgPend=null;clearTimeout(pgT);
+ if(!o.ok){L.msg='';L.err='Tu amigo no pudo recibir el Pokémon. Sigue contigo.';render();return}
+ try{const run=getRun();const list=run&&run[p.sel.w],i=list?list.findIndex(m=>hash(mkey(m))===p.key):-1;if(i>=0){list.splice(i,1);putRun(run)}
+  if(L.sel&&L.sel.w==p.sel.w){L.sel=null;L.mine=null;L.mineKey='-';resetAgree();send({t:'offer',m:null,k:'-'})}
+  L.msg=`🎁 ¡Has regalado a ${p.n} a ${L.pname||'tu amigo'}!`;L.err='';tst('🎁 Regalo entregado');try{beep(880,.15,'triangle')}catch(_){}}catch(e){console.error(e)}render()}
+
 /* ---------- regalar Pokémonedas (inventario o banco) ---------- */
 const GMAX=100000000;
 const fmtN=n=>nf(n);
@@ -5988,6 +6004,8 @@ async function onMsg(raw){
   else if(o.t=='ready'){L.theirReady=o.v?clean(o.k,80):null;checkAgree();render()}
   else if(o.t=='commit'){L.theirCommit=clean(o.k,80);checkApply()}
   else if(o.t=='gift')giftRecv(o);
+  else if(o.t=='pgift')pgiftRecv(o);
+  else if(o.t=='pgack')pgiftAck(o);
   else if(o.t=='gack')giftAck(o);
   else if(o.t=='greq'){if(L.host&&L.stage=='hub'){giftOpen();send({t:'go',k:'gift'})}}
   else if(o.t=='ireq'){if(L.host&&L.stage=='hub'){itemsOpen();send({t:'go',k:'items'})}}
@@ -6472,7 +6490,7 @@ function render(){
     const both=L.mine&&L.theirs,mine=L.sel&&run?mons(run).find(x=>x.w==L.sel.w&&x.i==L.sel.i):null,th=L.theirs;
     const offT=L.theirsLoading?waitOffer('Recibiendo oferta…'):th?bigOffer(th,`<small>${esc(th.moves.map(x=>x.n).join(', '))}</small>`):waitOffer(esc(L.pname||'El otro jugador')+' aún no ha elegido');
     b=`<div class="lgrid eq"><section class="lcard"><h4>🎒 Tu oferta</h4>${mine?bigOffer(mine.m):waitOffer('Elige un Pokémon abajo')}</section><section class="lcard"><h4>🎁 Oferta de ${esc(L.pname||'…')}</h4>${offT}</section></div><div class="ready"><span class="rd ${L.myReady?'ok':''}">Tú: ${L.myReady?'✔ listo':'…'}</span><span class="rd ${L.theirReady?'ok':''}">${esc(L.pname||'Rival')}: ${L.theirReady?'✔ listo':'…'}</span></div><div class="lcard"><h4>Tus Pokémon · toca para ofrecer</h4>${run?`<div class="mgrid">${mons(run).map((x,i)=>mcard(x,i,L.sel&&L.sel.w==x.w&&L.sel.i==x.i,0,'pick')).join('')}</div>`:'<small>No hay partida guardada.</small>'}</div>`;
-    d=FB('ready',L.myReady?'↩':'✅',L.myReady?'Cancelar confirmación':'Confirmar intercambio',{c:'pri',d:!(both&&!L.busy)})+FB('tohub','↩','Menú',{k:1})+FB('bye','🔌','Desconectar',{c:'dan',k:2})}
+    d=FB('ready',L.myReady?'↩':'✅',L.myReady?'Cancelar confirmación':'Confirmar intercambio',{c:'pri',d:!(both&&!L.busy)})+FB('pgift',L.pgPend?'⏳':'🎁',L.pgArm?'Toca otra vez para regalar':'Regalar el Pokémon elegido',{c:L.pgArm?'pri':'',d:!L.sel||L.busy||!!L.pgPend,k:1})+FB('xview','👀','Ver los Pokémon de tu amigo',{k:2})+FB('tohub','↩','Menú',{k:3})+FB('bye','🔌','Desconectar',{c:'dan',k:4})}
   else if(st=='gift'){
     const bl=run?gBal(run):{m:0,b:0},src=L.gSrc=='b'?'b':'m',pend=!!L.gPend,dis=pend?' disabled':'';
     const logH=L.gLog.map(x=>x.k=='out'?`<div class="glog">📤 Enviaste <b>${fmtN(x.n)} P</b> ${x.s=='b'?'de tu banco':'de tu inventario'} a ${esc(L.pname||'tu amigo')}</div>`:`<div class="glog in">📥 ${esc(L.pname||'Tu amigo')} te regaló <b>${fmtN(x.n)} P</b> ${x.s=='b'?'de su banco':'de su inventario'} · ya están en tu inventario</div>`).join('');
@@ -6595,6 +6613,8 @@ ov.addEventListener('click',e=>{
   else if(a=='dec')netDecline();
   else if(a=='pick')setOffer({w:b.dataset.w,i:+b.dataset.i});
   else if(a=='ready')toggleReady();
+  else if(a=='pgift')pgiftTap();
+  else if(a=='xview'){const f=D.getElementById('trfab');if(f)f.click()}
   else if(a=='copy')copy();
   else if(a=='pfedit'){if(window.__profEdit)__profEdit().then(()=>{render();try{announce()}catch(e){}if(CONN.includes(L.stage))send({t:'hello',n:L.name,l:myLead()})})}
   else if(a=='gotrade'){if(L.host&&L.stage=='hub'){resetTrade();L.stage='trade';send({t:'go',k:'trade'});render()}}
@@ -8595,7 +8615,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'49.7',t:'Arreglo del Perfil',s:'cur',l:[
+ {v:'49.8',t:'Regalar Pokémon en los intercambios',s:'cur',l:[
+  '🎁 Intercambios: nuevo botón 🎁 en la fila de iconos para regalar el Pokémon que tengas elegido a tu amigo sin recibir nada a cambio (se toca dos veces para confirmar). Le llega a su Caja',
+  '👀 El botón para ver los Pokémon de tu amigo pasa de flotar en un lado a la fila de iconos de abajo'
+]},
+{v:'49.7',t:'Arreglo del Perfil',s:'prev',l:[
   '🔧 Arreglado: en el Perfil, tocar la foto o el nombre (✏️) no hacía nada porque la ventana de edición quedaba escondida detrás. Ahora el Perfil se aparta mientras eliges y vuelve con los cambios'
 ]},
 {v:'49.6',t:'Ajustes más limpios',s:'prev',l:[
@@ -21166,6 +21190,8 @@ html.lt #arena.kofout{filter:invert(1) hue-rotate(180deg)}
 html.lt .pvsp img{filter:invert(1) hue-rotate(180deg)}
 html.lt #dmap .imc :is(img,image,.emj){filter:none}
 html.lt .emj{display:inline-block}
+/* v49.8: el botón de ver los Pokémon del amigo va en la fila de iconos */
+#trfab,#trfab.on{display:none!important}
 </style>
 <script id="v37js">
 (()=>{
