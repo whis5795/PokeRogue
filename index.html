@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v54.0</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v54.1</div>
 </section>
 
 <section id="team" class="scr">
@@ -8626,7 +8626,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'54.0',t:'Legendex',s:'cur',l:[
+ {v:'54.1',t:'Legendex con tus capturas de antes',s:'cur',l:[
+  '📖 La Legendex revisa tu equipo y tu Caja: los Pokémon que capturaste en megaincursiones simples antes de que existiera cuentan como capturados (y derrotados)'
+ ]},
+ {v:'54.0',t:'Legendex',s:'prev',l:[
   '📖 Nueva Legendex en la pestaña «Simple» de las Megaincursiones: todos los singulares, Ultraentes y Paradoja que pueden salir en las megaincursiones simples, con los que has visto, derrotado y capturado, filtros y progreso'
  ]},
  {v:'53.9',t:'Megadex y puestos sin conexión',s:'prev',l:[
@@ -13988,9 +13991,13 @@ function mbMark(b,k){if(!b)return;const SK=b.s?MBKS:MBK,d=mbGet(SK),key=mbKey(b)
  if(fresh&&k==='cap'&&!b.s&&INV.has(key)){try{setTimeout(()=>toast('✨ ¡Desbloqueada! Ya puedes usar '+bossName(b)+' con tus '+cap(sname(b.id))),2500)}catch(_){}}}
 /* las partidas de antes: los megajefes que ya tenías capturados cuentan como desbloqueados */
 function mbBackfill(){try{const r=(typeof R==='object'&&R&&R.team)?R:getRun();if(!r)return;const d=mbGet();let ch=0;for(const m of[...(r.team||[]),...(r.box||[])]){if(!m||!m.mraid)continue;for(const b of POOL){if(b.id!==m.id)continue;if(m.mrf!=null&&m.mrf!==mbKey(b))continue;const k=mbKey(b),e=d[k]=d[k]||{};if(!e.cap){e.cap=1;e.win=Math.max(e.win|0,1);e.seen=e.seen||Date.now();e.old=1;ch=1}}}if(ch)mbPut(d)}catch(e){}}
-setTimeout(mbBackfill,4000);
+/* v54.1: Legendex: los capturados en megaincursiones simples de antes (los que tienes en el equipo o en la Caja) también cuentan */
+function mbBackfillS(){try{const r=(typeof R==='object'&&R&&R.team)?R:getRun();if(!r)return;const d=mbGet(MBKS),ids=new Set(SPOOL.map(b=>b.id));let ch=0;
+ for(const m of[...(r.team||[]),...(r.box||[])]){if(!m||!m.mraid||!ids.has(m.id))continue;const k=m.id+'|',e=d[k]=d[k]||{};if(!e.cap){e.cap=1;e.win=Math.max(e.win|0,1);e.seen=e.seen||Date.now();e.old=1;ch=1}}
+ if(ch)mbPut(d,MBKS)}catch(e){}}
+setTimeout(mbBackfill,4000);setTimeout(mbBackfillS,4500);
 window.__megaOk=(id,f)=>{const bk=mfMap()[id+'|'+(f||'')];if(!bk)return true;const e=mbGet()[bk];return!!(e&&e.cap)};
-async function mbOpen(kind){const SM=kind==='s',PL=SM?SPOOL:POOL;if(!SM)mbBackfill();let el=document.getElementById('mbdx');if(el)el.remove();el=document.createElement('div');el.id='mbdx';if(SM)el.className='mdxs';document.body.append(el);let F='all';
+async function mbOpen(kind){const SM=kind==='s',PL=SM?SPOOL:POOL;if(SM)mbBackfillS();else mbBackfill();let el=document.getElementById('mbdx');if(el)el.remove();el=document.createElement('div');el.id='mbdx';if(SM)el.className='mdxs';document.body.append(el);let F='all';
  const draw=()=>{const d=mbGet(SM?MBKS:MBK),L=PL.map((b,i)=>({b,i,k:mbKey(b),e:d[mbKey(b)]||{}}));const tot=L.length,seen=L.filter(x=>x.e.seen).length,win=L.filter(x=>x.e.win).length,cp=L.filter(x=>x.e.cap).length,inv=L.filter(x=>INV.has(x.k)),invU=inv.filter(x=>x.e.cap).length;
   const show=L.filter(x=>F==='all'||(F==='inv'&&!SM&&INV.has(x.k))||(F==='cap'&&x.e.cap)||(F==='todo'&&!x.e.cap));
   el.innerHTML=`<div class="mdxw"><div class="mdxh"><b>${SM?'📖 Legendex':'📖 Megadex'}</b><button class="mdxx" data-m="x" aria-label="Cerrar">✕</button></div>
