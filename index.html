@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.1</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.2</div>
 </section>
 
 <section id="team" class="scr">
@@ -8621,7 +8621,14 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'52.1',t:'Pociones sin gastar turno',s:'cur',l:[
+ {v:'52.2',t:'Arreglos de la Aventura multiplayer',s:'cur',l:[
+  '🔧 Aventura multiplayer: cuando un amigo elige un Pokémon, su tarjeta se oscurece pero la «i» para ver lo que hace sigue funcionando',
+  '🔧 La barra de «Ataque en equipo» ya no vuelve a llenarse desde cero cada vez que se actualiza la pantalla: solo se mueve cuando cambia',
+  '👑 Las decisiones (eventos, bendiciones y atajos) las toma solo el líder (el anfitrión); los demás pueden votar y sus votos se ven en cada opción. El mapa ya no avanza solo aunque solo haya un camino, y los eventos ya no eligen solos si nadie decide',
+  '💗 Brisa Caricia (Happiny): cura lo que le falte al compañero y lo que sobre se convierte en vida extra (antes solo daba vida extra si tenía la vida llena)',
+  '📚 Al aprender un movimiento con 4 ya sabidos, cada jugador elige cuál olvida (o no aprenderlo) con la misma pantalla que en la aventura normal; antes se sustituía uno automáticamente'
+]},
+{v:'52.1',t:'Pociones sin gastar turno',s:'prev',l:[
   '🧪 Aventura multiplayer: usar una poción en combate (en tu turno) ya no gasta el turno: después puedes atacar igual'
 ]},
 {v:'52.0',t:'Duración de partida en la Aventura multiplayer',s:'prev',l:[
@@ -16035,7 +16042,7 @@ showMap=function(){const r=_sm.apply(this,arguments);
 #mpa .ma-hg button{position:relative;padding:4px 2px 6px;border-radius:14px;border:2px solid #ffffff22;background:#ffffff0c;color:#fff;cursor:pointer;font:800 10.5px system-ui}
 #mpa .ma-hg button img{display:block;width:56px;height:56px;margin:0 auto;image-rendering:pixelated}
 #mpa .ma-hg button.on{border-color:var(--c,#f5c84c);background:color-mix(in srgb,var(--c,#f5c84c) 30%,transparent)}
-#mpa .ma-hg button.tk{opacity:.35}
+#mpa .ma-hg button.tk{cursor:default}#mpa .ma-hg button.tk>img,#mpa .ma-hg button.tk>.mhn,#mpa .ma-hg button.tk>small{opacity:.35;filter:grayscale(.6)}
 #mpa .ma-hg button em{position:absolute;top:3px;right:3px;font-style:normal;font:900 10px system-ui;padding:1px 5px;border-radius:8px;background:var(--c);color:#111}
 #mpa .ma-note{font-size:12px;opacity:.75;line-height:1.4;margin:0}
 #mpa .ma-in{display:flex;gap:8px}
@@ -16258,7 +16265,7 @@ const CLS={
    [22,MV('Golpe Mortal','dark',60,1,100,'exec','Sus golpes críticos hacen el triple de daño (en vez de ×1,5). Crítico seguro si el rival tiene menos del 30% de PS.')]]},
  apoyo:{n:'Apoyo',ic:'💗',c:'#f472b6',base:440,evo:[[12,113],[26,242]],dd:1,dt:.9,mt:it=>!!MTC.apoyo[it.m],mtx:'aprende todas las MT que curan o roban vida',
   pas:[['💗 Sanadora','Todos sus movimientos curan o protegen. Su único ataque es Falso Tortazo.'],['🏳️ Piedad','Falso Tortazo nunca debilita. Pero si solo queda Happiny en pie (o juega sola), los rivales que tengan 1 PS se rinden. Si juega sola, empieza en Nv.3 para tener ya su ataque.'],['🤍 Robusta','Recibe un 10% menos de daño.']],
-  ls:[[1,MV('Brisa Caricia','fairy',0,0,100,'caress','Cura 10 PS (+1 cada 2 niveles) a un compañero o a sí misma. Si ya tiene la vida al máximo, le sube la vida máxima en esa cantidad de forma temporal: dura el combate y lo que se pierda no se puede regenerar.',{tg:'a',lk:1})],
+  ls:[[1,MV('Brisa Caricia','fairy',0,0,100,'caress','Cura 10 PS (+1 cada 2 niveles) a un compañero o a sí misma. Lo que sobre al llenar la vida se convierte en vida extra temporal: dura el combate y lo que se pierda no se puede regenerar.',{tg:'a',lk:1})],
    [3,MV('Falso Tortazo','normal',40,1,100,'false','Su único ataque. Nunca puede debilitar: siempre deja al rival con 1 PS como mínimo.',{lk:1})],
    [5,MV('Deseo','fairy',0,0,100,'wishm','Pide un deseo: al empezar el siguiente turno del compañero elegido, recupera el 40% de sus PS máximos.',{tg:'a'})],
    [8,MV('Pulso Cura','psychic',0,0,100,'pulse','Cura al instante el 40% de los PS máximos del compañero elegido.',{tg:'a'})],
@@ -16427,6 +16434,7 @@ function hostMsg(pid,o){const p=NET.peers.get(pid);if(!p)return;
  const i=seatOf(pid);if(i<0)return;
  if(o.t==='name'){const n=cleanN(o.n);if(n){G.seats[i].n=n;push()}return}
  if(o.t==='vote'){vote(i,+o.node);return}
+ if(o.t==='mva'){const f=MVP.get(String(o.id));if(f){MVP.delete(String(o.id));f(o.i|0)}return}
  if(o.t==='emo'){emo(i,o.e);return}
  if(o.t==='ko'){koAct(i,o.a,o.tg);return}
  if(o.t==='pick'&&V.ph==='lobby'&&newGame()){const id=+o.id;if(!HEROES.includes(id))return;if(G.seats.some((s,k)=>k!==i&&s.pick===id))return;G.seats[i].pick=G.seats[i].pick===id?null:id;push();return}
@@ -16443,7 +16451,7 @@ function waitInput(seat){return new Promise(res=>{let done=false;const fin=v=>{i
 const MVD={};const mvDesc=v=>{if(v.ds)return v.ds;const k=v.n;if(MVD[k]!=null)return MVD[k];let d='';try{d=MX.describe(v)||''}catch(e){}return MVD[k]=d};
 const mvPub=v=>({n:v.n,t:v.t,p:v.p||0,ph:!!v.ph,acc:v.acc||100,ds:mvDesc(v),tg:v.tg||null,lk:v.lk?1:0});
 const monPub=m=>m?{id:m.id,sh:m.sh?1:0,nm:pname(m),lvl:m.lvl,hp:m.hp,max:m.max,boss:m.boss?1:0,el:m.el?1:0,gd:m.guard?1:0,cls:m.cls||null,shd:(m._b&&m._b.shd)|0,sts:m._sts?Object.keys(m._sts):[],fl:m._b?((m._b.amb?'🌑':'')+(m._b.inv?'👻':'')+(m._b.tnt>0?'😤':'')+(m._b.prt?'🛡️':'')+(m._b.cnt?'↩️':'')+(m._b.wg?'🪨':'')+(m._b.rg>0?'💧':'')+(m._b.wish?'⭐':'')+(m._b.foc?'🎯':'')):'',moves:(m.moves||[]).map(mvPub)}:null;
-function snap(){return{len:G.len||20,asc:G.asc|0,ascMax:(meta().asc|0),bl:G.bl||{},ph:V.ph,state:G.state,code:NET.code,newg:newGame(),depth:G.pos==null?-1:(nodeById(G.map,G.pos)||{c:-1}).c,gold:G.gold|0,
+function snap(){return{evv:V.evv||null,len:G.len||20,asc:G.asc|0,ascMax:(meta().asc|0),bl:G.bl||{},ph:V.ph,state:G.state,code:NET.code,newg:newGame(),depth:G.pos==null?-1:(nodeById(G.map,G.pos)||{c:-1}).c,gold:G.gold|0,
  seats:G.seats.map((s,i)=>({n:s.n,on:i===0||!!s.pid,pick:s.pick||null,hero:monPub(s.hero),kcd:V.ph==='battle'&&s.hero&&s.hero.hp<=0?Math.max(0,(V.kr&&V.kr[i]||0)-(V.bclock||0)):0})),kpause:!!V.wait&&now()-(V.waitT||0)>=3000,foes:V.foes.map(monPub),bags:(G.bags||[]).map(b=>b||[]),shop:G.shop||null,rew:V.rew||null,
  turn:V.turn,wait:V.wait,log:V.log,fx:V.fx.slice(-24),ban:V.ban,map:G.map,pos:G.pos,done:G.done||[],choices:V.choices,horde:V.horde,msg:V.msg,order:V.order,
  wt:V.wait&&V.waitT?Math.max(0,120000-(now()-V.waitT)):0,votes:V.ph==='map'&&V.votes?V.votes:null,ev:V.ph==='event'&&V.ev?Object.assign({},V.ev,{now:now()}):null,spd:SPD,st:G.st||null,ult:Math.floor(G.ult||0),gid:G.created||0,emo:V.emo||null}}
@@ -16475,7 +16483,7 @@ async function mainLoop(){
   const cur=G.pos==null?null:nodeById(G.map,G.pos),next=cur?cur.to:G.map.cols[0].map(n=>n.id);
   V.ph='map';V.choices=next;V.foes=[];V.turn=null;V.log='';V.rew=null;push();
   if(!G.shop||G.shop.pos!==G.pos){await genShop();push()}
-  let id;if(next.length===1){await sl(1400);id=next[0]}else id=await waitMap(next);
+  let id=await waitMap(next); /* v52.2: el mapa nunca avanza solo: siempre elige el líder */
   if(!G||ROLE!=='host')return;
   G.pos=id;V.choices=[];const nd=nodeById(G.map,id);
   if(nd.t==='C')await center();
@@ -16526,10 +16534,10 @@ const EVS=[
 const BLESS=[['fue','💪 Furia','+15% de daño de todo el equipo.'],['esc','🛡️ Escudo','Todo el equipo recibe un 12% menos de daño.'],['vit','❤️ Vitalidad','Cada Pokémon recupera un 5% de PS al empezar su turno.'],['rap','⚡ Rapidez','+15% de velocidad para todo el equipo.'],['oro','💰 Fortuna','+30% de Pokémonedas en cada victoria.'],['sab','📚 Sabiduría','+25% de experiencia para todo el equipo.']];
 async function bless(why){if(!G||ROLE!=='host')return;G.bl=G.bl||{};const op=BLESS.slice().sort(()=>R0()-.5).slice(0,3);
  V.ph='event';V.foes=[];V.turn=null;V.ev={t:'✨ Bendición del equipo',x:(why?why+' ':'')+'Elegid una bendición para todo el equipo (se acumulan durante la aventura).',opts:op.map(([k,l,d])=>({l:l+((G.bl[k]|0)?' ·'+'★'.repeat(G.bl[k]):''),d})),end:now()+20000};V.log='';banner('✨ ¡Bendición!');push();bp(988,.12);setTimeout(()=>bp(1319,.14),120);
- const v=await new Promise(res=>{EVW=res;setTimeout(()=>{if(EVW===res){EVW=null;res(0)}},20000)});EVW=null;if(!G||ROLE!=='host')return;const x=op[Math.max(0,Math.min(2,v|0))];G.bl[x[0]]=(G.bl[x[0]]|0)+1;
+ V.evv={};const v=await new Promise(res=>{EVW=res});V.evv=null;EVW=null;if(!G||ROLE!=='host')return;const x=op[Math.max(0,Math.min(2,v|0))];G.bl[x[0]]=(G.bl[x[0]]|0)+1;
  V.ev=null;V.ph='reward';V.log=`✨ Bendición elegida: ${x[1]} — ${x[2]}`;push();[784,988,1175].forEach((f,i)=>setTimeout(()=>bp(f,.1),i*110));await sl(2200);save()}
 async function eventNode(nd){G.evh=G.evh||[];const EP=EVS.filter(x=>!G.evh.includes(x.t));const E=pick(EP.length?EP:EVS);G.evh.push(E.t);if(G.evh.length>6)G.evh.shift();V.ph='event';V.foes=[];V.turn=null;V.ev={t:E.t,x:E.x,opts:E.o.map(([l,d])=>({l,d})),end:now()+20000};V.log='';banner(E.t);push();bp(660,.12);setTimeout(()=>bp(880,.12),120);
- const v=await new Promise(res=>{EVW=res;setTimeout(()=>{if(EVW===res){EVW=null;res(0)}},20000)});EVW=null;if(!G||ROLE!=='host')return true;
+ V.evv={};const v=await new Promise(res=>{EVW=res});V.evv=null;EVW=null;if(!G||ROLE!=='host')return true;
  const all=()=>G.seats.map((s,i)=>({s,i})).filter(x=>x.s.hero);const hp=(p,rev)=>all().forEach(({s,i})=>{const m=s.hero;if(m.hp<=0&&!rev)return;const h=Math.ceil(m.max*p);m.hp=Math.min(m.max,Math.max(0,m.hp)+h);fx({k:'fl',s:'h',i,txt:'+'+h,cls:'hl'})});
  const gift=async()=>{const got=[];for(let i=0;i<G.seats.length;i++){const it=await randItem();(G.bags[i]=G.bags[i]||[]).push(it);got.push({s:i,it})}V.rew=got;return'🎁 '+got.map(g=>`${G.seats[g.s].n}: ${itIc(g.it)} ${itName(g.it)}`).join(' · ')};
  V.ph='reward';let L='';const k=E.t;
@@ -16548,8 +16556,8 @@ async function eventNode(nd){G.evh=G.evh||[];const EP=EVS.filter(x=>!G.evh.inclu
 /* ---------- peticiones de los jugadores: centro, tienda y mochila ---------- */
 function reply(seat,msg){if(seat===0||!G.seats[seat]||!G.seats[seat].pid||G.seats[seat].pid===NET.id){tst(msg);return}const p=NET.peers.get(G.seats[seat].pid);if(p)dsend(p.dc,{t:'toast',m:msg})}
 async function handleReq(seat,o){if(!G||G.state!=='play')return;const B=(G.bags[seat]=G.bags[seat]||[]),calm=['map','walk','reward','center','skip'].includes(V.ph);
- if(o.k==='ev'){if(V.ph==='event'&&EVW&&V.ev&&V.ev.opts[+o.v]){const f=EVW;EVW=null;V.log=`${G.seats[seat].n} elige: ${V.ev.opts[+o.v].l}`;f(+o.v)}return}
- if(o.k==='skip'){if(V.ph==='skip'&&SKIPW){const f=SKIPW;SKIPW=null;V.log=`${G.seats[seat].n} decide ${o.v?'tomar el atajo':'luchar'}.`;f(!!o.v)}return}
+ if(o.k==='ev'){if(V.ph==='event'&&EVW&&V.ev&&V.ev.opts[+o.v]){if(seat!==0){(V.evv=V.evv||{})[seat]=+o.v;V.log=`🗳️ ${G.seats[seat].n} vota: ${V.ev.opts[+o.v].l}`;push();return}const f=EVW;EVW=null;V.log=`👑 ${G.seats[seat].n} elige: ${V.ev.opts[+o.v].l}`;f(+o.v)}return}
+ if(o.k==='skip'){if(V.ph==='skip'&&SKIPW){if(seat!==0){(V.evv=V.evv||{})[seat]=o.v?1:0;V.log=`🗳️ ${G.seats[seat].n} vota ${o.v?'tomar el atajo':'luchar'}.`;push();return}const f=SKIPW;SKIPW=null;V.log=`👑 ${G.seats[seat].n} decide ${o.v?'tomar el atajo':'luchar'}.`;f(!!o.v)}return}
  if(o.k==='center'){if(!calm)return reply(seat,'El Centro Pokémon solo está disponible en el mapa');if((G.gold|0)<50)return reply(seat,'Hacen falta 50 Pokémonedas');
   G.gold-=50;G.seats.forEach((x,i)=>{if(x.hero){x.hero.hp=x.hero.max;fx({k:'fl',s:'h',i,txt:'+PS',cls:'hl'})}});banner('🏥 ¡Equipo curado!');V.log=`🏥 ${G.seats[seat].n} ha pagado el Centro Pokémon: todo el equipo está curado y reanimado.`;[659,784,1046].forEach((x,i)=>setTimeout(()=>bp(x,.14),i*160));save();push();return}
  if(o.k==='reroll'){if(V.ph!=='map'||!G.shop)return;const c=25+15*(G.shop.rr|0);if((G.gold|0)<c)return reply(seat,'Hacen falta '+c+' Pokémonedas para renovar la tienda');G.gold-=c;await genShop((G.shop.rr|0)+1);V.log=`🔄 ${G.seats[seat].n} ha renovado la tienda.`;bp(880,.08);save();push();return}
@@ -16579,7 +16587,7 @@ async function genFoes(lv,ids,boss){const out=[];const AS=(G&&G.asc)|0;for(const
 async function level(nd){const np=G.seats.length;
  for(let h=0;h<3;h++){V.horde=h+1;
   if(R0()<.35){V.ph='skip';V.foes=[];V.turn=null;V.skipT=now()+15000;V.log='';V.msg=`Horda ${h+1} de 3: encontráis un atajo escondido. Podéis evitar el combate y llevaros una recompensa aleatoria cada uno (pero sin experiencia).`;push();
-   const sk=await new Promise(res=>{SKIPW=res;setTimeout(()=>{if(SKIPW===res){SKIPW=null;res(false)}},15000)});SKIPW=null;if(!G||ROLE!=='host')return false;
+   V.evv={};const sk=await new Promise(res=>{SKIPW=res});V.evv=null;SKIPW=null;if(!G||ROLE!=='host')return false;
    if(sk){V.ph='reward';banner('🎁 ¡Atajo!');const got=[];for(let i=0;i<G.seats.length;i++){const it=await randItem();(G.bags[i]=G.bags[i]||[]).push(it);got.push({s:i,it})}V.rew=got;V.log='🎁 Atajo: '+got.map(g=>`${G.seats[g.s].n}: ${itIc(g.it)} ${itName(g.it)}`).join(' · ');push();bp(880,.15);await sl(2800);V.rew=null;save();continue}}
   V.ph='walk';V.foes=[];V.turn=null;V.order=[];V.log=`Horda ${h+1} de 3: el equipo avanza…`;push();await sl(1800);if(!G||ROLE!=='host')return false;
   const L=Math.max(1,avgLv()-(np===1?2:1)+(h===2&&nd.c>0?1:0)+(nd.c>=4?1:0)),n=np===1?(nd.c>=3&&h===2&&R0()<.35?2:1):Math.max(1,Math.min(4,np+(nd.c>1&&R0()<.35?1:0)-(np>=3&&R0()<.5?1:0)));
@@ -16748,8 +16756,9 @@ async function clsAct(u,m,v,tu){const nmA=pname(m),b=m._b||(m._b={}),self={s:u.s
  const ok=k=>{if(k==='focus'){b.foc=1;fx({k:'fl',s:u.s,i:u.i,txt:'🎯 Foco',cls:'hl'});V.log=`🎯 ${nmA} se concentra: ¡sus críticos serán más frecuentes!`;return 1}
   if(k==='stealth'){b.inv=1;b.amb=2;fx({k:'fl',s:u.s,i:u.i,txt:'👻 Oculto',cls:'hl'});V.log=`👻 ${nmA} se desvanece entre las sombras: nadie puede atacarle y su próximo golpe será crítico.`;return 1}
   if(k==='caress'){const t=ally(),n=10+Math.floor(m.lvl/2),tb=t.m._b||(t.m._b={});
-   if(t.m.hp>=t.m.max){const add=Math.max(0,Math.min(n,t.m.max-(tb.shd||0)));tb.shd=(tb.shd||0)+add;fx({k:'fl',s:t.s,i:t.i,txt:'💛 +'+add+' máx',cls:'hl'});V.log=`💗 ${nmA} usó Brisa Caricia: ¡${pname(t.m)} gana ${add} de vida máxima temporal!`}
-   else{const h=heal(t.m,t.i,t.s,n);V.log=`💗 ${nmA} usó Brisa Caricia: ${pname(t.m)} recupera ${h} PS.`}bp(880,.1);return 1}
+   /* v52.2: cura lo que falte y lo que sobre se convierte en vida extra */
+   const miss=Math.max(0,t.m.max-t.m.hp),h=miss>0?heal(t.m,t.i,t.s,Math.min(n,miss)):0,over=Math.max(0,n-h),add=Math.max(0,Math.min(over,t.m.max-(tb.shd||0)));if(add>0){tb.shd=(tb.shd||0)+add;fx({k:'fl',s:t.s,i:t.i,txt:'💛 +'+add,cls:'hl'})}
+   V.log=`💗 ${nmA} usó Brisa Caricia: ${pname(t.m)}${h?` recupera ${h} PS`:''}${h&&add?' y':''}${add?` gana ${add} de vida extra`:''}${!h&&!add?' ya no puede ganar más vida extra':''}.`;bp(880,.1);return 1}
   if(k==='wishm'){const t=ally(),tb=t.m._b||(t.m._b={});tb.wish=Math.ceil(t.m.max*.4);fx({k:'fl',s:t.s,i:t.i,txt:'⭐',cls:'hl'});V.log=`⭐ ${nmA} pide un deseo para ${pname(t.m)}: se cumplirá en su próximo turno.`;bp(988,.1);return 1}
   if(k==='pulse'){const t=ally(),h=heal(t.m,t.i,t.s,Math.ceil(t.m.max*.4));V.log=`💗 ${nmA} usó Pulso Cura: ${pname(t.m)} recupera ${h} PS.`;bp(880,.1);return 1}
   if(k==='soft'){const h=heal(m,u.i,u.s,Math.ceil(m.max*.5));V.log=`🥚 ${nmA} usó Amortiguador y recupera ${h} PS.`;bp(880,.1);return 1}
@@ -16781,19 +16790,29 @@ async function rewards(n,g){g=Math.round((g+ri(20))*luck());G.gold=(G.gold|0)+g;
  for(const s of G.seats){const m=s.hero;if(!m)continue;delete m._st;delete m._b;delete m._sts;if(m.hp>0){m.hp=Math.min(m.max,m.hp+Math.ceil(m.max*(G.seats.length===1?.4:G.seats.length===2?.3:.2)));const si=G.seats.indexOf(s);await lvUp(m,n*(1+.3*amu(si,'xp'))*(1+.1*metaLv('xp'))*(1+.25*((G.bl&&G.bl.sab)|0)),si)}}
  push();save();await sl(500)}
 /* subir de nivel: aprende movimientos solo y evoluciona con animación (la ven todos los jugadores) */
+/* v52.2: al aprender un 5.º movimiento, el jugador elige cuál olvida (como en la aventura normal) */
+let MVQ=Promise.resolve();const MVP=new Map();
+const mvLite=v=>({n:v.n,t:v.t,p:v.p|0,ph:v.ph?1:0,acc:v.acc|0,mp:v.mp|0,cp:v.cp|0,pr:v.pr|0,lk:v.lk?1:0});
+function mvLocal(m,nv,nm0){const run=()=>new Promise(async res=>{try{const opts=[...m.moves.map(o=>o.lk?{t:`🔒 ${o.n} (fijo)`,off:1}:`Olvidar ${o.n}${o.p?' (Poder '+o.p+')':''}`),'No aprender'];
+  const k=await ask('Nuevo movimiento',mvBox(m,nv,`${esc(nm0||pname(m))} quiere aprender ${esc(nv.n)}. ¿Qué movimiento olvida?`),opts);res(k>=0&&k<m.moves.length&&!m.moves[k].lk?k:-1)}catch(e){res(-1)}});const p=MVQ.then(run);MVQ=p.catch(()=>{});return p}
+function mvAsk(seat,m,nv){const st=G&&G.seats[seat];if(!st)return Promise.resolve(-1);
+ if(seat===0||st.pid===NET.id)return mvLocal(m,nv);
+ const peer=st.pid&&NET.peers.get(st.pid);if(!peer||!peer.dc||peer.dc.readyState!=='open'){/* sin conexión: se queda con sus movimientos */return Promise.resolve(-1)}
+ const id=Math.random().toString(36).slice(2,9);return new Promise(res=>{const t=setTimeout(()=>{MVP.delete(id);res(-1)},120000);MVP.set(id,v=>{clearTimeout(t);res(v)});dsend(peer.dc,{t:'mvq',id,nm:pname(m),pid:m.id|0,lvl:m.lvl|0,ty:(m.types||[]).slice(0,2),pn:m.name||'',sh:m.sh?1:0,mv:m.moves.map(mvLite),nw:mvLite(nv)})})}
 async function lvUp(m,n,seat,raw){if(!raw){m.xpf=(m.xpf||0)+n*1.25;n=Math.floor(m.xpf+1e-9);m.xpf-=n;if(n<=0)return}const from=m.lvl,q=m.max?m.hp/m.max:1;m.lvl=Math.min(100,m.lvl+n);try{m.xp=XPT(m.lvl)}catch(e){}stats(m);m.hp=m.hp<=0?0:Math.min(m.max,Math.max(1,Math.round(q*m.max)+Math.ceil(m.max*.1*n)));
  fx({k:'fl',s:'h',i:seat,txt:'Nv.'+m.lvl,cls:'hl'});
  if(CK(m)){for(const e of CK(m).ls){if(e[0]<=from||e[0]>m.lvl||m.moves.some(o=>o.n===e[1].n))continue;const nv=clsMv(e);
-   if(m.moves.length<4){m.moves.push(nv);tst(`${pname(m)} aprendió ${nv.n}`)}else{let w=-1,wl=1e9;m.moves.forEach((o,i)=>{if(o.lk)return;const l=o.lv||0;if(l<wl){wl=l;w=i}});if(w>=0){const old=m.moves[w].n;m.moves[w]=nv;tst(`${pname(m)} olvidó ${old} y aprendió ${nv.n}`)}}
+   if(m.moves.length<4){m.moves.push(nv);tst(`${pname(m)} aprendió ${nv.n}`)}else{const w=await mvAsk(seat,m,nv);if(w>=0&&m.moves[w]&&!m.moves[w].lk){const old=m.moves[w].n;m.moves[w]=nv;tst(`${pname(m)} olvidó ${old} y aprendió ${nv.n}`)}else{tst(`${pname(m)} no aprendió ${nv.n}`);continue}}
    V.log=`✨ ${pname(m)} ha aprendido ${nv.n}.`}}
  else try{const nw=(m.ls||[]).filter(x=>x.l>from&&x.l<=m.lvl).sort((a,b)=>a.l-b.l);
   for(const x of nw){const v=await getM(x.n);if(!v||!okT(m,v)||m.moves.some(o=>o.n==v.n))continue;const nv=cm(v);
    if(m.moves.length<4){m.moves.push(nv);tst(`${pname(m)} aprendió ${v.n}`)}
-   else if(v.p){let w=-1,wp=1e9;m.moves.forEach((o,i)=>{const p=o.p||0;if(p<wp){wp=p;w=i}});if(w>=0&&v.p>wp){const old=m.moves[w].n;m.moves[w]=nv;tst(`${pname(m)} olvidó ${old} y aprendió ${v.n}`)}}}}catch(e){}
+   else{const w=await mvAsk(seat,m,nv);if(w>=0&&m.moves[w]){const old=m.moves[w].n;m.moves[w]=nv;tst(`${pname(m)} olvidó ${old} y aprendió ${v.n}`)}}}}catch(e){}
  try{let e;if(CK(m)){const K=CK(m),ch=[K.base,...K.evo.map(x=>x[1])],j=ch.indexOf(m.id);e=j>=0?K.evo[j]:null}else{await evoFill(m);e=pickEvo(m)}if(e&&m.lvl>=e[0]){const d=await getD(e[1]),old=pname(m),oid=m.id;m.id=e[1];m.name=dexName(e[1]);m.types=d.types;m.b=d.st;m.ls=d.ls;m.tera=d.types[0];const q2=m.max?m.hp/m.max:1;stats(m);m.hp=m.hp<=0?0:Math.max(1,Math.round(q2*m.max));
   try{window.dexMark&&dexMark(m)}catch(_){}const ev={t:'evo',oid,nid:m.id,sh:m.sh?1:0,on:esc(old),nn:esc(pname(m))};bcast(ev);push();if(window.evoAnim)await evoAnim(oid,m.id,m.sh,ev.on,ev.nn)}}catch(e){console.error(e)}}
 /* ================= INVITADO ================= */
 function guestMsg(o){if(o.t==='toast'){tst(String(o.m||'').slice(0,160));return}
+ if(o.t==='mvq'&&Array.isArray(o.mv)&&o.nw){const m={id:o.pid|0||25,lvl:o.lvl|0||1,types:Array.isArray(o.ty)?o.ty.slice(0,2):['normal'],name:String(o.pn||'').slice(0,30),sh:o.sh?1:0,moves:o.mv.slice(0,4)};mvLocal(m,o.nw,String(o.nm||'').slice(0,20)).then(i=>dsend(NET.dc,{t:'mva',id:o.id,i}));return}
  if(o.t==='welcome'){MYSEAT=o.seat|0;if(RETRY){RETRY=0;tst('✅ ¡Reconectado!')}view='game';if(S)draw(S);return}
  if(o.t==='st'){view='game';const p=Q('#mapnl');if(p)p.classList.remove('sent');draw(unwire(o.s));return}
  if(o.t==='evo'){if(window.evoAnim)evoAnim(o.oid,o.nid,o.sh,o.on,o.nn);return}
@@ -16905,8 +16924,8 @@ function draw(s){if(!el)return;S=s;
    <div class="ma-mv">${m.moves.map((v,i)=>`<button data-mv="${i}" class="${SEL===i?'sel':''}" style="--c:${COL[v.t]||'#6366f1'}">${esc(v.n)}<small>${ES[v.t]||v.t} · ${v.p?(v.ph?'Físico':'Especial')+' · '+v.p:'Apoyo'}</small><i class="ma-i" data-info="${i}" role="button" aria-label="Qué hace ${esc(v.n)}">i</i></button>`).join('')}</div><div class="ma-acts">${(s.ult|0)>=100?'<button class="ma-b sm ma-ultb" data-mv="ult">💥 ¡En equipo!</button>':''}<button class="ma-b sm" data-mv="def">🛡️ Defenderse</button>${myBag(s).some(x=>x.k==='pot')?`<button class="ma-b sm g" data-a="bag">🧪 Poción (${myBag(s).filter(x=>x.k==='pot').length})</button>`:''}</div>`}
   else h+=`<div class="ma-who">${t?(t.s==='h'?`<em style="--c:${PC[t.i]}">${esc(ow.n)}</em> ${s.wait?'está eligiendo qué hacer… <span class="ma-tmr" data-tmr></span>':''}`:'⚠️ Turno del rival'):''}</div><div class="ma-log" data-lg></div><div class="ma-tmw" data-tm></div>`}
  else if(s.ph==='load')h=`<div class="ma-load"><i></i>${esc(s.msg)}</div><div class="ma-tmw" data-tm></div>`;
- else if(s.ph==='event'&&s.ev)h=`<div class="ma-evc"><h4>${esc(s.ev.t)}</h4><p>${esc(s.ev.x)}</p>${s.ev.opts.map((o,i)=>`<button class="ma-evo" data-a="ev:${i}"><b>${esc(o.l)}</b><small>${esc(o.d)}</small></button>`).join('')}<p class="ma-note">Cualquier jugador puede decidir. Si nadie elige en 20 s, se escoge la primera opción. <span class="ma-tmr" data-tmr></span></p></div><div class="ma-tmw" data-tm></div>`;
- else if(s.ph==='skip')h=`<div class="ma-log">🌿 ${esc(s.msg)}</div><div class="ma-acts"><button class="ma-b r" data-a="skip0">⚔️ Luchar</button><button class="ma-b g" data-a="skip1">🎁 Tomar el atajo</button></div><p class="ma-note">Cualquier jugador puede decidir. Si nadie elige en 15 s, se lucha.</p><div class="ma-tmw" data-tm></div>`;
+ else if(s.ph==='event'&&s.ev)h=`<div class="ma-evc"><h4>${esc(s.ev.t)}</h4><p>${esc(s.ev.x)}</p>${s.ev.opts.map((o,i)=>`<button class="ma-evo" data-a="ev:${i}"><b>${esc(o.l)}</b><small>${esc(o.d)}</small>${(s.evv?Object.keys(s.evv).filter(k=>s.evv[k]===i):[]).map(k=>`<i class="ma-vtd" style="--c:${PC[k]||'#fff'}"></i>`).join('')}</button>`).join('')}<p class="ma-note">👑 Solo el líder decide; los demás podéis votar tocando una opción.</p></div>`;
+ else if(s.ph==='skip')h=`<div class="ma-log">🌿 ${esc(s.msg)}</div><div class="ma-acts"><button class="ma-b r" data-a="skip0">⚔️ Luchar${(s.evv?Object.keys(s.evv).filter(k=>s.evv[k]===0):[]).map(k=>`<i class="ma-vtd" style="--c:${PC[k]||'#fff'}"></i>`).join('')}</button><button class="ma-b g" data-a="skip1">🎁 Tomar el atajo${(s.evv?Object.keys(s.evv).filter(k=>s.evv[k]===1):[]).map(k=>`<i class="ma-vtd" style="--c:${PC[k]||'#fff'}"></i>`).join('')}</button></div><p class="ma-note">👑 Solo el líder decide; los demás podéis votar.</p>`;
  else if(s.ph==='reward')h=`<div class="ma-log" data-lg></div><div class="ma-acts"><button class="ma-b sm" data-a="bag">🎒 Mochila${myBag(s).length?' ('+myBag(s).length+')':''}</button></div>${s.rew?`<div class="ma-rew">${s.rew.map(g=>`<div style="--c:${PC[g.s]}"><i>${itIc(g.it)}</i><b>${esc(itName(g.it))}</b><small>${esc(s.seats[g.s].n)}</small></div>`).join('')}</div>`:''}<div class="ma-tmw" data-tm></div>`;
  else if(s.ph==='end')h=`<div class="ma-log" style="font-size:16px">${esc(s.msg)}</div>${statsH(s)}<div class="ma-tmw" data-tm></div><div class="ma-acts"><button class="ma-b p" data-a="slots">${ROLE==='host'?'Volver a las casillas':'Salir'}</button></div>`;
  else h=`<div class="ma-log" data-lg></div><div class="ma-acts"><button class="ma-b sm" data-a="bag">🎒 Mochila${myBag(s).length?' ('+myBag(s).length+')':''}</button></div><div class="ma-tmw" data-tm></div>`;
@@ -16915,7 +16934,7 @@ function draw(s){if(!el)return;S=s;
  {const q=p.querySelector('[data-lg]');if(q&&q._t!==s.log){q._t=s.log;q.textContent=s.log||'';q.classList.remove('nw');void q.offsetWidth;q.classList.add('nw')}}
  {const q=p.querySelector('[data-tm]');if(q){const th=teamH(s);if(q._h!==th){q._h=th;q.innerHTML=th}}}
  {const q=p.querySelector('[data-ord]');if(q&&q._h!==ORDH){q._h=ORDH;q.innerHTML=ORDH}}
- {const q=p.querySelector('[data-ult]');if(q){const u=Math.min(100,s.ult|0);q.firstChild.style.transform=`scaleX(${u/100})`;q.classList.toggle('full',u>=100)}}
+ {const q=p.querySelector('[data-ult]');if(q){const u=Math.min(100,s.ult|0),bar=q.firstChild;/* v52.2: si la barra se acaba de dibujar, se pone en su sitio sin volver a animarse desde 0 */if(!q.dataset.ok){q.dataset.ok=1;bar.style.transition='none';bar.style.transform=`scaleX(${(window.__maUlt!=null?window.__maUlt:u)/100})`;void bar.offsetWidth;bar.style.transition=''}bar.style.transform=`scaleX(${u/100})`;window.__maUlt=u;q.style.animationDelay=`-${(performance.now()%2000)/1000}s`;q.classList.toggle('full',u>=100)}}
  if(s.ph==='end')metaAward(s);
  TMRE=s.wait&&s.wt?now()+s.wt:s.ph==='event'&&s.ev&&s.ev.end?now()+Math.max(0,s.ev.end-(s.ev.now||now())):0;tmrPaint();
  if(myTurn&&!WASMY){bp(880,.07);setTimeout(()=>bp(1175,.09),90);try{navigator.vibrate&&navigator.vibrate(35)}catch(e){}p.classList.remove('myt');void p.offsetWidth;p.classList.add('myt')}WASMY=myTurn;
@@ -17009,7 +17028,7 @@ function lobbyHTML(s){const host=ROLE==='host',mySeat=host?0:MYSEAT,me=s.seats[m
  <div class="ma-card"><h3>Código de la sala</h3><div class="ma-code"><b>${esc(s.code)}</b>${host&&window.__FR?`<button class="ma-b v" data-a="friends">👥 Invitar amigos</button>`:''}</div><p class="ma-note" style="margin-top:8px">${host?'Tus amigos pueden unirse con este código o con tu invitación, aunque estén en otra Wi‑Fi o con datos. Máximo 4 jugadores. No hace falta esperar a nadie: también puedes jugar solo.':'Esperando a que el anfitrión empiece la aventura…'}</p></div>
  <div class="ma-card"><h3>Tu nombre</h3><div class="ma-in"><input id="mamyname" maxlength="14" value="${esc((s.seats[mySeat]||{}).n||myName())}" autocomplete="off" style="letter-spacing:0;text-transform:none"><button class="ma-b v" data-a="myname">Guardar</button></div></div>
  <div class="ma-card"><h3>Jugadores (${s.seats.length}/4)</h3><div class="ma-seats">${s.seats.map((x,i)=>{const id=x.hero?x.hero.id:x.pick;return`<div class="ma-seat" style="--c:${PC[i]}">${id?`<img src="${mini(id)}" alt="">`:'<span style="font-size:30px">❔</span>'}<div><b>${esc(x.n)}${i===0?' 👑':''}${i===mySeat?' (tú)':''}</b><small>${x.hero?esc(x.hero.nm)+' · Nv.'+x.hero.lvl:id?esc(cap(dexName(id))):'Eligiendo Pokémon…'}${x.on?'':' · 🔌 sin jugador'}</small></div></div>`}).join('')}</div></div>
- ${s.newg?`<div class="ma-card"><h3>Elige tu Pokémon</h3><p class="ma-note" style="margin-bottom:8px">Cada Pokémon es una clase con su papel en el equipo y sus propios movimientos. Toca la <b>i</b> para ver sus habilidades. Empieza a nivel 1, evoluciona al subir de nivel y cada jugador lleva uno distinto.</p><div class="ma-hg">${HEROES.map(id=>{const tk=taken.includes(id)&&mp!==id;const K=CLS[clsOf(id)];return`<button data-a="hero:${id}" class="${mp===id?'on':''}${tk?' tk':''}" style="--c:${PC[mySeat]||'#f5c84c'}" ${tk?'disabled':''}>${mp===id?'<em>TÚ</em>':''}${K?`<i class="ma-ci" data-cinfo="${clsOf(id)}" style="--c:${K.c}" role="button" aria-label="Ver habilidades">i</i>`:''}<img src="${mini(id)}" alt="">${esc(cap(dexName(id)))}${K?`<small class="ma-cl" style="--c:${K.c}">${K.ic} ${K.n}</small>`:''}</button>`}).join('')}</div></div>`:''}
+ ${s.newg?`<div class="ma-card"><h3>Elige tu Pokémon</h3><p class="ma-note" style="margin-bottom:8px">Cada Pokémon es una clase con su papel en el equipo y sus propios movimientos. Toca la <b>i</b> para ver sus habilidades. Empieza a nivel 1, evoluciona al subir de nivel y cada jugador lleva uno distinto.</p><div class="ma-hg">${HEROES.map(id=>{const tk=taken.includes(id)&&mp!==id;const K=CLS[clsOf(id)];return`<button data-a="hero:${id}" class="${mp===id?'on':''}${tk?' tk':''}" style="--c:${PC[mySeat]||'#f5c84c'}" ${tk?'aria-disabled="true"':''}>${mp===id?'<em>TÚ</em>':''}${K?`<i class="ma-ci" data-cinfo="${clsOf(id)}" style="--c:${K.c}" role="button" aria-label="Ver habilidades">i</i>`:''}<img src="${mini(id)}" alt=""><span class="mhn">${esc(cap(dexName(id)))}</span>${K?`<small class="ma-cl" style="--c:${K.c}">${K.ic} ${K.n}</small>`:''}</button>`}).join('')}</div></div>`:''}
  ${s.newg?`<div class="ma-card ma-asc"><h3>🔥 Dificultad ${s.asc|0}</h3><p class="ma-note" style="margin-bottom:8px">${(s.asc|0)?`Rivales con +${12*(s.asc|0)}% de vida y más daño. Recompensa: +${25*(s.asc|0)}% de medallas, +${10*(s.asc|0)}% de monedas.`:'Normal. Gana una aventura para desbloquear la Dificultad 1.'}</p><div class="ma-ascb">${Array.from({length:Math.min(10,(s.ascMax|0))+1},(_,k)=>`<button class="ma-b sm${k===(s.asc|0)?' on':''}" data-a="asc:${k}" ${host?'':'disabled'}>${k?'🔥'+k:'Normal'}</button>`).join('')}</div></div>`:''}
  ${s.newg?`<div class="ma-card ma-asc"><h3>⏱️ Duración de partida</h3><p class="ma-note" style="margin-bottom:8px">${({20:'Corta: 20 niveles, con el jefe en el 20.',40:'Mediana: 40 niveles, con jefes en el 20 y el 40.',60:'Larga: 60 niveles, con jefes en el 20, el 40 y el 60.',100:'Ultra larga: 100 niveles, con un jefe cada 20.'})[s.len||20]}</p><div class="ma-ascb">${[[20,'Corta'],[40,'Mediana'],[60,'Larga'],[100,'Ultra larga']].map(([v,t])=>`<button class="ma-b sm${v===(s.len||20)?' on':''}" data-a="len:${v}" ${host?'':'disabled'}>${t}</button>`).join('')}</div></div>`:''}
  ${host?`<button class="ma-b p" data-a="start" ${ready?'':'disabled'} style="padding:14px;font-size:15px">⚔️ ${s.newg?'Empezar la aventura':'Continuar la aventura'}</button>${ready?'':'<p class="ma-note" style="text-align:center">Todos los jugadores tienen que elegir su Pokémon.</p>'}`:''}</div>`}
@@ -17055,7 +17074,7 @@ async function onClick(ev){const t=ev.target;
  if(a==='spd'&&ROLE==='host'){SPD=SPD>1?1:2;try{localStorage.setItem('pa_mpa_spd',SPD)}catch(e){}bp(SPD>1?990:660,.05);push();return}
  if(a==='stats'){if(S)ask('📊 Estadísticas',statsH(S)||'Aún no hay datos.',['Cerrar']);return}
  if(a==='skip0'||a==='skip1'){req({k:'skip',v:a==='skip1'?1:0});return}
- if(a.startsWith('ev:')){req({k:'ev',v:+a.slice(3)});b.disabled=true;bp(760,.05);return}
+ if(a.startsWith('ev:')){req({k:'ev',v:+a.slice(3)});bp(760,.05);return}
  if(a==='myname'){const i=Q('#mamyname');const n=cleanN(i&&i.value);if(!n)return tst('Escribe un nombre');try{localStorage.setItem('pa_mpa_name',n)}catch(e){}try{window.setPName&&setPName(n)}catch(e){}tst('✏️ Ahora te llamas '+n);if(ROLE==='host'&&G){G.seats[0].n=n;push()}else if(ROLE==='guest')dsend(NET.dc,{t:'name',n});else render();return}
  if(a==='shop'){MOD={k:'shop'};return modal()}
  if(a==='center'){const k=await ask('🏥 Centro Pokémon','Cura por completo y reanima a todo el equipo a cambio de <b>50 Pokémonedas</b> del grupo.',['Pagar 50','Cancelar']);if(k===0)req({k:'center'});return}
@@ -17069,7 +17088,7 @@ async function onClick(ev){const t=ev.target;
  if(a.startsWith('del:')){const i=+a.slice(4),cur=ls.get()[i];const k=await ask('Borrar casilla '+(i+1),`¿Borrar la partida «${esc(cur&&cur.name)}»? No se puede deshacer.`,['🗑 Borrar','Cancelar']);if(k!==0)return;const A=ls.get();A[i]=null;ls.set(A);bp(300,.1);return render()}
  if(a.startsWith('load:'))return loadRoom(+a.slice(5));
  if(a.startsWith('up:')){const k=a.slice(3),x=META.find(y=>y.k===k),m=meta(),l=m.up[k]|0,c=(l+1)*5;if(!x||l>=x.mx||m.m<c)return;m.m-=c;m.up[k]=l+1;putMeta(m);bp(988,.12);setTimeout(()=>bp(1318,.14),110);tst(`${x.ic} ${x.n} sube a nivel ${l+1}`);return render()}
- if(a.startsWith('hero:')){const id=+a.slice(5);if(ROLE==='host'){if(G.seats.some((s,k)=>k!==0&&s.pick===id))return;G.seats[0].pick=G.seats[0].pick===id?null:id;bp(640,.03);push()}else{dsend(NET.dc,{t:'pick',id});bp(640,.03)}return}
+ if(a.startsWith('hero:')){if(b&&b.classList&&b.classList.contains('tk'))return;const id=+a.slice(5);if(ROLE==='host'){if(G.seats.some((s,k)=>k!==0&&s.pick===id))return;G.seats[0].pick=G.seats[0].pick===id?null:id;bp(640,.03);push()}else{dsend(NET.dc,{t:'pick',id});bp(640,.03)}return}
  if(a.startsWith('len:')&&ROLE==='host'&&G&&newGame()){const v=+a.slice(4);G.len=[20,40,60,100].includes(v)?v:20;push();try{render()}catch(_){}return}
  if(a.startsWith('asc:')&&ROLE==='host'&&G&&newGame()){G.asc=Math.max(0,Math.min(meta().asc|0,10,+a.slice(4)|0));push();try{render()}catch(_){}return}
  if(a==='start'&&ROLE==='host'){if(busy)return;busy=true;startGame().catch(e=>console.error(e)).finally(()=>{busy=false});return}}
@@ -21391,6 +21410,9 @@ body:has(#set.ov) #mod{z-index:100030!important}
 #dmap .xlab .wcnt{font-style:normal;font:900 11px system-ui;color:#fde047;background:#0009;border-radius:8px;padding:1px 5px;margin-left:4px}
 #trv .tvc.wsh{box-shadow:0 0 0 2px #fde047 inset}
 #trv .tvc.wsh::after{content:'⭐ deseado';position:absolute;top:2px;left:4px;font:800 9px system-ui;color:#fde047}
+#mpa .ma-vtd{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);border:2px solid #0b0720;margin-left:4px;vertical-align:middle}
+body:has(#mpa.on) #mod{z-index:100050!important}
+body:has(#mpa.on) #svl{z-index:100050!important}
 </style>
 <script id="v37js">
 (()=>{
