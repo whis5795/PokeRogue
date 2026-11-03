@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v49.4</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v49.5</div>
 </section>
 
 <section id="team" class="scr">
@@ -5231,6 +5231,7 @@ const DEF=[
   {k:'frnt',t:'Avisos de amigos',d:'Te avisa cuando un amigo captura un shiny o un legendario, gana una medalla, consigue un título o reacciona a tu vitrina',b:1},
   {k:'ntf',t:'Avisos y notificaciones',d:'Todos los carteles del juego y la campanita del menú. Desactivado: no sale NINGÚN cartel ni aviso (las invitaciones de amigos sí siguen llegando)',b:1},
   {k:'pname',t:'Nombre de jugador',d:'Lo ven tus amigos, las salas multijugador, los torneos y las megaincursiones',x:1},
+  {k:'theme',t:'Tema',d:'Oscuro, claro o según tu dispositivo. El tema claro está en pruebas: si ves algo raro, vuelve al oscuro',o:[['dark','Oscuro'],['light','Claro'],['auto','Automático']]},
   {k:'gender',t:'Personaje',d:'Combates de gimnasio',o:[['m','Chico'],['f','Chica']]},
   {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
   {k:'dn',t:'Ciclo día y noche',d:'Por turnos: cambia cada pocas rondas · Hora real: sigue el reloj de tu dispositivo',o:[['turn','Por turnos'],['real','Hora real'],['off','Desactivado']]},
@@ -8595,7 +8596,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'49.4',t:'Retos, emojis y avisos de amigos',s:'cur',l:[
+ {v:'49.5',t:'Tema claro',s:'cur',l:[
+  '☀️ Nuevo ajuste «Tema»: Oscuro, Claro o Automático (según tu dispositivo). El tema claro aclara menús, ventanas, mochila, tienda, amigos y demás; las fotos de los Pokémon, los mapas, los biomas y la escena de combate se ven como siempre',
+  '☀️ El tema claro está en pruebas: si ves algo raro, vuelve al oscuro y avísame'
+]},
+{v:'49.4',t:'Retos, emojis y avisos de amigos',s:'prev',l:[
   '⚔️ Retos entre amigos (Amigos → ⚔️ Retos): elige amigo, objetivo (capturas de un tipo, shinys, un Pokémon concreto, combates, golpe más fuerte, megaevoluciones, Pokédex o rondas), cantidad y duración',
   '⚔️ Premios a tu gusto: apuesta de Pokémonedas (los dos ponen lo mismo y el ganador se lo lleva todo), un objeto de tu mochila como premio, una prenda para quien pierda y un mensaje. Se ve el progreso de los dos en directo',
   '💬 Emojis rápidos en el PvP y en el 2 contra 2 con un amigo: toca 💬 y elige uno; a tu amigo le sale en pantalla',
@@ -21145,6 +21150,17 @@ body.lowfx .bzp img{filter:drop-shadow(0 4px 3px #0007)!important}
 .emobtn{top:46%;bottom:auto}
 .emopal{top:calc(46% + 54px);bottom:auto}
 .emob.me{top:calc(46% - 74px);bottom:auto;right:12px}
+/* v49.5: ☀️ tema claro */
+html.lt{filter:invert(1) hue-rotate(180deg);background:#fff}
+html.lt :is(img,video,canvas,iframe,image):not(:is(#bzv,#arena,.pvsp,#dmap,.lt-k) *),
+html.lt .emj:not(:is(#bzv,#arena,#dmap,.lt-k) *),
+html.lt :is(#bzv,#arena,#dmap .imc),
+html.lt .lt-k:not(:is(#bzv,#arena,#dmap,.lt-k) *){filter:invert(1) hue-rotate(180deg)}
+html.lt #arena.kofin{filter:invert(1) hue-rotate(180deg) saturate(.55) contrast(1.15)}
+html.lt #arena.kofout{filter:invert(1) hue-rotate(180deg)}
+html.lt .pvsp img{filter:invert(1) hue-rotate(180deg)}
+html.lt #dmap .imc :is(img,image,.emj){filter:none}
+html.lt .emj{display:inline-block}
 </style>
 <script id="v37js">
 (()=>{
@@ -25110,6 +25126,29 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  /* botón en Amigos */
  const addBtn=()=>{const fc=Q('#frp .fr-me .fr-code');if(fc&&!Q('#frp .rt-open')){const b=D.createElement('button');b.type='button';b.className='fr-cp fr-stall rt-open';b.textContent='⚔️ Retos';b.onclick=e=>{e.stopPropagation();openRetos()};fc.append(b);badge()}};
  if(window.__onDom)__onDom(addBtn);
+})();
+
+/* ---------- v49.5: ☀️ Tema claro (en pruebas): se invierten los colores de la interfaz; fotos, mapas, biomas y combates se ven como siempre ---------- */
+(()=>{const D=document,H=D.documentElement;
+ const mq=(()=>{try{return matchMedia('(prefers-color-scheme: light)')}catch(e){return null}})();
+ const want=()=>{let t='dark';try{t=(typeof S=='object'&&S&&S.theme)||'dark'}catch(e){}return t==='light'||(t==='auto'&&!!(mq&&mq.matches))};
+ const RX=/(?:\p{Extended_Pictographic}|\p{Regional_Indicator}{2})(?:️|⃣|[\u{1F3FB}-\u{1F3FF}]|‍(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})️?)*/gu;
+ const SKIP=new Set(['SCRIPT','STYLE','TEXTAREA','INPUT','SELECT','OPTION','NOSCRIPT','TITLE']);
+ const okParent=el=>{for(let e=el,i=0;e&&i<40;e=e.parentElement,i++){if(SKIP.has(e.tagName)||e.namespaceURI==='http://www.w3.org/2000/svg'||e.classList&&e.classList.contains('emj')||e.isContentEditable)return false}return true};
+ function wrapText(t){const s=t.data;if(!s||s.length>2000)return;RX.lastIndex=0;if(!RX.test(s))return;const p=t.parentElement;if(!p||!okParent(p))return;RX.lastIndex=0;
+  const f=D.createDocumentFragment();let last=0,m;while((m=RX.exec(s))){if(m.index>last)f.append(s.slice(last,m.index));const sp=D.createElement('span');sp.className='emj';sp.textContent=m[0];f.append(sp);last=m.index+m[0].length}if(last<s.length)f.append(s.slice(last));t.replaceWith(f)}
+ /* colores de tipo y botones de color propio: se mantienen exactos */
+ const KEEP=/background(-color)?:\s*(#|rgb|hsl|linear-gradient)|--c:\s*#/i;
+ const keep=el=>{if(el.nodeType!==1)return;const t=el.getAttribute&&el.getAttribute('style');if(t&&KEEP.test(t))el.classList.add('lt-k')};
+ function keepAll(root){if(!root||root.nodeType!==1)return;keep(root);root.querySelectorAll&&root.querySelectorAll('[style]').forEach(keep)}
+ function walk(root){if(!root)return;if(root.nodeType===3){wrapText(root);return}if(root.nodeType!==1||SKIP.has(root.tagName))return;keepAll(root);const w=D.createTreeWalker(root,NodeFilter.SHOW_TEXT);const L=[];let n;while((n=w.nextNode())&&L.length<5000)L.push(n);L.forEach(wrapText)}
+ let mo=null,q=new Set(),raf=0;
+ const flush=()=>{raf=0;const L=[...q];q.clear();for(const n of L){if(n.isConnected)walk(n)}};
+ function on(){if(mo)return;H.classList.add('lt');walk(D.body);mo=new MutationObserver(rs=>{for(const r of rs){if(r.type==='attributes'){keep(r.target);continue}if(r.type==='characterData'){if(r.target.parentElement&&!r.target.parentElement.classList.contains('emj'))q.add(r.target)}else r.addedNodes.forEach(n=>{if(n.nodeType===1&&n.classList&&n.classList.contains('emj'))return;q.add(n)})}if(q.size&&!raf)raf=requestAnimationFrame(flush)});mo.observe(D.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['style']});meta()}
+ function off(){if(!mo&&!H.classList.contains('lt'))return;H.classList.remove('lt');D.querySelectorAll('.lt-k').forEach(e=>e.classList.remove('lt-k'));if(mo){mo.disconnect();mo=null}meta()}
+ function meta(){try{const m=D.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',H.classList.contains('lt')?'#f1edff':'#070b24')}catch(e){}}
+ const apply=()=>{try{want()?on():off()}catch(e){}};
+ setInterval(apply,1000);setTimeout(apply,0);if(mq&&mq.addEventListener)mq.addEventListener('change',apply);
 })();
 
 })();</script>
