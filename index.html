@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.8</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.9</div>
 </section>
 
 <section id="team" class="scr">
@@ -6368,7 +6368,7 @@ function onPvMsg(o){
 /* ---------- utilidades visuales (v18) ---------- */
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const nh=s=>{let h=5381;for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))>>>0;return h};
-const pimg=(id,sh,cls)=>`<img${cls?` class="${cls}"`:''} src="${art(id,sh)}" alt="" onerror="this.onerror=null;this.src='${mini(id,sh)}'">`;
+const pimg=(id,sh,cls)=>`<img${cls?` class="${cls}"`:''} loading="lazy" decoding="async" src="${art(id,sh)}" alt="" onerror="this.onerror=null;this.src='${mini(id,sh)}'">`;
 const myLead=()=>{try{const r=getRun(),m=r&&r.team&&r.team[0];let o=m?{id:m.id,sh:m.sh?1:0,lv:m.lvl|0}:null;const P=window.__prof&&__prof();if(P&&P.k==='mon')o={id:P.id,sh:P.sh?1:0,lv:o?o.lv:1};if(P&&P.k==='img'&&P.src){o=o||{id:0,sh:0,lv:1};o.av=P.src}return o}catch(e){return null}};
 const ldS=l=>l?{id:l.id,sh:l.sh,lv:l.lv}:null;
 const myCount=()=>{try{const r=getRun();return r?r.team.length+(r.box||[]).length:0}catch(e){return 0}};
@@ -6494,7 +6494,7 @@ function render(){
   else if(st=='trade'){
     const both=L.mine&&L.theirs,mine=L.sel&&run?mons(run).find(x=>x.w==L.sel.w&&x.i==L.sel.i):null,th=L.theirs;
     const offT=L.theirsLoading?waitOffer('Recibiendo oferta…'):th?bigOffer(th,`<small>${esc(th.moves.map(x=>x.n).join(', '))}</small>`):waitOffer(esc(L.pname||'El otro jugador')+' aún no ha elegido');
-    b=`<div class="lgrid eq"><section class="lcard"><h4>🎒 Tu oferta</h4>${mine?bigOffer(mine.m):waitOffer('Elige un Pokémon abajo')}</section><section class="lcard"><h4>🎁 Oferta de ${esc(L.pname||'…')}</h4>${offT}</section></div><div class="ready"><span class="rd ${L.myReady?'ok':''}">Tú: ${L.myReady?'✔ listo':'…'}</span><span class="rd ${L.theirReady?'ok':''}">${esc(L.pname||'Rival')}: ${L.theirReady?'✔ listo':'…'}</span></div><div class="lcard"><h4>Tus Pokémon · toca para ofrecer</h4>${run?`<div class="mgrid">${mons(run).map((x,i)=>mcard(x,i,L.sel&&L.sel.w==x.w&&L.sel.i==x.i,0,'pick')).join('')}</div>`:'<small>No hay partida guardada.</small>'}</div>`;
+    b=`<div class="lgrid eq"><section class="lcard"><h4>🎒 Tu oferta</h4>${mine?bigOffer(mine.m):waitOffer('Elige un Pokémon abajo')}</section><section class="lcard"><h4>🎁 Oferta de ${esc(L.pname||'…')}</h4>${offT}</section></div><div class="ready"><span class="rd ${L.myReady?'ok':''}">Tú: ${L.myReady?'✔ listo':'…'}</span><span class="rd ${L.theirReady?'ok':''}">${esc(L.pname||'Rival')}: ${L.theirReady?'✔ listo':'…'}</span></div>${(()=>{/* v52.9: la lista de tus Pokémon no se reconstruye si no ha cambiado (rendimiento y el buscador no pierde el foco) */const inner=`<h4>Tus Pokémon · toca para ofrecer</h4>${run?`<div class="mgrid">${mons(run).map((x,i)=>mcard(x,i,L.sel&&L.sel.w==x.w&&L.sel.i==x.i,0,'pick')).join('')}</div>`:'<small>No hay partida guardada.</small>'}`;let h=5381;for(let k=0;k<inner.length;k++)h=((h<<5)+h+inner.charCodeAt(k))|0;return`<div class="lcard" id="ltpick" data-sig="${h}">${inner}</div>`})()}`;
     d=FB('ready',L.myReady?'↩':'✅',L.myReady?'Cancelar confirmación':'Confirmar intercambio',{c:'pri',d:!(both&&!L.busy)})+FB('pgift',L.pgPend?'⏳':'🎁',L.pgArm?'Toca otra vez para regalar':'Regalar el Pokémon elegido',{c:L.pgArm?'pri':'',d:!L.sel||L.busy||!!L.pgPend,k:1})+FB('xview','👀','Ver los Pokémon de tu amigo',{k:2})+FB('tohub','↩','Menú',{k:3})+FB('bye','🔌','Desconectar',{c:'dan',k:4})}
   else if(st=='gift'){
     const bl=run?gBal(run):{m:0,b:0},src=L.gSrc=='b'?'b':'m',pend=!!L.gPend,dis=pend?' disabled':'';
@@ -6508,7 +6508,10 @@ function render(){
     const canR=(iCount(L.io)||iCount(L.ith))&&!busy;
     b=`${vsHTML()}<h2>🎒 Intercambio de objetos</h2><div class="sub center" style="margin-bottom:12px">Cada uno elige qué objetos, MT, reliquias y amuletos ofrece. Cuando los dos confirméis la misma oferta, se intercambian al instante.</div><div class="lgrid eq"><section class="lcard"><h4>🎒 Tu oferta</h4>${listH(mineE,true)}</section><section class="lcard"><h4>🎁 Oferta de ${esc(L.pname||'…')}</h4>${listH(thE,false)}</section></div><div class="ready"><span class="rd ${L.iRdy?'ok':''}">Tú: ${L.iRdy?'✔ listo':'…'}</span><span class="rd ${L.iThRdy?'ok':''}">${esc(L.pname||'Rival')}: ${L.iThRdy?'✔ listo':'…'}</span></div><div class="lcard"><h4>Tus objetos · toca para ofrecer</h4>${owned.length?`<div class="mgrid igrid">${owned.map((k,i)=>{const have=hv(run,k),n=L.io[k]|0;return`<button type="button" class="mc itc${n?' on':''}" style="--i:${i}" data-a="iadd" data-k="${esc(k)}" data-d="1">${n?`<span class="ord">${n}</span>`:''}<span class="itic">${iIcon(k)}</span><b>${esc(iName(k))}</b><small>Tienes ${have}</small></button>`}).join('')}</div>`:'<small>No tienes objetos, MT, reliquias ni amuletos.</small>'}</div>`;
     d=FB('iready',L.iRdy?'↩':'✅',L.iRdy?'Cancelar confirmación':'Confirmar intercambio',{c:'pri',d:!canR})+FB('tohub','↩','Menú',{k:1})+FB('bye','🔌','Desconectar',{c:'dan',k:2})}
-  Q('#lmain').innerHTML=`<div class="lstage${st!=lastStage?' anim':''}">${err}${msg}${b}</div>`;lastStage=st;
+  const oldPick=st=='trade'&&lastStage=='trade'&&Q('#ltpick'),sy=Q('#lmain').scrollTop,fo=oldPick&&D.activeElement&&oldPick.contains(D.activeElement)?D.activeElement:null,fs=fo&&[fo.selectionStart,fo.selectionEnd];
+  Q('#lmain').innerHTML=`<div class="lstage${st!=lastStage?' anim':''}">${err}${msg}${b}</div>`;
+  if(oldPick){const np=Q('#ltpick');if(np&&np.dataset.sig===oldPick.dataset.sig){np.replaceWith(oldPick);Q('#lmain').scrollTop=sy;if(fo){try{fo.focus({preventScroll:true});if(fs&&fs[0]!=null)fo.setSelectionRange(fs[0],fs[1])}catch(_){}}}}
+  lastStage=st;
   Q('#ldock').innerHTML=d;Q('#ldock').classList.toggle('ico',['trade','items','gift'].includes(st));renderInv();chipUpd();
   const ta=Q('#lin');if(ta&&L.inTxt)ta.value=L.inTxt;
   if(gF){const g=Q('#lgamt');if(g&&!g.disabled){g.focus();try{g.setSelectionRange(g.value.length,g.value.length)}catch(e){}}}
@@ -8621,7 +8624,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'52.8',t:'Pociones cuando quieras',s:'cur',l:[
+ {v:'52.9',t:'Intercambio más fluido',s:'cur',l:[
+  '⚡ Intercambio con amigos mucho más fluido: la lista de tus Pokémon ya no se vuelve a crear entera cada vez que tu amigo hace algo, las imágenes se cargan solo cuando se ven y se quitan efectos muy pesados (desenfoques, sombras y animaciones en cadena de cientos de cartas)',
+  '🔍 El buscador del intercambio ya no pierde lo que escribes ni cierra el teclado cuando tu amigo cambia su oferta',
+  '🖤 Arreglado: al cerrar el teclado después de buscar un Pokémon en el intercambio, la pantalla se quedaba en negro'
+ ]},
+ {v:'52.8',t:'Pociones cuando quieras',s:'prev',l:[
   '🧪 Aventura multiplayer: las pociones de la mochila ya se pueden usar en cualquier momento del combate (también en el turno de un compañero o del rival) y en los eventos, no solo en tu turno'
  ]},
  {v:'52.7',t:'Ataque en equipo más lento de cargar',s:'prev',l:[
@@ -17317,7 +17325,7 @@ setInterval(place,700);addEventListener('resize',()=>setTimeout(place,80));
 #trfab.on{display:flex}
 #trfab i{font-style:normal;font-size:19px}
 #trfab em{font-style:normal;min-width:20px;height:20px;border-radius:10px;background:#fde047;color:#422006;font:900 11px/20px system-ui;text-align:center;padding:0 5px}
-#trv{position:fixed;inset:0;z-index:9700;display:flex;align-items:center;justify-content:center;background:#05030dcc;backdrop-filter:blur(4px);padding:12px}
+#trv{position:fixed;inset:0;z-index:9700;display:flex;align-items:center;justify-content:center;background:#05030df0;padding:12px}
 #trv .tvw{width:min(720px,100%);max-height:calc(100% - 10px);display:flex;flex-direction:column;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#2e1065,#0b0720 50%);border:2px solid #a78bfa;color:#fff;box-shadow:0 20px 50px #000c}
 #trv .tvh{display:flex;align-items:center;gap:10px;padding:14px}
 #trv .tvh div{flex:1;min-width:0}
@@ -17381,7 +17389,9 @@ function openV(){let v=Q('#trv');if(v)v.remove();v=D.createElement('div');v.id='
  drawV()}
 function drawV(){const g=Q('#tvg');if(!g)return;if(!THEIR){g.innerHTML='<div class="tvl">Pidiendo la lista…</div>';return}
  const q=norm(VQ.trim()),L2=THEIR.filter(x=>(!q||norm(x.n).includes(q))&&(!VT||x.ty.includes(VT)));
- g.innerHTML=L2.length?L2.map(x=>{const k=x.w+':'+x.i+':'+x.id;return`<button class="tvc${MYW.has(k)?' on':''}${window.__wishHas&&__wishHas(x.id)?' wsh':''}" data-k="${k}"><img src="${mini(x.id,x.sh)}" alt=""><b>${esc(x.n)}${x.sh?' ✨':''}</b><small>Nv.${x.lv} · ${x.w==='team'?'Equipo':'Caja'}</small></button>`}).join(''):'<div class="tvl">No hay Pokémon con este filtro.</div>'}
+ g.innerHTML=L2.length?L2.map(x=>{const k=x.w+':'+x.i+':'+x.id;return`<button class="tvc${MYW.has(k)?' on':''}${window.__wishHas&&__wishHas(x.id)?' wsh':''}" data-k="${k}"><img src="${mini(x.id,x.sh)}" alt="" loading="lazy" decoding="async"><b>${esc(x.n)}${x.sh?' ✨':''}</b><small>Nv.${x.lv} · ${x.w==='team'?'Equipo':'Caja'}</small></button>`}).join(''):'<div class="tvl">No hay Pokémon con este filtro.</div>'}
+/* v52.9: al cerrar el teclado el navegador del móvil a veces deja el intercambio en negro: se fuerza un repintado */
+if(window.visualViewport){let vt;visualViewport.addEventListener('resize',()=>{clearTimeout(vt);vt=setTimeout(()=>{const l=Q('#lan');if(!l||getComputedStyle(l).display==='none')return;if(D.scrollingElement&&D.scrollingElement.scrollTop)D.scrollingElement.scrollTop=0;l.style.transform='translateZ(0)';requestAnimationFrame(()=>requestAnimationFrame(()=>{l.style.transform=''}))},150)})}
 setInterval(sync,500);
 {const lm=()=>Q('#lmain');const t=setInterval(()=>{const m=lm();if(!m)return;clearInterval(t);new MutationObserver(()=>{if(stage()==='trade')decorate()}).observe(m,{childList:true})},500)}
 })();</script>
@@ -21472,6 +21482,14 @@ body:has(#mpa.on) #svl{z-index:100050!important}
 #mpa .mbg>i{position:relative}
 #mpa .mbg .mbn{position:absolute;right:-6px;bottom:-4px;font-style:normal;font:900 10px system-ui;background:#fde047;color:#111;border-radius:8px;padding:0 4px}
 #mpa .mbg .mbw{display:block;color:#fca5a5;font-size:10.5px;margin-top:2px}
+/* v52.9: intercambio fluido y sin pantalla negra al cerrar el teclado (sin desenfoques ni animaciones en cadena) */
+#lan .lcard{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:linear-gradient(160deg,#2c2766,#1a1745)}
+#lan .lstage:not(.anim) .mc{animation:none}
+#lan .mc{animation-delay:calc(min(var(--i,0),14)*30ms)}
+#lan .mgrid .mc{box-shadow:0 4px 10px #0006;content-visibility:auto;contain-intrinsic-size:auto 128px}
+#lan .mgrid .mc img{filter:none}
+#trv .tvc{content-visibility:auto;contain-intrinsic-size:auto 104px}
+#lan .mgrid .mc.on,#lan .mgrid .mc.trw{content-visibility:visible}
 </style>
 <script id="v37js">
 (()=>{
