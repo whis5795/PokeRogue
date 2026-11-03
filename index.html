@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v53.8</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v53.9</div>
 </section>
 
 <section id="team" class="scr">
@@ -376,6 +376,8 @@ const MEGAF={3:[''],6:['x','y'],9:[''],15:[''],18:[''],65:[''],80:[''],94:[''],1
 /* id del sprite de cada forma mega (respaldo; se confirma con PokeAPI al megaevolucionar) */
 const MEGAFB={'venusaur-mega':10033,'charizard-mega-x':10034,'charizard-mega-y':10035,'blastoise-mega':10036,'alakazam-mega':10037,'gengar-mega':10038,'kangaskhan-mega':10039,'pinsir-mega':10040,'gyarados-mega':10041,'aerodactyl-mega':10042,'mewtwo-mega-x':10043,'mewtwo-mega-y':10044,'ampharos-mega':10045,'scizor-mega':10046,'heracross-mega':10047,'houndoom-mega':10048,'tyranitar-mega':10049,'blaziken-mega':10050,'gardevoir-mega':10051,'mawile-mega':10052,'aggron-mega':10053,'medicham-mega':10054,'manectric-mega':10055,'banette-mega':10056,'absol-mega':10057,'garchomp-mega':10058,'lucario-mega':10059,'abomasnow-mega':10060,'latias-mega':10062,'latios-mega':10063,'swampert-mega':10064,'sceptile-mega':10065,'sableye-mega':10066,'altaria-mega':10067,'gallade-mega':10068,'audino-mega':10069,'sharpedo-mega':10070,'slowbro-mega':10071,'steelix-mega':10072,'pidgeot-mega':10073,'glalie-mega':10074,'diancie-mega':10075,'metagross-mega':10076,'rayquaza-mega':10079,'camerupt-mega':10087,'lopunny-mega':10088,'salamence-mega':10089,'beedrill-mega':10090},MEGAID={};
 const megaCap=m=>!!m&&!!MEGAF[m.id];
+/* v53.9: formas Mega que TÚ puedes usar (las exclusivas de megaincursión necesitan haber capturado al megajefe) */
+const megaForms=m=>m?(MEGAF[m.id]||[]).filter(f=>!window.__megaOk||__megaOk(m.id,f)):[];const megaCapP=m=>megaForms(m).length>0;
 const megaSlug=m=>m.name+'-mega'+(m.mfs?'-'+m.mfs:'');
 const megaSpr=m=>(window.MEGARTN&&MEGARTN[m.id+'|'+(m.mfs||'')]&&(()=>{try{return window.__dayPhase&&__dayPhase()==='night'}catch(e){return false}})()&&MEGARTN[m.id+'|'+(m.mfs||'')])||(window.MEGART&&MEGART[m.id+'|'+(m.mfs||'')])||MEGAID[megaSlug(m)]||MEGAFB[megaSlug(m)]||m.id;
 async function megaResolve(m){const sl=megaSlug(m);if(window.MEGART&&MEGART[m.id+'|'+(m.mfs||'')])return MEGART[m.id+'|'+(m.mfs||'')];if(MEGAID[sl])return MEGAID[sl];
@@ -764,16 +766,16 @@ async function mega(s,f){
   await say(`¡${s=='e'?'El rival ':''}${nm(m)} Megaevolucionó! Sus estadísticas y su vida suben ×${String(kx).replace('.',',')} durante todo el combate.`)}
 /* Rayquaza: 1 uso cada 10 peleas en las que participe (m.mfp = peleas jugadas desde el último uso; la primera vez ya está disponible) */
 const MEGA_F=10,megaF=m=>(m&&(m.rb|0)>=2)?5:MEGA_F; /* 2ª estrella: cada 5 rondas ganadas */
-function megaReady(m){return megaCap(m)&&!m.megaOn&&((typeof CHT!=='undefined'&&CHT.mega)||(m.lvl|0)>=100&&(m.megaLv==null||(m.mfp||0)>=megaF(m)))}
+function megaReady(m){return megaCapP(m)&&!m.megaOn&&((typeof CHT!=='undefined'&&CHT.mega)||(m.lvl|0)>=100&&(m.megaLv==null||(m.mfp||0)>=megaF(m)))}
 function megaInfo(p){if(!p.megaOn&&(p.lvl|0)<100)return'🔒 Megaevolución: se desbloquea cuando '+nm(p)+' llegue al nivel 100.';const f=Math.min(megaF(p),p.mfp||0);
   if(p.megaOn)return`✔ Megaevolución activa: ${nm(p)} tiene ×3 stats y vida durante todo el combate.`;
   return`🔒 Megaevolución: ${nm(p)} debe ganar ${megaF(p)} rondas participando desde su última Megaevolución (${f}/${megaF(p)}). Al activarla: ×3 stats y vida durante todo el combate.`}
-function megaBtn(p){if(!megaCap(p))return'';const rd=megaReady(p),on=!!p.megaOn,f=Math.min(megaF(p),p.mfp||0);
+function megaBtn(p){if(!megaCapP(p))return'';const rd=megaReady(p),on=!!p.megaOn,f=Math.min(megaF(p),p.mfp||0);
   return`<button type="button" class="megc ${on?'on':rd?'rdy':'lck'}" id="bm" aria-label="Megaevolucionar"${rd?'':' aria-disabled="true"'}><i class="mg-ring"></i><i class="mg-shk"></i><i class="mg-orb"></i><i class="mg-spk"><b></b><b></b><b></b><b></b><b></b><b></b></i><span class="mg-t"><u>MEGA</u><u>${on?'✔ ACTIVA':'EVOLUCIONAR'}</u>${rd||on?'':`<em class="mg-n">🔒 ${(p.lvl|0)<100?'Nv.100':f+'/'+megaF(p)}</em>`}</span></button>`}
 async function megaTap(){const p=act('p');
   if(!megaReady(p)){toast(megaInfo(p));return}
   const b=$('#bm'),g=$('.mvg');if(!b||b.classList.contains('go'))return;
-  let f='';const fs=MEGAF[p.id]||[''];
+  const fs=megaForms(p);if(!fs.length)return;let f=fs[0]||'';
   if(fs.length>1){const base=p.name.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()),i=await ask('⚡ Megaevolución','<small>Elige la forma a la que megaevoluciona '+base+'.</small>',[...fs.map(x=>`<span class="mgopt"><img src="${art(megaSpr({...p,mfs:x}),p.sh)}" alt="" loading="lazy"><span>Mega ${(window.MEGABASE&&MEGABASE[p.id])||base}${x?' '+((window.MEGALBL&&MEGALBL[p.id+'|'+x])||x.toUpperCase()):''}${x?'':' <small>(original)</small>'}</span></span>`),'Cancelar']);if(!(i<fs.length))return;f=fs[i]}
   const b2=$('#bm'),g2=$('.mvg');if(!b2||b2.classList.contains('go'))return;
   b2.classList.add('go');if(g2)g2.classList.add('go');beep(660,.25,'triangle');setTimeout(()=>turn({mega:1,mf:f}),520)}
@@ -857,7 +859,7 @@ function chooseSwitch(forced){
 function menu(){
   B.busy=0;const p=act('p'),e=act('e'),mvs=p.moves.every(v=>v.cp<=0)?[STR]:p.moves;
   $('#msg').textContent=`¿Qué hará ${nm(p)}?`;
-  $('#opts').innerHTML='<div class="g mvg'+(megaCap(p)?(mvs.length>=3?' mg':' mg solo'):'')+'">'+mvs.map((m,i)=>{const x=((()=>{try{return MX.isSt(m)}catch(_){return !m.p}})())?1:ultraEff(p,m,eff(m.t,e.types));return`<button class="mvb${x===0?' imm':''}" data-i="${i}" ${m.cp<=0?'disabled':''} style="background:${COL[m.t]}">${m.n}<span class="ib" data-i="${i}">i</span><small>${ES[m.t]} · ${m.p||'Estado'} · PP ${m.cp}/${m.mp} ${x>1?'<b style="color:#15803d">▲</b>':x===0?'<b class="mvimm">✖ No afecta</b>':x<1?'<b style="color:#b91c1c">▼</b>':''}</small></button>`}).join('')+megaBtn(p)+`</div><div class="g" style="margin-top:7px"><button class="act ${B.free?'free':''}" id="bsw">🔄 Cambiar${B.free?' · gratis':''}</button><button class="act ${B.wt?'on':''}" id="bt" ${B.tu.p||p.teraOn||(B.adv&&p.lvl<30&&!CHT.tera)?'disabled':''}>${B.adv&&p.lvl<30&&!CHT.tera?'🔒 Tera (Nv.30)':IC.tera+' Tera '+ES[p.tera]}</button><button class="act${window.__bagHint&&__bagHint()?' bgn':''}" id="bg">${IC.bag} Mochila${window.__bagHint&&__bagHint()?'<i class="bgnb" aria-label="Puedes curar">💊</i>':''}</button><button class="act" id="fl">Huir</button></div>`;
+  $('#opts').innerHTML='<div class="g mvg'+(megaCapP(p)?(mvs.length>=3?' mg':' mg solo'):'')+'">'+mvs.map((m,i)=>{const x=((()=>{try{return MX.isSt(m)}catch(_){return !m.p}})())?1:ultraEff(p,m,eff(m.t,e.types));return`<button class="mvb${x===0?' imm':''}" data-i="${i}" ${m.cp<=0?'disabled':''} style="background:${COL[m.t]}">${m.n}<span class="ib" data-i="${i}">i</span><small>${ES[m.t]} · ${m.p||'Estado'} · PP ${m.cp}/${m.mp} ${x>1?'<b style="color:#15803d">▲</b>':x===0?'<b class="mvimm">✖ No afecta</b>':x<1?'<b style="color:#b91c1c">▼</b>':''}</small></button>`}).join('')+megaBtn(p)+`</div><div class="g" style="margin-top:7px"><button class="act ${B.free?'free':''}" id="bsw">🔄 Cambiar${B.free?' · gratis':''}</button><button class="act ${B.wt?'on':''}" id="bt" ${B.tu.p||p.teraOn||(B.adv&&p.lvl<30&&!CHT.tera)?'disabled':''}>${B.adv&&p.lvl<30&&!CHT.tera?'🔒 Tera (Nv.30)':IC.tera+' Tera '+ES[p.tera]}</button><button class="act${window.__bagHint&&__bagHint()?' bgn':''}" id="bg">${IC.bag} Mochila${window.__bagHint&&__bagHint()?'<i class="bgnb" aria-label="Puedes curar">💊</i>':''}</button><button class="act" id="fl">Huir</button></div>`;
   $$('.mvb').forEach(b=>b.onclick=ev=>{const m=mvs[+b.dataset.i];if(ev.target.classList.contains('ib'))mvInfo(m);else if(b.classList.contains('imm')&&!b.classList.contains('arm')){$$('.mvb.arm').forEach(z=>z.classList.remove('arm'));b.classList.add('arm');toast('✖ '+m.n+' no afecta a '+nm(e)+'. Tócalo otra vez si quieres usarlo igual')}else turn({mv:m})});
   {const bgb=$('#bg');if(bgb&&p.hp>0&&p.hp/p.max<=.25)bgb.classList.add('lowhp')}
   $('#bsw').onclick=async()=>{const i=await chooseSwitch(false);if(i==null)menu();else if(B.free){B.free=0;await swap('p',i);menu()}else turn({sw:i})};
@@ -6566,7 +6568,7 @@ function pvDock(){
     c=`<div class="pvw" style="padding:4px 8px 10px">¿Quién entrará después de ${esc(mv?mv.n:'')}?</div><div class="pvsw">${P.t[me].map((m,i)=>m.hp>0&&i!==P.a[me]?`<button type="button" class="pvb" data-pv="pivs" data-i="${i}" style="--i:${i}">${pimg(m.id,m.sh)}<span><b>${esc(nm(m))}</b><span class="mt"><span>Nv.${m.lvl}</span><span>${m.hp}/${m.max}</span></span><span class="pp"><i style="width:${m.hp/m.max*100}%"></i></span></span></button>`:'').join('')}</div><div class="pvact"><button type="button" class="pvb sm" data-pv="back">↩ Volver</button></div>`}
   else{const m=P.t[me][P.a[me]],lk=shimRO(()=>MX.lockMove(m)),trp=shimRO(()=>MX.trapped(m)),allOut=m.moves.every(v=>v.cp<=0);
     if(lk){c=w(`⏳ ${esc(nm(m))} ${shimRO(()=>MX.V(m).rech)?'debe recuperarse':'continúa con '+esc(lk.n)}`);if(P._auto!==P.turn){P._auto=P.turn;setTimeout(()=>{if(P&&!P.ch[P.me]&&!P.busy)pvChoose({k:'m',i:0})},650)}}
-    else c=`<div class="pvmv">${allOut?`<button type="button" class="pvb" data-pv="m" data-i="0" style="--c:${COL.normal}"><b>Forcejeo</b><span class="mt"><span>Normal</span><span>Pod. 50</span></span><span class="mt"><span>Sin PP en ningún movimiento</span></span></button>`:m.moves.map((v,i)=>{const why=shimRO(()=>MX.restrictWhy(m,v,1))||(v.cp<=0?'Sin PP':''),ef=(window.MX&&MX.describe(v))||'';return`<button type="button" class="pvb${why?' no':''}" data-pv="m" data-i="${i}" style="--c:${COL[v.t]||'#6366f1'};--i:${i}" ${why?`disabled title="${esc(why)}"`:''}><span class="pvi" data-pv="info" data-i="${i}" title="Información">i</span><b>${esc(v.n)}</b><span class="mt"><span>${ES[v.t]||v.t}</span><span>${v.p?'Pod. '+v.p:'Estado'}</span></span><span class="pp"><i style="width:${v.mp?v.cp/v.mp*100:0}%"></i></span><span class="mt"><span>PP ${v.cp}/${v.mp}</span><span>${why?'🚫':''}</span></span>${ef?`<span class="pvef">${esc(ef)}</span>`:''}</button>`}).join('')}</div>${pvMegaOk(me)?`<div class="pvmega">${(MEGAF[m.id]||['']).map(f=>`<button type="button" class="pvb sm pvmgb${P.mgSel===f?' on':''}" data-pv="mega" data-f="${esc(f)}"><span>⚡</span>${P.mgSel===f?'✔ ':''}${esc((()=>{try{return nm({...m,megaOn:true,mfs:f})}catch(_){return'Mega'}})())}</button>`).join('')}<small>${P.mgSel!=null?'Elige un ataque: megaevolucionará antes de atacar':'Una vez por batalla · ×1,5 stats y vida'}</small></div>`:P.mg[me]?'':''}<div class="pvact"><button type="button" class="pvb sm" data-pv="sw" ${P.t[me].some((x,i)=>x.hp>0&&i!==P.a[me])&&!trp?'':'disabled'}>${trp?'⛓️ Atrapado':'🔄 Cambiar'}</button><button type="button" class="pvb sm dan" data-pv="ff">🏳️ Rendirse</button></div>`}
+    else c=`<div class="pvmv">${allOut?`<button type="button" class="pvb" data-pv="m" data-i="0" style="--c:${COL.normal}"><b>Forcejeo</b><span class="mt"><span>Normal</span><span>Pod. 50</span></span><span class="mt"><span>Sin PP en ningún movimiento</span></span></button>`:m.moves.map((v,i)=>{const why=shimRO(()=>MX.restrictWhy(m,v,1))||(v.cp<=0?'Sin PP':''),ef=(window.MX&&MX.describe(v))||'';return`<button type="button" class="pvb${why?' no':''}" data-pv="m" data-i="${i}" style="--c:${COL[v.t]||'#6366f1'};--i:${i}" ${why?`disabled title="${esc(why)}"`:''}><span class="pvi" data-pv="info" data-i="${i}" title="Información">i</span><b>${esc(v.n)}</b><span class="mt"><span>${ES[v.t]||v.t}</span><span>${v.p?'Pod. '+v.p:'Estado'}</span></span><span class="pp"><i style="width:${v.mp?v.cp/v.mp*100:0}%"></i></span><span class="mt"><span>PP ${v.cp}/${v.mp}</span><span>${why?'🚫':''}</span></span>${ef?`<span class="pvef">${esc(ef)}</span>`:''}</button>`}).join('')}</div>${pvMegaOk(me)&&megaForms(m).length?`<div class="pvmega">${megaForms(m).map(f=>`<button type="button" class="pvb sm pvmgb${P.mgSel===f?' on':''}" data-pv="mega" data-f="${esc(f)}"><span>⚡</span>${P.mgSel===f?'✔ ':''}${esc((()=>{try{return nm({...m,megaOn:true,mfs:f})}catch(_){return'Mega'}})())}</button>`).join('')}<small>${P.mgSel!=null?'Elige un ataque: megaevolucionará antes de atacar':'Una vez por batalla · ×1,5 stats y vida'}</small></div>`:P.mg[me]?'':''}<div class="pvact"><button type="button" class="pvb sm" data-pv="sw" ${P.t[me].some((x,i)=>x.hp>0&&i!==P.a[me])&&!trp?'':'disabled'}>${trp?'⛓️ Atrapado':'🔄 Cambiar'}</button><button type="button" class="pvb sm dan" data-pv="ff">🏳️ Rendirse</button></div>`}
   if(c===P._dk)return;P._dk=c;const dk=Q('#pvc');dk.className='pvdock'+cls;dk.innerHTML=c}
 function pvRes(){
   const r=Q('#pvres');if(!r)return;
@@ -8624,7 +8626,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'53.8',t:'Amigos y multijugador renovados',s:'cur',l:[
+ {v:'53.9',t:'Megadex y puestos sin conexión',s:'cur',l:[
+  '📖 Nueva Megadex dentro de las Megaincursiones: todos los megajefes, con los que has visto, derrotado y capturado (y cuántas veces), filtros y tu progreso',
+  '✨ Las Megas exclusivas de las megaincursiones (Houndoom X/Y, Gyarados Abisal, Mimikyu, Gengar Z…) solo se pueden usar si has derrotado y capturado a ese megajefe. Al capturarlo, todos tus Pokémon de esa especie pueden usar esa forma. Si ya tenías megajefes capturados de antes, cuentan como desbloqueados',
+  '🛒 Los puestos de tus amigos se pueden ver aunque no estén conectados (la última copia guardada) y puedes reservar cosas: pagas al momento y lo recibes cuando los dos estéis conectados a la vez. Si ya se vendió, te devolvemos el dinero'
+ ]},
+ {v:'53.8',t:'Amigos y multijugador renovados',s:'prev',l:[
   '🌐 Nuevo centro Multijugador (botón del menú principal): tu código de amigo, los amigos que están en línea con un botón «🎮 Jugar», y todos los modos a mano: Amigos, Aventura multiplayer, Megaincursiones (con el tiempo que falta para la próxima), Sala de juego y Torre 2 vs 2',
   '🟢 El botón «Multijugador» del menú muestra cuántos amigos hay en línea (o tus solicitudes de amistad en rojo)',
   '🎮 Amigos: el botón «🔄 Invitar» ahora es «🎮 Jugar» y abre una ficha nueva del amigo con todo junto: su perfil, «Jugar juntos» (Sala de juego con intercambio, PvP, Torre 2 vs 2, objetos y regalos; Aventura multiplayer; Megaincursión), «Su mundo» (casa, espectear, vitrina y puesto) y «Más» (préstamo y eliminar, con confirmación)',
@@ -13967,6 +13974,32 @@ const sname=id=>{try{const e=(typeof DEX!=='undefined'?DEX:[]).find(x=>x.id==id)
 const cap=s=>String(s||'').replace(/-/g,' ').replace(/^./,c=>c.toUpperCase());
 const bossName=b=>b.s?cap(sname(b.id)):b.n||('Mega '+cap(sname(b.id))+(b.f&&b.f!=='primal'?' '+b.f.toUpperCase():''));
 async function bossArt(b){if(b.s)return art(b.id,0);if(b.art)return art(b.art,1);try{const m={id:b.id,name:sname(b.id),mfs:b.f&&b.f!=='primal'?b.f:''};const id=await megaResolve(m);return art(id,1)}catch(e){return art(b.id,1)}}
+/* ---------- v53.9: Megadex de megajefes y Megas exclusivas desbloqueables ---------- */
+const MBK='pa_mbdex',mbKey=b=>b.id+'|'+(b.f||'');
+const mbGet=()=>{try{return JSON.parse(localStorage.getItem(MBK)||'{}')||{}}catch(e){return{}}};
+const mbPut=d=>{try{localStorage.setItem(MBK,JSON.stringify(d))}catch(e){}};
+const INV=new Set(POOL.filter(b=>typeof b.art==='string').map(mbKey));
+/* la forma Mega que desbloquea cada megajefe exclusivo (p. ej. «Mega Gyarados Abisal» es la forma 130|z) */
+let MFK=null;const mfMap=()=>{if(MFK)return MFK;const M=window.MEGART||{};MFK={};POOL.forEach(b=>{if(typeof b.art!=='string')return;const k=Object.keys(M).find(x=>M[x]===b.art)||mbKey(b);MFK[k]=mbKey(b)});return MFK};
+function mbMark(b,k){if(!b||b.s)return;const d=mbGet(),key=mbKey(b),e=d[key]=d[key]||{};const fresh=!e[k];if(k==='seen')e.seen=e.seen||Date.now();else e[k]=(e[k]|0)+1;if(k==='cap'){e.seen=e.seen||Date.now();e.win=Math.max(e.win|0,1)}if(k==='win')e.seen=e.seen||Date.now();mbPut(d);
+ if(fresh&&k==='cap'&&INV.has(key)){try{setTimeout(()=>toast('✨ ¡Desbloqueada! Ya puedes usar '+bossName(b)+' con tus '+cap(sname(b.id))),2500)}catch(_){}}}
+/* las partidas de antes: los megajefes que ya tenías capturados cuentan como desbloqueados */
+function mbBackfill(){try{const r=(typeof R==='object'&&R&&R.team)?R:getRun();if(!r)return;const d=mbGet();let ch=0;for(const m of[...(r.team||[]),...(r.box||[])]){if(!m||!m.mraid)continue;for(const b of POOL){if(b.id!==m.id)continue;if(m.mrf!=null&&m.mrf!==mbKey(b))continue;const k=mbKey(b),e=d[k]=d[k]||{};if(!e.cap){e.cap=1;e.win=Math.max(e.win|0,1);e.seen=e.seen||Date.now();e.old=1;ch=1}}}if(ch)mbPut(d)}catch(e){}}
+setTimeout(mbBackfill,4000);
+window.__megaOk=(id,f)=>{const bk=mfMap()[id+'|'+(f||'')];if(!bk)return true;const e=mbGet()[bk];return!!(e&&e.cap)};
+async function mbOpen(){mbBackfill();let el=document.getElementById('mbdx');if(el)el.remove();el=document.createElement('div');el.id='mbdx';document.body.append(el);let F='all';
+ const draw=()=>{const d=mbGet(),L=POOL.map((b,i)=>({b,i,k:mbKey(b),e:d[mbKey(b)]||{}}));const tot=L.length,seen=L.filter(x=>x.e.seen).length,win=L.filter(x=>x.e.win).length,cp=L.filter(x=>x.e.cap).length,inv=L.filter(x=>INV.has(x.k)),invU=inv.filter(x=>x.e.cap).length;
+  const show=L.filter(x=>F==='all'||(F==='inv'&&INV.has(x.k))||(F==='cap'&&x.e.cap)||(F==='todo'&&!x.e.cap));
+  el.innerHTML=`<div class="mdxw"><div class="mdxh"><b>📖 Megadex</b><button class="mdxx" data-m="x" aria-label="Cerrar">✕</button></div>
+  <div class="mdxst"><div><b>${seen}/${tot}</b><small>👁️ Vistos</small></div><div><b>${win}/${tot}</b><small>🏆 Derrotados</small></div><div><b>${cp}/${tot}</b><small>🔴 Capturados</small></div><div><b>${invU}/${inv.length}</b><small>✨ Megas desbloqueadas</small></div></div>
+  <div class="mdxp"><i style="width:${(cp/tot*100).toFixed(1)}%"></i></div>
+  <p class="mdxn">Las <b>Megas exclusivas</b> ✨ (las que solo existen en las megaincursiones) solo se pueden usar en tus Pokémon cuando has <b>derrotado y capturado</b> a ese megajefe. Ejemplo: captura a Mega Houndoom X y todos tus Houndoom podrán megaevolucionar a su forma X.</p>
+  <div class="mdxf">${[['all','Todos'],['inv','✨ Exclusivas'],['cap','🔴 Capturados'],['todo','⏳ Pendientes']].map(([k,t])=>`<button data-m="f:${k}" class="${F===k?'on':''}">${t}</button>`).join('')}</div>
+  <div class="mdxg">${show.map(x=>{const st=x.e.cap?'cap':x.e.win?'win':x.e.seen?'seen':'unk',ex=INV.has(x.k);return`<div class="mdxc ${st}${ex?' ex':''}"><span class="mdxnum">#${String(x.i+1).padStart(2,'0')}</span>${ex?`<span class="mdxex">${x.e.cap?'🔓':'🔒'} ✨</span>`:''}<img data-b="${x.i}" alt=""><b>${st==='unk'?'???':esc(bossName(x.b))}</b><small>${st==='cap'?'🔴 Capturado'+((x.e.cap|0)>1?' ×'+x.e.cap:''):st==='win'?'🏆 Derrotado'+((x.e.win|0)>1?' ×'+x.e.win:''):st==='seen'?'👁️ Visto':'Aún no lo has visto'}</small>${ex?`<em>${x.e.cap?'Su Mega ya es tuya':'Captúralo para usar su Mega'}</em>`:''}</div>`}).join('')||'<p class="mdxn" style="grid-column:1/-1;text-align:center">Nada por aquí todavía.</p>'}</div></div>`;
+  el.querySelectorAll('img[data-b]').forEach(im=>{const b=POOL[+im.dataset.b];bossArt(b).then(u=>{im.src=u}).catch(()=>{})})};
+ el.onclick=e=>{if(e.target===el){el.remove();return}const b=e.target.closest('[data-m]');if(!b)return;const a=b.dataset.m;if(a==='x'){el.remove();return}if(a.startsWith('f:')){F=a.slice(2);draw();try{beep(660,.04,'triangle')}catch(_){}}};
+ draw()}
+window.__mbOpen=mbOpen;
 /* ---------- guardado por ventana (tickets y vida del jefe) ---------- */
 const SK0='pa_mraid',SKS='pa_mraidS',skey=wid=>(wid?isS(wid):SIMPLE())?SKS:SK0;
 function sv(wid){let o={};const SK=skey(wid);try{o=JSON.parse(localStorage.getItem(SK)||'{}')||{}}catch(e){}if(wid&&o.wid!==wid){const old=o;o={wid,used:0,hp:MAXHP,thr:[],win:false,cap:false,prev:old&&old.wid?{wid:old.wid,hp:old.hp,win:old.win}:old.prev||null}}return o}
@@ -14040,7 +14073,7 @@ const isSt=v=>{try{return MX.isSt(v)}catch(e){return !v.p}};
 const uh=(f,u)=>!!(f&&f.U&&f.U.some(x=>x===u||x.startsWith(u+':')));
 const SGN={a:'ATQ',d:'DEF',sa:'AT.E',sd:'DF.E',sp:'VEL',ac:'PRE',ev:'EVA'};
 const AILN={par:['PAR','#ca8a04','paralizado'],brn:['QUE','#ea580c','quemado'],psn:['VEN','#9333ea','envenenado'],tox:['VEN+','#7e22ce','gravemente envenenado'],slp:['DOR','#64748b','dormido'],frz:['CONG','#0891b2','congelado'],cnf:['CONF','#db2777','confuso']};
-const monPack=m=>({id:m.id,sh:m.sh?1:0,name:m.name,nick:m.nick||'',lvl:m.lvl,types:m.types,max:m.max,a:m.a,d:m.d,sa:m.sa,sd:m.sd,sp:m.sp,rb:m.rb|0,tera:m.tera||null,ut:!!((m.rb|0)>=1&&m.lvl>=60&&m.tera),cm:(()=>{try{return!!(megaCap(m)&&m.lvl>=100)}catch(e){return false}})(),mid:(()=>{try{return(MEGAF[m.id]||['']).map(f=>[f,megaSpr({...m,mfs:f})])}catch(e){return[['',m.id]]}})(),moves:(m.moves||[]).slice(0,4).map(v=>({n:v.n,t:v.t,p:v.p|0,ph:!!v.ph,acc:v.acc||100,pr:v.pr|0,k:v.k||null}))});
+const monPack=m=>({id:m.id,sh:m.sh?1:0,name:m.name,nick:m.nick||'',lvl:m.lvl,types:m.types,max:m.max,a:m.a,d:m.d,sa:m.sa,sd:m.sd,sp:m.sp,rb:m.rb|0,tera:m.tera||null,ut:!!((m.rb|0)>=1&&m.lvl>=60&&m.tera),cm:(()=>{try{return!!(megaCapP(m)&&m.lvl>=100)}catch(e){return false}})(),mid:(()=>{try{return megaForms(m).map(f=>[f,megaSpr({...m,mfs:f})])}catch(e){return[['',m.id]]}})(),moves:(m.moves||[]).slice(0,4).map(v=>({n:v.n,t:v.t,p:v.p|0,ph:!!v.ph,acc:v.acc||100,pr:v.pr|0,k:v.k||null}))});
 const mName=m=>m.nick||cap(m.name);
 const tys=p=>p.tera&&p.mon.tera?[p.mon.tera]:p.mon.types;
 const CLR=180000;
@@ -14184,7 +14217,7 @@ const G={st:null,off:0,moves:null,me:null,
   else if(o.t==='st')G.onState(o.st);else if(o.t==='end')G.onEnd(o)},
  onStart(st,moves){G.moves=moves;G.st=st;G.off=st.now-now();G.res=null;G.target=null;UI.go('battle')},
  onState(st){if(!G.st)return;G.off=st.now-now();const ev=st.ev||[];G.st=st;UI.paintBattle();ev.forEach(UI.fx)},
- onEnd(res){G.res=res;const o=sv(res.wid);o.hp=Math.min(MAXHP,o.hp??MAXHP,Math.round(res.hp/(res.max||MAXHP)*MAXHP));o.thr=[...new Set([...(o.thr||[]),...(res.thr||[])])];if(res.win){o.win=true;if(!/libre-/.test(res.wid||''))o.canCap=true}put(o);setTimeout(()=>{UI.go('end');if(res.win&&o.canCap)setTimeout(()=>UI.capFlow(),700)},1400)},
+ onEnd(res){G.res=res;const o=sv(res.wid);o.hp=Math.min(MAXHP,o.hp??MAXHP,Math.round(res.hp/(res.max||MAXHP)*MAXHP));o.thr=[...new Set([...(o.thr||[]),...(res.thr||[])])];if(res.win){o.win=true;if(!/libre-/.test(res.wid||''))o.canCap=true;try{if(!isS(res.wid||o.wid))mbMark(bossFor(res.wid||o.wid),'win')}catch(_){}}put(o);setTimeout(()=>{UI.go('end');if(res.win&&o.canCap)setTimeout(()=>UI.capFlow(),700)},1400)},
  act(o){/* v51.2: botón de golpe certero → el próximo ataque hace ×1,5 */if(o&&(o.k==null||o.k==='mv')&&o.i!=null&&(()=>{try{const m=G.moves[NETR.id][o.i];return m&&m.p>0}catch(_){return false}})()&&window.__mrX15){const xm=__mrX15.take();if(xm)o=Object.assign({},o,{xm})}if(NETR.role==='guest')send(NETR.dc,Object.assign({t:'act'},o));else H.act(NETR.id,o)}};
 /* ---------- INTERFAZ ---------- */
 const UI={view:'home',w:{},boss:null,bossArt:'',sel:null,room:[],code:'',err:'',el:null,tk:null,
@@ -14216,7 +14249,7 @@ const UI={view:'home',w:{},boss:null,bossArt:'',sel:null,room:[],code:'',err:'',
    <div class="mr-bts">${o.canCap&&!o.cap?`<button class="mr-bt mr-g" data-a="cap">${IC.mrb?`<span class="mr-evi">${IC.mrb}</span>`:'🔴'} Volver a la captura (${CAPN-(o.capT|0)}/${CAPN})</button>`:''}
 ${!w.open?(()=>{const run=getRun(),n=run&&run.bag&&run.bag.mrinv|0,P=100000000,mo=run?run.money|0:0;return n>0?`<button class="mr-bt mr-g" data-a="inv">🌋 Usar Invocación de megaincursión (×${n})</button>`:`<button class="mr-bt mr-g" data-a="invbuy" ${mo>=P||(window.CHT&&CHT.money)?'':'disabled'}>🌋 Comprar e invocar megaincursión ${IC.coin} ${fmt(P)}${mo>=P?'':`<small style="display:block;font-size:11px;opacity:.9">Te faltan ${fmt(P-mo)} Pokémonedas</small>`}</button>`})():''}
    <button class="mr-bt mr-p" data-a="solo" ${w.open&&left&&!o.win?'':'disabled'}>⚔️ Asalto en solitario</button>
-   <div class="mr-row2"><button class="mr-bt mr-b" data-a="host" ${w.open&&left&&!o.win?'':'disabled'}>👥 Crear sala</button><button class="mr-bt mr-b" data-a="join" ${w.open&&left&&!o.win?'':'disabled'}>🔑 Unirse</button></div>${UI.scH()}</div>`}
+   <div class="mr-row2"><button class="mr-bt mr-b" data-a="host" ${w.open&&left&&!o.win?'':'disabled'}>👥 Crear sala</button><button class="mr-bt mr-b" data-a="join" ${w.open&&left&&!o.win?'':'disabled'}>🔑 Unirse</button></div>${SIMPLE()?'':(()=>{const d=mbGet(),n=POOL.filter(b=>(d[mbKey(b)]||{}).cap).length;return`<button class="mr-bt mr-dex" data-a="mbdex">📖 Megadex · ${n}/${POOL.length} capturados</button>`})()}${UI.scH()}</div>`}
   else if(v==='pick'){const T=run?run.team:[];
    h=head+`<div class="mr-mcard"><b>Elige tu Pokémon</b><div class="mr-pk" style="margin-top:10px">${T.map((m,i)=>`<button data-a="pk:${i}" class="${UI.sel===i?'mr-on':''}" ${m.hp<=0&&false?'disabled':''}><img src="${mini(m.id,m.sh)}" alt=""><span>${esc(nm(m))}</span><small>Nv.${m.lvl}</small></button>`).join('')}</div></div>
    <div class="mr-bts"><button class="mr-bt mr-p" data-a="pickok" ${UI.sel==null?'disabled':''}>Continuar</button>${UI.scH()}<button class="mr-bt" data-a="home">Volver</button></div>`}
@@ -14279,6 +14312,7 @@ ${!w.open?(()=>{const run=getRun(),n=run&&run.bag&&run.bag.mrinv|0,P=100000000,m
   if(a==='frinv'){try{__FR.open('invite')}catch(e){}return}
   if(a.startsWith('kind:')){const k=a.slice(5);if(k!==UI.kind){UI.kind=k;try{localStorage.setItem('pa_mrk',k)}catch(_){}netClose();H.lobby=[];UI.err='';UI.w=win();await UI.loadBoss(UI.w.open?UI.w.wid:(UI.w.next?nextWid(UI.w.next):'mr-x'));UI.go('home')}return}
   if(a==='cap')return UI.capture();
+  if(a==='mbdex')return mbOpen();
   if(a==='inv'||a==='invbuy'){const run=getRun();if(!run||!window.mrInvUse){UI.toastS('Necesitas una partida de aventura');return}
    if(a==='invbuy'){const P=100000000;if((run.money|0)<P&&!(window.CHT&&CHT.money)){UI.toastS('No tienes suficientes Pokémonedas');return}
     const c=await ask('🌋 Comprar invocación',`<small>¿Pagar <b>${fmt(P)}</b> Pokémonedas por una Invocación de megaincursión y usarla ahora?</small>`,['Comprar e invocar','Cancelar']);if(c!==0)return;
@@ -14451,13 +14485,13 @@ ${!w.open?(()=>{const run=getRun(),n=run&&run.bag&&run.bag.mrinv|0,P=100000000,m
     /* v37: el cuadro de captura se queda debajo de la animación (ya con la ball gastada) y se actualiza en su sitio: no parpadea ni desaparece */
     {const MD=D.getElementById('mod');if(MD){MD.classList.add('keep','mr-capk');const l2=Math.max(0,CAPN-o.capT),ev=MD.querySelector('.mr-evr');if(ev)ev.innerHTML=UI.evRow(l2);{const sm=[...MD.querySelectorAll('small')].find(x=>/Megaballs? de evento/.test(x.textContent)&&/captura/.test(x.textContent));if(sm)sm.innerHTML=`Te ${l2==1?'queda':'quedan'} <b>${l2} ${l2==1?'Megaball':'Megaballs'} de evento</b> · ${Math.round(capP(wid)*100)}% de captura cada una`;const b0=MD.querySelector('[data-i="0"]');if(b0&&/Lanzar/.test(b0.textContent))b0.textContent=`Lanzar Megaball de evento (${l2}/${CAPN})`}MD.querySelectorAll('[data-i]').forEach(x=>x.style.pointerEvents='none');MD.style.display='flex'}}
     try{await UI.capAnim(b.art||UI.bossArt||art(m.id,m.sh),ok,bn,ok?null:{m:Object.assign({},m,{nick:'',rb:0}),stay:o.capT<CAPN})}catch(e){console.error(e)}
-    if(ok){o.cap=true;o.canCap=false;put(o);if(isS(wid)){try{ach('c');ach('rdc');if(TAGS[m.id])ach('rd'+TAGS[m.id]);if((m.lvl|0)>=100)ach('rd150');capHook&&capHook(m)}catch(_){}}const r2=getRun()||run;if(r2.team.length<6)r2.team.push(m);else(r2.box=r2.box||[]).push(m);putRun(r2);try{teamBar()}catch(e){}
+    if(ok){o.cap=true;o.canCap=false;put(o);try{if(!isS(wid)){const bb=bossFor(wid);m.mrf=mbKey(bb);mbMark(bb,'cap')}}catch(_){}if(isS(wid)){try{ach('c');ach('rdc');if(TAGS[m.id])ach('rd'+TAGS[m.id]);if((m.lvl|0)>=100)ach('rd150');capHook&&capHook(m)}catch(_){}}const r2=getRun()||run;if(r2.team.length<6)r2.team.push(m);else(r2.box=r2.box||[]).push(m);putRun(r2);try{teamBar()}catch(e){}
      await ask('🏆 ¡Megapokémon capturado!',`<div style="text-align:center"><img src="${art(m.id,m.sh)}" style="width:140px;height:140px;object-fit:contain"><br><b>${esc(nm(m))}</b><br><small>Nv.${m.lvl} · legendario · ${r2.team.includes(m)?'se une a tu equipo':'va a la Caja'}</small></div>`,['¡Genial!']);break}
     if(o.capT>=CAPN){await ask('💨 ¡Ha huido!',`<div style="text-align:center">${img}${bn} escapó de la última Megaball de evento y se marchó volando.<div class="mr-evr">${UI.evRow(0)}</div></div>`,['Vale']);break}
     msg=`<div style="margin:6px 0;font-weight:900;color:#fca5a5">💨 ¡Se escapó de la Megaball de evento!</div>`}
   }finally{UI.capBusy=0;{const MD=D.getElementById('mod');if(MD&&MD.classList.contains('mr-capk')){MD.classList.remove('keep','mr-capk');if(!MD.querySelector('[data-i]:not([style*="pointer-events"])'))MD.style.display='none'}}try{UI.draw()}catch(e){}}}};
 function hostOpenSafe(){netClose();if(UI.mode==='host'){try{hostOpen()}catch(e){UI.err='No se pudo abrir la sala.'}}else{NETR.role='host';NETR.code='SOLO'}}
-UI.loadBoss=(orig=>async function(wid){await orig(wid);try{const d=await getD(UI.boss.id);UI.btypes=UI.boss.ty||d.types}catch(e){UI.btypes=UI.boss.ty||[]}})(UI.loadBoss);
+UI.loadBoss=(orig=>async function(wid){await orig(wid);try{if(UI.w&&UI.w.open&&UI.w.wid===wid&&!isS(wid))mbMark(UI.boss,'seen')}catch(_){}try{const d=await getD(UI.boss.id);UI.btypes=UI.boss.ty||d.types}catch(e){UI.btypes=UI.boss.ty||[]}})(UI.loadBoss);
 window.openMegaRaid=k=>UI.open(k);
 /* v28.0: solo cuenta como «abierta» una megaincursión de verdad (no el modo de prueba de los trucos) */
 const realOpen=k=>{const w=win(null,k);return w.open&&!w.dbg};
@@ -15589,7 +15623,7 @@ function sheet(id,focus){const f=F.list[id];if(!f)return;const o=online(f),rm=wi
   ${T('adv','🗺️','Aventura multiplayer',am?'Se unirá a tu partida (sala '+esc(am.code)+')':'Abre tu partida y después invítale desde la sala','#15803d','#14532d',false)}
   ${T('raid','🌋','Megaincursión',rm?'Se unirá a tu sala '+esc(rm.code):'Crea primero una sala de megaincursión para invitarle','#9d174d','#4c1d95',!rm)}
   <div class="fr-sec" data-f="world">🏡 Su mundo</div>
-  <div class="fr-tiles">${tile('visit','🏠','Su casa','Visítala')}${tile('spec','👁️','Espectear','Su partida en directo')}${tile('vit','🏛️','Vitrina','Sus Pokémon expuestos')}${tile('mkt','🛒','Su puesto','Compra lo que vende')}</div>
+  <div class="fr-tiles">${tile('visit','🏠','Su casa','Visítala')}${tile('spec','👁️','Espectear','Su partida en directo')}${tile('vit','🏛️','Vitrina','Sus Pokémon expuestos')}${tile('mkt','🛒','Su puesto','Aunque no esté conectado')}</div>
   <div class="fr-sec">⚙️ Más</div>
   <div class="fr-row2"><button class="fr-b gh" data-a="loan">💸 Prestarle dinero</button><button class="fr-b r" data-a="del">🗑️ Eliminar</button></div></div>`;
  box.append(s);if(focus==='world')setTimeout(()=>{const w=s.querySelector('[data-f="world"]');if(w)w.scrollIntoView({block:'start',behavior:'smooth'})},120);
@@ -21662,6 +21696,42 @@ body:has(#mpa.on) #svl{z-index:100050!important}
 html.mpsv #mpa.on{visibility:hidden}
 html.mpsv #svl::before{animation:none;will-change:auto}
 html.mpsv #svl .v-pk .v-ring{animation:none}
+/* v53.9: Megadex de megajefes */
+#mrd .mr-dex,.mr-bt.mr-dex{width:100%;margin-top:8px;background:linear-gradient(120deg,#a21caf,#4c1d95)!important;border:1px solid #f0abfc66!important;color:#fff!important;font-weight:900!important}
+#mbdx{position:fixed;inset:0;z-index:100060;display:flex;align-items:center;justify-content:center;padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom));background:radial-gradient(120% 80% at 50% 0,#a21caf55,#0000 60%),#05030df2;color:#fff;font-family:system-ui,-apple-system,sans-serif;animation:mbIn .2s ease-out}
+@keyframes mbIn{from{opacity:0}}
+#mbdx .mdxw{width:min(680px,100%);max-height:100%;overflow:auto;border-radius:24px;background:linear-gradient(180deg,#2a0d4a,#0d0824 55%);border:1px solid #f0abfc44;box-shadow:0 30px 80px #000c;padding:14px 14px 18px;overscroll-behavior:contain}
+#mbdx .mdxh{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+#mbdx .mdxh b{flex:1;font:900 21px system-ui;background:linear-gradient(90deg,#fff,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent}
+#mbdx .mdxx{width:40px;height:40px;border-radius:13px;border:1px solid #ffffff33;background:#ffffff14;color:#fff;font:900 16px system-ui;cursor:pointer}
+#mbdx .mdxst{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#mbdx .mdxst div{padding:8px 4px;border-radius:14px;background:#ffffff0e;border:1px solid #ffffff1c;text-align:center}
+#mbdx .mdxst b{display:block;font:900 15px system-ui;color:#fde68a}
+#mbdx .mdxst small{display:block;font:700 10px system-ui;opacity:.8;margin-top:2px}
+#mbdx .mdxp{height:8px;border-radius:5px;background:#ffffff14;overflow:hidden;margin:10px 0 8px}
+#mbdx .mdxp i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#f472b6,#fde047)}
+#mbdx .mdxn{font:600 12px/1.45 system-ui;opacity:.85;margin:6px 2px 10px}
+#mbdx .mdxf{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+#mbdx .mdxf button{flex:1 1 auto;padding:8px 10px;border-radius:999px;border:1px solid #ffffff2a;background:#ffffff0d;color:#e9d5ff;font:800 12px system-ui;cursor:pointer}
+#mbdx .mdxf button.on{background:linear-gradient(180deg,#c026d3,#7e22ce);color:#fff;border-color:#f0abfc}
+#mbdx .mdxg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+#mbdx .mdxc{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 8px 11px;border-radius:18px;background:linear-gradient(180deg,#ffffff10,#ffffff05);border:1px solid #ffffff1c;text-align:center;content-visibility:auto;contain-intrinsic-size:auto 190px}
+#mbdx .mdxc img{width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 6px 8px #000a)}
+#mbdx .mdxc.unk img{filter:brightness(0) opacity(.55)}
+#mbdx .mdxc.seen img{filter:grayscale(.6) brightness(.85)}
+#mbdx .mdxc b{font:900 12.5px/1.2 system-ui;margin-top:2px}
+#mbdx .mdxc small{font:700 10.5px system-ui;opacity:.8}
+#mbdx .mdxc em{font-style:normal;margin-top:4px;padding:2px 8px;border-radius:999px;font:800 10px system-ui;background:#0007;border:1px solid #ffffff2a}
+#mbdx .mdxc.cap{border-color:#f472b688;background:linear-gradient(180deg,#be185d33,#ffffff06)}
+#mbdx .mdxc.win{border-color:#facc1566}
+#mbdx .mdxc.ex.cap em{background:#16a34a;border-color:#86efac}
+#mbdx .mdxnum{position:absolute;top:7px;left:9px;font:900 10px ui-monospace,monospace;opacity:.6}
+#mbdx .mdxex{position:absolute;top:6px;right:8px;font:900 11px system-ui}
+/* v53.9: puestos de amigos desconectados */
+#mktov .mk-src{margin:0 0 10px;padding:9px 12px;border-radius:13px;font:800 12px/1.4 system-ui}
+#mktov .mk-src small{display:block;font-weight:600;opacity:.85;margin-top:3px}
+#mktov .mk-src.on{background:#16a34a33;border:1px solid #4ade8066}
+#mktov .mk-src.off{background:#f59e0b22;border:1px solid #f59e0b66}
 </style>
 <script id="v37js">
 (()=>{
@@ -23905,7 +23975,21 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const tst=t=>{try{toast(t)}catch(e){}},bp=(f,d)=>{try{beep(f,d||.08,'triangle')}catch(e){}};
  const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},st=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
  const K='pa_mkt',KT='pa_mkt_tx',MKMAX=Infinity,PMAX=1000000000,PG=20,coin=()=>(window.IC&&IC.coin)||'🪙',fmt=n=>{try{return nf(Math.round(n))}catch(e){return String(Math.round(n))}};
- const M=()=>{const m=ld(K,{});m.l=m.l||[];m.sold=m.sold||{};m.hist=m.hist||[];m.pend=m.pend|0;m.out=m.out||[];return m},putM=m=>st(K,m);
+ const M=()=>{const m=ld(K,{});m.l=m.l||[];m.sold=m.sold||{};m.hist=m.hist||[];m.pend=m.pend|0;m.out=m.out||[];return m},putM=m=>{st(K,m);try{setTimeout(()=>pubStall(),300)}catch(_){}};
+ /* v53.9: puestos visibles aunque su dueño no esté conectado: cada puesto deja una copia en el servidor de mensajes (dura unas 12 h) y cada comprador guarda la última que vio */
+ const RSV2=['https://ntfy.sh','https://ntfy.envs.net','https://ntfy.adminforge.de'],stTopic=id=>'pkr53-stall-'+id,SC='pa_stallc';
+ const myFid=()=>{try{return FR().fid()}catch(e){return''}};
+ let pubT=0,lastPubH='';
+ function pubStall(force){const fid=myFid();if(!fid)return;const m=ld(K,{}),L=(m.l||[]).map(x=>({id:x.id,k:x.k,key:x.key,q:x.q,p:x.p,ms:x.ms})),h=JSON.stringify(L);if(!force&&h===lastPubH&&now()-pubT<2*3600000)return;lastPubH=h;pubT=now();
+  const sid=now().toString(36)+Math.random().toString(36).slice(2,6),ch=[];let cur=[];for(const x of L){cur.push(x);if(JSON.stringify(cur).length>2800){cur.pop();if(cur.length)ch.push(cur);cur=[x]}}ch.push(cur);let n='';try{n=window.__pname()}catch(e){}
+  ch.forEach((c,i)=>{const body=JSON.stringify({sid,pg:i,np:ch.length,t:now(),n,l:c});RSV2.forEach(u=>fetch(u+'/'+stTopic(fid),{method:'POST',body}).catch(()=>{}))})}
+ setTimeout(()=>pubStall(true),12000);setInterval(()=>pubStall(),30*60000);
+ const scGet=id=>{const c=ld(SC,{});return c[id]||null},scPut=(id,o)=>{const c=ld(SC,{});c[id]=o;st(SC,c)};
+ async function fetchStall(id){let best=null;await Promise.all(RSV2.map(async u=>{try{const c=new AbortController(),tm=setTimeout(()=>c.abort(),7000);const r=await fetch(u+'/'+stTopic(id)+'/json?poll=1&since=12h',{cache:'no-store',signal:c.signal});clearTimeout(tm);if(!r.ok)return;
+   const ms=(await r.text()).trim().split('\n').map(l=>{try{const d=JSON.parse(l);return d.event==='message'?JSON.parse(d.message):null}catch(e){return null}}).filter(x=>x&&x.sid&&Array.isArray(x.l));if(!ms.length)return;
+   const last=ms.reduce((a,b)=>(b.t||0)>(a.t||0)?b:a),parts=ms.filter(x=>x.sid===last.sid).sort((a,b)=>a.pg-b.pg),seen=new Set(),L=[];parts.forEach(x=>x.l.forEach(y=>{if(y&&!seen.has(y.id)){seen.add(y.id);L.push(y)}}));
+   if(!best||last.t>best.t)best={t:last.t,l:L}}catch(e){}}));return best}
+ const agoT=t=>{const s=(now()-t)/1000;return s<90?'hace un momento':s<3600?'hace '+Math.round(s/60)+' min':s<86400?'hace '+Math.round(s/3600)+' h':'hace '+Math.round(s/86400)+' d'};
  const TX=()=>ld(KT,{}),putTX=t=>st(KT,t);
  const uid=()=>now().toString(36)+Math.random().toString(36).slice(2,7);
  const live=()=>{try{return typeof R=='object'&&R&&R.team&&R.team.length&&!R.done?R:null}catch(e){return null}};
@@ -23943,21 +24027,24 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   t.st='done';putTX(T);sv();pm();const g=o.g;tst(`🛍️ ¡Compra completada! ${g.k==='it'?itIc(g.key)+' '+itName(g.key)+(g.q>1?' ×'+g.q:''):'🐾 '+(g.mon&&nm(g.mon))+' se une a tu '+(R.team.includes(g.mon)?'equipo':'caja')}`);bp(988,.12);
   if(view==='shop'&&shopId===o.f){shopL=shopL.filter(x=>x.id!==o.lid);busy='';render()}};
  H.mkno=(o)=>{const T=TX(),t=T[o.tx];if(!t||t.st!=='wait')return;t.st='ref';putTX(T);addMoney(t.p);busy='';tst(o.why==='precio'?'El precio ha cambiado: vuelve a mirar el puesto':'¡Vaya! Alguien se te adelantó y ya está vendido');if(view==='shop'){ask2()}};
- let mklQ='';H.mkl=(o)=>{if(view!=='shop'||o.f!==shopId)return;const L=(Array.isArray(o.l)?o.l:[]).filter(x=>x&&typeof x==='object'&&(x.k==='it'||x.k==='pk')&&(+x.p||0)>0&&(+x.p||0)<=PMAX);const k=String(o.qid||'')+'|'+o.f;if(!o.pg||mklQ!==k){mklQ=k;shopL=L}else{const ids=new Set(shopL.map(x=>x.id));shopL=shopL.concat(L.filter(x=>!ids.has(x.id)))}loaded=true;render()};
- setInterval(()=>{const T=TX();let ch=0;for(const k in T){const t=T[k];if(t.st==='wait'&&now()-t.t>25000){t.st='ref';addMoney(t.p);ch=1;tst('⌛ El vendedor no ha respondido: te devolvemos el dinero');if(busy===k)busy=''}else if(t.st!=='wait'&&now()-t.t>14*86400000){delete T[k];ch=1}}if(ch){putTX(T);if(ov&&ov.classList.contains('on'))render()}},5000);
+ let mklQ='';H.mkl=(o)=>{if(view!=='shop'||o.f!==shopId)return;const L=(Array.isArray(o.l)?o.l:[]).filter(x=>x&&typeof x==='object'&&(x.k==='it'||x.k==='pk')&&(+x.p||0)>0&&(+x.p||0)<=PMAX);const k=String(o.qid||'')+'|'+o.f;if(!o.pg||mklQ!==k){mklQ=k;shopL=L}else{const ids=new Set(shopL.map(x=>x.id));shopL=shopL.concat(L.filter(x=>!ids.has(x.id)))}loaded=true;live1=now();src='live';try{scPut(o.f,{t:now(),l:shopL})}catch(_){}render()};
+ setInterval(()=>{const T=TX();let ch=0;for(const k in T){const t=T[k];if(t.st==='wait'&&now()-t.t>25000){if(t.off&&now()-(t.t0||t.t)<7*86400000){t.st='off';ch=1;if(busy===k)busy=''}else{t.st='ref';addMoney(t.p);ch=1;tst('⌛ El vendedor no ha respondido: te devolvemos el dinero');if(busy===k)busy=''}}else if(t.st==='off'){if(now()-(t.t0||t.t)>7*86400000){t.st='ref';addMoney(t.p);ch=1;tst('⌛ Un pedido de hace una semana no se completó: te devolvemos el dinero')}else{let on=false;try{on=FR().isOn(t.f)}catch(_){}if(on&&now()-(t.lt||0)>60000){t.lt=now();t.st='wait';t.t=now();ch=1;send(t.f,{t:'mkb',tx:k,lid:t.lid,p:t.p})}}}else if(t.st!=='wait'&&now()-t.t>14*86400000){delete T[k];ch=1}}if(ch){putTX(T);if(ov&&ov.classList.contains('on'))render()}},5000);
  /* ===== interfaz ===== */
- let ov=null,view='mine',shopId='',shopN='',shopL=[],loaded=false,busy='',pick=null,qT=0;
+ let ov=null,view='mine',shopId='',shopN='',shopL=[],loaded=false,busy='',pick=null,qT=0,live1=0,src='',srcT=0;
  function el(){if(ov)return ov;ov=D.createElement('div');ov.id='mktov';D.body.append(ov);ov.addEventListener('click',click);ov.addEventListener('input',e=>{if(e.target.matches('[data-in]'))upd()});return ov}
- function ask2(){if(!shopId)return;loaded=false;render();send(shopId,{t:'mkq',qid:uid()});clearTimeout(qT);qT=setTimeout(()=>{if(!loaded&&view==='shop'){const w=ov&&ov.querySelector('.mk-wait span');if(w)w.textContent=`${shopN} no responde: necesita tener el juego abierto.`}},6000)}
+ function ask2(){if(!shopId)return;const id=shopId;live1=0;const c=scGet(id);if(c&&Array.isArray(c.l)){shopL=c.l;loaded=true;src='cache';srcT=c.t}else{loaded=false;src=''}render();send(id,{t:'mkq',qid:uid()});
+  fetchStall(id).then(r=>{if(!r||shopId!==id||src==='live')return;if(!srcT||r.t>=srcT){shopL=r.l;loaded=true;src='srv';srcT=r.t;scPut(id,{t:r.t,l:r.l});render()}});
+  clearTimeout(qT);qT=setTimeout(()=>{if(view!=='shop'||shopId!==id||src==='live')return;if(!loaded){loaded=true;src='none';shopL=[]}render()},7000)}
  function open(id,n){el();pick=null;busy='';if(id){view='shop';shopId=id;shopN=n||'Amigo';shopL=[];ask2()}else{view='mine';flush();render()}ov.classList.add('on')}
  function close(){if(ov){ov.classList.remove('on');ov.innerHTML=''}view='mine';shopId=''}
  function render(){const o=el(),r=live(),m=M();let b='';
   if(view==='shop'){
-   b=!loaded?`<div class="mk-wait"><i></i><span>Abriendo el puesto de ${esc(shopN)}…</span></div>`:!shopL.length?`<div class="mk-empty">🧺<b>${esc(shopN)} no tiene nada a la venta</b><small>Dile que ponga cosas en su puesto desde «Amigos → 🛒 Mi puesto».</small></div>`:
-    `<div class="mk-list">${shopL.map(x=>{const ok=r&&(r.money|0)>=x.p;return`<div class="mk-row">${lIcon(x)}<span class="mk-t"><b>${esc(lName(x))}</b><small>${x.k==='pk'?(x.ms.ty||[]).map(t=>(typeof ES!='undefined'&&ES[t])||t).join(' · '):esc((ITEM[x.key]||{}).d||'')}</small></span><button type="button" class="mk-buy" data-m="buy:${esc(x.id)}" ${ok&&!busy?'':'disabled'}>${busy===x.id?'…':fmt(x.p)+' '+coin()}</button></div>`}).join('')}</div>`;
+   const ban=src==='live'?`<div class="mk-src on">🟢 ${esc(shopN)} está conectado: la compra es al instante</div>`:src==='cache'||src==='srv'?`<div class="mk-src off">📦 ${esc(shopN)} no está conectado. Ves su puesto como estaba ${agoT(srcT)}.<small>Puedes reservar: pagas ahora y lo recibes en cuanto los dos estéis conectados a la vez (si algo ya se vendió, te devolvemos el dinero).</small></div>`:'';
+   b=src==='none'?`<div class="mk-empty">🔌<b>${esc(shopN)} no está conectado</b><small>Todavía no hay ninguna copia de su puesto. Cuando abra el juego, su puesto quedará guardado para que puedas verlo aunque se desconecte.</small></div>`:!loaded?`<div class="mk-wait"><i></i><span>Abriendo el puesto de ${esc(shopN)}…</span></div>`:!shopL.length?`<div class="mk-empty">🧺<b>${esc(shopN)} no tiene nada a la venta</b><small>Dile que ponga cosas en su puesto desde «Amigos → 🛒 Mi puesto».</small></div>`:
+    `<div class="mk-list">${shopL.map(x=>{const ok=r&&(r.money|0)>=x.p;return`<div class="mk-row">${lIcon(x)}<span class="mk-t"><b>${esc(lName(x))}</b><small>${x.k==='pk'?(x.ms.ty||[]).map(t=>(typeof ES!='undefined'&&ES[t])||t).join(' · '):esc((ITEM[x.key]||{}).d||'')}</small></span><button type="button" class="mk-buy" data-m="buy:${esc(x.id)}" ${ok&&!busy&&!resv(x.id)?'':'disabled'}>${busy===x.id?'…':resv(x.id)?'⏳ Reservado':(src==='live'?'':'📦 ')+fmt(x.p)+' '+coin()}</button></div>`}).join('')}</div>`;b=ban+b;
    b=`<p class="mk-p">${r?`Tienes <b>${fmt(r.money)} ${coin()}</b>`:'Empieza una aventura para poder comprar.'}</p>`+b+`<button type="button" class="mk-sec" data-m="reload">🔄 Actualizar</button>`}
   else if(pick){b=pickHTML(r)}
-  else{b=`<p class="mk-p">Pon a la venta objetos de tu mochila y Pokémon de tu caja. Tus amigos podrán comprarlos desde su lista de amigos (⋯ → Ver su puesto) mientras tengas el juego abierto.</p>
+  else{b=`<p class="mk-p">Pon a la venta objetos de tu mochila y Pokémon de tu caja. Tus amigos podrán verlo desde su lista de amigos (🎮 Jugar → Su puesto) aunque no estés conectado, y reservar cosas que recibirán cuando coincidáis conectados.</p>
    <div class="mk-list">${m.l.length?m.l.map(x=>`<div class="mk-row">${lIcon(x)}<span class="mk-t"><b>${esc(lName(x))}</b><small>${fmt(x.p)} ${coin()}</small></span><button type="button" class="mk-del" data-m="del:${esc(x.id)}">Retirar</button></div>`).join(''):'<div class="mk-empty">🧺<b>Tu puesto está vacío</b></div>'}</div>
    ${r?`<div class="mk-add"><button type="button" data-m="add:it" ${m.l.length>=MKMAX?'disabled':''}>🎒 Vender objeto</button><button type="button" data-m="add:pk" ${m.l.length>=MKMAX||!(r.box||[]).length?'disabled':''}>🐾 Vender Pokémon</button></div>`:'<p class="mk-p">Empieza una aventura para poner cosas a la venta.</p>'}
    ${m.pend?`<p class="mk-p">💰 Pendiente de cobrar: <b>${fmt(m.pend)} ${coin()}</b> (se suma al empezar una aventura)</p>`:''}
@@ -23983,7 +24070,10 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
    if(x.k==='it'){r.bag[x.key]=(r.bag[x.key]|0)+x.q}else(r.box=r.box||[]).push(x.mon);m.l.splice(i,1);putM(m);sv();try{teamBar()}catch(_){}tst('↩ '+lName(x)+' vuelve contigo');return render()}
   if(a.startsWith('buy:')){if(!r||busy)return;const x=shopL.find(y=>y.id===a.slice(4));if(!x)return;
    const j=await ask('🛒 Comprar',`${lIcon(x)} <b>${esc(lName(x))}</b><br>por <b>${fmt(x.p)} ${coin()}</b> a ${esc(shopN)}`,['Comprar','Cancelar']);if(j!==0||busy)return;
-   if((+r.money||0)<x.p)return tst('No tienes suficientes Pokémonedas');r.money-=x.p;sv();pm();const tx=uid(),T=TX();T[tx]={f:shopId,lid:x.id,p:x.p,st:'wait',t:now()};putTX(T);busy=x.id;render();send(shopId,{t:'mkb',tx,lid:x.id,p:x.p})}}
+   if((+r.money||0)<x.p)return tst('No tienes suficientes Pokémonedas');r.money-=x.p;sv();pm();const tx=uid(),T=TX(),isLive=src==='live'&&now()-live1<120000;
+   if(!isLive){T[tx]={f:shopId,lid:x.id,p:x.p,st:'off',off:1,t:now(),t0:now(),n:lName(x)};putTX(T);tst(`📦 ¡Reservado! Recibirás ${lName(x)} cuando ${shopN} y tú estéis conectados a la vez`);bp(880);render();return}
+   T[tx]={f:shopId,lid:x.id,p:x.p,st:'wait',t:now()};putTX(T);busy=x.id;render();send(shopId,{t:'mkb',tx,lid:x.id,p:x.p})}}
+ const resv=lid=>{const T=TX();for(const k in T){const t=T[k];if(t.lid===lid&&t.f===shopId&&(t.st==='off'||t.st==='wait'))return true}return false};
  const _sm=window.showMap;window.showMap=function(){const r=_sm.apply(this,arguments);try{flush()}catch(e){}return r};
  window.__mktOpen=open;window.__mkt={M,TX,flush};
 })();
