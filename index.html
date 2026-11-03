@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v49.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v50.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -1936,7 +1936,7 @@ cb.onclick=async()=>{if(R.lock)return;const P=15,need=R.team.some(m=>m.hp<m.max|
 <script id="fx5s">(()=>{
 const Q=s=>document.querySelector(s),K={skip:0},FX=()=>S.fx!==false&&!matchMedia('(prefers-reduced-motion:reduce)').matches;
 const wt=ms=>K.skip||!FX()?Promise.resolve():new Promise(r=>setTimeout(r,ms));
-const ty=async(e,t)=>{e.textContent='';if(K.skip||!FX()){e.textContent=t;return}for(let i=1;i<=t.length;i++){if(K.skip){e.textContent=t;return}e.textContent=t.slice(0,i);await new Promise(r=>setTimeout(r,18))}await wt(350)};
+const ty=async(e,t)=>{e.textContent='';if(S.cenq&&e.classList&&e.classList.contains('ctxt'))return; /* v50.0: sin diálogos de la enfermera */if(K.skip||!FX()){e.textContent=t;return}for(let i=1;i<=t.length;i++){if(K.skip){e.textContent=t;return}e.textContent=t.slice(0,i);await new Promise(r=>setTimeout(r,18))}await wt(350)};
 const TEM={normal:'⚪',fire:'🔥',water:'💧',electric:'⚡',grass:'🍃',ice:'❄️',fighting:'🥊',poison:'☠️',ground:'⛰️',flying:'🪶',psychic:'🔮',bug:'🐛',rock:'🪨',ghost:'👻',dragon:'🐉',dark:'🌙',steel:'⚙️',fairy:'✨'};window.TEM=TEM;
 const pf=(e,ch,c,n=6)=>{if(!FX())return;const r=e.getBoundingClientRect();for(let i=0;i<n;i++){const s=document.createElement('i');s.textContent=ch;s.style.cssText=`position:fixed;left:${r.left+r.width*(.2+Math.random()*.6)}px;top:${r.top+r.height*.6}px;color:${c};font-style:normal;font-size:${12+Math.random()*10}px;z-index:99;pointer-events:none;text-shadow:0 0 6px ${c}`;document.body.append(s);s.animate([{transform:'scale(.5)',opacity:1},{transform:`translate(${(Math.random()-.5)*30}px,-${50+Math.random()*50}px) scale(1.2)`,opacity:0}],{duration:900+Math.random()*500,delay:i*80}).onfinish=()=>s.remove()}};
 const ink='#3b2412';
@@ -5227,6 +5227,7 @@ const DEF=[
   {k:'qvic',t:'Victoria rápida',d:'La pantalla de premios de cada combate ganado se cierra sola',b:1},
   {k:'qcap',t:'Captura rápida',d:'Lanzar la Ball dura un instante en vez de la animación larga',b:1},
   {k:'qevo',t:'Evolución rápida',d:'La animación de evolución va a toda velocidad',b:1},
+  {k:'cenq',t:'Sin diálogos de la enfermera',d:'En el Centro Pokémon la enfermera cura a tu equipo sin hablar (sin bocadillos de texto)',b:1},
   {k:'autoheal',t:'Curar tras cada combate',d:'Al ganar un combate de la aventura usa solo las pociones justas de tu mochila para curar al equipo',b:1},
   {k:'frnt',t:'Avisos de amigos',d:'Te avisa cuando un amigo captura un shiny o un legendario, gana una medalla, consigue un título o reacciona a tu vitrina',b:1},
   {k:'ntf',t:'Avisos y notificaciones',d:'Todos los carteles del juego y la campanita del menú. Desactivado: no sale NINGÚN cartel ni aviso (las invitaciones de amigos sí siguen llegando)',b:1},
@@ -8615,7 +8616,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'49.9',t:'Arreglo del clima en los biomas',s:'cur',l:[
+ {v:'50.0',t:'Centro Pokémon sin diálogos',s:'cur',l:[
+  '🏥 Nuevo ajuste «Sin diálogos de la enfermera»: en el Centro Pokémon la enfermera cura a tu equipo sin bocadillos de texto, más rápido'
+]},
+{v:'49.9',t:'Arreglo del clima en los biomas',s:'prev',l:[
   '🔧 Arreglado: dentro de un bioma, al tocar el icono del clima la explicación salía escondida debajo del bioma. Ahora sale encima, en una tarjeta'
 ]},
 {v:'49.8',t:'Regalar Pokémon en los intercambios',s:'prev',l:[
@@ -21198,6 +21202,7 @@ html.lt .emj{display:inline-block}
 #bzv .bzwxp{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:60;width:min(320px,calc(100% - 32px));display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:18px;background:#0f172af2;border:1px solid #ffffff33;box-shadow:0 16px 40px #000b;color:#fff;font-family:system-ui,sans-serif;text-align:center;animation:pfIn .2s}
 #bzv .bzwxp b{font:900 18px system-ui}#bzv .bzwxp small{font-size:13px;opacity:.9;line-height:1.35}
 #bzv .bzwxp button{margin-top:4px;border:0;border-radius:12px;padding:10px;font:800 14px system-ui;color:#fff;background:linear-gradient(180deg,#3b82f6,#1d4ed8);cursor:pointer}
+html.cenq #cen .ctxt{display:none!important}
 </style>
 <script id="v37js">
 (()=>{
@@ -25192,6 +25197,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  const apply=()=>{try{want()?on():off()}catch(e){}};
  setInterval(apply,1000);setTimeout(apply,0);if(mq&&mq.addEventListener)mq.addEventListener('change',apply);
 })();
+setInterval(()=>{try{document.documentElement.classList.toggle('cenq',!!(typeof S=='object'&&S&&S.cenq))}catch(e){}},800);
 
 })();</script>
 </body></html>
