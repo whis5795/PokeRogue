@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v53.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v54.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -8626,7 +8626,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'53.9',t:'Megadex y puestos sin conexión',s:'cur',l:[
+ {v:'54.0',t:'Legendex',s:'cur',l:[
+  '📖 Nueva Legendex en la pestaña «Simple» de las Megaincursiones: todos los singulares, Ultraentes y Paradoja que pueden salir en las megaincursiones simples, con los que has visto, derrotado y capturado, filtros y progreso'
+ ]},
+ {v:'53.9',t:'Megadex y puestos sin conexión',s:'prev',l:[
   '📖 Nueva Megadex dentro de las Megaincursiones: todos los megajefes, con los que has visto, derrotado y capturado (y cuántas veces), filtros y tu progreso',
   '✨ Las Megas exclusivas de las megaincursiones (Houndoom X/Y, Gyarados Abisal, Mimikyu, Gengar Z…) solo se pueden usar si has derrotado y capturado a ese megajefe. Al capturarlo, todos tus Pokémon de esa especie pueden usar esa forma. Si ya tenías megajefes capturados de antes, cuentan como desbloqueados',
   '🛒 Los puestos de tus amigos se pueden ver aunque no estén conectados (la última copia guardada) y puedes reservar cosas: pagas al momento y lo recibes cuando los dos estéis conectados a la vez. Si ya se vendió, te devolvemos el dinero'
@@ -13975,28 +13978,28 @@ const cap=s=>String(s||'').replace(/-/g,' ').replace(/^./,c=>c.toUpperCase());
 const bossName=b=>b.s?cap(sname(b.id)):b.n||('Mega '+cap(sname(b.id))+(b.f&&b.f!=='primal'?' '+b.f.toUpperCase():''));
 async function bossArt(b){if(b.s)return art(b.id,0);if(b.art)return art(b.art,1);try{const m={id:b.id,name:sname(b.id),mfs:b.f&&b.f!=='primal'?b.f:''};const id=await megaResolve(m);return art(id,1)}catch(e){return art(b.id,1)}}
 /* ---------- v53.9: Megadex de megajefes y Megas exclusivas desbloqueables ---------- */
-const MBK='pa_mbdex',mbKey=b=>b.id+'|'+(b.f||'');
-const mbGet=()=>{try{return JSON.parse(localStorage.getItem(MBK)||'{}')||{}}catch(e){return{}}};
-const mbPut=d=>{try{localStorage.setItem(MBK,JSON.stringify(d))}catch(e){}};
+const MBK='pa_mbdex',MBKS='pa_mbdexS'/* v54.0: Legendex de las megaincursiones simples */,mbKey=b=>b.id+'|'+(b.f||'');
+const mbGet=(k)=>{try{return JSON.parse(localStorage.getItem(k||MBK)||'{}')||{}}catch(e){return{}}};
+const mbPut=(d,k)=>{try{localStorage.setItem(k||MBK,JSON.stringify(d))}catch(e){}};
 const INV=new Set(POOL.filter(b=>typeof b.art==='string').map(mbKey));
 /* la forma Mega que desbloquea cada megajefe exclusivo (p. ej. «Mega Gyarados Abisal» es la forma 130|z) */
 let MFK=null;const mfMap=()=>{if(MFK)return MFK;const M=window.MEGART||{};MFK={};POOL.forEach(b=>{if(typeof b.art!=='string')return;const k=Object.keys(M).find(x=>M[x]===b.art)||mbKey(b);MFK[k]=mbKey(b)});return MFK};
-function mbMark(b,k){if(!b||b.s)return;const d=mbGet(),key=mbKey(b),e=d[key]=d[key]||{};const fresh=!e[k];if(k==='seen')e.seen=e.seen||Date.now();else e[k]=(e[k]|0)+1;if(k==='cap'){e.seen=e.seen||Date.now();e.win=Math.max(e.win|0,1)}if(k==='win')e.seen=e.seen||Date.now();mbPut(d);
- if(fresh&&k==='cap'&&INV.has(key)){try{setTimeout(()=>toast('✨ ¡Desbloqueada! Ya puedes usar '+bossName(b)+' con tus '+cap(sname(b.id))),2500)}catch(_){}}}
+function mbMark(b,k){if(!b)return;const SK=b.s?MBKS:MBK,d=mbGet(SK),key=mbKey(b),e=d[key]=d[key]||{};const fresh=!e[k];if(k==='seen')e.seen=e.seen||Date.now();else e[k]=(e[k]|0)+1;if(k==='cap'){e.seen=e.seen||Date.now();e.win=Math.max(e.win|0,1)}if(k==='win')e.seen=e.seen||Date.now();mbPut(d,SK);
+ if(fresh&&k==='cap'&&!b.s&&INV.has(key)){try{setTimeout(()=>toast('✨ ¡Desbloqueada! Ya puedes usar '+bossName(b)+' con tus '+cap(sname(b.id))),2500)}catch(_){}}}
 /* las partidas de antes: los megajefes que ya tenías capturados cuentan como desbloqueados */
 function mbBackfill(){try{const r=(typeof R==='object'&&R&&R.team)?R:getRun();if(!r)return;const d=mbGet();let ch=0;for(const m of[...(r.team||[]),...(r.box||[])]){if(!m||!m.mraid)continue;for(const b of POOL){if(b.id!==m.id)continue;if(m.mrf!=null&&m.mrf!==mbKey(b))continue;const k=mbKey(b),e=d[k]=d[k]||{};if(!e.cap){e.cap=1;e.win=Math.max(e.win|0,1);e.seen=e.seen||Date.now();e.old=1;ch=1}}}if(ch)mbPut(d)}catch(e){}}
 setTimeout(mbBackfill,4000);
 window.__megaOk=(id,f)=>{const bk=mfMap()[id+'|'+(f||'')];if(!bk)return true;const e=mbGet()[bk];return!!(e&&e.cap)};
-async function mbOpen(){mbBackfill();let el=document.getElementById('mbdx');if(el)el.remove();el=document.createElement('div');el.id='mbdx';document.body.append(el);let F='all';
- const draw=()=>{const d=mbGet(),L=POOL.map((b,i)=>({b,i,k:mbKey(b),e:d[mbKey(b)]||{}}));const tot=L.length,seen=L.filter(x=>x.e.seen).length,win=L.filter(x=>x.e.win).length,cp=L.filter(x=>x.e.cap).length,inv=L.filter(x=>INV.has(x.k)),invU=inv.filter(x=>x.e.cap).length;
-  const show=L.filter(x=>F==='all'||(F==='inv'&&INV.has(x.k))||(F==='cap'&&x.e.cap)||(F==='todo'&&!x.e.cap));
-  el.innerHTML=`<div class="mdxw"><div class="mdxh"><b>📖 Megadex</b><button class="mdxx" data-m="x" aria-label="Cerrar">✕</button></div>
-  <div class="mdxst"><div><b>${seen}/${tot}</b><small>👁️ Vistos</small></div><div><b>${win}/${tot}</b><small>🏆 Derrotados</small></div><div><b>${cp}/${tot}</b><small>🔴 Capturados</small></div><div><b>${invU}/${inv.length}</b><small>✨ Megas desbloqueadas</small></div></div>
+async function mbOpen(kind){const SM=kind==='s',PL=SM?SPOOL:POOL;if(!SM)mbBackfill();let el=document.getElementById('mbdx');if(el)el.remove();el=document.createElement('div');el.id='mbdx';if(SM)el.className='mdxs';document.body.append(el);let F='all';
+ const draw=()=>{const d=mbGet(SM?MBKS:MBK),L=PL.map((b,i)=>({b,i,k:mbKey(b),e:d[mbKey(b)]||{}}));const tot=L.length,seen=L.filter(x=>x.e.seen).length,win=L.filter(x=>x.e.win).length,cp=L.filter(x=>x.e.cap).length,inv=L.filter(x=>INV.has(x.k)),invU=inv.filter(x=>x.e.cap).length;
+  const show=L.filter(x=>F==='all'||(F==='inv'&&!SM&&INV.has(x.k))||(F==='cap'&&x.e.cap)||(F==='todo'&&!x.e.cap));
+  el.innerHTML=`<div class="mdxw"><div class="mdxh"><b>${SM?'📖 Legendex':'📖 Megadex'}</b><button class="mdxx" data-m="x" aria-label="Cerrar">✕</button></div>
+  <div class="mdxst"><div><b>${seen}/${tot}</b><small>👁️ Vistos</small></div><div><b>${win}/${tot}</b><small>🏆 Derrotados</small></div><div><b>${cp}/${tot}</b><small>🔴 Capturados</small></div>${SM?'':`<div><b>${invU}/${inv.length}</b><small>✨ Megas desbloqueadas</small></div>`}</div>
   <div class="mdxp"><i style="width:${(cp/tot*100).toFixed(1)}%"></i></div>
-  <p class="mdxn">Las <b>Megas exclusivas</b> ✨ (las que solo existen en las megaincursiones) solo se pueden usar en tus Pokémon cuando has <b>derrotado y capturado</b> a ese megajefe. Ejemplo: captura a Mega Houndoom X y todos tus Houndoom podrán megaevolucionar a su forma X.</p>
-  <div class="mdxf">${[['all','Todos'],['inv','✨ Exclusivas'],['cap','🔴 Capturados'],['todo','⏳ Pendientes']].map(([k,t])=>`<button data-m="f:${k}" class="${F===k?'on':''}">${t}</button>`).join('')}</div>
-  <div class="mdxg">${show.map(x=>{const st=x.e.cap?'cap':x.e.win?'win':x.e.seen?'seen':'unk',ex=INV.has(x.k);return`<div class="mdxc ${st}${ex?' ex':''}"><span class="mdxnum">#${String(x.i+1).padStart(2,'0')}</span>${ex?`<span class="mdxex">${x.e.cap?'🔓':'🔒'} ✨</span>`:''}<img data-b="${x.i}" alt=""><b>${st==='unk'?'???':esc(bossName(x.b))}</b><small>${st==='cap'?'🔴 Capturado'+((x.e.cap|0)>1?' ×'+x.e.cap:''):st==='win'?'🏆 Derrotado'+((x.e.win|0)>1?' ×'+x.e.win:''):st==='seen'?'👁️ Visto':'Aún no lo has visto'}</small>${ex?`<em>${x.e.cap?'Su Mega ya es tuya':'Captúralo para usar su Mega'}</em>`:''}</div>`}).join('')||'<p class="mdxn" style="grid-column:1/-1;text-align:center">Nada por aquí todavía.</p>'}</div></div>`;
-  el.querySelectorAll('img[data-b]').forEach(im=>{const b=POOL[+im.dataset.b];bossArt(b).then(u=>{im.src=u}).catch(()=>{})})};
+  ${SM?'<p class="mdxn">Todos los Pokémon singulares, Ultraentes y Paradoja que pueden aparecer en las <b>megaincursiones simples</b>: los que has visto, derrotado y capturado.</p>':`<p class="mdxn">Las <b>Megas exclusivas</b> ✨ (las que solo existen en las megaincursiones) solo se pueden usar en tus Pokémon cuando has <b>derrotado y capturado</b> a ese megajefe. Ejemplo: captura a Mega Houndoom X y todos tus Houndoom podrán megaevolucionar a su forma X.</p>`}
+  <div class="mdxf">${[['all','Todos'],...(SM?[]:[['inv','✨ Exclusivas']]),['cap','🔴 Capturados'],['todo','⏳ Pendientes']].map(([k,t])=>`<button data-m="f:${k}" class="${F===k?'on':''}">${t}</button>`).join('')}</div>
+  <div class="mdxg">${show.map(x=>{const st=x.e.cap?'cap':x.e.win?'win':x.e.seen?'seen':'unk',ex=INV.has(x.k);return`<div class="mdxc ${st}${ex?' ex':''}"><span class="mdxnum">#${String(x.i+1).padStart(SM?3:2,'0')}</span>${ex?`<span class="mdxex">${x.e.cap?'🔓':'🔒'} ✨</span>`:''}<img data-b="${x.i}" alt=""><b>${st==='unk'?'???':esc(bossName(x.b))}</b><small>${st==='cap'?'🔴 Capturado'+((x.e.cap|0)>1?' ×'+x.e.cap:''):st==='win'?'🏆 Derrotado'+((x.e.win|0)>1?' ×'+x.e.win:''):st==='seen'?'👁️ Visto':'Aún no lo has visto'}</small>${ex?`<em>${x.e.cap?'Su Mega ya es tuya':'Captúralo para usar su Mega'}</em>`:''}</div>`}).join('')||'<p class="mdxn" style="grid-column:1/-1;text-align:center">Nada por aquí todavía.</p>'}</div></div>`;
+  el.querySelectorAll('img[data-b]').forEach(im=>{const b=PL[+im.dataset.b];bossArt(b).then(u=>{im.src=u}).catch(()=>{})})};
  el.onclick=e=>{if(e.target===el){el.remove();return}const b=e.target.closest('[data-m]');if(!b)return;const a=b.dataset.m;if(a==='x'){el.remove();return}if(a.startsWith('f:')){F=a.slice(2);draw();try{beep(660,.04,'triangle')}catch(_){}}};
  draw()}
 window.__mbOpen=mbOpen;
@@ -14217,7 +14220,7 @@ const G={st:null,off:0,moves:null,me:null,
   else if(o.t==='st')G.onState(o.st);else if(o.t==='end')G.onEnd(o)},
  onStart(st,moves){G.moves=moves;G.st=st;G.off=st.now-now();G.res=null;G.target=null;UI.go('battle')},
  onState(st){if(!G.st)return;G.off=st.now-now();const ev=st.ev||[];G.st=st;UI.paintBattle();ev.forEach(UI.fx)},
- onEnd(res){G.res=res;const o=sv(res.wid);o.hp=Math.min(MAXHP,o.hp??MAXHP,Math.round(res.hp/(res.max||MAXHP)*MAXHP));o.thr=[...new Set([...(o.thr||[]),...(res.thr||[])])];if(res.win){o.win=true;if(!/libre-/.test(res.wid||''))o.canCap=true;try{if(!isS(res.wid||o.wid))mbMark(bossFor(res.wid||o.wid),'win')}catch(_){}}put(o);setTimeout(()=>{UI.go('end');if(res.win&&o.canCap)setTimeout(()=>UI.capFlow(),700)},1400)},
+ onEnd(res){G.res=res;const o=sv(res.wid);o.hp=Math.min(MAXHP,o.hp??MAXHP,Math.round(res.hp/(res.max||MAXHP)*MAXHP));o.thr=[...new Set([...(o.thr||[]),...(res.thr||[])])];if(res.win){o.win=true;if(!/libre-/.test(res.wid||''))o.canCap=true;try{mbMark(bossFor(res.wid||o.wid),'win')}catch(_){}}put(o);setTimeout(()=>{UI.go('end');if(res.win&&o.canCap)setTimeout(()=>UI.capFlow(),700)},1400)},
  act(o){/* v51.2: botón de golpe certero → el próximo ataque hace ×1,5 */if(o&&(o.k==null||o.k==='mv')&&o.i!=null&&(()=>{try{const m=G.moves[NETR.id][o.i];return m&&m.p>0}catch(_){return false}})()&&window.__mrX15){const xm=__mrX15.take();if(xm)o=Object.assign({},o,{xm})}if(NETR.role==='guest')send(NETR.dc,Object.assign({t:'act'},o));else H.act(NETR.id,o)}};
 /* ---------- INTERFAZ ---------- */
 const UI={view:'home',w:{},boss:null,bossArt:'',sel:null,room:[],code:'',err:'',el:null,tk:null,
@@ -14249,7 +14252,7 @@ const UI={view:'home',w:{},boss:null,bossArt:'',sel:null,room:[],code:'',err:'',
    <div class="mr-bts">${o.canCap&&!o.cap?`<button class="mr-bt mr-g" data-a="cap">${IC.mrb?`<span class="mr-evi">${IC.mrb}</span>`:'🔴'} Volver a la captura (${CAPN-(o.capT|0)}/${CAPN})</button>`:''}
 ${!w.open?(()=>{const run=getRun(),n=run&&run.bag&&run.bag.mrinv|0,P=100000000,mo=run?run.money|0:0;return n>0?`<button class="mr-bt mr-g" data-a="inv">🌋 Usar Invocación de megaincursión (×${n})</button>`:`<button class="mr-bt mr-g" data-a="invbuy" ${mo>=P||(window.CHT&&CHT.money)?'':'disabled'}>🌋 Comprar e invocar megaincursión ${IC.coin} ${fmt(P)}${mo>=P?'':`<small style="display:block;font-size:11px;opacity:.9">Te faltan ${fmt(P-mo)} Pokémonedas</small>`}</button>`})():''}
    <button class="mr-bt mr-p" data-a="solo" ${w.open&&left&&!o.win?'':'disabled'}>⚔️ Asalto en solitario</button>
-   <div class="mr-row2"><button class="mr-bt mr-b" data-a="host" ${w.open&&left&&!o.win?'':'disabled'}>👥 Crear sala</button><button class="mr-bt mr-b" data-a="join" ${w.open&&left&&!o.win?'':'disabled'}>🔑 Unirse</button></div>${SIMPLE()?'':(()=>{const d=mbGet(),n=POOL.filter(b=>(d[mbKey(b)]||{}).cap).length;return`<button class="mr-bt mr-dex" data-a="mbdex">📖 Megadex · ${n}/${POOL.length} capturados</button>`})()}${UI.scH()}</div>`}
+   <div class="mr-row2"><button class="mr-bt mr-b" data-a="host" ${w.open&&left&&!o.win?'':'disabled'}>👥 Crear sala</button><button class="mr-bt mr-b" data-a="join" ${w.open&&left&&!o.win?'':'disabled'}>🔑 Unirse</button></div>${(()=>{const SM=SIMPLE(),PL=SM?SPOOL:POOL,d=mbGet(SM?MBKS:MBK),n=PL.filter(b=>(d[mbKey(b)]||{}).cap).length;return`<button class="mr-bt mr-dex" data-a="mbdex">${SM?'📖 Legendex':'📖 Megadex'} · ${n}/${PL.length} capturados</button>`})()}${UI.scH()}</div>`}
   else if(v==='pick'){const T=run?run.team:[];
    h=head+`<div class="mr-mcard"><b>Elige tu Pokémon</b><div class="mr-pk" style="margin-top:10px">${T.map((m,i)=>`<button data-a="pk:${i}" class="${UI.sel===i?'mr-on':''}" ${m.hp<=0&&false?'disabled':''}><img src="${mini(m.id,m.sh)}" alt=""><span>${esc(nm(m))}</span><small>Nv.${m.lvl}</small></button>`).join('')}</div></div>
    <div class="mr-bts"><button class="mr-bt mr-p" data-a="pickok" ${UI.sel==null?'disabled':''}>Continuar</button>${UI.scH()}<button class="mr-bt" data-a="home">Volver</button></div>`}
@@ -14312,7 +14315,7 @@ ${!w.open?(()=>{const run=getRun(),n=run&&run.bag&&run.bag.mrinv|0,P=100000000,m
   if(a==='frinv'){try{__FR.open('invite')}catch(e){}return}
   if(a.startsWith('kind:')){const k=a.slice(5);if(k!==UI.kind){UI.kind=k;try{localStorage.setItem('pa_mrk',k)}catch(_){}netClose();H.lobby=[];UI.err='';UI.w=win();await UI.loadBoss(UI.w.open?UI.w.wid:(UI.w.next?nextWid(UI.w.next):'mr-x'));UI.go('home')}return}
   if(a==='cap')return UI.capture();
-  if(a==='mbdex')return mbOpen();
+  if(a==='mbdex')return mbOpen(SIMPLE()?'s':'');
   if(a==='inv'||a==='invbuy'){const run=getRun();if(!run||!window.mrInvUse){UI.toastS('Necesitas una partida de aventura');return}
    if(a==='invbuy'){const P=100000000;if((run.money|0)<P&&!(window.CHT&&CHT.money)){UI.toastS('No tienes suficientes Pokémonedas');return}
     const c=await ask('🌋 Comprar invocación',`<small>¿Pagar <b>${fmt(P)}</b> Pokémonedas por una Invocación de megaincursión y usarla ahora?</small>`,['Comprar e invocar','Cancelar']);if(c!==0)return;
@@ -14485,13 +14488,13 @@ ${!w.open?(()=>{const run=getRun(),n=run&&run.bag&&run.bag.mrinv|0,P=100000000,m
     /* v37: el cuadro de captura se queda debajo de la animación (ya con la ball gastada) y se actualiza en su sitio: no parpadea ni desaparece */
     {const MD=D.getElementById('mod');if(MD){MD.classList.add('keep','mr-capk');const l2=Math.max(0,CAPN-o.capT),ev=MD.querySelector('.mr-evr');if(ev)ev.innerHTML=UI.evRow(l2);{const sm=[...MD.querySelectorAll('small')].find(x=>/Megaballs? de evento/.test(x.textContent)&&/captura/.test(x.textContent));if(sm)sm.innerHTML=`Te ${l2==1?'queda':'quedan'} <b>${l2} ${l2==1?'Megaball':'Megaballs'} de evento</b> · ${Math.round(capP(wid)*100)}% de captura cada una`;const b0=MD.querySelector('[data-i="0"]');if(b0&&/Lanzar/.test(b0.textContent))b0.textContent=`Lanzar Megaball de evento (${l2}/${CAPN})`}MD.querySelectorAll('[data-i]').forEach(x=>x.style.pointerEvents='none');MD.style.display='flex'}}
     try{await UI.capAnim(b.art||UI.bossArt||art(m.id,m.sh),ok,bn,ok?null:{m:Object.assign({},m,{nick:'',rb:0}),stay:o.capT<CAPN})}catch(e){console.error(e)}
-    if(ok){o.cap=true;o.canCap=false;put(o);try{if(!isS(wid)){const bb=bossFor(wid);m.mrf=mbKey(bb);mbMark(bb,'cap')}}catch(_){}if(isS(wid)){try{ach('c');ach('rdc');if(TAGS[m.id])ach('rd'+TAGS[m.id]);if((m.lvl|0)>=100)ach('rd150');capHook&&capHook(m)}catch(_){}}const r2=getRun()||run;if(r2.team.length<6)r2.team.push(m);else(r2.box=r2.box||[]).push(m);putRun(r2);try{teamBar()}catch(e){}
+    if(ok){o.cap=true;o.canCap=false;put(o);try{const bb=bossFor(wid);if(!isS(wid))m.mrf=mbKey(bb);mbMark(bb,'cap')}catch(_){}if(isS(wid)){try{ach('c');ach('rdc');if(TAGS[m.id])ach('rd'+TAGS[m.id]);if((m.lvl|0)>=100)ach('rd150');capHook&&capHook(m)}catch(_){}}const r2=getRun()||run;if(r2.team.length<6)r2.team.push(m);else(r2.box=r2.box||[]).push(m);putRun(r2);try{teamBar()}catch(e){}
      await ask('🏆 ¡Megapokémon capturado!',`<div style="text-align:center"><img src="${art(m.id,m.sh)}" style="width:140px;height:140px;object-fit:contain"><br><b>${esc(nm(m))}</b><br><small>Nv.${m.lvl} · legendario · ${r2.team.includes(m)?'se une a tu equipo':'va a la Caja'}</small></div>`,['¡Genial!']);break}
     if(o.capT>=CAPN){await ask('💨 ¡Ha huido!',`<div style="text-align:center">${img}${bn} escapó de la última Megaball de evento y se marchó volando.<div class="mr-evr">${UI.evRow(0)}</div></div>`,['Vale']);break}
     msg=`<div style="margin:6px 0;font-weight:900;color:#fca5a5">💨 ¡Se escapó de la Megaball de evento!</div>`}
   }finally{UI.capBusy=0;{const MD=D.getElementById('mod');if(MD&&MD.classList.contains('mr-capk')){MD.classList.remove('keep','mr-capk');if(!MD.querySelector('[data-i]:not([style*="pointer-events"])'))MD.style.display='none'}}try{UI.draw()}catch(e){}}}};
 function hostOpenSafe(){netClose();if(UI.mode==='host'){try{hostOpen()}catch(e){UI.err='No se pudo abrir la sala.'}}else{NETR.role='host';NETR.code='SOLO'}}
-UI.loadBoss=(orig=>async function(wid){await orig(wid);try{if(UI.w&&UI.w.open&&UI.w.wid===wid&&!isS(wid))mbMark(UI.boss,'seen')}catch(_){}try{const d=await getD(UI.boss.id);UI.btypes=UI.boss.ty||d.types}catch(e){UI.btypes=UI.boss.ty||[]}})(UI.loadBoss);
+UI.loadBoss=(orig=>async function(wid){await orig(wid);try{if(UI.w&&UI.w.open&&UI.w.wid===wid)mbMark(UI.boss,'seen')}catch(_){}try{const d=await getD(UI.boss.id);UI.btypes=UI.boss.ty||d.types}catch(e){UI.btypes=UI.boss.ty||[]}})(UI.loadBoss);
 window.openMegaRaid=k=>UI.open(k);
 /* v28.0: solo cuenta como «abierta» una megaincursión de verdad (no el modo de prueba de los trucos) */
 const realOpen=k=>{const w=win(null,k);return w.open&&!w.dbg};
@@ -21732,6 +21735,14 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #mktov .mk-src small{display:block;font-weight:600;opacity:.85;margin-top:3px}
 #mktov .mk-src.on{background:#16a34a33;border:1px solid #4ade8066}
 #mktov .mk-src.off{background:#f59e0b22;border:1px solid #f59e0b66}
+/* v54.0: Legendex (megaincursiones simples) en tonos dorados */
+#mbdx.mdxs{background:radial-gradient(120% 80% at 50% 0,#ca8a0455,#0000 60%),#05030df2}
+#mbdx.mdxs .mdxw{background:linear-gradient(180deg,#3a2606,#0d0824 55%);border-color:#fde68a55}
+#mbdx.mdxs .mdxh b{background-image:linear-gradient(90deg,#fff,#fde68a)}
+#mbdx.mdxs .mdxst{grid-template-columns:repeat(3,1fr)}
+#mbdx.mdxs .mdxf button.on{background:linear-gradient(180deg,#eab308,#a16207);border-color:#fde68a}
+#mbdx.mdxs .mdxp i{background:linear-gradient(90deg,#fbbf24,#fef08a)}
+#mbdx.mdxs .mdxc.cap{border-color:#fde04788;background:linear-gradient(180deg,#a1620733,#ffffff06)}
 </style>
 <script id="v37js">
 (()=>{
