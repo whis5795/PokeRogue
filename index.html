@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v49.2</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v49.3</div>
 </section>
 
 <section id="team" class="scr">
@@ -8594,7 +8594,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'49.2',t:'Entrenador de movimientos y climas',s:'cur',l:[
+ {v:'49.3',t:'Perfil de entrenador',s:'cur',l:[
+  '👤 Nuevo Perfil (botón 👤 en el menú principal y en Amigos): tu foto, tu nombre, tu código de amigo y tu título',
+  '✨ Guarda tu primer shiny para siempre (aunque lo liberes o evolucione), tu golpe más fuerte (con el Pokémon y el ataque) y tu Pokémon de más nivel',
+  '📊 Estadísticas: combates ganados, capturas, shinys, especies de la Pokédex, dinero máximo, ronda más alta, medallas, megaevoluciones, huidas y tiempo jugado',
+  '🎖️ 24 títulos de entrenador que se desbloquean jugando (Cazashinys, Millonario, Domador, Fuerza bruta, Leyenda de gimnasios…). Elige cuál lucir'
+]},
+{v:'49.2',t:'Entrenador de movimientos y climas',s:'prev',l:[
   '🎓 Plaza del pueblo: toca la plaza (la gran Poké Ball del suelo) para ver al Entrenador de movimientos. Gratis, hace que tus Pokémon recuerden ataques que pudieron aprender en niveles anteriores o al evolucionar',
   '🌧️ Vuelven los climas: llegan más a menudo (cada 4-5 rondas) y duran 3-4 rondas',
   '🌧️ El clima se ve en el pueblo, en la isla y también dentro de los biomas (lluvia, nieve, arena, niebla, sol y tormenta), con una insignia que dice cuánto dura y qué hace'
@@ -21025,6 +21031,44 @@ body.lowfx .bzp img{filter:drop-shadow(0 4px 3px #0007)!important}
 #bzv>.mwx-rain i,#bzv>.mwx-storm i{animation-name:mwRainT;animation-duration:calc(1.1s*var(--s))}
 #bzv>.mwx-snow i{animation-name:mwSnowT;animation-duration:calc(7s*var(--s))}
 #bzv>.mwx-sand i{top:var(--y)}
+/* v49.3: Perfil */
+#pfbtn{position:relative;display:grid;place-items:center;width:46px;height:46px;padding:0;border-radius:50%;border:2px solid #c084fc;background:linear-gradient(180deg,#581c87ee,#2e1065ee);font-size:21px;cursor:pointer;box-shadow:0 4px 12px #0007}
+#prfov{position:fixed;inset:0;z-index:100020;display:none;align-items:center;justify-content:center;background:#05031099;backdrop-filter:blur(3px);padding:12px;font-family:system-ui,sans-serif;color:#fff}
+#prfov.on{display:flex}
+#prfov .pf-w{width:min(460px,100%);max-height:calc(100dvh - 24px);display:flex;flex-direction:column;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#1e1b4b,#0f0a2a);border:1px solid #c4b5fd44;box-shadow:0 20px 50px #000c;animation:pfIn .25s cubic-bezier(.2,1.2,.4,1)}
+@keyframes pfIn{from{transform:translateY(20px) scale(.96);opacity:0}}
+#prfov .pf-top{position:relative;display:flex;gap:14px;align-items:center;padding:18px 16px 16px;background:radial-gradient(120% 140% at 0 0,#7c3aed,#3b0764 55%,#1e1b4b)}
+#prfov .pf-x{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;border:1px solid #ffffff33;background:#0006;color:#fff;font-size:15px;cursor:pointer}
+#prfov .pf-av{position:relative;flex:none;width:78px;height:78px;border-radius:50%;border:3px solid #fde68a;background:#0b0720;display:grid;place-items:center;padding:0;cursor:pointer;overflow:visible;box-shadow:0 0 0 4px #0003,0 6px 18px #0008}
+#prfov .pf-av img{width:100%;height:100%;object-fit:contain;border-radius:50%;image-rendering:auto}
+#prfov .pf-av img.pfa-img{object-fit:cover}
+#prfov .pf-av span{font-size:36px}
+#prfov .pf-av i{position:absolute;right:-4px;bottom:-2px;font-style:normal;font-size:13px;background:#1e1b4b;border:1px solid #ffffff44;border-radius:50%;width:24px;height:24px;display:grid;place-items:center}
+#prfov .pf-id{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0}
+#prfov .pf-nm{background:none;border:0;color:#fff;font:900 21px system-ui;padding:0;cursor:pointer;text-align:left;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#prfov .pf-nm small{font-size:13px;opacity:.7}
+#prfov .pf-tt{border:1px solid #fde68a88;background:linear-gradient(90deg,#b4530955,#facc1533);color:#fef3c7;font:800 12.5px system-ui;border-radius:999px;padding:4px 11px;cursor:pointer}
+#prfov .pf-fc{font-size:11px;opacity:.8}#prfov .pf-fc b{letter-spacing:1px;color:#fde68a}
+#prfov .pf-body{overflow:auto;padding:4px 14px 16px;overscroll-behavior:contain}
+#prfov .pf-sec{margin:14px 2px 7px;font:900 13px system-ui;color:#ddd6fe;display:flex;justify-content:space-between}
+#prfov .pf-sec small{opacity:.7}
+#prfov .pf-first{display:flex;align-items:center;gap:12px;padding:10px;border-radius:16px;background:linear-gradient(120deg,#fde68a22,#c084fc22);border:1px solid #fde68a55}
+#prfov .pf-first img{width:92px;height:92px;object-fit:contain;filter:drop-shadow(0 4px 8px #0008)}
+#prfov .pf-first b{font-size:17px;display:block}#prfov .pf-first small{font-size:11.5px;opacity:.8}
+#prfov .pf-hit{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:#ffffff0d;border:1px solid #ffffff1a}
+#prfov .pf-big{font:900 24px system-ui;color:#fde047;min-width:80px}
+#prfov .pf-mon{display:flex;align-items:center;gap:8px;min-width:0}#prfov .pf-mon img{width:44px;height:44px;object-fit:contain;image-rendering:pixelated}
+#prfov .pf-mon b{display:block;font-size:13.5px}#prfov .pf-mon small{display:block;font-size:11px;opacity:.75}
+#prfov .pf-empty,#prfov .pf-none{font-size:12px;opacity:.7;padding:4px}
+#prfov .pf-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+#prfov .pf-grid div{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:8px;align-items:center;padding:9px 10px;border-radius:14px;background:#ffffff0d;border:1px solid #ffffff17}
+#prfov .pf-grid i{grid-row:1/3;font-style:normal;font-size:20px}#prfov .pf-grid b{font-size:15px}#prfov .pf-grid small{font-size:10.5px;opacity:.75}
+#prfov .pf-tl{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+#prfov .pf-tl button{text-align:left;padding:9px 10px;border-radius:14px;border:1px solid #fde68a55;background:linear-gradient(120deg,#b4530933,#1e1b4b);color:#fff;cursor:pointer}
+#prfov .pf-tl button.on{border:2px solid #fde047;box-shadow:0 0 12px #fde04766}
+#prfov .pf-tl button.lk{border-color:#ffffff1a;background:#ffffff08;opacity:.55;cursor:default}
+#prfov .pf-tl b{display:block;font-size:12.5px}#prfov .pf-tl small{display:block;font-size:10.5px;opacity:.8;margin-top:2px}
+#frp .fr-pf{background:linear-gradient(180deg,#9333ea,#6b21a8)!important;color:#fff!important}
 </style>
 <script id="v37js">
 (()=>{
@@ -24560,7 +24604,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  const tapClose=e=>{const b=e.target.closest&&e.target.closest('button,[role=button],[data-a],#chips2>*');if(b&&!b.closest('.sh-close')&&!b.closest('#mappin'))setTimeout(close,90)};sh.addEventListener('click',tapClose,true);sh.addEventListener('pointerup',tapClose,true);
  addEventListener('keydown',e=>{if(e.key==='Escape'&&sh.classList.contains('op')){e.stopPropagation();close()}},true);
  const sync=()=>{if(B.dataset.v==='map')enable();else disable()};
- const OVS=['#bzv','#pcbox','#frp','#pcas','#homeov','#mktov','#vitov','#safov','#lan','#mrd','#mpa','#coop','#pvp','#bdx','#pfpk','#ntf','#eqov','#cookov','#specov','#mgov','#cmpov','#rkov','#exov','#chov','#colov','#msov','#rnov','#tcgov','#tutov','#stov','#shinf','#evoa'];
+ const OVS=['#bzv','#pcbox','#frp','#pcas','#homeov','#mktov','#vitov','#safov','#lan','#mrd','#mpa','#coop','#pvp','#bdx','#pfpk','#ntf','#eqov','#cookov','#specov','#mgov','#cmpov','#rkov','#exov','#chov','#colov','#msov','#rnov','#tcgov','#tutov','#stov','#shinf','#evoa','#prfov'];
  const busy=()=>{const m=Q('#mod');if(m&&getComputedStyle(m).display!=='none')return true;for(const s of OVS){const e=Q(s);if(e&&e.isConnected){const c=getComputedStyle(e);if(c.display!=='none'&&c.visibility!=='hidden'&&+c.opacity!==0&&e.getBoundingClientRect().height>100)return true}}return false};
  setInterval(()=>{if(!on||D.hidden)return;const b=busy();if(B.classList.contains('shhide')!==b){B.classList.toggle('shhide',b);if(b)close()}},400);
  new MutationObserver(sync).observe(B,{attributes:true,attributeFilter:['data-v']});setInterval(()=>{sync();if(on)label()},700);sync();
@@ -24719,6 +24763,104 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
    if(m.moves.length<4){const c=await ask('Recordar '+nv.n,mvBox(m,nv,'Hay un hueco libre.'),['Recordar','Volver']);if(c===0){m.moves.push(nv);ok=true}}
    else{const f=await ask('¿Qué olvida?',mvBox(m,nv,`${esc(nm(m))} ya conoce 4 movimientos. ¿Cuál olvida para recordar ${esc(nv.n)}?`),mvOpts(m));if(f>=0&&f<m.moves.length){m.moves[f]=nv;ok=true}}
    if(ok){try{beep(880,.15,'triangle')}catch(e){}try{saveRun()}catch(e){}try{toast(`🎓 ${nm(m)} recordó ${nv.n}`)}catch(e){}}}};
+})();
+
+/* ---------- v49.3: 👤 Perfil — títulos de entrenador y estadísticas de siempre ---------- */
+(()=>{const D=document,Q=s=>D.querySelector(s);
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const SK='pa_pstat',TK='pa_ptitle';
+ const ld=()=>{try{return Object.assign({wins:0,caps:0,shc:0,flee:0,mega:0,money:0,round:0,medals:0,time:0,since:Date.now()},JSON.parse(localStorage.getItem(SK)||'{}'))}catch(e){return{wins:0,caps:0,shc:0,flee:0,mega:0,money:0,round:0,medals:0,time:0,since:Date.now()}}};
+ let ST=ld();let dirty=false;const sv=()=>{dirty=true};setInterval(()=>{if(dirty){dirty=false;try{localStorage.setItem(SK,JSON.stringify(ST))}catch(e){}}},2000);
+ const live=()=>{try{return typeof R=='object'&&R&&R.team&&R.team.length?R:null}catch(e){return null}};
+ const spName=id=>{try{const n=(typeof NAMES!='undefined'&&NAMES[id])||'';return n?n.charAt(0).toUpperCase()+n.slice(1):'#'+id}catch(e){return'#'+id}};
+ const snap=m=>({id:m.id,sh:m.sh?1:0,n:spName(m.id),nk:m.nick||'',lv:m.lvl|0});
+ window.__pstat=()=>ST;
+ /* al estrenar el Perfil se parte de lo que ya hay en la Pokédex */
+ if(!ST.seeded){try{const d=JSON.parse(localStorage.getItem('pokerogue_pokedex_v1')||'{}');ST.caps=Math.max(ST.caps,Object.keys(d.c||{}).length);ST.shc=Math.max(ST.shc,Object.keys(d.sh||{}).length)}catch(e){}ST.seeded=1;sv()}
+ /* --- registro --- */
+ const _ch=window.capHook;window.capHook=function(m){try{ST.caps++;if(m&&m.sh){ST.shc++;if(!ST.first)ST.first=Object.assign(snap(m),{t:Date.now()})}sv()}catch(e){}return _ch?_ch.apply(this,arguments):undefined};
+ const _hit=window.hit;window.hit=async function(s,r,mv){try{if(s==='e'&&r&&r.d>0&&typeof B=='object'&&B&&B.pl){const a=act('p');if(a&&(!ST.hit||r.d>ST.hit.d)){ST.hit=Object.assign(snap(a),{d:r.d|0,mv:mv&&mv.n||'',t:Date.now()});sv()}}}catch(e){}return _hit.apply(this,arguments)};
+ const _ae=window.advEnd;if(_ae)window.advEnd=advEnd=async function(w){try{if(w){ST.wins++;sv()}}catch(e){}return _ae.apply(this,arguments)};
+ const _mg=window.mega;if(_mg)window.mega=mega=async function(s){try{if(s==='p'){ST.mega++;sv()}}catch(e){}return _mg.apply(this,arguments)};
+ const _ff=window.__fleeFx;window.__fleeFx=async function(){try{ST.flee++;sv()}catch(e){}return _ff?_ff.apply(this,arguments):undefined};
+ const scan=()=>{const r=live();if(!r)return;let c=false;
+  const mo=(r.money|0)+(r.bank|0);if(mo>ST.money){ST.money=mo;c=true}
+  if((r.round|0)>ST.round){ST.round=r.round|0;c=true}
+  const md=(r.badges||[]).length;if(md>ST.medals){ST.medals=md;c=true}
+  for(const m of [...r.team,...(r.box||[])]){if(!m)continue;if(!ST.lvl||(m.lvl|0)>ST.lvl.lv){ST.lvl=snap(m);c=true}if(m.sh&&!ST.first){ST.first=Object.assign(snap(m),{t:Date.now(),old:1});c=true}}
+  if(c)sv()};
+ setInterval(()=>{try{scan();if(live()&&D.visibilityState==='visible'){ST.time+=15;sv()}}catch(e){}},15000);setTimeout(scan,3000);
+ /* --- títulos --- */
+ const pdx=()=>{try{const d=JSON.parse(localStorage.getItem('pokerogue_pokedex_v1')||'{}');return Object.keys(d.c||{}).length}catch(e){return 0}};
+ const T=[
+  ['nov','Entrenador novato','Lo tienes desde el principio',()=>true],
+  ['brillo','Primer brillo','Captura tu primer shiny',s=>!!s.first],
+  ['shiny','Cazashinys','Captura 5 shinys',s=>s.shc>=5],
+  ['shiny2','Leyenda variocolor','Captura 25 shinys',s=>s.shc>=25],
+  ['col','Coleccionista','Captura 100 Pokémon',s=>s.caps>=100],
+  ['col2','Maestro Poké Ball','Captura 500 Pokémon',s=>s.caps>=500],
+  ['dex','Investigador','Registra 150 especies en la Pokédex',()=>pdx()>=150],
+  ['dex2','Profesor Pokémon','Registra 500 especies en la Pokédex',()=>pdx()>=500],
+  ['vet','Veterano','Gana 200 combates',s=>s.wins>=200],
+  ['imp','Imparable','Gana 1.000 combates',s=>s.wins>=1000],
+  ['golpe','Golpe demoledor','Haz un golpe de 5.000 de daño',s=>s.hit&&s.hit.d>=5000],
+  ['golpe2','Fuerza bruta','Haz un golpe de 50.000 de daño',s=>s.hit&&s.hit.d>=50000],
+  ['mill','Millonario','Ten 1.000.000 de Pokémonedas (encima + banco)',s=>s.money>=1e6],
+  ['mag','Magnate','Ten 100.000.000 de Pokémonedas',s=>s.money>=1e8],
+  ['med','Medallista','Consigue 3 medallas en una aventura',s=>s.medals>=3],
+  ['med2','Leyenda de gimnasios','Consigue 8 medallas en una aventura',s=>s.medals>=8],
+  ['exp','Explorador','Llega a la ronda 50',s=>s.round>=50],
+  ['exp2','Infatigable','Llega a la ronda 150',s=>s.round>=150],
+  ['dom','Domador','Ten un Pokémon de Nv.100',s=>s.lvl&&s.lvl.lv>=100],
+  ['dom2','Domador supremo','Ten un Pokémon de Nv.200',s=>s.lvl&&s.lvl.lv>=200],
+  ['mega','Maestro Mega','Megaevoluciona 25 veces',s=>s.mega>=25],
+  ['esc','Escapista','Huye de 25 combates',s=>s.flee>=25],
+  ['ded','Dedicado','Juega 10 horas',s=>s.time>=36000],
+  ['inc','Incansable','Juega 50 horas',s=>s.time>=180000]];
+ const has=t=>{try{return!!t[3](ST)}catch(e){return false}};
+ const curT=()=>{let k='nov';try{k=localStorage.getItem(TK)||'nov'}catch(e){}const t=T.find(x=>x[0]===k);return t&&has(t)?t:T[0]};
+ window.__ptitle=()=>curT()[1];
+ /* aviso al desbloquear un título */
+ let known=null;setInterval(()=>{try{const got=T.filter(has).map(t=>t[0]);if(known===null){let k=null;try{k=JSON.parse(localStorage.getItem('pa_ptk')||'null')}catch(e){}known=k||got;if(!k)localStorage.setItem('pa_ptk',JSON.stringify(known));return}
+  const nw=got.filter(x=>!known.includes(x));if(nw.length){known=got;localStorage.setItem('pa_ptk',JSON.stringify(known));const t=T.find(x=>x[0]===nw[0]);try{toast(`🎖️ ¡Nuevo título: «${t[1]}»! Póntelo en tu Perfil`)}catch(e){}}}catch(e){}},5000);
+ /* --- interfaz --- */
+ const nf2=n=>{try{return nf(n)}catch(e){return String(n)}};
+ const tm=s=>{const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?`${h} h ${m} min`:`${m} min`};
+ const dt=t=>{try{return new Date(t).toLocaleDateString('es',{day:'numeric',month:'short',year:'numeric'})}catch(e){return''}};
+ const avHTML=()=>{try{const P=window.__prof&&__prof();if(P&&P.k==='img'&&P.src)return`<img src="${P.src}" alt="" class="pfa-img">`;if(P&&P.k==='mon'&&P.id)return`<img src="${mini(P.id,P.sh)}" alt="">`}catch(e){}
+  try{const r=live()||JSON.parse(localStorage.getItem('pa_run')||'null');const m=r&&r.team&&r.team[0];if(m)return`<img src="${mini(m.id,m.sh)}" alt="">`}catch(e){}return'<span>👤</span>'};
+ const dn=o=>o.nk||(o.n&&o.n[0]!=='#'?o.n:spName(o.id));
+ const monChip=(o,extra)=>o?`<span class="pf-mon"><img src="${mini(o.id,o.sh)}" alt=""><span><b>${o.sh?'✨ ':''}${esc(dn(o))}</b>${extra?`<small>${extra}</small>`:''}</span></span>`:'<small class="pf-none">—</small>';
+ function render(o){scan();const t=curT(),fid=(()=>{try{return window.__FR?__FR.fid():''}catch(e){return''}})(),nm0=(()=>{try{return __pname()}catch(e){return'Entrenador'}})();const got=T.filter(has).length;
+  const st=[['🏆','Combates ganados',nf2(ST.wins)],['🎯','Pokémon capturados',nf2(ST.caps)],['✨','Shinys capturados',nf2(ST.shc)],['📖','Especies en la Pokédex',nf2(pdx())],['💰','Dinero máximo',nf2(ST.money)],['🗺️','Ronda más alta',nf2(ST.round)],['🏅','Medallas en una aventura',nf2(ST.medals)],['🌀','Megaevoluciones',nf2(ST.mega)],['🏃','Huidas',nf2(ST.flee)],['⏱️','Tiempo jugado',tm(ST.time)]];
+  o.innerHTML=`<div class="pf-w"><div class="pf-top"><button type="button" class="pf-x" data-a="x" aria-label="Cerrar">✕</button>
+   <button type="button" class="pf-av" data-a="av" aria-label="Cambiar foto">${avHTML()}<i>✏️</i></button>
+   <div class="pf-id"><button type="button" class="pf-nm" data-a="nm">${esc(nm0)} <small>✏️</small></button><button type="button" class="pf-tt" data-a="tt">🎖️ ${esc(t[1])} <small>▾</small></button>${fid?`<small class="pf-fc">Código de amigo: <b>${esc(fid.slice(0,4)+'-'+fid.slice(4))}</b></small>`:''}</div></div>
+   <div class="pf-body">
+    <div class="pf-sec">✨ Tu primer shiny</div>
+    <div class="pf-first">${ST.first?`<img src="${art(ST.first.id,1)}" alt=""><div><b>${esc(dn(ST.first))}</b><small>${ST.first.old?'Ya lo tenías antes de que existiera el Perfil':'Capturado el '+dt(ST.first.t)}${ST.first.lv?' · Nv.'+ST.first.lv:''}</small></div>`:'<div class="pf-empty">Aún no has capturado ningún shiny. ¡Sigue buscando!</div>'}</div>
+    <div class="pf-sec">💥 Tu golpe más fuerte</div>
+    <div class="pf-hit">${ST.hit?`<b class="pf-big">${nf2(ST.hit.d)}</b>${monChip(ST.hit,esc(ST.hit.mv)+' · '+dt(ST.hit.t))}`:'<div class="pf-empty">Gana algún combate para registrarlo.</div>'}</div>
+    <div class="pf-sec">📈 Tu Pokémon de más nivel</div>
+    <div class="pf-hit">${ST.lvl?`<b class="pf-big">Nv.${ST.lvl.lv}</b>${monChip(ST.lvl)}`:'<div class="pf-empty">—</div>'}</div>
+    <div class="pf-sec">📊 Estadísticas</div>
+    <div class="pf-grid">${st.map(([e,n,v])=>`<div><i>${e}</i><b>${v}</b><small>${n}</small></div>`).join('')}</div>
+    <div class="pf-sec">🎖️ Títulos <small>${got}/${T.length}</small></div>
+    <div class="pf-tl">${T.map(x=>{const h=has(x);return`<button type="button" class="${h?'':'lk'}${x===t?' on':''}" data-t="${x[0]}" ${h?'':'disabled'}><b>${h?'🎖️':'🔒'} ${esc(x[1])}</b><small>${esc(x[2])}</small></button>`}).join('')}</div>
+   </div></div>`}
+ window.openProfile=function(){let o=Q('#prfov');if(!o){o=D.createElement('div');o.id='prfov';D.body.append(o);
+   o.addEventListener('click',async e=>{const b=e.target.closest('[data-a],[data-t]');if(e.target===o){close();return}if(!b)return;
+    if(b.dataset.t){try{localStorage.setItem(TK,b.dataset.t)}catch(_){}try{beep(880,.08,'triangle')}catch(_){}render(o);try{toast('🎖️ Título: '+curT()[1])}catch(_){}return}
+    const a=b.dataset.a;if(a==='x')return close();
+    if(a==='av'){try{if(window.__profEdit)await __profEdit()}catch(_){}render(o);return}
+    if(a==='nm'){try{if(window.changeName)await changeName()}catch(_){}render(o);return}
+    if(a==='tt'){const tl=o.querySelector('.pf-tl');if(tl)tl.scrollIntoView({behavior:'smooth',block:'start'});return}})}
+  render(o);o.classList.add('on');try{beep(700,.06,'triangle')}catch(_){}};
+ function close(){const o=Q('#prfov');if(o)o.classList.remove('on')}
+ /* botón en el menú principal (fila de iconos) y en Amigos */
+ const addBtn=()=>{const row=D.getElementById('clrow');if(row&&!D.getElementById('pfbtn')){const b=D.createElement('button');b.type='button';b.id='pfbtn';b.setAttribute('aria-label','Perfil');b.title='Perfil';b.innerHTML='<span>👤</span>';b.onclick=e=>{e.stopPropagation();openProfile()};row.prepend(b)}
+  const fc=Q('#frp .fr-me .fr-code');if(fc&&!Q('#frp .fr-pf')){const b=D.createElement('button');b.type='button';b.className='fr-cp fr-stall fr-pf';b.textContent='👤 Perfil';b.onclick=e=>{e.stopPropagation();openProfile()};fc.append(b)}};
+ if(window.__onDom)__onDom(addBtn);setTimeout(addBtn,1500);
 })();
 
 })();</script>
