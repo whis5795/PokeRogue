@@ -8621,7 +8621,8 @@ const CHANGELOG=[
  {v:'51.7',t:'Nueva evolución de Kingambit',s:'cur',l:[
   '👑 Kingambit tiene una forma nueva (y única) de conseguirse: tu Bisharp, llevando la Roca del Rey, tiene que derrotar a un Bisharp Alfa en un bioma dando el golpe final con un ataque supereficaz. Entonces evoluciona',
   '👑 Bisharp ya no evoluciona por nivel (ni con caramelos ni desde la Caja), y Kingambit ya no aparece salvaje en ningún sitio (ni en biomas, ni como Pokémon del día). Los Bisharp Alfa salen en los grupos de Pawniard',
-  '📖 La ficha de Bisharp explica la nueva forma de evolucionar'
+  '📖 La ficha de Bisharp explica la nueva forma de evolucionar',
+  '👥 Biomas: la pestaña de tu equipo pasa arriba a la derecha y se despliega hacia abajo en columna, con animación'
 ]},
 {v:'51.6',t:'Megaincursiones más difíciles',s:'prev',l:[
   '🌋 Megaincursiones más difíciles: el jefe ataca más a menudo (unos 3,8 s, 3 s con escudo), pega bastante más fuerte (y aún más cuando le queda poca vida), aguanta más golpes y tardas 20 s en volver si te debilitan'
@@ -21323,6 +21324,18 @@ body:has(#set.ov) #mod{z-index:100030!important}
 #bzv .bzt-m.on{border-color:#fde047;background:#fde04722;box-shadow:0 0 10px #fde04755}
 #bzv .bzt-m em{position:absolute;top:1px;right:2px;font-style:normal;font-size:12px}
 #bzv .bzt-m.ko{opacity:.4;filter:grayscale(1)}
+
+/* v51.7: la pestaña del equipo va arriba a la derecha y se despliega hacia abajo */
+#bzv .bzt{left:auto;right:10px;top:calc(10px + env(safe-area-inset-top));transform:none;flex-direction:column;align-items:flex-end;gap:6px}
+#bzv .bzt-tab{order:1;flex-direction:row;width:auto;padding:7px 11px;border-radius:999px;border:1px solid #ffffff3a;gap:5px;font-size:16px}
+#bzv .bzt-tab b{font-size:12px}
+#bzv .bzt.op .bzt-tab b{transform:rotate(180deg)}
+#bzv .bzt-col{order:2;width:74px;max-height:0;opacity:1;padding:0;background:none;border:0!important;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.9,.3,1)}
+#bzv .bzt.op .bzt-col{width:74px;max-height:80vh;overflow:auto;padding:0;border-radius:0;background:none}
+#bzv .bzt-m{background:#0f172ae6;opacity:0;transform:translateY(-14px) scale(.9);transition:opacity .25s,transform .3s cubic-bezier(.2,1.4,.4,1);transition-delay:0s}
+#bzv .bzt.op .bzt-m{opacity:1;transform:none;transition-delay:calc(var(--i,0)*55ms)}
+#bzv .bzt.op .bzt-m.ko{opacity:.4}
+#bzv .bzt-m.on{background:linear-gradient(#3b2f05e6,#1c1606e6)}
 </style>
 <script id="v37js">
 (()=>{
@@ -25454,9 +25467,9 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
  const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  let open=false;
  function html(){const T=(typeof R=='object'&&R&&R.team)||[],li=R.li|0;return T.map((m,i)=>{const q=Math.max(0,Math.min(100,m.hp/m.max*100)),c=q>50?'#4ade80':q>20?'#facc15':'#f87171';
-  return`<button type="button" class="bzt-m${i===li?' on':''}${m.hp<=0?' ko':''}" data-i="${i}" ${m.hp<=0?'disabled':''} title="${esc(nm(m))}"><img src="${mini(m.id,m.sh)}" alt=""><small>Nv.${m.lvl}</small><i><u style="width:${q}%;background:${c}"></u></i>${i===li?'<em>⚔️</em>':''}</button>`}).join('')}
+  return`<button type="button" class="bzt-m${i===li?' on':''}${m.hp<=0?' ko':''}" style="--i:${i}" data-i="${i}" ${m.hp<=0?'disabled':''} title="${esc(nm(m))}"><img src="${mini(m.id,m.sh)}" alt=""><small>Nv.${m.lvl}</small><i><u style="width:${q}%;background:${c}"></u></i>${i===li?'<em>⚔️</em>':''}</button>`}).join('')}
  function paint(){const bz=D.getElementById('bzv');if(!bz)return;let w=bz.querySelector('.bzt');
-  if(!w){w=D.createElement('div');w.className='bzt';w.innerHTML='<button type="button" class="bzt-tab" aria-label="Tu equipo">👥<b>›</b></button><div class="bzt-col"></div>';bz.append(w);
+  if(!w){w=D.createElement('div');w.className='bzt';w.innerHTML='<button type="button" class="bzt-tab" aria-label="Tu equipo">👥<b>▾</b></button><div class="bzt-col"></div>';bz.append(w);
    w.querySelector('.bzt-tab').onclick=e=>{e.stopPropagation();open=!open;w.classList.toggle('op',open);if(open)fill(w);try{beep(open?700:520,.05,'triangle')}catch(_){}};
    w.querySelector('.bzt-col').onclick=e=>{e.stopPropagation();const b=e.target.closest('[data-i]');if(!b||b.disabled)return;const i=+b.dataset.i,m=R.team[i];if(!m||m.hp<=0)return;R.li=i;try{saveRun()}catch(_){}try{toast(`⚔️ ${nm(m)} empezará los combates`)}catch(_){}try{beep(880,.08,'triangle')}catch(_){}fill(w);try{if(D.getElementById('tm')&&window.teamBar)teamBar()}catch(_){}}}
   w.classList.toggle('op',open);if(open)fill(w)}
