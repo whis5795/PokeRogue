@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v53.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -8624,7 +8624,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'52.9',t:'Intercambio más fluido',s:'cur',l:[
+ {v:'53.0',t:'Arreglos de la mochila y de aprender movimientos (Aventura multiplayer)',s:'cur',l:[
+  '🎒 Arreglado: los botones de la mochila de la Aventura multiplayer a veces no respondían (la ventana se volvía a crear a mitad del toque). Ahora solo se actualiza cuando algo cambia de verdad',
+  '📚 La pantalla de aprender movimientos ya no parpadea: mientras está abierta, la partida de fondo no se redibuja',
+  '📚 Ya se ven los 4 movimientos al aprender uno nuevo. Los fijos 🔒 aparecen marcados pero no se pueden olvidar'
+ ]},
+ {v:'52.9',t:'Intercambio más fluido',s:'prev',l:[
   '⚡ Intercambio con amigos mucho más fluido: la lista de tus Pokémon ya no se vuelve a crear entera cada vez que tu amigo hace algo, las imágenes se cargan solo cuando se ven y se quitan efectos muy pesados (desenfoques, sombras y animaciones en cadena de cientos de cartas)',
   '🔍 El buscador del intercambio ya no pierde lo que escribes ni cierra el teclado cuando tu amigo cambia su oferta',
   '🖤 Arreglado: al cerrar el teclado después de buscar un Pokémon en el intercambio, la pantalla se quedaba en negro'
@@ -12827,7 +12832,7 @@ function open(title,mon,nw,msg,mode){return new Promise(res=>{
  /* lista: movimientos actuales + el nuevo al final */
  const L=moves.map((v,i)=>({v,i})),N={v:nw,i:-1,nw:1};let sel=free?L.length:0;const all=[...L,N];
  const ty=(mon.types||[]).map(t=>`<span class="v-typ" style="--c:${COL[t]}"><i></i>${ES[t]||t}</span>`).join('');
- const row=(o,k)=>`<button type="button" class="v-mv${o.nw?' v-nw':''}" data-k="${k}" style="--c:${COL[o.v.t]||'#888'}"><span class="v-ti">${esc((ES[o.v.t]||o.v.t||'').slice(0,3).toUpperCase())}</span><span>${esc(o.v.n)}</span>${o.nw?'<span class="v-new">NUEVO</span>':'<span></span>'}<span class="v-pp">PP ${ppTxt(o.v)}</span></button>`;
+ const row=(o,k)=>`<button type="button" class="v-mv${o.nw?' v-nw':''}${o.v.lk&&!o.nw?' v-lk':''}" data-k="${k}" style="--c:${COL[o.v.t]||'#888'}"><span class="v-ti">${esc((ES[o.v.t]||o.v.t||'').slice(0,3).toUpperCase())}</span><span>${o.v.lk&&!o.nw?'🔒 ':''}${esc(o.v.n)}</span>${o.nw?'<span class="v-new">NUEVO</span>':'<span></span>'}<span class="v-pp">PP ${ppTxt(o.v)}</span></button>`;
  el.innerHTML=`<div class="v-sw">
   <div class="v-hd"><b>${esc(title)}</b><span>${esc(msg)}</span></div>
   <div class="v-pk"><div class="v-ring"></div><img alt="" data-k="${mon.id}_${mon.sh?1:0}" class="${keepIm?'ld':''}" src="${art(mon.id,mon.sh)}" onload="this.classList.add('ld')" onerror="this.src='${mini(mon.id,mon.sh)}';this.style.imageRendering='pixelated'"><div class="v-info"><div class="v-nm">${esc(nm(mon))}<small>Nv. ${mon.lvl}</small></div><div class="v-tys">${ty}</div></div></div>
@@ -12851,6 +12856,7 @@ function open(title,mon,nw,msg,mode){return new Promise(res=>{
  async function confirmA(){if(busy)return;busy=1;const o=all[sel];
   if(free){close(0);busy=0;return}
   if(o.nw){await cancel();busy=0;return}
+  if(o.v.lk){await talk(`<b>${esc(o.v.n)}</b> es un movimiento fijo 🔒: no se puede olvidar. Elige otro.`);busy=0;return}
   const i=await talk(`¿Quieres que <b>${esc(nm(mon))}</b> olvide <b>${esc(o.v.n)}</b> para aprender <b>${esc(nw.n)}</b>?`,['Sí','No']);
   if(i!==0){busy=0;return}
   rows[sel].classList.add('v-gone');snd(330,.12);await new Promise(r=>setTimeout(r,560));
@@ -16832,8 +16838,8 @@ const mvLite=v=>({n:v.n,t:v.t,p:v.p|0,ph:v.ph?1:0,acc:v.acc|0,mp:v.mp|0,cp:v.cp|
 function mvwPaint(s){let b=el.querySelector('.ma-mvw');const w=s&&s.mvw;if(!w||w.seat===MYSEAT){if(b)b.remove();return}
  if(!b){b=document.createElement('div');b.className='ma-mvw';el.append(b)}const t=`📚 ${esc(w.n)} está decidiendo si ${esc(w.p)} aprende ${esc(w.mv)}…`;if(b._t!==t){b._t=t;b.innerHTML=`<i></i><span>${t}</span>`}}
 function mvLocal(m,nv,nm0){const run=()=>new Promise(async res=>{try{/* los movimientos fijos (🔒) no se pueden olvidar: no se ofrecen */const free=m.moves.map((o,i)=>({o,i})).filter(x=>!x.o.lk);if(!free.length){tst(`${nm0||pname(m)} no puede olvidar ningún movimiento (todos son fijos)`);return res(-1)}
-  const m2=Object.assign({},m,{moves:free.map(x=>x.o)}),opts=[...free.map(x=>`Olvidar ${x.o.n}${x.o.p?' (Poder '+x.o.p+')':''}`),'No aprender'];
-  const k=await ask('Nuevo movimiento',mvBox(m2,nv,`${esc(nm0||pname(m))} quiere aprender ${esc(nv.n)}. ¿Qué movimiento olvida?${free.length<m.moves.length?' (Los movimientos fijos 🔒 no se pueden olvidar.)':''}`),opts);res(k>=0&&k<free.length?free[k].i:-1)}catch(e){res(-1)}});const p=MVQ.then(run);MVQ=p.catch(()=>{});return p}
+  /* v53.0: se ven los 4 movimientos; los fijos 🔒 aparecen pero no se pueden elegir */const m2=m,opts=[...m.moves.map(x=>`${x.lk?'🔒 ':''}Olvidar ${x.n}${x.p?' (Poder '+x.p+')':''}`),'No aprender'];
+  const k=await ask('Nuevo movimiento',mvBox(m2,nv,`${esc(nm0||pname(m))} quiere aprender ${esc(nv.n)}. ¿Qué movimiento olvida?${free.length<m.moves.length?' (Los movimientos fijos 🔒 no se pueden olvidar.)':''}`),opts);res(k>=0&&k<m.moves.length&&!m.moves[k].lk?k:-1)}catch(e){res(-1)}});const p=MVQ.then(run);MVQ=p.catch(()=>{});return p}
 function mvAsk(seat,m,nv){const st=G&&G.seats[seat];if(!st)return Promise.resolve(-1);V.mvw={seat,n:st.n,p:pname(m),mv:nv.n};push();const done=v=>{V.mvw=null;push();return v};return mvAsk0(seat,m,nv,st).then(done,()=>done(-1))}
 function mvAsk0(seat,m,nv,st){
  if(seat===0||st.pid===NET.id)return mvLocal(m,nv);
@@ -16948,7 +16954,8 @@ const scKey=(e,root)=>{const p=[];for(let x=e;x&&x!==root&&p.length<6;x=x.parent
 function scCap(root){const o={};if(!root)return o;root.querySelectorAll('*').forEach(e=>{if(e.scrollTop>0||e.scrollLeft>0){const k=scKey(e,root);if(!(k in o))o[k]=[e.scrollTop,e.scrollLeft]}});return o}
 function scRes(root,o,skip){if(!root)return;const ks=Object.keys(o);if(!ks.length)return;root.querySelectorAll('*').forEach(e=>{if(!(e.scrollHeight>e.clientHeight||e.scrollWidth>e.clientWidth))return;const k=scKey(e,root);const v=o[k];if(!v||(skip&&skip(e)))return;e.scrollTop=v[0];e.scrollLeft=v[1]})}
 let SCPOS=null;
-function draw(s){if(!el)return;const posCh=s&&s.pos!==SCPOS;SCPOS=s&&s.pos;const o=scCap(el);draw0(s);scRes(el,o,e=>posCh&&e.closest&&e.closest('#mamap,.ma-mapw'))}
+let SVLT=0;
+function draw(s){if(!el)return;/* v53.0: con la pantalla de aprender movimientos abierta no se redibuja (sin parpadeos) */if(document.querySelector('#svl.on:not(.out)')){S=s;if(!SVLT)SVLT=setInterval(()=>{if(!document.querySelector('#svl.on:not(.out)')){clearInterval(SVLT);SVLT=0;if(S)draw(S)}},200);return}const posCh=s&&s.pos!==SCPOS;SCPOS=s&&s.pos;const o=scCap(el);draw0(s);scRes(el,o,e=>posCh&&e.closest&&e.closest('#mamap,.ma-mapw'))}
 function draw0(s){if(!el)return;S=s;setTimeout(()=>{try{if(S===s)mvwPaint(s)}catch(_){}},0);
  if(s.ph==='lobby'){SEL=null;curBio=-1;UN={};el.className='on';const b=el.querySelector('.ma-body'),sc=b?b.scrollTop:0,ae=D.activeElement,ki=ae&&ae.id==='mamyname'?{v:ae.value,p:ae.selectionStart}:null;el.innerHTML=lobbyHTML(s);if(ki){const i=Q('#mamyname');if(i){i.value=ki.v;i.focus();try{i.setSelectionRange(ki.p,ki.p)}catch(e){}}}const b2=el.querySelector('.ma-body');if(b2)b2.scrollTop=sc;badge();return}
  const bi=biomeOf(Math.max(0,s.depth));if(!el.classList.contains('game')||curBio!==bi||!Q('#masc'))gameShell(bi);
@@ -17015,7 +17022,7 @@ function modal0(){const s=S;let g=Q('#mamod');if(!MOD||!s){if(g)g.remove();retur
  else if(MOD.k==='rv'){h=`<h4>💎 ¿A quién reanimas?</h4><div class="ma-it">${s.seats.map((x,i)=>x.hero&&x.hero.hp<=0?`<button class="ma-b" data-mo="rv:${i}" style="border-color:${PC[i]}"><img src="${mini(x.hero.id,x.hero.sh)}" alt="" style="width:32px;height:32px;vertical-align:middle;image-rendering:pixelated"> ${esc(x.hero.nm)} · ${esc(x.n)}</button>`:'').join('')}</div>`}
  else if(MOD.k==='mt'){const it=bag[MOD.idx];if(!it||!hero){MOD={k:'bag'};return modal()}h=`<h4>💿 ${esc(it.n)}: ¿qué movimiento olvida ${esc(hero.nm)}?</h4><div class="ma-it">${hero.moves.map((v,i)=>`<button class="ma-b" data-mo="slot:${i}" ${v.lk?'disabled':''} style="text-align:left;border-color:${COL[v.t]||'#fff'}">${v.lk?'🔒 ':''}${esc(v.n)} <small style="opacity:.75">· ${ES[v.t]||v.t}${v.p?' · '+v.p:' · apoyo'}${v.lk?' · fijo, no se puede olvidar':''}</small></button>`).join('')}</div>`}
  h+=`<button class="ma-b" data-mo="${MOD.k==='bag'||MOD.k==='shop'?'x':'bag'}" style="width:100%;margin-top:10px">${MOD.k==='bag'||MOD.k==='shop'?'Cerrar':'← Volver'}</button>`;
- g.innerHTML=`<div>${h}</div>`}
+ /* v53.0: si no cambia nada no se reconstruye (antes los toques se perdían porque el botón se sustituía a mitad del toque) */const hh=`<div>${h}</div>`;if(g._h!==hh){g._h=hh;g.innerHTML=hh}}
 function modalAct(a){const s=S,bag=myBag(s);
  if(a==='x'){MOD=null;return modal()}if(a==='bag'){MOD={k:'bag'};return modal()}
  const [k,v]=a.split(':'),n=+v;
@@ -21490,6 +21497,8 @@ body:has(#mpa.on) #svl{z-index:100050!important}
 #lan .mgrid .mc img{filter:none}
 #trv .tvc{content-visibility:auto;contain-intrinsic-size:auto 104px}
 #lan .mgrid .mc.on,#lan .mgrid .mc.trw{content-visibility:visible}
+/* v53.0: movimientos fijos en la pantalla de aprender */
+#svl .v-mv.v-lk{opacity:.6}
 </style>
 <script id="v37js">
 (()=>{
