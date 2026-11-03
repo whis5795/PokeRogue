@@ -9,7 +9,7 @@
       su lista de cambios en español, y cambiar la anterior de s:'cur' a s:'prev'.
   No entregues el archivo sin hacer estos dos pasos.
 -->
-<html lang="es"><head><meta charset="utf-8"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><script>if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});</script>
+<html lang="es"><head><meta charset="utf-8"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><script>if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){const had=!!navigator.serviceWorker.controller;let shown=0;const upd=()=>{if(shown)return;shown=1;const go=()=>location.reload();if(document.body&&document.body.dataset.v==='menu'&&!document.querySelector('.ov,#lan[style*=flex],#mpa.on,#coop')){go();return}const b=document.createElement('button');b.type='button';b.textContent='🔄 Hay una versión nueva del juego · toca para actualizar';b.style.cssText='position:fixed;left:50%;top:max(8px,env(safe-area-inset-top));transform:translateX(-50%);z-index:2147483000;padding:10px 16px;border-radius:999px;border:2px solid #fde68a;background:#4c1d95;color:#fff;font:800 13px system-ui;box-shadow:0 8px 22px #000a;max-width:92vw';b.onclick=go;document.body.append(b)};navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.t==='upd')upd()});navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had)upd()});addEventListener('load',()=>{navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update().catch(()=>{})})}).catch(()=>{})})}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="apple-mobile-web-app-title" content="PokeRogue">
@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v53.6</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v53.7</div>
 </section>
 
 <section id="team" class="scr">
@@ -8624,7 +8624,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'53.6',t:'Optimización general',s:'cur',l:[
+ {v:'53.7',t:'Adiós a los mapas viejos',s:'cur',l:[
+  '🗺️ Los mapas antiguos (el camino vertical y el mapa ilustrado) ya no pueden aparecer nunca: antes, si algo fallaba al dibujar el mapa nuevo (pasaba en algunos iPhone), se mostraba el viejo',
+  '🔄 Actualizaciones más fiables: si la conexión es lenta, el juego ya no se queda atascado en una versión antigua. Se abre la copia guardada mientras se descarga la nueva y, cuando termina, aparece un aviso «Hay una versión nueva» (en el menú se actualiza sola)'
+ ]},
+ {v:'53.6',t:'Optimización general',s:'prev',l:[
   '⚡ Rendimiento: la lluvia de estrellas del menú se pausa cuando otra pantalla completa lo tapa (intercambio, torre 2 vs 2, Aventura multiplayer…). En el intercambio el juego gasta la mitad de trabajo de dibujo por segundo',
   '🔍 Revisión general: se han vuelto a probar el menú, la aventura, las incursiones, la Aventura multiplayer, el casino, el mercado y las vitrinas sin encontrar errores'
  ]},
@@ -24823,7 +24827,10 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
     cur=`<g class="rn cur mnode" role="button" tabindex="0" aria-label="Ronda ${j}: continuar" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle class="rng" r="42"/>${body}${spr}</g>`}
    else lab+=`<g class="rn ${st}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})">${body}</g>`}
   return`<div id="dmap" class="imap xmap xruta">${bar()}<div class="imw"><div class="imc"><svg viewBox="0 0 ${RW} ${RH}" xmlns="http://www.w3.org/2000/svg"><image href="${img}" width="${RW}" height="${RH}"/>${lab}${cur}</svg></div></div><div id="mhint" class="mhint">Ronda <b>${r}/${R.inf?'∞':R.max}</b> · toca la ronda que brilla para continuar</div></div>${dummies(ALLIDS,1)}`}
- const _d=dMap;dMap=function(sh,zs){/* v50.3: con aventura en curso ya no se prepara el mapa antiguo por debajo */if(live()){try{if(tab==='town')return townHTML();if(tab==='bio')return bioHTML();return rutaHTML()}catch(e){console.error('pestañas del mapa',e)}}const base=_d.apply(this,arguments);try{if(!live())return base;if(tab==='town')return townHTML();if(tab==='bio')return bioHTML();return rutaHTML()}catch(e){console.error('pestañas del mapa',e);return base}};
+ /* v53.7: los mapas antiguos (el camino vertical y el mapa ilustrado) ya no se usan NUNCA, ni siquiera si algo falla: antes, si una pestaña daba error (p. ej. en algún iPhone), se volvía a ver el mapa viejo */
+ dMap=function(sh,zs){let err='';const T=f=>{try{return f()}catch(e){console.error('pestañas del mapa',e);err=err||String(e&&e.message||e);return''}};
+  let h=tab==='town'?T(townHTML):tab==='bio'?T(bioHTML):'';if(!h)h=T(rutaHTML);if(!h&&tab!=='town')h=T(townHTML);if(h)return h;
+  return`<div id="dmap" class="imap"><div style="max-width:420px;margin:90px auto;padding:18px;border-radius:18px;background:#1e1b4bcc;border:1px solid #ffffff33;color:#fff;text-align:center;font:700 14px system-ui"><b style="font-size:16px">⚠️ No se pudo dibujar el mapa</b><p style="opacity:.8;margin:8px 0 12px">${(err||'').replace(/[<>&]/g,'')}</p><button type="button" class="act" onclick="location.reload()">🔄 Recargar</button></div></div>`};
  const _s=showMap;showMap=function(){const r=_s.apply(this,arguments);try{post()}catch(e){console.error(e)}return r};
  function post(){const c=Q('#cards');if(!c)return;
   if(tab!=='ruta'){const s=Q('#smap');if(s)s.remove();const d=Q('#dmap');if(d)d.style.display=''}
