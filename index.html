@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v50.2</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v50.3</div>
 </section>
 
 <section id="team" class="scr">
@@ -5227,7 +5227,9 @@ const DEF=[
   {k:'qvic',t:'Victoria rápida',d:'La pantalla de premios de cada combate ganado se cierra sola',b:1},
   {k:'qcap',t:'Captura rápida',d:'Lanzar la Ball dura un instante en vez de la animación larga',b:1},
   {k:'qevo',t:'Evolución rápida',d:'La animación de evolución va a toda velocidad',b:1},
-  {k:'bztop',t:'Botones del bioma arriba',d:'Dentro de los biomas, el botón para volver a la isla (y los de información) van arriba a la derecha en vez de abajo',b:1},
+  {k:'bztop',t:'Botones del bioma arriba',d:'Dentro de los biomas, el botón para volver a la isla (y los de información) van arriba a la izquierda, como antes, en vez de abajo',b:1},
+  {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
+  {k:'noko',t:'Sin golpe final a cámara lenta',d:'El ataque que gana el combate se ve normal, sin zoom, cámara lenta ni «¡K.O.!»',b:1},
   {k:'cenq',t:'Sin diálogos de la enfermera',d:'En el Centro Pokémon la enfermera cura a tu equipo sin hablar (sin bocadillos de texto)',b:1},
   {k:'autoheal',t:'Curar tras cada combate',d:'Al ganar un combate de la aventura usa solo las pociones justas de tu mochila para curar al equipo',b:1},
   {k:'frnt',t:'Avisos de amigos',d:'Te avisa cuando un amigo captura un shiny o un legendario, gana una medalla, consigue un título o reacciona a tu vitrina',b:1},
@@ -5254,12 +5256,11 @@ const root=document.createElement('div');root.id='setx';const tabs=document.crea
 const val=(k)=>S[k];
 const lbl=(d)=>{const f=d.o.find(x=>x[0]===S[d.k]);return f?f[1]:String(S[d.k])};
 const panels={};let cur=localStorage.getItem('pa_stab')||'game';if(!DEF.some(c=>c[0]===cur))cur='game';
-function setOpt(k,v){S[k]=v;try{save()}catch(e){}
+function setOpt(k,v){S[k]=v;try{save()}catch(e){}if(k=='smap'&&window.__smapRefresh)__smapRefresh();
  if(k=='gfx'){try{applyGfx(1)}catch(e){}}
   if(k=='mareo'&&window.applyMareo)applyMareo();
  if(k=='rounds'&&live()){if(v==='inf'){R.inf=1;R.max=Math.max(R.max,Math.ceil((R.round+1)/20)*20)}else{R.inf=0;R.max=Math.max(v,Math.ceil((R.round+1)/20)*20,R.ext&&R.ext.length?R.max:0)}}
  if(k=='lives'&&live())R.livesInf=v==='inf'?1:0;
- if(k=='smap'&&window.__smapRefresh)__smapRefresh();
  if(k=='snd'||k=='vol')applyVol();
  refresh()}
 function applyVol(){try{if(window.MG)MG.gain.value=.9*(S.vol==null?1:S.vol/100)}catch(e){}}
@@ -8617,7 +8618,19 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'50.2',t:'Arreglo de la cortina del mapa',s:'cur',l:[
+ {v:'50.3',t:'Limpieza y arreglos',s:'cur',l:[
+  '😤 Obediencia corregida: empiezas controlando hasta Nv.40 y cada medalla suma 40 niveles (1 medalla: Nv.80, 2: Nv.120, 3: Nv.160, 4: Nv.200)',
+  '🏅 Nuevo chip en el mapa (en la cortina) que dice hasta qué nivel te obedecen tus Pokémon; tócalo para ver quién no te hace caso',
+  '⚙️ Nuevo ajuste «Sin golpe final a cámara lenta» para desactivar el zoom y el «¡K.O.!» del último golpe',
+  '🛠️ Panel de trucos: nuevo «Darte medallas» para elegir cuántas medallas tienes en la aventura',
+  '↖️ El ajuste «Botones del bioma arriba» ahora los pone arriba a la izquierda, como estaban antes',
+  '🧹 Se ha borrado del juego el mapa ilustrado antiguo (el de antes de las pestañas): el juego pesa unos 400 KB menos y el mapa se abre más rápido, porque ya no se prepara el mapa viejo por debajo',
+  '🗺️ Vuelve el ajuste «Mapa simple» (lo quité por un malentendido). La cortina con los botones del mapa ya no sale en Ajustes ni en otras pantallas',
+  '🔧 Arreglado: la cortina del mapa se cerraba sola al intentar abrirla en el Pueblo',
+  '🔧 Arreglado: las ventanas que se abren desde Ajustes (sobrescribir, cargar o borrar una ranura…) salían por debajo de Ajustes en algunos sitios, como el Centro Pokémon. Ahora salen siempre encima',
+  '🏷️ Biomas: la tarjeta de cada Pokémon ya no muestra la efectividad de tus ataques (▲/▼)'
+]},
+{v:'50.2',t:'Arreglo de la cortina del mapa',s:'prev',l:[
   '🔧 Arreglado: la cortina con los botones del mapa seguía viéndose encima de otras pantallas, como el Centro Pokémon. Ahora se esconde en cualquier pantalla que no sea el mapa'
 ]},
 {v:'50.1',t:'Botones del bioma arriba',s:'prev',l:[
@@ -10393,7 +10406,7 @@ body[data-v=map] #evtab,body[data-v=map] #evtab.on{display:none!important}
 body[data-v=map] #homeb{display:none!important}
 </style>
 <script id="imapjs">(()=>{
-const Q=s=>document.querySelector(s),W=1535,H=1024,IMG="assets/1280af6bc3f0.webp",TL=[[760, 300], [826, 310], [882, 336], [928, 376], [960, 426], [977, 482], [973, 539], [947, 591], [902, 632], [839, 660], [765, 671], [689, 662], [625, 633], [579, 592], [550, 539], [542, 480], [556, 421], [589, 370], [638, 331], [694, 308]],HS=[["mz0", "M34 377 L40 297 L109 217 L194 171 L286 183 L343 240 L366 331 L349 434 L297 514 L217 543 L126 537 L69 491 L34 434 Z"], ["mz1", "M885 770 L950 735 L1040 730 L1110 775 L1115 860 L1060 905 L960 910 L890 880 Z"], ["mz2", "M1052 109 L1086 51 L1143 17 L1257 23 L1360 69 L1434 126 L1474 183 L1440 257 L1371 309 L1280 303 L1189 303 L1097 269 L1063 194 Z"], ["mz3", "M577 126 L623 69 L697 17 L754 9 L846 14 L914 80 L932 149 L891 194 L800 211 L697 211 L617 183 Z"], ["mz4", "M1160 457 L1211 394 L1291 377 L1406 383 L1497 400 L1520 480 L1509 560 L1474 623 L1394 634 L1291 617 L1211 594 L1166 537 Z"], ["mz5", "M246 171 L286 91 L343 43 L411 40 L480 86 L509 160 L491 223 L434 229 L343 211 L274 217 Z"], ["mshop", "M1005 560 L1050 522 L1130 520 L1185 555 L1182 625 L1020 628 L1005 600 Z"], ["mcen", "M194 594 L229 566 L331 560 L360 594 L363 668 L331 692 L217 686 L194 651 Z"], ["mbank", "M1135 672 L1160 645 L1285 642 L1298 670 L1296 762 L1140 762 Z"], ["mhome", "M651 789 L697 743 L817 737 L835 789 L860 823 L863 892 L749 905 L657 892 Z"], ["mraid", "M686 417 L737 400 L800 400 L825 440 L825 514 L789 531 L714 528 L691 491 Z"]],CE={"mz0": [190, 367], "mz1": [1001, 821], "mz2": [1250, 170], "mz3": [759, 115], "mz4": [1344, 505], "mz5": [382, 147], "mshop": [1082, 573], "mcen": [277, 626], "mbank": [1219, 692], "mhome": [766, 821], "mraid": [758, 465]},K=TL.length;
+const Q=s=>document.querySelector(s),W=1535,H=1024,IMG="" /* v50.3: el mapa ilustrado antiguo se ha quitado */,TL=[[760, 300], [826, 310], [882, 336], [928, 376], [960, 426], [977, 482], [973, 539], [947, 591], [902, 632], [839, 660], [765, 671], [689, 662], [625, 633], [579, 592], [550, 539], [542, 480], [556, 421], [589, 370], [638, 331], [694, 308]],HS=[["mz0", "M34 377 L40 297 L109 217 L194 171 L286 183 L343 240 L366 331 L349 434 L297 514 L217 543 L126 537 L69 491 L34 434 Z"], ["mz1", "M885 770 L950 735 L1040 730 L1110 775 L1115 860 L1060 905 L960 910 L890 880 Z"], ["mz2", "M1052 109 L1086 51 L1143 17 L1257 23 L1360 69 L1434 126 L1474 183 L1440 257 L1371 309 L1280 303 L1189 303 L1097 269 L1063 194 Z"], ["mz3", "M577 126 L623 69 L697 17 L754 9 L846 14 L914 80 L932 149 L891 194 L800 211 L697 211 L617 183 Z"], ["mz4", "M1160 457 L1211 394 L1291 377 L1406 383 L1497 400 L1520 480 L1509 560 L1474 623 L1394 634 L1291 617 L1211 594 L1166 537 Z"], ["mz5", "M246 171 L286 91 L343 43 L411 40 L480 86 L509 160 L491 223 L434 229 L343 211 L274 217 Z"], ["mshop", "M1005 560 L1050 522 L1130 520 L1185 555 L1182 625 L1020 628 L1005 600 Z"], ["mcen", "M194 594 L229 566 L331 560 L360 594 L363 668 L331 692 L217 686 L194 651 Z"], ["mbank", "M1135 672 L1160 645 L1285 642 L1298 670 L1296 762 L1140 762 Z"], ["mhome", "M651 789 L697 743 L817 737 L835 789 L860 823 L863 892 L749 905 L657 892 Z"], ["mraid", "M686 417 L737 400 L800 400 L825 440 L825 514 L789 531 L714 528 L691 491 Z"]],CE={"mz0": [190, 367], "mz1": [1001, 821], "mz2": [1250, 170], "mz3": [759, 115], "mz4": [1344, 505], "mz5": [382, 147], "mshop": [1082, 573], "mcen": [277, 626], "mbank": [1219, 692], "mhome": [766, 821], "mraid": [758, 465]},K=TL.length;
 const LAB={mshop:'Tienda',mcen:'Centro Pokémon',mbank:'Banco Pokémon',mhome:'Mi casa',mraid:'Altar de megaincursiones'};
 let sel=null,HINT={};const DEF='Toca dos veces una zona para entrar';
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -10427,7 +10440,6 @@ function post(){const d=Q('#dmap.imap');if(!d)return;
   d.querySelectorAll('.hs').forEach(g=>{if(!g.onkeydown)g.onkeydown=e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();g.onclick&&g.onclick()}}});
   const cu=Q('.mnode.cur');if(cu){cu.onclick=showCards;cu.onkeydown=e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();showCards()}}}
   const w=Q('#dmap .imw');if(w)w.scrollLeft=(755/W)*w.scrollWidth-w.clientWidth/2;raidSync()}
-const _d=dMap;dMap=function(sh,zs){try{return mapHTML(sh,zs)}catch(e){console.error('mapa de imagen',e);return _d(sh,zs)}};
 const _s=showMap;showMap=function(){const r=_s.apply(this,arguments);try{post()}catch(e){console.error(e)}return r};
 window.__mapHTML=mapHTML;
 })();</script>
@@ -12268,6 +12280,11 @@ const upd=()=>{try{if(Q('#tm'))teamBar();if(Q('#mn'))Q('#mn').innerHTML=IC.coin+
 async function findPoke(q){try{await loadDex()}catch(e){}q=norm(q);let e=DEX.find(x=>x.name==q||String(x.id)==q)||DEX.find(x=>x.name.includes(q));return e?{id:e.id,name:e.name}:null}
 /* ---- herramientas ---- */
 const T=[
+ ['🏅','Darte medallas','Elige cuántas medallas tienes en esta aventura (cambia la obediencia)',need('run',async()=>{
+   const n0=(R.badges||[]).length,p=ask('🏅 Darte medallas',`<small>Tienes ${n0}. Escribe cuántas medallas quieres tener (0 a 20). Cada una suma 40 niveles de obediencia.</small><input id="cmdn" type="number" inputmode="numeric" min="0" max="20" value="${n0}" style="display:block;width:100%;margin:10px 0 4px;padding:10px 12px;border-radius:10px;border:1px solid #fff4;background:#0006;color:#fff;font:inherit;font-size:16px;box-sizing:border-box">`,['Aplicar','Cancelar']);
+   const inp=D.getElementById('cmdn');const k=await p;if(k!==0)return;const n=Math.max(0,Math.min(20,parseInt(inp&&inp.value)||0));
+   const TY=['bug','grass','electric','water','normal','ghost','psychic','ice','fire','fighting','dark','steel','fairy','dragon','rock','ground','poison','flying'];const cur=(R.badges||[]).slice(0,n);let i=0;while(cur.length<n){cur.push(TY[i%TY.length]);i++}R.badges=cur;try{saveRun()}catch(e){}
+   toast(`🏅 Ahora tienes ${n} medalla${n===1?'':'s'}: te obedecen hasta Nv.${window.__obeyCap?__obeyCap():40+40*n}`)})],
  ['⚡','Mega siempre lista','Megaevoluciona en todos los combates, sin nivel 100 ni recarga',async()=>{CHT.mega=!CHT.mega;toast(CHT.mega?'⚡ Mega siempre lista: ACTIVADA':'Mega siempre lista: desactivada');try{if(D.body.dataset.v==='battle'&&D.querySelector('#opts .mvg'))menu()}catch(e){}},()=>!!CHT.mega],
  ['⚔️','Combate de prueba','Salvaje, entrenador o jefe al instante',need('run',async()=>{
    const i=await ask('Combate de prueba','<small>Empieza un combate ahora mismo con tu equipo actual.</small>',['🌿 Pokémon salvaje','🧢 Entrenador (3 Pokémon)','👑 Jefe (6 Pokémon)','Cancelar']);if(i>2)return;
@@ -12567,7 +12584,7 @@ body.tmhide[data-v=map] #run #bagb,body.tmhide[data-v=map] #run #homeb{bottom:ca
 </style>
 <script id="smapjs">(()=>{
 const Q=s=>document.querySelector(s);
-const on=()=>false; /* v49.6: se quitó el mapa simple */
+const on=()=>{try{return !!S.smap}catch(e){return false}};
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ZC=[['#166534','#14532d'],['#65a30d','#3f6212'],['#64748b','#334155'],['#c2410c','#7f1d1d'],['#0284c7','#075985'],['#6d28d9','#3b0764']];
 const tn=n=>n+(n==1?' turno':' turnos');
@@ -18866,7 +18883,7 @@ const SK='pr_mappos';const getP=()=>{try{return JSON.parse(localStorage.getItem(
 const setV=p=>{B.style.setProperty('--mp-t',p.t+'px');B.style.setProperty('--mp-l',p.l+'px');B.style.setProperty('--mp-w',p.w+'px');B.classList.add('mappin')};
 function save(r){const p={t:Math.round(r.top),l:Math.round(r.left),w:Math.round(r.width),vw:innerWidth,vh:innerHeight};try{localStorage.setItem(SK,JSON.stringify(p))}catch(e){}return p}
 const fits=p=>p&&Math.abs(p.vw-innerWidth)<=2&&Math.abs(p.vh-innerHeight)<=160&&p.t>-50&&p.t<innerHeight-60;
-const simple=()=>false; /* v49.6: se quitó el mapa simple */
+const simple=()=>{try{return !!S.smap}catch(e){return false}};
 function pin(re){clearTimeout(tm);if(!want||B.dataset.v!=='map'||simple()){B.classList.remove('mappin');return}
  const p=getP();if(!re&&fits(p)){setV(p);return}
  B.classList.remove('mappin');
@@ -21211,8 +21228,10 @@ html.lt .emj{display:inline-block}
 #bzv .bzwxp button{margin-top:4px;border:0;border-radius:12px;padding:10px;font:800 14px system-ui;color:#fff;background:linear-gradient(180deg,#3b82f6,#1d4ed8);cursor:pointer}
 html.cenq #cen .ctxt{display:none!important}
 /* v50.1: ajuste «Botones del bioma arriba» */
-html.bztop #bzv .bz-hud{top:calc(10px + env(safe-area-inset-top))!important;bottom:auto!important;left:auto!important;right:10px!important;padding:0!important;background:none!important;flex-direction:row-reverse!important;flex-wrap:nowrap!important;width:auto!important;gap:6px!important}
+html.bztop #bzv .bz-hud{top:calc(10px + env(safe-area-inset-top))!important;bottom:auto!important;left:10px!important;right:auto!important;padding:0!important;background:none!important;flex-direction:row!important;flex-wrap:nowrap!important;width:auto!important;gap:6px!important}
 html.bztop #bzv .bz-hud b{display:none}
+/* v50.3: cualquier ventana abierta desde Ajustes (sobrescribir ranura, cargar, borrar…) sale por encima de Ajustes */
+body:has(#set.ov) #mod{z-index:100030!important}
 </style>
 <script id="v37js">
 (()=>{
@@ -21687,6 +21706,19 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  if(typeof dMap==='function'){let src=null,url=null;const _dm=dMap;
   dMap=function(){let h=_dm.apply(this,arguments);try{if(!src){const i=h.indexOf('href="data:image/');if(i>=0){const j=h.indexOf('"',i+6);src=h.slice(i+6,j);if(src.length>20000)fetch(src).then(r=>r.blob()).then(b=>{url=URL.createObjectURL(b)}).catch(()=>{});else src=null}}
    if(url&&src)h=h.split(src).join(url)}catch(e){}return h}}
+})();
+/* ---------- v43.3: el mapa simple empieza justo debajo de los chips de arriba (sin solaparse ni bajar de más) ---------- */
+(()=>{const D=document;let lastM=-1;
+ const fit=()=>{try{if(D.body.classList.contains('mo'))return;const s=D.getElementById('smap'),c=D.getElementById('chips');if(!s||!c||D.body.dataset.v!=='map'||!s.offsetParent)return;
+  const cm=parseFloat(s.style.marginTop)||parseFloat(getComputedStyle(s).marginTop)||0,base=s.getBoundingClientRect().top+(D.scrollingElement.scrollTop||0)-cm;
+  const cb=c.getBoundingClientRect().bottom,m=Math.max(8,Math.round(cb+10-base));if(Math.abs(m-lastM)>1||Math.abs(cm-m)>1){lastM=m;s.style.setProperty('margin-top',m+'px','important')}
+  /* si aun así no cabe sobre el equipo, se compacta un poco más */
+  if(innerWidth<=640){const L=s.querySelectorAll('.smb');const last=L[L.length-1];if(last){const tm=D.getElementById('tm');const hid=D.body.classList.contains('tmhide');const lim=(tm&&!hid&&tm.offsetParent?tm.getBoundingClientRect().top:innerHeight)-6;
+   const over=()=>last.getBoundingClientRect().bottom+(D.scrollingElement.scrollTop||0)>lim;
+   if(!s.dataset.fitk||s.dataset.fitk!==innerHeight+'|'+hid+'|'+L.length+'|'+m){s.dataset.fitk=innerHeight+'|'+hid+'|'+L.length+'|'+m;s.classList.remove('smt1','smt2');if(over()){s.classList.add('smt1');if(over())s.classList.add('smt2')}}}}
+ }catch(e){}};
+ setInterval(fit,300);addEventListener('resize',fit);
+ const _r=window.__smapRefresh;if(_r)window.__smapRefresh=function(){const r=_r.apply(this,arguments);requestAnimationFrame(fit);return r};
 })();
 /* ---------- Copia de seguridad: exportar / importar UNA ranura sin tocar las demás (v37.6) ---------- */
 (()=>{const B=window.__bkp;if(!B)return;
@@ -23647,19 +23679,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const add=()=>{if(!b.isConnected)D.body.append(b)};if(D.body)add();else addEventListener('DOMContentLoaded',add);
 })();
 
-/* ---------- v43.3: el mapa simple empieza justo debajo de los chips de arriba (sin solaparse ni bajar de más) ---------- */
-(()=>{const D=document;let lastM=-1;
- const fit=()=>{try{if(D.body.classList.contains('mo'))return;const s=D.getElementById('smap'),c=D.getElementById('chips');if(!s||!c||D.body.dataset.v!=='map'||!s.offsetParent)return;
-  const cm=parseFloat(s.style.marginTop)||parseFloat(getComputedStyle(s).marginTop)||0,base=s.getBoundingClientRect().top+(D.scrollingElement.scrollTop||0)-cm;
-  const cb=c.getBoundingClientRect().bottom,m=Math.max(8,Math.round(cb+10-base));if(Math.abs(m-lastM)>1||Math.abs(cm-m)>1){lastM=m;s.style.setProperty('margin-top',m+'px','important')}
-  /* si aun así no cabe sobre el equipo, se compacta un poco más */
-  if(innerWidth<=640){const L=s.querySelectorAll('.smb');const last=L[L.length-1];if(last){const tm=D.getElementById('tm');const hid=D.body.classList.contains('tmhide');const lim=(tm&&!hid&&tm.offsetParent?tm.getBoundingClientRect().top:innerHeight)-6;
-   const over=()=>last.getBoundingClientRect().bottom+(D.scrollingElement.scrollTop||0)>lim;
-   if(!s.dataset.fitk||s.dataset.fitk!==innerHeight+'|'+hid+'|'+L.length+'|'+m){s.dataset.fitk=innerHeight+'|'+hid+'|'+L.length+'|'+m;s.classList.remove('smt1','smt2');if(over()){s.classList.add('smt1');if(over())s.classList.add('smt2')}}}}
- }catch(e){}};
- setInterval(fit,300);addEventListener('resize',fit);
- const _r=window.__smapRefresh;if(_r)window.__smapRefresh=function(){const r=_r.apply(this,arguments);requestAnimationFrame(fit);return r};
-})();
+
 
 /* ---------- v43.8: 📘 Tutorial para jugadores nuevos (todas las mecánicas, por capítulos) ---------- */
 (()=>{const D=document,Q=s=>D.querySelector(s),SK='pa_tut';
@@ -24501,7 +24521,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
     cur=`<g class="rn cur mnode" role="button" tabindex="0" aria-label="Ronda ${j}: continuar" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle class="rng" r="42"/>${body}${spr}</g>`}
    else lab+=`<g class="rn ${st}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})">${body}</g>`}
   return`<div id="dmap" class="imap xmap xruta">${bar()}<div class="imw"><div class="imc"><svg viewBox="0 0 ${RW} ${RH}" xmlns="http://www.w3.org/2000/svg"><image href="${img}" width="${RW}" height="${RH}"/>${lab}${cur}</svg></div></div><div id="mhint" class="mhint">Ronda <b>${r}/${R.inf?'∞':R.max}</b> · toca la ronda que brilla para continuar</div></div>${dummies(ALLIDS,1)}`}
- const _d=dMap;dMap=function(sh,zs){const base=_d.apply(this,arguments);try{if(!live())return base;if(tab==='town')return townHTML();if(tab==='bio')return bioHTML();return rutaHTML()}catch(e){console.error('pestañas del mapa',e);return base}};
+ const _d=dMap;dMap=function(sh,zs){/* v50.3: con aventura en curso ya no se prepara el mapa antiguo por debajo */if(live()){try{if(tab==='town')return townHTML();if(tab==='bio')return bioHTML();return rutaHTML()}catch(e){console.error('pestañas del mapa',e)}}const base=_d.apply(this,arguments);try{if(!live())return base;if(tab==='town')return townHTML();if(tab==='bio')return bioHTML();return rutaHTML()}catch(e){console.error('pestañas del mapa',e);return base}};
  const _s=showMap;showMap=function(){const r=_s.apply(this,arguments);try{post()}catch(e){console.error(e)}return r};
  function post(){const c=Q('#cards');if(!c)return;
   if(tab!=='ruta'){const s=Q('#smap');if(s)s.remove();const d=Q('#dmap');if(d)d.style.display=''}
@@ -24691,7 +24711,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   c.innerHTML=`<img src="${mini(m.id,m.sh)}" alt=""><div><b>${m.sh?'✨ ':''}${esc(nmS(m))}${own?`<span class="own" title="Ya capturado" aria-label="Ya capturado">${(typeof IC==='object'&&IC.ball)||'⚪'}</span>`:''}${m.alpha?' <em class="bzca">Alfa</em>':''}</b><small>Nv. ${m.lvl}${m.sh?' · ¡Shiny!':''}${m.alpha?' · más fuerte':''}${own?'':' · <b class="bznew">🆕 Nuevo</b>'}</small><small class="bzty"></small>${(()=>{const L=allMons(BD()[cur.k]),f=u=>{const x=L.find(y=>y.u===u);return x?esc(nmS(x)):null},o=[];if(m.fr!=null&&f(m.fr))o.push('🤝 Amigo de '+f(m.fr));if(m.beat!=null&&f(m.beat))o.push('🏆 Ganó a '+f(m.beat)+((m.wins|0)>1?' (×'+m.wins+')':''));if(m.lost!=null&&f(m.lost))o.push('🩹 Perdió contra '+f(m.lost));return o.length?`<small class="bzrel">${o.join(' · ')}</small>`:''})()}</div><button type="button" data-b="fight">⚔️ Combatir</button><button type="button" class="bz-cx" data-b="x" aria-label="Cerrar">✕</button>`;
   /* tipos del salvaje y cómo le va a tu primer Pokémon */
   (async()=>{try{const dd=await getD(m.id);if(c._tok!==tok||!c.querySelector('.bzty'))return;const ty=dd.types||[],ld=R.team[R.li||0]||R.team[0];let best=0,bn='';if(ld&&ld.moves)ld.moves.forEach(v=>{if(!v.p)return;const e=eff(v.t,ty);if(e>best){best=e;bn=v.n}});
-   const tag=best>=2?`<em class="bzm up">▲ ${esc(bn)} ×${best}</em>`:best>0&&best<1?`<em class="bzm dn">▼ tus ataques ×${best}</em>`:best===0&&ld?'<em class="bzm dn">✖ no le afectan</em>':'';
+   const tag=''; /* v50.3: ya no se muestra la efectividad de tus ataques en la tarjeta del bioma */
    c.querySelector('.bzty').innerHTML=ty.map(t=>`<i class="vt-ty" style="--c:${(typeof COL!=='undefined'&&COL[t])||'#64748b'}">${esc((typeof ES!=='undefined'&&ES[t])||t)}</i>`).join('')+tag}catch(e){}})()}
  function desel(){if(!cur)return;cur.sel=null;cur.o.querySelectorAll('.bzp.sel').forEach(x=>x.classList.remove('sel'));const c=cur.o.querySelector('.bz-card');if(c)c.hidden=true}
  function close2(back){if(!cur)return;clearInterval(cur.wt);try{cur.o.remove()}catch(e){}cur=null;if(back)bp(520)}
@@ -24761,7 +24781,8 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  const OVS=['#bzv','#pcbox','#frp','#pcas','#homeov','#mktov','#vitov','#safov','#lan','#mrd','#mpa','#coop','#pvp','#bdx','#pfpk','#ntf','#eqov','#cookov','#specov','#mgov','#cmpov','#rkov','#exov','#chov','#colov','#msov','#rnov','#tcgov','#tutov','#stov','#shinf','#evoa','#prfov','#rtov'];
  const busy=()=>{const m=Q('#mod');if(m&&getComputedStyle(m).display!=='none')return true;for(const s of OVS){const e=Q(s);if(e&&e.isConnected){const c=getComputedStyle(e);if(c.display!=='none'&&c.visibility!=='hidden'&&+c.opacity!==0&&e.getBoundingClientRect().height>100)return true}}
   /* v50.2: cualquier otra pantalla que tape todo (Centro Pokémon, etc.) también esconde la cortina */
-  for(const e of B.children){if(e.id==='shade'||e.classList.contains('scr'))continue;const c=getComputedStyle(e);if(c.position!=='fixed'||c.display==='none'||c.visibility==='hidden'||+c.opacity<.5||c.pointerEvents==='none')continue;const r=e.getBoundingClientRect();if(r.height>=innerHeight*.8&&r.width>=innerWidth*.8)return true}return false};
+  {const st=Q('#set.ov');if(st&&getComputedStyle(st).display!=='none')return true}
+  for(const e of B.children){if(e.id==='shade'||e.id==='shscrim'||e.id==='shbar'||e.classList.contains('scr'))continue;const c=getComputedStyle(e);if(c.position!=='fixed'||c.display==='none'||c.visibility==='hidden'||+c.opacity<.5||c.pointerEvents==='none')continue;const r=e.getBoundingClientRect();if(r.height>=innerHeight*.8&&r.width>=innerWidth*.8)return true}return false};
  setInterval(()=>{if(!on||D.hidden)return;const b=busy();if(B.classList.contains('shhide')!==b){B.classList.toggle('shhide',b);if(b)close()}},400);
  new MutationObserver(sync).observe(B,{attributes:true,attributeFilter:['data-v']});setInterval(()=>{sync();if(on)label()},700);sync();
  window.__shade={open,close};
@@ -24820,10 +24841,14 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  const live=()=>typeof B=='object'&&B&&B.pl&&B.en;
  /* --- Obediencia: cada medalla de la aventura actual permite 40 niveles (sin medallas, hasta Nv.40). Las estrellas de renacimiento no cuentan --- */
  const medals=()=>{try{return(R.badges||[]).length}catch(e){return 0}};
- const cap=()=>40*Math.max(1,medals());
+ const cap=()=>Math.min(typeof MAXL!='undefined'?MAXL:200,40+40*medals()); /* v50.3: 40 de base + 40 por medalla (4 medallas = Nv.200) */
  const applies=()=>{try{return live()&&B.adv&&!B.prac&&!(B.c&&(B.c.raid||B.c.pvp))&&!B.pvp&&!B.mp}catch(e){return false}};
  window.__obeyCap=cap;window.__disobeys=m=>!!m&&applies()&&(m.lvl|0)>cap();
- const need=m=>Math.ceil((m.lvl|0)/40);
+ /* chip en el mapa con el nivel que obedece */
+ setInterval(()=>{try{const ch=document.getElementById('chips');let c=document.getElementById('obchip');if(!ch||typeof R!='object'||!R||!R.team||!R.team.length){if(c)c.remove();return}
+  if(!c){c=document.createElement('button');c.type='button';c.id='obchip';c.className='chip';c.onclick=e=>{e.stopPropagation();const n=medals(),k=cap(),bad=R.team.filter(m=>(m.lvl|0)>k);ask('🏅 Obediencia',`<small>Tus Pokémon te obedecen hasta el <b>Nv.${k}</b>.<br>Empiezas con Nv.40 y cada medalla de gimnasio de esta aventura suma 40 niveles (con 4 medallas, hasta Nv.200).<br>Tienes <b>${n}</b> medalla${n===1?'':'s'}.${bad.length?`<br><br>😤 No te obedecen del todo: ${bad.map(m=>nm(m)+' (Nv.'+m.lvl+')').join(', ')}`:''}</small>`,['Entendido'])}}
+  if(!c.isConnected)ch.append(c);const t=`🏅 Obedecen hasta Nv.${cap()}${R.team.some(m=>(m.lvl|0)>cap())?' 😤':''}`;if(c.textContent!==t)c.textContent=t}catch(e){}},1500);
+ const need=m=>Math.max(1,Math.ceil(((m.lvl|0)-40)/40));
  const LINES=[n=>`${n} no te hace caso…`,n=>`${n} se hace el dormido.`,n=>`${n} mira hacia otro lado.`,n=>`${n} ignora tus órdenes.`,n=>`${n} bosteza y no hace nada.`,n=>`${n} se pone a holgazanear.`];
  const _ex=window.exec;
  window.exec=async function(s){
@@ -24842,7 +24867,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  const _hit=window.hit;
  window.hit=async function(s,r,mv){
   let slow=false;
-  try{if(s==='e'&&live()&&!(B.c&&B.c.raid)&&r&&r.d>0&&S.fx!==false&&S.gfx!=='calc'&&!S.qvic){const e=act('e');if(e&&e.hp>0&&e.hp-r.d<=0&&B.en.every(x=>x===e||x.hp<=0))slow=true}}catch(e){}
+  try{if(s==='e'&&live()&&!(B.c&&B.c.raid)&&r&&r.d>0&&S.fx!==false&&S.gfx!=='calc'&&!S.qvic&&!S.noko){const e=act('e');if(e&&e.hp>0&&e.hp-r.d<=0&&B.en.every(x=>x===e||x.hp<=0))slow=true}}catch(e){}
   if(!slow)return _hit.apply(this,arguments);
   const ar=document.getElementById('arena'),sp=S.speed,eS=el('e');let ko=null;
   try{
