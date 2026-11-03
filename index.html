@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v50.3</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -8618,7 +8618,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'50.3',t:'Limpieza y arreglos',s:'cur',l:[
+ {v:'51.0',t:'Cuentas en la nube',s:'cur',l:[
+  '☁️ Cuentas: en tu Perfil (👤) puedes entrar con Google o con correo y contraseña. Todo tu progreso (aventura, ranuras, Pokédex, casa, amigos, ajustes, perfil…) se guarda en la nube',
+  '☁️ Se guarda solo cada 2 minutos y al salir del juego; también hay «Guardar ahora» y «Cargar de la nube»',
+  '📱💻 Juega en otro móvil o en el PC con la misma cuenta: si en la nube hay progreso más reciente, el juego te pregunta si quieres cargarlo. Y si se borran los datos del navegador, al volver a entrar lo recuperas',
+  '☁️ El icono 👤 del menú lleva una nubecita cuando tienes la sesión iniciada'
+]},
+{v:'50.3',t:'Limpieza y arreglos',s:'prev',l:[
   '😤 Obediencia corregida: empiezas controlando hasta Nv.40 y cada medalla suma 40 niveles (1 medalla: Nv.80, 2: Nv.120, 3: Nv.160, 4: Nv.200)',
   '🏅 Nuevo chip en el mapa (en la cortina) que dice hasta qué nivel te obedecen tus Pokémon; tócalo para ver quién no te hace caso',
   '⚙️ Nuevo ajuste «Sin golpe final a cámara lenta» para desactivar el zoom y el «¡K.O.!» del último golpe',
@@ -21232,6 +21238,15 @@ html.bztop #bzv .bz-hud{top:calc(10px + env(safe-area-inset-top))!important;bott
 html.bztop #bzv .bz-hud b{display:none}
 /* v50.3: cualquier ventana abierta desde Ajustes (sobrescribir ranura, cargar, borrar…) sale por encima de Ajustes */
 body:has(#set.ov) #mod{z-index:100030!important}
+/* v51.0: cuenta */
+#prfov .pf-acc{padding:11px 12px;border-radius:16px;background:linear-gradient(120deg,#0ea5e922,#6366f122);border:1px solid #7dd3fc55;display:flex;flex-direction:column;gap:8px}
+#prfov .pf-acc small{font-size:11.5px;opacity:.85;line-height:1.35}
+#prfov .ac-on b{display:block;font-size:13.5px;word-break:break-all}
+#prfov .ac-bt{display:flex;gap:7px;flex-wrap:wrap}
+#prfov .ac-bt button{flex:1 1 auto;border:1px solid #ffffff2e;background:#ffffff14;color:#fff;border-radius:12px;padding:9px 10px;font:800 12.5px system-ui;cursor:pointer}
+#prfov .ac-bt button.g{background:linear-gradient(180deg,#3b82f6,#1d4ed8);border-color:#93c5fd}
+#prfov .ac-bt button.sm{flex:0 0 auto;font-size:11.5px;opacity:.85}
+#pfbtn.cl::after{content:'☁️';position:absolute;right:-6px;bottom:-4px;font-size:13px}
 </style>
 <script id="v37js">
 (()=>{
@@ -25020,7 +25035,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   o.innerHTML=`<div class="pf-w"><div class="pf-top"><button type="button" class="pf-x" data-a="x" aria-label="Cerrar">✕</button>
    <button type="button" class="pf-av" data-a="av" aria-label="Cambiar foto">${avHTML()}<i>✏️</i></button>
    <div class="pf-id"><button type="button" class="pf-nm" data-a="nm">${esc(nm0)} <small>✏️</small></button><button type="button" class="pf-tt" data-a="tt">🎖️ ${esc(t[1])} <small>▾</small></button>${fid?`<small class="pf-fc">Código de amigo: <b>${esc(fid.slice(0,4)+'-'+fid.slice(4))}</b></small>`:''}</div></div>
-   <div class="pf-body">
+   <div class="pf-body">${window.__acctSec?__acctSec():''}
     <div class="pf-sec">✨ Tu primer shiny</div>
     <div class="pf-first">${ST.first?`<img src="${art(ST.first.id,1)}" alt=""><div><b>${esc(dn(ST.first))}</b><small>${ST.first.old?'Ya lo tenías antes de que existiera el Perfil':'Capturado el '+dt(ST.first.t)}${ST.first.lv?' · Nv.'+ST.first.lv:''}</small></div>`:'<div class="pf-empty">Aún no has capturado ningún shiny. ¡Sigue buscando!</div>'}</div>
     <div class="pf-sec">💥 Tu golpe más fuerte</div>
@@ -25036,6 +25051,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
    o.addEventListener('click',async e=>{const b=e.target.closest('[data-a],[data-t]');if(e.target===o){close();return}if(!b)return;
     if(b.dataset.t){try{localStorage.setItem(TK,b.dataset.t)}catch(_){}try{beep(880,.08,'triangle')}catch(_){}render(o);try{toast('🎖️ Título: '+curT()[1])}catch(_){}return}
     const a=b.dataset.a;if(a==='x')return close();
+    if(/^ac_/.test(a)){if(window.__acctAct)await __acctAct(a);return}
     /* v49.6: el Perfil se aparta mientras eliges foto o nombre (antes quedaba por encima y no se veía la ventana) */
     if(a==='av'||a==='nm'){o.classList.remove('on');try{if(a==='av'){if(window.__profEdit)await __profEdit()}else if(window.changeName)await changeName()}catch(_){}
      if(a==='av'){for(let i=0;i<600&&(D.getElementById('pfpk')||(()=>{const m=D.getElementById('mod');return m&&getComputedStyle(m).display!=='none'})());i++)await new Promise(r=>setTimeout(r,250))}
@@ -25235,6 +25251,81 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  setInterval(apply,1000);setTimeout(apply,0);if(mq&&mq.addEventListener)mq.addEventListener('change',apply);
 })();
 setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.classList.toggle('cenq',!!(o&&S.cenq));h.classList.toggle('bztop',!!(o&&S.bztop))}catch(e){}},800);
+
+/* ---------- v51.0: ☁️ Cuentas (Firebase): inicia sesión y tu progreso se guarda en la nube ---------- */
+(()=>{const D=document,now=()=>Date.now();
+ const CFG={apiKey:"AIzaSyC58D6mTBN-D3saeZs2-1wjemipW-m1K6Q",authDomain:"pokerogue-1e733.firebaseapp.com",projectId:"pokerogue-1e733",storageBucket:"pokerogue-1e733.firebasestorage.app",messagingSenderId:"892301548723",appId:"1:892301548723:web:47ab872e7104608c3e24c6"};
+ const V='10.14.1',BASE=`https://www.gstatic.com/firebasejs/${V}/`;
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const tst=t=>{try{toast(t)}catch(e){}};
+ const LS={g:k=>{try{return localStorage.getItem(k)}catch(e){return null}},s:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},r:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+ let dev=LS.g('pa_cl_dev');if(!dev){dev=Math.random().toString(36).slice(2,10);LS.s('pa_cl_dev',dev)}
+ /* qué se guarda: todo el progreso del juego (partida, ranuras, Pokédex, casa, amigos, ajustes, perfil…) menos copias de seguridad y cachés */
+ const inc=k=>/^(pa_|pr_|pokerogue_pokedex)/.test(k)&&!/^pa_(cl_|bkp|bio_types)/.test(k)&&k!=='pokerogue_names_v1';
+ const collect=()=>{const o={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&inc(k))o[k]=localStorage.getItem(k)}return o};
+ const hsh=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0).toString(36)+s.length};
+ async function gz(str){try{if(typeof CompressionStream=='undefined')throw 0;const cs=new Blob([str]).stream().pipeThrough(new CompressionStream('gzip'));const buf=new Uint8Array(await new Response(cs).arrayBuffer());let b='';for(let i=0;i<buf.length;i+=0x8000)b+=String.fromCharCode.apply(null,buf.subarray(i,i+0x8000));return{z:1,d:btoa(b)}}catch(e){return{z:0,d:str}}}
+ async function ungz(p){if(!p.z)return p.d;const bin=atob(p.d),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);const ds=new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'));return await new Response(ds).text()}
+ /* --- carga del SDK solo cuando hace falta --- */
+ let FB=null,user=null,busy=false,lastH=LS.g('pa_cl_h')||'',ready=false;
+ async function sdk(){if(FB)return FB;const [A,Au,F]=await Promise.all([import(BASE+'firebase-app.js'),import(BASE+'firebase-auth.js'),import(BASE+'firebase-firestore.js')]);
+  const app=A.initializeApp(CFG),auth=Au.getAuth(app),db=F.getFirestore(app);try{auth.languageCode='es'}catch(e){}
+  FB={A,Au,F,app,auth,db};
+  Au.onAuthStateChanged(auth,u=>{const was=user;user=u||null;if(u){LS.s('pa_cl_on','1');LS.s('pa_cl_mail',u.email||'');if(!was)afterLogin()}else{LS.r('pa_cl_on')}ready=true;paint()});
+  try{await Au.getRedirectResult(auth)}catch(e){}
+  return FB}
+ const ERR={'auth/invalid-credential':'Correo o contraseña incorrectos','auth/wrong-password':'Contraseña incorrecta','auth/user-not-found':'No hay ninguna cuenta con ese correo','auth/email-already-in-use':'Ya hay una cuenta con ese correo: usa «Entrar»','auth/weak-password':'La contraseña debe tener al menos 6 caracteres','auth/invalid-email':'Ese correo no es válido','auth/popup-closed-by-user':'Has cerrado la ventana de Google','auth/network-request-failed':'Sin conexión a internet','auth/too-many-requests':'Demasiados intentos. Espera un poco','auth/unauthorized-domain':'Esta web aún no está autorizada en Firebase (Authentication → Dominios autorizados)'};
+ const em=e=>ERR[e&&e.code]||('Error: '+((e&&(e.code||e.message))||e));
+ /* --- nube --- */
+ const ref=(...p)=>FB.F.doc(FB.db,'saves',user.uid,...p);
+ async function upload(force){if(!user||busy)return false;const data=collect(),js=JSON.stringify(data),h=hsh(js);if(!force&&h===lastH)return true;busy=true;
+  try{const p=await gz(js),CH=700000,n=Math.max(1,Math.ceil(p.d.length/CH)),t=now(),b=FB.F.writeBatch(FB.db);
+   for(let i=0;i<n;i++)b.set(ref('c',String(i)),{d:p.d.slice(i*CH,(i+1)*CH)});
+   let nm='';try{nm=__pname()}catch(e){}
+   b.set(ref(),{t,dev,n,z:p.z,sz:js.length,name:String(nm).slice(0,20),v:(D.getElementById('ver')||{}).textContent||''});await b.commit();
+   lastH=h;LS.s('pa_cl_h',h);LS.s('pa_cl_t',String(t));paint();return true}catch(e){console.error('nube',e);return false}finally{busy=false}}
+ async function meta(){try{const s=await FB.F.getDoc(ref());return s.exists()?s.data():null}catch(e){console.error(e);return null}}
+ async function download(m){m=m||await meta();if(!m)return null;let d='';for(let i=0;i<(m.n|0);i++){const s=await FB.F.getDoc(ref('c',String(i)));d+=(s.exists()&&s.data().d)||''}const js=await ungz({z:m.z,d});return JSON.parse(js)}
+ async function applyCloud(m){const data=await download(m);if(!data)return tst('No se pudo leer la partida de la nube');
+  for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k&&inc(k)&&!(k in data))localStorage.removeItem(k)}
+  for(const k in data)LS.s(k,data[k]);const js=JSON.stringify(collect());lastH=hsh(js);LS.s('pa_cl_h',lastH);LS.s('pa_cl_t',String(m.t||now()));
+  tst('☁️ Progreso cargado. Reiniciando…');setTimeout(()=>location.reload(),900)}
+ const hasLocal=()=>{try{const d=JSON.parse(LS.g('pokerogue_pokedex_v1')||'{}');return!!LS.g('pa_run')||Object.keys(d.c||{}).length>3||!!LS.g('pa_slot_1')}catch(e){return!!LS.g('pa_run')}};
+ const fdt=t=>{try{return new Date(t).toLocaleString('es',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return''}};
+ async function afterLogin(){const m=await meta();const lt=+LS.g('pa_cl_t')||0;
+  if(!m){await upload(true);tst('☁️ Cuenta lista: tu progreso ya se guarda en la nube');return}
+  if((+m.t||0)<=lt||m.dev===dev&&(+m.t||0)<=lt+1000){tst('☁️ Sesión iniciada · progreso al día');return}
+  if(!hasLocal()){await applyCloud(m);return}
+  hideProf();const k=await ask('☁️ Progreso en la nube',`<small>Tu cuenta tiene progreso guardado el <b>${esc(fdt(m.t))}</b>${m.name?' ('+esc(m.name)+')':''}, distinto del de este dispositivo.</small>`,['☁️ Cargar el de la nube','📱 Usar el de este dispositivo (sobrescribe la nube)','Decidir luego']);showProf();
+  if(k===0)await applyCloud(m);else if(k===1){await upload(true);tst('☁️ Se ha guardado en la nube el progreso de este dispositivo')}}
+ /* guardado automático */
+ setInterval(()=>{if(user&&D.visibilityState==='visible')upload()},120000);
+ D.addEventListener('visibilitychange',()=>{if(user&&D.visibilityState==='hidden')upload()});
+ /* si ya habías iniciado sesión, se conecta solo al abrir el juego */
+ if(LS.g('pa_cl_on'))setTimeout(()=>{sdk().catch(e=>console.error('nube',e))},2500);
+ /* --- interfaz (en el Perfil) --- */
+ const prof=()=>D.getElementById('prfov');let profWas=false;
+ const hideProf=()=>{const o=prof();profWas=!!(o&&o.classList.contains('on'));if(o)o.classList.remove('on')},showProf=()=>{const o=prof();if(o&&profWas){o.classList.add('on');try{openProfile()}catch(e){}}};
+ window.__acctSec=()=>{const on=!!user,mail=user?(user.email||'Cuenta de Google'):'',lt=+LS.g('pa_cl_t')||0;
+  return`<div class="pf-sec">☁️ Cuenta</div><div class="pf-acc">${on?`<div class="ac-on"><b>✅ ${esc(mail)}</b><small>${lt?'Último guardado en la nube: '+esc(fdt(lt)):'Aún sin guardar en la nube'} · se guarda solo cada 2 minutos</small></div><div class="ac-bt"><button type="button" data-a="ac_save">☁️ Guardar ahora</button><button type="button" data-a="ac_load">⬇️ Cargar de la nube</button><button type="button" data-a="ac_out" class="sm">Cerrar sesión</button></div>`
+   :`<small>Inicia sesión y tu progreso se guardará en la nube: podrás seguir en otro móvil o en el PC, y no lo perderás aunque se borren los datos del navegador.</small><div class="ac-bt"><button type="button" data-a="ac_g" class="g">🔵 Entrar con Google</button><button type="button" data-a="ac_mail">✉️ Entrar con correo</button></div>${LS.g('pa_cl_on')&&!ready?'<small>Conectando…</small>':''}`}</div>`};
+ function paint(){try{const o=prof();if(o&&o.classList.contains('on')){const a=o.querySelector('.pf-acc');if(a){const w=D.createElement('div');w.innerHTML=__acctSec();a.replaceWith(w.querySelector('.pf-acc'))}}const b=D.getElementById('pfbtn');if(b)b.classList.toggle('cl',!!user)}catch(e){}}
+ async function mailFlow(){hideProf();const p=ask('✉️ Entrar con correo',`<small>Escribe tu correo y una contraseña (mínimo 6 caracteres). Si aún no tienes cuenta, toca «Crear cuenta».</small><input id="acm" type="email" autocomplete="email" placeholder="tu@correo.com" style="display:block;width:100%;margin:10px 0 6px;padding:10px 12px;border-radius:10px;border:1px solid #fff4;background:#0006;color:#fff;font:inherit;font-size:16px;box-sizing:border-box"><input id="acp" type="password" autocomplete="current-password" placeholder="Contraseña" style="display:block;width:100%;margin:0 0 4px;padding:10px 12px;border-radius:10px;border:1px solid #fff4;background:#0006;color:#fff;font:inherit;font-size:16px;box-sizing:border-box">`,['Entrar','Crear cuenta','¿Olvidaste la contraseña?','Cancelar']);
+  const mi=D.getElementById('acm'),pi=D.getElementById('acp');const k=await p;const mail=(mi&&mi.value||'').trim(),pw=pi&&pi.value||'';
+  try{if(k===3||k<0)return;await sdk();const Au=FB.Au;
+   if(k===2){if(!mail)return tst('Escribe tu correo primero');await Au.sendPasswordResetEmail(FB.auth,mail);tst('📧 Te hemos enviado un correo para cambiar la contraseña');return}
+   if(k===0)await Au.signInWithEmailAndPassword(FB.auth,mail,pw);else await Au.createUserWithEmailAndPassword(FB.auth,mail,pw)}
+  catch(e){tst('⚠️ '+em(e))}finally{showProf()}}
+ async function google(){try{await sdk();const Au=FB.Au,pv=new Au.GoogleAuthProvider();try{await Au.signInWithPopup(FB.auth,pv)}catch(e){if(e&&/popup-blocked|operation-not-supported|web-storage/.test(e.code||''))await Au.signInWithRedirect(FB.auth,pv);else throw e}}catch(e){tst('⚠️ '+em(e))}}
+ window.__acctAct=async a=>{
+  if(a==='ac_g')return google();
+  if(a==='ac_mail')return mailFlow();
+  if(!user)return;
+  if(a==='ac_save'){tst('☁️ Guardando…');const ok=await upload(true);tst(ok?'☁️ Progreso guardado en la nube':'⚠️ No se pudo guardar (¿sin conexión?)');return}
+  if(a==='ac_load'){const m=await meta();if(!m)return tst('Aún no hay nada guardado en la nube');hideProf();const k=await ask('⬇️ Cargar de la nube',`<small>Se reemplazará el progreso de este dispositivo por el guardado el <b>${esc(fdt(m.t))}</b>.</small>`,['Cargar','Cancelar']);showProf();if(k===0)await applyCloud(m);return}
+  if(a==='ac_out'){await upload();await FB.Au.signOut(FB.auth);LS.r('pa_cl_t');LS.r('pa_cl_h');lastH='';tst('Sesión cerrada. Tu progreso sigue en este dispositivo');paint()}};
+ window.__cloud={upload,meta,collect,on:()=>!!user};
+})();
 
 })();</script>
 </body></html>
