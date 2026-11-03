@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v49.0</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v49.1</div>
 </section>
 
 <section id="team" class="scr">
@@ -1299,7 +1299,7 @@ async function capture(m){
     toast(nm(m)+' fue enviado a la Caja');break}}
 async function flee(){
   const a=B.adv,fr=a&&B.c.free,i=await ask('¿Huir del combate?',a?(fr?'Volverás al mapa.':'Retrocederás 1 ronda y volverás al mapa.'):'Volverás al menú.',['Huir','Seguir luchando']);
-  if(i)return;B.over=1;B.busy=1;beep(300,.3,'triangle');
+  if(i)return;B.over=1;B.busy=1;beep(300,.3,'triangle');try{if(window.__fleeFx)await __fleeFx()}catch(_e){}
   if(a){R.team.forEach(revertMega);if(fr)showMap();else{R.round=Math.max(1,R.round-1);R.fl2=0;showMap();toast('¡Escapaste! Vuelves a la ronda '+R.round)}}else show('menu')}
 async function shop(){
   for(;;){
@@ -2181,7 +2181,7 @@ flee=async function(){const a=B.adv,fr=a&&B.c.free;
   const ins=a&&!B.prac&&!CHT.money&&rico?{m:Math.floor((R.money||0)*.30),b:Math.floor((R.bank||0)*.15)}:null;
   const seg=ins?`<br><br>🛡️ <b>Seguro de huida</b>: pagas ${IC.coin} ${nf(ins.m)} (el 30% de lo que llevas) y 🏦 ${ins.b} (el 15% del banco) para que ni tú ni tus Pokémon sufráis daño. <small>(El seguro solo se aplica con 10 M o más en el banco y más de 2 M encima; si no, huyes gratis.)</small>`:'';
   const i=await ask('¿Huir del combate?',(a?(fr?'Volverás al mapa.':'Retrocederás 1 ronda y volverás al mapa.'):'Volverás al menú.')+seg,['Huir','Seguir luchando']);
-  if(i)return;B.over=1;B.busy=1;beep(300,.3,'triangle');
+  if(i)return;B.over=1;B.busy=1;beep(300,.3,'triangle');try{if(window.__fleeFx)await __fleeFx()}catch(_e){}
   let fee='';
   if(ins){R.money=Math.max(0,(R.money||0)-ins.m);R.bank=Math.max(0,(R.bank||0)-ins.b);fee=` · 🛡️ Seguro: −${nf(ins.m)} P`+(ins.b?` y −${nf(ins.b)} P del banco`:'');
    try{saveRun()}catch(e){}try{const mn=document.getElementById('mn');if(mn)mn.innerHTML=IC.coin+' '+nf(R.money)}catch(e){}}
@@ -8594,7 +8594,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'49.0',t:'Mega Haxorus',s:'cur',l:[
+ {v:'49.1',t:'Obediencia y combates con estilo',s:'cur',l:[
+  '😤 Obediencia: en la aventura, cada medalla de gimnasio permite controlar 40 niveles (con 3 medallas, hasta Nv.120; sin medallas, hasta Nv.40). Un Pokémon por encima de tu límite desobedece el 65% de las veces: no hace nada o falla el ataque a propósito. Las estrellas de renacimiento no cuentan',
+  '😤 Si tu Pokémon no te obedece del todo, verás 😤 en la pregunta «¿Qué hará…?» y un aviso con las medallas que necesitas',
+  '💥 Golpe final a cámara lenta: el ataque que gana el combate se ve con zoom, cámara lenta y un gran «¡K.O.!» (se salta con gráficos mínimos, efectos desactivados o Victoria rápida)',
+  '🏃 Huida con estilo: al huir, tu Pokémon escapa con una animación según su tipo (se zambulle, sale volando, cava un hoyo, se teletransporta, rueda, bomba de humo…)'
+]},
+{v:'49.0',t:'Mega Haxorus',s:'prev',l:[
   '🐉 Nueva megaevolución inventada: Mega Haxorus, con ilustración propia y su versión shiny (negra) para los Haxorus shiny',
   '🔧 Arreglado: con el botón Mega en medio de los ataques, la eficacia (▲ ×2, ▼ ×½, ✖ No afecta…) quedaba tapada; ahora va en su propia línea, hacia el lado de fuera de cada botón'
 ]},
@@ -20980,6 +20986,15 @@ body.lowfx .bzp img{filter:drop-shadow(0 4px 3px #0007)!important}
 #opts .mvg.mg .mvb small .mcat{margin-right:3px}
 #opts .mvg.mg .mvb small .eff,#opts .mvg.mg .mvb small .mvimm{display:table!important;margin:3px auto 0 0!important}
 #opts .mvg.mg .mvb:nth-child(even) small .eff,#opts .mvg.mg .mvb:nth-child(even) small .mvimm{margin:3px 0 0 auto!important}
+/* v49.1: golpe final a cámara lenta */
+#arena.kofin{transition:scale .35s cubic-bezier(.2,.8,.2,1),filter .35s;scale:1.22;transform-origin:var(--kx,70%) var(--ky,35%);filter:saturate(.55) contrast(1.15)}
+#arena.kofout{transition:scale .45s ease,filter .45s;scale:1;filter:none}
+#arena.kofin::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at var(--kx,70%) var(--ky,35%),transparent 30%,#000a 85%);z-index:30}
+#arena .kotxt{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%) scale(.4) rotate(-8deg);z-index:31;font:900 46px/1 system-ui;color:#fff;-webkit-text-stroke:3px #b91c1c;text-shadow:0 4px 0 #7f1d1d,0 0 24px #f87171;opacity:0;pointer-events:none;animation:kotx 1.6s .25s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes kotx{0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(-8deg)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(-8deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-8deg)}}
+#arena .flpuff{position:absolute;width:28px;height:28px;border-radius:50%;background:radial-gradient(circle,var(--c) 0,#fff0 70%);opacity:.85;pointer-events:none;z-index:6;animation:flpf .9s ease-out forwards}
+@keyframes flpf{to{transform:translate(30px,-26px) scale(2.4);opacity:0}}
+@media (prefers-reduced-motion:reduce){#arena.kofin{scale:1}}
 </style>
 <script id="v37js">
 (()=>{
@@ -24567,6 +24582,79 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  window.__rsPlan=()=>{let m=(typeof CHT=='object'&&CHT.money)?1e15:R.money,c=0,short=0;const L=[];
   for(const[k,q]of RST){if(!ITEM[k])continue;const p=ITEM[k].p,need=Math.max(0,q-(R.bag[k]|0)),n=Math.min(need,Math.floor(m/p));if(n>0){L.push([k,n]);m-=n*p;c+=n*p}if(n<need)short=1}return{L,c,short}};
  window.__rsBuy=()=>{const{L,c}=__rsPlan();if(!L.length)return 0;if(!(typeof CHT=='object'&&CHT.money))R.money-=c;let n=0;for(const[k,q]of L){R.bag[k]=(R.bag[k]|0)+q;n+=q}try{saveRun()}catch(e){}return n};
+})();
+
+/* ---------- v49.1: obediencia por medallas, golpe final a cámara lenta y huida con estilo ---------- */
+(()=>{
+ const live=()=>typeof B=='object'&&B&&B.pl&&B.en;
+ /* --- Obediencia: cada medalla de la aventura actual permite 40 niveles (sin medallas, hasta Nv.40). Las estrellas de renacimiento no cuentan --- */
+ const medals=()=>{try{return(R.badges||[]).length}catch(e){return 0}};
+ const cap=()=>40*Math.max(1,medals());
+ const applies=()=>{try{return live()&&B.adv&&!B.prac&&!(B.c&&(B.c.raid||B.c.pvp))&&!B.pvp&&!B.mp}catch(e){return false}};
+ window.__obeyCap=cap;window.__disobeys=m=>!!m&&applies()&&(m.lvl|0)>cap();
+ const need=m=>Math.ceil((m.lvl|0)/40);
+ const LINES=[n=>`${n} no te hace caso…`,n=>`${n} se hace el dormido.`,n=>`${n} mira hacia otro lado.`,n=>`${n} ignora tus órdenes.`,n=>`${n} bosteza y no hace nada.`,n=>`${n} se pone a holgazanear.`];
+ const _ex=window.exec;
+ window.exec=async function(s){
+  try{if(s==='p'){const at=act('p');
+   if(at&&at.hp>0&&window.__disobeys(at)&&Math.random()<.65){
+    if(!B._obeyTip){B._obeyTip=1;try{toast(`😤 ${nm(at)} (Nv.${at.lvl}) solo obedece del todo con ${need(at)} medalla${need(at)>1?'s':''}. Tienes ${medals()}.`)}catch(e){}}
+    const el0=el('p');try{el0&&el0.animate([{transform:'none'},{transform:'translateX(-8px) rotate(-6deg)'},{transform:'translateX(8px) rotate(6deg)'},{transform:'none'}],{duration:500})}catch(e){}
+    if(Math.random()<.5){await say(LINES[Math.random()*LINES.length|0](nm(at)))}
+    else{const mv=at.pick&&at.pick.n?at.pick.n:'su ataque';await say(`${nm(at)} usó ${mv}…`);try{SFX.miss()}catch(e){}await say('¡Pero lo falló a propósito!')}
+    return}}}catch(e){console.error('obey',e)}
+  return _ex.apply(this,arguments)};
+ /* aviso en el texto del menú */
+ const _menu=window.menu;if(_menu)window.menu=menu=function(){const r=_menu.apply(this,arguments);try{const p=act('p'),m=document.getElementById('msg');if(p&&m&&window.__disobeys(p)&&!/😤/.test(m.textContent))m.textContent+=' 😤'}catch(e){}return r};
+
+ /* --- Golpe final a cámara lenta --- */
+ const _hit=window.hit;
+ window.hit=async function(s,r,mv){
+  let slow=false;
+  try{if(s==='e'&&live()&&!(B.c&&B.c.raid)&&r&&r.d>0&&S.fx!==false&&S.gfx!=='calc'&&!S.qvic){const e=act('e');if(e&&e.hp>0&&e.hp-r.d<=0&&B.en.every(x=>x===e||x.hp<=0))slow=true}}catch(e){}
+  if(!slow)return _hit.apply(this,arguments);
+  const ar=document.getElementById('arena'),sp=S.speed,eS=el('e');let ko=null;
+  try{
+   ar.classList.add('kofin');
+   try{const[x,y]=ctr(eS),R0=ar.getBoundingClientRect();ar.style.setProperty('--kx',(x/R0.width*100)+'%');ar.style.setProperty('--ky',(y/R0.height*100)+'%')}catch(e){}
+   S.speed=Math.max(.1,(sp||1)*.3);
+   ko=document.createElement('div');ko.className='kotxt';ko.textContent='¡K.O.!';ar.append(ko);
+   await _hit.apply(this,arguments);
+   await sleep(350);
+  }finally{S.speed=sp;ar.classList.remove('kofin');ar.classList.add('kofout');setTimeout(()=>{ar.classList.remove('kofout');ko&&ko.remove()},500)}};
+
+ /* --- Huida con estilo según el tipo --- */
+ const FL={
+  fire:['¡{n} sale disparado dejando una estela de humo!',[[0,0,0,1],[-60,-6,-8,1],[-420,-10,-12,0]],'#fb923c'],
+  water:['¡{n} se zambulle y desaparece!',[[0,0,0,1],[0,-30,0,1],[0,120,0,0]],'#38bdf8'],
+  flying:['¡{n} alza el vuelo y se pierde entre las nubes!',[[0,0,0,1],[-30,-40,-10,1],[-160,-480,-20,0]],'#e0f2fe'],
+  electric:['¡{n} se esfuma como un rayo!',[[0,0,0,1],[10,0,0,0],[-40,0,0,1],[-500,0,0,0]],'#facc15'],
+  ghost:['{n} se vuelve invisible… ¡y se larga!',[[0,0,0,1],[0,-10,0,.4],[0,-30,0,0]],'#a78bfa'],
+  psychic:['¡{n} se teletransporta lejos!',[[0,0,0,1,1],[0,0,0,1,1.2],[0,0,0,0,.05]],'#f472b6'],
+  ground:['¡{n} cava un hoyo y escapa bajo tierra!',[[0,0,0,1],[0,-10,0,1],[0,140,0,0]],'#a16207'],
+  rock:['¡{n} se hace bola y rueda cuesta abajo!',[[0,0,0,1],[-80,0,-360,1],[-460,20,-1080,0]],'#a8a29e'],
+  grass:['{n} se esconde entre los arbustos…',[[0,0,0,1,1],[0,10,0,1,.8],[-20,30,0,0,.2]],'#4ade80'],
+  ice:['¡{n} patina a toda velocidad sobre el hielo!',[[0,0,0,1],[-40,0,8,1],[-500,0,14,0]],'#bae6fd'],
+  bug:['¡{n} se escabulle en zigzag!',[[0,0,0,1],[-60,-20,0,1],[-120,20,0,1],[-200,-20,0,1],[-420,0,0,0]],'#a3e635'],
+  fighting:['¡{n} hace una voltereta hacia atrás y se va!',[[0,0,0,1],[-60,-90,-180,1],[-160,0,-360,1],[-460,0,-360,0]],'#f97316'],
+  poison:['¡{n} lanza una bomba de humo y desaparece!',[[0,0,0,1],[0,0,0,0]],'#a855f7'],
+  dark:['¡{n} se funde con las sombras!',[[0,0,0,1],[-20,0,0,.3],[-60,0,0,0]],'#334155'],
+  fairy:['{n} se desvanece entre destellos ✨',[[0,0,0,1,1],[0,-20,0,.6,1.05],[0,-50,0,0,.9]],'#f9a8d4'],
+  dragon:['¡{n} despega en espiral y se aleja volando!',[[0,0,0,1,1],[-60,-80,-30,1,1],[-200,-500,-90,0,.6]],'#818cf8'],
+  steel:['¡{n} sale rodando con gran estruendo!',[[0,0,0,1],[-100,0,-200,1],[-500,0,-720,0]],'#cbd5e1'],
+  normal:['¡{n} pone pies en polvorosa!',[[0,0,0,1],[12,-14,6,1],[-80,0,-4,1],[-480,0,-6,0]],'#e5e7eb']};
+ window.__fleeFx=async()=>{try{if(!live())return;const p=act('p'),d=el('p');if(!p||!d||p.hp<=0)return;
+  const ty=(p.teraOn&&p.tera)||p.types[0],f=FL[ty]||FL.normal,txt=f[0].replace('{n}',nm(p));
+  try{$('#opts').innerHTML=''}catch(e){}
+  if(S.fx===false){await say(txt);return}
+  const flip=getComputedStyle(d).transform;const K=f[1].map((k,i)=>({transform:`translate(${k[0]}px,${k[1]}px) rotate(${k[2]}deg) scale(${k[4]==null?1:k[4]})`,opacity:k[3],offset:f[1].length>1?i/(f[1].length-1):1}));
+  let base=d.style.transform||'';K.forEach(k=>k.transform=base+' '+k.transform);
+  const [x,y]=ctr(d);
+  if(ty==='poison'||ty==='psychic'||ty==='fairy'||ty==='dark'){try{burst(x,y,f[2]);setTimeout(()=>burst(x,y,f[2]),120)}catch(e){}}
+  else{try{const n=6;for(let i=0;i<n;i++)setTimeout(()=>{const z=document.createElement('div');z.className='flpuff';z.style.cssText=`left:${x-14+(Math.random()*30-15)}px;top:${y+30+(Math.random()*16-8)}px;--c:${f[2]}`;arena.append(z);setTimeout(()=>z.remove(),900)},i*90)}catch(e){}}
+  try{beep(ty==='electric'?1200:ty==='water'?300:520,.15,'triangle')}catch(e){}
+  const a=d.animate(K,{duration:1100,easing:'cubic-bezier(.5,0,.75,0)',fill:'forwards'});
+  $('#msg').textContent=txt;await a.finished.catch(()=>{});await sleep(500)}catch(e){console.error('fleeFx',e)}};
 })();
 
 })();</script>
