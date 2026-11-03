@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.8</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v51.9</div>
 </section>
 
 <section id="team" class="scr">
@@ -8621,7 +8621,14 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'51.8',t:'Estrellas en el PvP',s:'cur',l:[
+ {v:'51.9',t:'Lista de deseados mejorada',s:'cur',l:[
+  '⭐ Deseados: nuevo selector visual con todos los Pokémon (buscar por nombre o número, filtrar por tipo y ocultar los que ya tienes); toca para añadir o quitar. Ahora caben 60',
+  '⭐ Cada deseado dice dónde encontrarlo (en qué bioma sale, si sale como Alfa, si es legendario…) y se marca «✓ Conseguido» cuando lo capturas',
+  '✨ Toca un deseado para quererlo shiny, marcarlo como prioritario (salen primero) o quitarlo',
+  '🌿 En los biomas, los Pokémon de tu lista llevan una ⭐ encima, te avisamos al entrar si hay alguno y la isla muestra cuántos hay en cada zona',
+  '🎉 Aviso especial al capturar un Pokémon deseado. En los intercambios, los Pokémon de tu amigo que tienes en tu lista salen marcados como «⭐ deseado»'
+]},
+{v:'51.8',t:'Estrellas en el PvP',s:'prev',l:[
   '⭐ PvP: al elegir el nivel del combate, el anfitrión también puede elegir cuántas estrellas tienen todos los Pokémon de los dos equipos (de 0 a 8) o dejar las suyas. Cada estrella sube sus características como en la aventura'
 ]},
 {v:'51.7',t:'Equipo en los biomas',s:'prev',l:[
@@ -17297,7 +17304,7 @@ function openV(){let v=Q('#trv');if(v)v.remove();v=D.createElement('div');v.id='
  drawV()}
 function drawV(){const g=Q('#tvg');if(!g)return;if(!THEIR){g.innerHTML='<div class="tvl">Pidiendo la lista…</div>';return}
  const q=norm(VQ.trim()),L2=THEIR.filter(x=>(!q||norm(x.n).includes(q))&&(!VT||x.ty.includes(VT)));
- g.innerHTML=L2.length?L2.map(x=>{const k=x.w+':'+x.i+':'+x.id;return`<button class="tvc${MYW.has(k)?' on':''}" data-k="${k}"><img src="${mini(x.id,x.sh)}" alt=""><b>${esc(x.n)}${x.sh?' ✨':''}</b><small>Nv.${x.lv} · ${x.w==='team'?'Equipo':'Caja'}</small></button>`}).join(''):'<div class="tvl">No hay Pokémon con este filtro.</div>'}
+ g.innerHTML=L2.length?L2.map(x=>{const k=x.w+':'+x.i+':'+x.id;return`<button class="tvc${MYW.has(k)?' on':''}${window.__wishHas&&__wishHas(x.id)?' wsh':''}" data-k="${k}"><img src="${mini(x.id,x.sh)}" alt=""><b>${esc(x.n)}${x.sh?' ✨':''}</b><small>Nv.${x.lv} · ${x.w==='team'?'Equipo':'Caja'}</small></button>`}).join(''):'<div class="tvl">No hay Pokémon con este filtro.</div>'}
 setInterval(sync,500);
 {const lm=()=>Q('#lmain');const t=setInterval(()=>{const m=lm();if(!m)return;clearInterval(t);new MutationObserver(()=>{if(stage()==='trade')decorate()}).observe(m,{childList:true})},500)}
 })();</script>
@@ -21339,6 +21346,40 @@ body:has(#set.ov) #mod{z-index:100030!important}
 #bzv .bzt.op .bzt-m{opacity:1;transform:none;transition-delay:calc(var(--i,0)*55ms)}
 #bzv .bzt.op .bzt-m.ko{opacity:.4}
 #bzv .bzt-m.on{background:linear-gradient(#3b2f05e6,#1c1606e6)}
+
+/* v51.9: deseados mejorados */
+#prfov .pf-wish{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))!important}
+#prfov .pf-wish button{min-height:104px;justify-content:flex-start}
+#prfov .pf-wish button .wn{font:800 11px system-ui;text-align:center;line-height:1.15;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#prfov .pf-wish button .ww{font-size:9.5px!important;opacity:.85;white-space:normal!important;line-height:1.2!important}
+#prfov .pf-wish button.pr{border-color:#fde047;box-shadow:0 0 10px #fde04744}
+#prfov .pf-wish button.sh{background:linear-gradient(160deg,#fde0471a,#c084fc1f)}
+#prfov .pf-wish button .wp{position:absolute;top:2px;left:4px;font-style:normal;font-size:11px}
+#prfov .pf-wish button.got{opacity:.8}
+#wspk{position:fixed;inset:0;z-index:100040;display:flex;align-items:center;justify-content:center;background:#05031099;backdrop-filter:blur(3px);padding:10px;font-family:system-ui,sans-serif;color:#fff}
+#wspk .wk-w{width:min(520px,100%);height:min(760px,calc(100dvh - 20px));display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:20px;background:linear-gradient(180deg,#1e1b4b,#0f0a2a);border:1px solid #fde04755;box-shadow:0 20px 50px #000c;animation:pfIn .22s}
+#wspk .wk-h{display:flex;align-items:center;gap:8px}#wspk .wk-h b{font-size:17px;flex:1}#wspk .wk-h small{opacity:.8}
+#wspk .wk-x{border:0;border-radius:12px;padding:8px 14px;font:800 13px system-ui;color:#1c1917;background:#fde047;cursor:pointer}
+#wspk .wk-q{width:100%;box-sizing:border-box;border-radius:12px;border:1px solid #ffffff2e;background:#0b0720;color:#fff;padding:10px 12px;font:600 15px system-ui}
+#wspk .wk-t{display:flex;gap:5px;overflow-x:auto;padding-bottom:3px;flex:none}
+#wspk .wk-t button{flex:none;border:1px solid #ffffff2a;border-radius:999px;padding:5px 10px;font:800 11.5px system-ui;color:#fff;background:color-mix(in srgb,var(--c,#64748b) 45%,#0b0720);cursor:pointer;opacity:.7}
+#wspk .wk-t button.on{opacity:1;outline:2px solid #fff}
+#wspk .wk-hd{font-size:12px;display:flex;align-items:center;gap:6px;opacity:.9}
+#wspk .wk-g{flex:1;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:6px;align-content:start;overscroll-behavior:contain}
+#wspk .wk-g button{position:relative;display:flex;flex-direction:column;align-items:center;padding:6px 3px 4px;border-radius:12px;border:1.5px solid #ffffff1a;background:#ffffff0a;color:#fff;cursor:pointer}
+#wspk .wk-g button img{width:56px;height:56px;object-fit:contain;image-rendering:pixelated}
+#wspk .wk-g button small{font-size:10px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#wspk .wk-g button em{font-style:normal;font-size:9px;opacity:.55}
+#wspk .wk-g button.own::before{content:'✓';position:absolute;top:3px;left:5px;color:#4ade80;font:900 11px system-ui}
+#wspk .wk-g button.on{border-color:#fde047;background:#fde04722}
+#wspk .wk-g button.on::after{content:'⭐';position:absolute;top:2px;right:4px;font-size:12px}
+#wspk .wk-e{grid-column:1/-1;text-align:center;opacity:.7;font-size:13px}
+#bzv .bzp .wstar{position:absolute;left:50%;top:-14px;transform:translateX(-50%);font-style:normal;font-size:15px;pointer-events:none;filter:drop-shadow(0 1px 2px #000);animation:wsb 1.2s ease-in-out infinite;z-index:3}
+#bzv .bzp:not(.wsh) .wstar{display:none}
+@keyframes wsb{50%{transform:translate(-50%,-4px)}}
+#dmap .xlab .wcnt{font-style:normal;font:900 11px system-ui;color:#fde047;background:#0009;border-radius:8px;padding:1px 5px;margin-left:4px}
+#trv .tvc.wsh{box-shadow:0 0 0 2px #fde047 inset}
+#trv .tvc.wsh::after{content:'⭐ deseado';position:absolute;top:2px;left:4px;font:800 9px system-ui;color:#fde047}
 </style>
 <script id="v37js">
 (()=>{
@@ -24726,7 +24767,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  const needGen=(k)=>{const r=live(),d=BD()[k];return!d||(d.cl!=null&&r.round>d.cl)||(d.t!=null&&r.round-d.t>=8)||(!d.cl&&!(d.g||[]).some(g=>g.m.length))};
  const allMons=d=>d&&d.g?d.g.flatMap(g=>g.m):[];
  const bzSize=m=>m.alpha?190:118;
- function pkH(m){const s=bzSize(m);return`<button type="button" class="bzp${m.sh?' sh':''}${m.alpha?' al':''}" data-u="${m.u}" data-n="${esc(nmS(m))}" data-x="${m.x}" data-y="${m.y}" style="left:${m.x}px;top:${m.y}px;width:${s}px;height:${s}px;--dl:${(-(m.u*.53)%3).toFixed(2)}s" aria-label="${esc((m.sh?'Shiny ':'')+(m.alpha?'Alfa ':'')+nmS(m))}"><span class="bzr"><img src="${art(m.id,m.sh)}" alt="" draggable="false" loading="lazy" onerror="this.onerror=null;this.src='${mini(m.id,m.sh)}'"></span>${m.sh?'<i class="hds"></i><i class="hds b"></i><i class="hds c"></i>':''}</button>`}
+ function pkH(m){const s=bzSize(m);return`<button type="button" class="bzp${m.sh?' sh':''}${m.alpha?' al':''}" data-id="${m.id}" data-u="${m.u}" data-n="${esc(nmS(m))}" data-x="${m.x}" data-y="${m.y}" style="left:${m.x}px;top:${m.y}px;width:${s}px;height:${s}px;--dl:${(-(m.u*.53)%3).toFixed(2)}s" aria-label="${esc((m.sh?'Shiny ':'')+(m.alpha?'Alfa ':'')+nmS(m))}"><span class="bzr"><img src="${art(m.id,m.sh)}" alt="" draggable="false" loading="lazy" onerror="this.onerror=null;this.src='${mini(m.id,m.sh)}'"></span>${m.sh?'<i class="hds"></i><i class="hds b"></i><i class="hds c"></i>':''}</button>`}
  async function enterBiome(k,cam,fresh){const r=live();if(!r)return;let d=BD()[k];if(fresh){delete lastCam[k]}const hadCam=!!cam;
   close2();const o=D.createElement('div');o.id='bzv';o.className='bz-'+k;const i=BI(k),lv=window.zoneLv&&i>=0?zoneLv(i):0;
   o.innerHTML=`<div class="bz-vp"><div class="bz-w" style="width:${WW}px;height:${WH}px"><canvas class="bz-bg" width="${WW}" height="${WH}"></canvas><div class="bz-pk"></div></div></div>
@@ -25443,26 +25484,63 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
  setInterval(()=>{const f=fight();if(!f){next=0;pend=0;paint();return}const t=Date.now();if(!next){next=t+4000+Math.random()*8000;return}if(t>=next){next=t+4000+Math.random()*9000;if(!pend)spawn()}paint()},300);
 })();
 
-/* ---------- v51.4: ⭐ Lista de deseados (en el Perfil) ---------- */
-(()=>{const D=document,K='pa_wish',MAX=30;
+/* ---------- v51.4 → v51.9: ⭐ Lista de deseados (Perfil) mejorada ---------- */
+(()=>{const D=document,K='pa_wish',MAX=60;
  const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
- const get=()=>{try{const v=JSON.parse(localStorage.getItem(K)||'[]');return Array.isArray(v)?v.filter(x=>x>0):[]}catch(e){return[]}},put=v=>{try{localStorage.setItem(K,JSON.stringify(v.slice(0,MAX)))}catch(e){}};
+ const tst=t=>{try{toast(t)}catch(e){}};
  const spName=id=>{try{const n=(typeof NAMES!='undefined'&&NAMES[id])||((typeof DEX!='undefined'&&DEX.find(x=>x.id==id))||{}).name||'';return n?n.charAt(0).toUpperCase()+n.slice(1):'#'+id}catch(e){return'#'+id}};
- /* lista completa de especies (para buscar por nombre) */
  window.__spList=async()=>{try{if(typeof loadDex=='function')await loadDex()}catch(e){}let L=[];try{L=(typeof DEX!='undefined'?DEX:[]).filter(x=>x&&x.id>0&&x.id<=1025).map(x=>({id:x.id,d:(n=>n.charAt(0).toUpperCase()+n.slice(1))(String((typeof NAMES!='undefined'&&NAMES[x.id])||x.name))}))}catch(e){}return L};
  window.__spFind=(L,v)=>{const q=String(v||'').trim().toLowerCase().replace(/\s+/g,'-');if(!q)return-1;const f=L.find(x=>x.d.toLowerCase()===q||x.d.toLowerCase().replace(/\s+/g,'-')===q);return f?f.id:-1};
- const caught=id=>{try{const d=JSON.parse(localStorage.getItem('pokerogue_pokedex_v1')||'{}');return!!(d.c&&d.c[id])}catch(e){return false}};
- window.__wishHas=id=>get().includes(+id);
- window.__wishSec=()=>{const L=get();return`<div class="pf-sec">⭐ Pokémon deseados <small>${L.length}/${MAX}</small></div><div class="pf-wish">${L.map(id=>`<button type="button" data-a="ws_del" data-id="${id}" class="${caught(id)?'got':''}" title="Toca para quitarlo"><img src="${mini(id,0)}" alt="" loading="lazy"><small>${esc(spName(id))}</small>${caught(id)?'<i>✓</i>':''}</button>`).join('')}<button type="button" data-a="ws_add" class="add"><b>＋</b><small>Añadir</small></button></div><small class="pf-wh">Los que tengas en la lista se marcan con ⭐ al verlos en los biomas. Toca uno para quitarlo.</small>`};
+ /* datos: [{id, sh (lo quiere shiny), pr (prioritario), t, got}] */
+ const get=()=>{try{const v=JSON.parse(localStorage.getItem(K)||'[]');return(Array.isArray(v)?v:[]).map(x=>typeof x==='number'?{id:x,sh:0,pr:0,t:0}:x).filter(x=>x&&x.id>0)}catch(e){return[]}};
+ const put=v=>{try{localStorage.setItem(K,JSON.stringify(v.slice(0,MAX)))}catch(e){}};
+ const dex=()=>{try{return JSON.parse(localStorage.getItem('pokerogue_pokedex_v1')||'{}')||{}}catch(e){return{}}};
+ const have=(w,d)=>{d=d||dex();return w.sh?!!(d.sh&&d.sh[w.id]):!!(d.c&&d.c[w.id])};
+ window.__wishHas=id=>get().some(w=>w.id===+id);
+ window.__wishGet=get;
+ /* tipos de todas las especies (caché de los biomas) para filtrar y decir dónde sale */
+ let TY=null;const TYX={},STX={};const tys=()=>{if(!TY){try{const c=JSON.parse(localStorage.getItem('pa_bio_types_v1')||'null');if(c&&c.t)TY=c.t}catch(e){}}return TY?Object.assign({},TY,TYX):TYX};
+ let fetching=false;const TRIED=new Set();const fillTypes=ids=>{const miss=ids.filter(id=>!TRIED.has(id));miss.forEach(id=>TRIED.add(id));if(!miss.length||fetching)return;fetching=true;Promise.all(miss.map(id=>Promise.all([getD(id).then(d=>{if(d&&d.types)TYX[id]=d.types}).catch(()=>{}),(window.__herd&&__herd.stage?__herd.stage(id).then(v=>{STX[id]=v}).catch(()=>{}):null)]))).finally(()=>{fetching=false;const o=D.getElementById('prfov');if(o&&o.classList.contains('on'))try{openProfile()}catch(_){}})};
+ const STG=()=>{try{return Object.assign(JSON.parse(localStorage.getItem('pa_stage1')||'{}')||{},STX)}catch(e){return STX}};
+ const where=id=>{try{if(id===983)return['❓','Forma misteriosa'];if(id===201)return['🏛️','Solo en las ruinas'];if(id===132)return['✨','No sale en los biomas'];if(typeof TAGS!='undefined'&&TAGS[id])return['👑','Legendario: no sale en los biomas'];
+  const t=tys()[id];if(!t)return['🔎','Toca para ver más'];const bk=biomeOf(t),bb=BIO.find(x=>x.k===bk);if(!bb)return['✨','No sale en los biomas'];const n=bb.k==='cav'?'Desierto rocoso':bb.n,st=STG()[id];
+  return st===2?['🔱',`Alfa en ${n} (o evolucionando)`]:[bb.ic,`Sale en ${n}`]}catch(e){return['🔎','']}};
+ /* --- sección del Perfil --- */
+ window.__wishSec=()=>{const L=get(),d=dex();fillTypes(L.map(w=>w.id).filter(id=>!tys()[id]||STG()[id]==null));const got=L.filter(w=>have(w,d)).length,S=L.slice().sort((a,b)=>(have(a,d)-have(b,d))||((b.pr|0)-(a.pr|0))||((a.t|0)-(b.t|0)));
+  return`<div class="pf-sec">⭐ Pokémon deseados <small>${L.length?`${got}/${L.length} conseguidos`:''}</small></div><div class="pf-wish">${S.map(w=>{const h=have(w,d),[ic,tx]=where(w.id);return`<button type="button" data-a="ws_opt" data-id="${w.id}" class="${h?'got':''}${w.pr?' pr':''}${w.sh?' sh':''}"><img src="${mini(w.id,w.sh?1:0)}" alt="" loading="lazy"><span class="wn">${w.sh?'✨ ':''}${esc(spName(w.id))}</span><small class="ww">${h?'✓ Conseguido':`${ic} ${esc(tx)}`}</small>${w.pr?'<i class="wp">⭐</i>':''}</button>`}).join('')}<button type="button" data-a="ws_add" class="add"><b>＋</b><small>Añadir</small></button></div><small class="pf-wh">Toca uno para quererlo shiny, marcarlo como prioritario o quitarlo. En los biomas se marcan con ⭐ y te avisamos al encontrarlos y al capturarlos.</small>`};
+ /* --- selector visual --- */
+ let pk=null,pkQ='',pkT='',pkHide=false,SL=null;
+ const TYL=['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
+ async function picker(){if(!SL)SL=await __spList();const d=dex();pk=D.createElement('div');pk.id='wspk';D.body.append(pk);draw();
+  function draw(){const L=get(),ids=new Set(L.map(w=>w.id)),T=tys(),q=pkQ.trim().toLowerCase();
+   const list=SL.filter(x=>(!q||x.d.toLowerCase().includes(q)||String(x.id)===q)&&(!pkT||(T[x.id]||[]).includes(pkT))&&(!pkHide||!(d.c&&d.c[x.id])));
+   const g=pk.querySelector('.wk-g');const sc=g?g.scrollTop:0;
+   pk.innerHTML=`<div class="wk-w"><div class="wk-h"><b>⭐ Añadir deseados</b><small>${L.length}/${MAX}</small><button type="button" data-k="x" class="wk-x">Listo</button></div>
+    <input class="wk-q" placeholder="🔍 Buscar por nombre o número…" value="${esc(pkQ)}" autocomplete="off">
+    <div class="wk-t"><button type="button" data-t="" class="${pkT?'':'on'}">Todos</button>${TYL.map(t=>`<button type="button" data-t="${t}" class="${pkT===t?'on':''}" style="--c:${(typeof COL!='undefined'&&COL[t])||'#64748b'}">${esc((typeof ES!='undefined'&&ES[t])||t)}</button>`).join('')}</div>
+    <label class="wk-hd"><input type="checkbox" ${pkHide?'checked':''}> Ocultar los que ya tengo</label>
+    <div class="wk-g">${list.slice(0,400).map(x=>`<button type="button" data-id="${x.id}" class="${ids.has(x.id)?'on':''}${d.c&&d.c[x.id]?' own':''}"><img src="${mini(x.id,0)}" alt="" loading="lazy"><small>${esc(x.d)}</small><em>#${x.id}</em></button>`).join('')||'<p class="wk-e">No hay Pokémon con ese filtro.</p>'}${list.length>400?`<p class="wk-e">Y ${list.length-400} más: afina la búsqueda.</p>`:''}</div></div>`;
+   const g2=pk.querySelector('.wk-g');g2.scrollTop=sc;
+   const qi=pk.querySelector('.wk-q');qi.oninput=()=>{pkQ=qi.value;clearTimeout(pk._t);pk._t=setTimeout(()=>{draw();const n=pk.querySelector('.wk-q');n.focus();n.setSelectionRange(n.value.length,n.value.length)},180)};
+   pk.querySelector('.wk-hd input').onchange=e=>{pkHide=e.target.checked;draw()}}
+  pk.onclick=e=>{const t=e.target.closest('[data-t]');if(t){pkT=t.dataset.t;draw();return}const x=e.target.closest('[data-k="x"]');if(x||e.target===pk){pk.remove();pk=null;try{openProfile()}catch(_){}return}
+   const b=e.target.closest('[data-id]');if(!b)return;const id=+b.dataset.id;let L=get();if(L.some(w=>w.id===id)){L=L.filter(w=>w.id!==id);b.classList.remove('on')}else{if(L.length>=MAX)return tst('⭐ Tu lista está llena ('+MAX+')');L.push({id,sh:0,pr:0,t:Date.now()});b.classList.add('on');try{beep(880,.05,'triangle')}catch(_){}}put(L);const hh=pk.querySelector('.wk-h small');if(hh)hh.textContent=L.length+'/'+MAX}}
  window.__wishAct=async(b,o)=>{const a=b.dataset.a;
-  if(a==='ws_del'){const id=+b.dataset.id;put(get().filter(x=>x!==id));try{toast('⭐ '+spName(id)+' ya no está en tu lista')}catch(e){}try{openProfile()}catch(e){}return}
-  if(a==='ws_add'){if(get().length>=MAX)return toast('⭐ Tu lista está llena ('+MAX+')');o.classList.remove('on');
-   const SL=await window.__spList();let opts='';SL.forEach(x=>{opts+=`<option value="${esc(x.d)}">`});
-   const p=ask('⭐ Añadir a deseados','<small>Escribe el nombre del Pokémon que quieres conseguir.</small><input id="wsin" list="wsdl" autocomplete="off" placeholder="Ej.: Dragonite" style="display:block;width:100%;margin:10px 0 4px;padding:10px 12px;border-radius:10px;border:1px solid #fff4;background:#0006;color:#fff;font:inherit;font-size:16px;box-sizing:border-box"><datalist id="wsdl">'+opts+'</datalist>',['Añadir','Cancelar']);
-   const i=D.getElementById('wsin');if(i)setTimeout(()=>{try{i.focus()}catch(_){}},60);const k=await p;
-   if(k===0){const id=window.__spFind(SL,i&&i.value);
-    if(!(id>0))toast('No encuentro ese Pokémon. Elige uno de la lista');else if(get().includes(id))toast('⭐ '+spName(id)+' ya está en tu lista');else{put([...get(),id]);toast('⭐ '+spName(id)+' añadido a tus deseados')}}
-   try{openProfile()}catch(e){}}};
+  if(a==='ws_add'){o.classList.remove('on');await picker();return}
+  if(a==='ws_opt'){const id=+b.dataset.id,L=get(),w=L.find(x=>x.id===id);if(!w)return;o.classList.remove('on');const [ic,tx]=where(id);
+   const k=await ask(`${w.sh?'✨ ':''}${esc(spName(id))}`,`<div style="text-align:center"><img src="${art(id,w.sh?1:0)}" alt="" style="width:120px"></div><small>${ic} ${esc(tx)}${have(w)?'<br>✓ Ya lo tienes en la Pokédex':''}</small>`,[w.sh?'Lo quiero normal (no shiny)':'✨ Lo quiero shiny',w.pr?'Quitar de prioritarios':'⭐ Marcar como prioritario','🗑️ Quitar de la lista','Cerrar']);
+   if(k===0)w.sh=w.sh?0:1;else if(k===1)w.pr=w.pr?0:1;else if(k===2){put(L.filter(x=>x.id!==id));tst('⭐ '+spName(id)+' ya no está en tu lista');try{openProfile()}catch(_){}return}
+   put(L);try{openProfile()}catch(_){}}};
+ /* --- avisos al capturar --- */
+ const _ch=window.capHook;window.capHook=function(m){try{if(m){const L=get(),w=L.find(x=>x.id===m.id&&(!x.sh||m.sh));if(w&&!w.got){w.got=Date.now();put(L);setTimeout(()=>{tst(`🎉 ¡Has conseguido un Pokémon deseado: ${w.sh?'✨ ':''}${spName(m.id)}!`);try{beep(1046,.15,'triangle');setTimeout(()=>beep(1568,.2,'triangle'),140)}catch(_){}},1200)}}}catch(e){}return _ch?_ch.apply(this,arguments):undefined};
+ /* --- biomas: ⭐ sobre los deseados, aviso al entrar y contador en la isla --- */
+ let lastBz=null;
+ const mark=()=>{const L=get();if(!L.length)return;const ids=new Map(L.map(w=>[w.id,w]));
+  const bz=D.getElementById('bzv');if(bz){const ps=bz.querySelectorAll('.bzp[data-id]');const seen=[];ps.forEach(b=>{const w=ids.get(+b.dataset.id),on=!!w&&(!w.sh||b.classList.contains('sh'));if(on!==b.classList.contains('wsh')){b.classList.toggle('wsh',on)}if(on&&!b.querySelector('.wstar')){const s=D.createElement('i');s.className='wstar';s.textContent='⭐';b.append(s)}if(on)seen.push(+b.dataset.id)});
+   if(bz!==lastBz&&ps.length){lastBz=bz;if(seen.length){const u=[...new Set(seen)];setTimeout(()=>tst(`⭐ ¡Aquí hay ${u.length>1?'Pokémon de tu lista de deseados':'un Pokémon de tu lista de deseados'}: ${u.slice(0,3).map(spName).join(', ')}!`),700)}}}
+  else lastBz=null;
+  D.querySelectorAll('#dmap.xbio .xlab.z[data-z^="bz-"]').forEach(l=>{const k=l.dataset.z.slice(3);let n=0;try{const bd=(R.bz||{})[k];(bd&&bd.g||[]).forEach(g=>(g.m||[]).forEach(m=>{const w=ids.get(m.id);if(w&&(!w.sh||m.sh)&&!m.beat&&!m.lost)n++}))}catch(e){}let e=l.querySelector('.wcnt');if(!n){if(e)e.remove();return}if(!e){e=D.createElement('em');e.className='wcnt';l.append(e)}const t='⭐'+n;if(e.textContent!==t)e.textContent=t})};
+ if(window.__onDom)__onDom(mark);setInterval(mark,2000);
 })();
 
 /* ---------- v51.5: 👥 pestaña del equipo dentro de los biomas: elige quién empieza los combates ---------- */
