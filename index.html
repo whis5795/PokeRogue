@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.4</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v52.5</div>
 </section>
 
 <section id="team" class="scr">
@@ -8621,7 +8621,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'52.4',t:'Arreglo al aprender movimientos',s:'cur',l:[
+ {v:'52.5',t:'Deseo de muerte y protección al revivir',s:'cur',l:[
+  '💀 Aventura multiplayer: «Deseo de muerte» ahora siempre hace algo: maldice a un enemigo al azar y le quita un 10% de su vida máxima (4% a jefes, élites y guardianes). Además tiene un 8% de fulminarlo (los jefes no caen de golpe, pero a veces reciben el triple)',
+  '🛡️ Quien vuelve al combate (Revivir, Deseo Cura…) queda protegido: los rivales no pueden atacarle hasta su siguiente turno'
+]},
+{v:'52.4',t:'Arreglo al aprender movimientos',s:'prev',l:[
   '🔧 Aventura multiplayer: al aprender un movimiento (por nivel o con MT) se podía elegir olvidar un movimiento fijo 🔒 y entonces no se aprendía nada. Ahora los fijos salen bloqueados o no se ofrecen',
   '🔧 Las MT avisan antes si tu clase no puede aprenderlas o si ya conoces el movimiento, en vez de dejarte elegir qué olvidar para luego no aprenderlo'
 ]},
@@ -16463,7 +16467,10 @@ function snap(){return{mvw:V.mvw||null,evv:V.evv||null,len:G.len||20,asc:G.asc|0
  turn:V.turn,wait:V.wait,log:V.log,fx:V.fx.slice(-24),ban:V.ban,map:G.map,pos:G.pos,done:G.done||[],choices:V.choices,horde:V.horde,msg:V.msg,order:V.order,
  wt:V.wait&&V.waitT?Math.max(0,120000-(now()-V.waitT)):0,votes:V.ph==='map'&&V.votes?V.votes:null,ev:V.ph==='event'&&V.ev?Object.assign({},V.ev,{now:now()}):null,spd:SPD,st:G.st||null,ult:Math.floor(G.ult||0),gid:G.created||0,emo:V.emo||null}}
 let PQ=0,WK={},WDS=new Set();
-function push(){if(ROLE!=='host'||!G||PQ)return;PQ=requestAnimationFrame(flushPush);setTimeout(()=>{if(PQ){cancelAnimationFrame(PQ);flushPush()}},40)}
+/* v52.5: quien vuelve al combate (Revivir, Deseo Cura…) no puede ser atacado hasta su siguiente turno */
+function rvScan(){try{if(ROLE!=='host'||!G)return;const inB=V.ph==='battle';G.seats.forEach((x,i)=>{const m=x.hero;if(!m)return;if(!inB){delete m._ko;return}
+ if(m.hp<=0){m._ko=1;return}if(m._ko){delete m._ko;const b=m._b||(m._b={});b.prt=1;b.rvp=1;fx({k:'fl',s:'h',i,txt:'🛡️ Protegido',cls:'hl'})}})}catch(e){}}
+function push(){rvScan();if(ROLE!=='host'||!G||PQ)return;PQ=requestAnimationFrame(flushPush);setTimeout(()=>{if(PQ){cancelAnimationFrame(PQ);flushPush()}},40)}
 function flushPush(){PQ=0;if(ROLE!=='host'||!G)return;const s=snap();if(NET.peers.size)bcast({t:'st',s:wire(s)});draw(s)}
 /* versión para la red: solo las partes que han cambiado desde el último envío y sin descripciones de movimientos ya enviadas */
 function wire(s){const w={},full=!WK.ph;for(const k in s){const j=JSON.stringify(s[k]);if(full||WK[k]!==j){WK[k]=j;w[k]=s[k]}}if(!full)w._d=1;
@@ -16662,7 +16669,7 @@ async function battle0(title){const foes=V.foes;[...G.seats.map(s=>s.hero),...fo
 /* inicio de turno: efectos temporales y estados alterados. Devuelve true si la unidad pierde el turno */
 function heal(t,i,s,h,ic){h=Math.min(t.max-t.hp,h);if(h<=0)return 0;t.hp+=h;fx({k:'fl',s,i,txt:(ic||'+')+h,cls:'hl'});return h}
 function turnStart(u){const m=u.m,b=m._b||(m._b={}),L=[];
- b.inv=0;b.prt=0;b.cnt=0;b.wg=0;if(b.tnt>0)b.tnt--;b.hitP=b.hit;b.hit=0;
+ b.inv=0;b.prt=0;b.rvp=0;b.cnt=0;b.wg=0;if(b.tnt>0)b.tnt--;b.hitP=b.hit;b.hit=0;
  if(b.wish){const h=heal(m,u.i,u.s,b.wish,'⭐ +');b.wish=0;if(h)L.push(`⭐ ¡El deseo se cumple! ${pname(m)} recupera ${h} PS.`)}
  if(m.hero&&G.bl&&G.bl.vit&&m.hp>0&&m.hp<m.max){const h=heal(m,u.i,u.s,Math.ceil(m.max*.05*G.bl.vit),'❤️ +');if(h)L.push(`❤️ Vitalidad: ${pname(m)} recupera ${h} PS.`)}
  if(b.rg>0){b.rg--;const h=heal(m,u.i,u.s,Math.ceil(m.max*.1),'💧 +');if(h)L.push(`💧 Acua Aro: ${pname(m)} recupera ${h} PS.`)}
@@ -16687,7 +16694,7 @@ function aim(u,inp){if(!inp||!inp.tg||inp.tg.s!=='h')return inp;const hs=G.seats
   const o=hs.filter(x=>x.m.cls!=='asesino');const note=`🌑 ${pname(u.m)} no se atreve a atacar a ${pname(t)}…`;
   if(!o.length)return{i:'hes',msg:note+' ¡y pierde el turno! '+pname(t)+' queda al acecho.'};inp.tg={s:'h',i:pick(o).i};inp.note=note}
  return inp}
-function foeAI(u){const hs=G.seats.map((s,i)=>({s:'h',i,m:s.hero})).filter(x=>x.m&&x.m.hp>0);if(!hs.length)return{i:'def'};const mvs=(u.m.moves||[]).map((v,i)=>({v,i})).filter(x=>x.v.p>0);
+function foeAI(u){let hs=G.seats.map((s,i)=>({s:'h',i,m:s.hero})).filter(x=>x.m&&x.m.hp>0);if(!hs.length)return{i:'def'};{const nr=hs.filter(x=>!(x.m._b&&x.m._b.rvp));if(nr.length)hs=nr}const mvs=(u.m.moves||[]).map((v,i)=>({v,i})).filter(x=>x.v.p>0);
  if(!mvs.length)return{i:'tackle',tg:{s:'h',i:pick(hs).i}};let best=null,bs=-1;
  for(const x of mvs)for(const h of hs){const sc=x.v.p*(typeof eff==='function'?eff(x.v.t,h.m.types||[]):1)*((u.m.types||[]).includes(x.v.t)?1.5:1)*(.6+R0()*.8);if(sc>bs){bs=sc;best={i:x.i,tg:{s:'h',i:h.i}}}}return best}
 /* habilidades de los debilitados: se usan en cualquier momento del combate; 8 s de espera que solo corren mientras alguien ataca */
@@ -16696,8 +16703,9 @@ function koAct(seat,a,tg){V._by={s:'h',i:seat};try{koAct0(seat,a,tg)}finally{V._
 function koAct0(seat,a,tg){if(V.ph!=='battle'||!G)return;const me=G.seats[seat]&&G.seats[seat].hero;if(!me||me.hp>0)return;
  if((V.kr[seat]||0)-3000>V.bclock)return;if(!V.foes.some(m=>m.hp>0)||!alive())return;const nmA=pname(me);V.kr[seat]=V.bclock+KOCD;
  if(a==='death'){const c=V.foes.map((m,i)=>({m,i})).filter(x=>x.m.hp>0),t=pick(c);fx({k:'fl',s:'h',i:seat,txt:'💀',cls:'db'});
-  if(R0()<.05){t.m.hp=0;fx({k:'hit',s:'e',i:t.i});fx({k:'fl',s:'e',i:t.i,txt:'💀 ¡KO!',cls:'se'});V.log=`💀 ¡Deseo de muerte de ${nmA}! ¡${pname(t.m)} cae fulminado!`;bp(140,.4,'sawtooth')}
-  else{V.log=`💀 ${nmA} lanzó un Deseo de muerte sobre ${pname(t.m)}… pero no ocurrió nada.`;bp(260,.1)}}
+  /* v52.5: siempre hace algo: maldice (daño) y con un 8% fulmina (los jefes no caen de golpe: reciben el triple) */
+  const big=t.m.boss||t.m.el||t.m.guard;if(!big&&R0()<.08){t.m.hp=0;fx({k:'hit',s:'e',i:t.i});fx({k:'fl',s:'e',i:t.i,txt:'💀 ¡KO!',cls:'se'});V.log=`💀 ¡Deseo de muerte de ${nmA}! ¡${pname(t.m)} cae fulminado!`;bp(140,.4,'sawtooth')}
+  else{const d=Math.max(1,Math.min(t.m.hp,Math.ceil(t.m.max*(big?.04:.1)*(big&&R0()<.08?3:1))));t.m.hp=Math.max(0,t.m.hp-d);fx({k:'hit',s:'e',i:t.i});fx({k:'fl',s:'e',i:t.i,txt:'💀 -'+d,cls:'db'});V.log=`💀 ${nmA} maldice a ${pname(t.m)} con un Deseo de muerte: pierde ${d} PS${t.m.hp<=0?' ¡y cae!':''}.`;bp(220,.15,'sawtooth')}}
  else{let tu=tg&&tg.s==='h'?{i:+tg.i,m:unitOf(tg)}:null;if(!tu||!tu.m||tu.m.hp<=0){const c=G.seats.map((x,i)=>({i,m:x.hero})).filter(x=>x.m&&x.m.hp>0);if(!c.length)return;tu=pick(c)}
   fx({k:'fl',s:'h',i:seat,txt:'✨',cls:'hl'});
   if(R0()<.4){const h=Math.ceil(tu.m.max*.2);tu.m.hp=Math.min(tu.m.max,tu.m.hp+h);fx({k:'fl',s:'h',i:tu.i,txt:'✨ +'+h,cls:'hl'});V.log=`✨ Deseo de vida de ${nmA}: ¡${pname(tu.m)} recupera ${h} PS!`;bp(988,.15)}
@@ -17009,7 +17017,7 @@ setInterval(()=>{const e=Q('#makcd');if(!e)return;const l=koLeft(),r=koReady(),w
  const h=r?'✅ ¡Deseos listos!':(KOC&&KOC.p?'⏸️ Recarga en pausa mientras tu compañero elige':'⏳ Recargando…');if(e._h!==h){e._h=h;e.textContent=h}e.classList.toggle('rdy',r);koBtns()},100);
 function sendKo(a,tg){if(ROLE==='host')koAct(0,a,tg);else dsend(NET.dc,{t:'ko',a,tg});bp(a==='death'?220:880,.08)}
 function sendInput(o){if(ROLE==='host'){if(INW)INW.res(o)}else{dsend(NET.dc,{t:'in',i:o.i,tg:o.tg});const p=Q('#mapnl');if(p)p.classList.add('sent')}}
-function info(i){const s=S;if(!s)return;if(i==='death'){const v={ko:1,n:'Deseo de muerte',t:'ghost',p:0,acc:5,ds:'Habilidad que solo tienen los Pokémon debilitados del equipo. Elige a un enemigo al azar: hay un 5% de probabilidad de derrotarlo de un solo golpe. Se puede usar en cualquier momento del combate y luego tiene 8 s de recarga (que se pausa mientras nadie ataca).'};return info2(v)}if(!s.turn&&i!=='wish')return;const v=i==='wish'?{ko:1,n:'Deseo de vida',t:'fairy',p:0,acc:40,ds:'Habilidad que solo tienen los Pokémon debilitados del equipo. Elige a un compañero que siga en pie: hay un 40% de probabilidad de que recupere un 20% de sus PS máximos. Se puede usar en cualquier momento del combate y luego tiene 8 s de recarga (que se pausa mientras nadie ataca).'}:s.seats[s.turn.i].hero.moves[+i];if(!v)return;info2(v)}
+function info(i){const s=S;if(!s)return;if(i==='death'){const v={ko:1,n:'Deseo de muerte',t:'ghost',p:0,acc:8,ds:'Habilidad que solo tienen los Pokémon debilitados del equipo. Maldice a un enemigo al azar: le quita un 10% de su vida máxima (un 4% a jefes, élites y guardianes) y tiene un 8% de probabilidad de derrotarlo de un solo golpe (los jefes no caen de golpe: a veces reciben el triple). Se puede usar en cualquier momento del combate y luego tiene 8 s de recarga (que se pausa mientras nadie ataca).'};return info2(v)}if(!s.turn&&i!=='wish')return;const v=i==='wish'?{ko:1,n:'Deseo de vida',t:'fairy',p:0,acc:40,ds:'Habilidad que solo tienen los Pokémon debilitados del equipo. Elige a un compañero que siga en pie: hay un 40% de probabilidad de que recupere un 20% de sus PS máximos. Se puede usar en cualquier momento del combate y luego tiene 8 s de recarga (que se pausa mientras nadie ataca).'}:s.seats[s.turn.i].hero.moves[+i];if(!v)return;info2(v)}
 function clsInfo(k){const K=CLS[k];if(!K)return;const ms=S&&S.seats?S.seats.map(x=>x.hero).find(h=>h&&h.cls===k):null,known=ms?ms.moves.map(x=>x.n):[],lv=ms?ms.lvl:0;
  const g=D.createElement('div');g.className='ma-pop';g.style.setProperty('--c',K.c);
  g.innerHTML=`<div class="ma-cip"><h4>${K.ic} Clase ${esc(K.n)} <span>${esc(cap(dexName(K.base)))}</span></h4>
