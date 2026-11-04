@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.8</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.9</div>
 </section>
 
 <section id="team" class="scr">
@@ -8650,7 +8650,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'55.8',t:'Cargando Pokédex',s:'cur',l:[
+ {v:'55.9',t:'Biomas 3D mucho más bonitos',s:'cur',l:[
+  '🌄 Con la cámara 3D en los biomas: cielo con sol y nubes que se mueven (de noche, luna y estrellas que titilan), montañas lejanas del color de cada bioma (volcán humeante en el Volcán y mar en la Costa), suelo que llega hasta el horizonte sin bordes vacíos, niebla de distancia, viñeta y sombras tumbadas en el suelo bajo cada Pokémon'
+ ]},
+ {v:'55.8',t:'Cargando Pokédex',s:'prev',l:[
   '📖 Al abrir la Pokédex (desde la mochila o el menú) sale un cartel de «Cargando Pokédex…» que se cierra solo en cuanto está lista'
  ]},
  {v:'55.7',t:'Modo 3D en los biomas',s:'prev',l:[
@@ -21964,11 +21967,10 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #pdx #dpimg.dphd{object-fit:contain}
 #mpa .ma-u.h img[src*="/showdown/"],#mpa .ma-u.h img[src*="/other/home/"]{scale:-1 1}
 /* v55.7: modo 3D en los biomas */
-#bzv.bzcam3d .bz-vp{perspective:900px;perspective-origin:50% 35%}
+#bzv.bzcam3d .bz-vp{perspective:620px;perspective-origin:50% 60%;-webkit-mask-image:linear-gradient(#0000 0%,#0000 calc(var(--hz,14%) - 2%),#000 calc(var(--hz,14%) + 10%));mask-image:linear-gradient(#0000 0%,#0000 calc(var(--hz,14%) - 2%),#000 calc(var(--hz,14%) + 10%))}
 #bzv.bzcam3d .bz-w,#bzv.bzcam3d .bz-pk,#bzv.bzcam3d .bz-soc{transform-style:preserve-3d}
-#bzv.bzcam3d .bzp{rotate:x -38deg;transform-origin:50% 85%}
-#bzv.bzcam3d .bzs,#bzv.bzcam3d .bzwp,#bzv.bzcam3d .bzbaby{rotate:x -38deg}
-#bzv.bzcam3d .bz-vp::before{content:"";position:absolute;left:0;right:0;top:0;height:28%;z-index:2;pointer-events:none;background:linear-gradient(#87ceeb,#bfe3f5 55%,#0000)}
+#bzv.bzcam3d .bzp{rotate:x -56deg;transform-origin:50% 85%}
+#bzv.bzcam3d .bzs,#bzv.bzcam3d .bzwp,#bzv.bzcam3d .bzbaby{rotate:x -56deg}
 #bzv.bzspr3d .bzp .bzr img{object-fit:contain;image-rendering:auto}
 /* v55.8: cargando Pokédex */
 #pdxload{position:fixed;inset:0;z-index:100070;display:flex;align-items:center;justify-content:center;background:#05030dcc;animation:pdlIn .15s ease-out}
@@ -21976,6 +21978,35 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #pdxload i{width:42px;height:42px;border-radius:50%;border:5px solid #ffffff33;border-top-color:#fff;animation:pdlSp .8s linear infinite}
 #pdxload.out{opacity:0;transition:opacity .22s}
 @keyframes pdlIn{from{opacity:0}}@keyframes pdlSp{to{transform:rotate(360deg)}}
+
+/* v55.9: biomas 3D mucho más bonitos */
+#bzv .bz-sky{display:none;position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:linear-gradient(#4aa8e8 0%,#8fd0f5 calc(var(--hz,14%) - 6%),#e6f6fd calc(var(--hz,14%) + 2%),var(--gnd) calc(var(--hz,14%) + 14%),var(--gnd2) 100%)}
+#bzv.bznight .bz-sky{background:linear-gradient(#0b1030 0%,#1e2a5a calc(var(--hz,14%) - 6%),#41507f calc(var(--hz,14%) + 2%),var(--gnd2) calc(var(--hz,14%) + 14%),#0b0f12 100%)}
+#bzv.bzcam3d .bz-sky{display:block}
+#bzv.bzcam3d{background:var(--gnd2)}
+#bzv.bzcam3d .bz-vp{z-index:1}
+#bzv .bzk-sun{position:absolute;right:16%;top:calc(var(--hz,14%) - 11%);width:70px;height:70px;border-radius:50%;font-style:normal;font-size:54px;display:grid;place-items:center;background:radial-gradient(circle,#fffbe6 0 40%,#fde68a 55%,#fde68a00 72%);filter:drop-shadow(0 0 30px #fde68a)}
+#bzv.bznight .bzk-sun{background:none;filter:drop-shadow(0 0 22px #e0e7ff)}
+#bzv .bzk-st{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff;animation:bzTw 2.4s ease-in-out infinite alternate}
+@keyframes bzTw{to{opacity:.25}}
+#bzv .bzk-cl{position:absolute;left:-20%;margin-top:-4%;font-style:normal;font-size:64px;opacity:.9;filter:drop-shadow(0 6px 8px #0002);animation:bzCl linear infinite}
+#bzv.bznight .bzk-cl{opacity:.35;filter:brightness(.6)}
+@keyframes bzCl{to{left:115%}}
+#bzv .bzk-mt{position:absolute;left:-5%;right:-5%;top:calc(var(--hz,14%) - 12%);height:13%}
+#bzv .bzk-mt.b{background:var(--mt2);opacity:.55;clip-path:polygon(0 100%,0 55%,8% 30%,16% 58%,26% 20%,36% 52%,46% 28%,55% 60%,64% 18%,74% 50%,84% 25%,93% 55%,100% 35%,100% 100%)}
+#bzv .bzk-mt.f{top:calc(var(--hz,14%) - 7%);height:8%;background:var(--mt1);opacity:.85;clip-path:polygon(0 100%,0 60%,10% 40%,20% 65%,30% 35%,42% 70%,52% 42%,62% 72%,72% 38%,84% 66%,94% 45%,100% 60%,100% 100%)}
+#bzv.bznight .bzk-mt{filter:brightness(.45) saturate(.6)}
+#bzv .bzk-vol{position:absolute;left:12%;top:calc(var(--hz,14%) - 13%);font-size:90px;filter:drop-shadow(0 0 20px #f97316)}
+#bzv .bzk-sea{position:absolute;left:0;right:0;top:calc(var(--hz,14%) + 0%);height:3%;background:linear-gradient(#38bdf8,#0ea5e9);opacity:.8}
+/* suelo infinito: el mundo se extiende con el color del bioma (sin bordes vacíos) */
+#bzv.bzcam3d .bz-w::before{content:"";position:absolute;inset:-2400px;z-index:-1;background:radial-gradient(circle at 50% 50%,var(--gnd) 0 40%,var(--gnd2) 75%)}
+/* niebla de distancia sobre el horizonte y viñeta */
+#bzv.bzcam3d .bz-vp::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(120% 90% at 50% 75%,#0000 60%,#0005 100%)}
+/* sombra en el suelo bajo cada Pokémon (tumbada sobre el terreno) */
+#bzv.bzcam3d .bzp::after{left:5%;right:5%;bottom:-6%;height:26%;transform:rotateX(70deg);background:radial-gradient(#000b,transparent 68%)}
+#bzv.bzcam3d .bzp .bzr img{filter:drop-shadow(0 4px 3px #0005) brightness(1.04) saturate(1.08)}
+
+#bzv.bzcam3d{--hz:22%}
 </style>
 <script id="v37js">
 (()=>{
@@ -25397,6 +25428,11 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   o.innerHTML=`<div class="bz-vp"><div class="bz-w" style="width:${WW}px;height:${WH}px"><canvas class="bz-bg" width="${WW}" height="${WH}"></canvas><div class="bz-pk"></div></div></div>
    <div class="bz-hud"><button type="button" class="bz-back" data-b="back">← Isla</button><span class="bz-n"></span><button type="button" class="bz-i" data-b="guide" aria-label="Guía del bioma">i</button></div>
    <div class="bz-zoom"><button type="button" data-b="zi" aria-label="Acercar">＋</button><span class="bz-zl">100%</span><button type="button" data-b="zo" aria-label="Alejar">－</button><button type="button" data-b="zf" aria-label="Ver todo" title="Ver todo">⤢</button></div><div class="bz-card" hidden></div><div class="bz-tip">Arrastra para explorar · pellizca o usa ＋/－ para el zoom · toca un Pokémon</div><div class="bz-load"><i></i><span>Explorando ${esc(ZN[k].n)}…</span></div>`;
+  /* v55.9: escenario 3D: cielo con nubes y sol (o luna y estrellas), montañas lejanas del bioma y suelo infinito */
+  try{const night=ph()==='night',GC={for:['#2f5f2a','#1f3f1c'],pra:['#5f9e45','#3f7a30'],mon:['#dbe7f0','#9fb6c8'],vol:['#4b2f2a','#2a1a18'],wat:['#e3cf9c','#c2a970'],cav:['#c49a62','#8d6a3f']}[k]||['#4a7a3a','#2f5a26'],
+   MC={for:['#2c5a3a','#1d4029'],pra:['#6f9f7a','#4f7f5a'],mon:['#f1f5f9','#94a3b8'],vol:['#3b1f1b','#7f1d1d'],wat:['#7dd3fc','#0ea5e9'],cav:['#b45309','#78350f']}[k]||['#475569','#334155'];
+   o.style.setProperty('--gnd',GC[0]);o.style.setProperty('--gnd2',GC[1]);o.style.setProperty('--mt1',MC[0]);o.style.setProperty('--mt2',MC[1]);o.classList.toggle('bznight',night);
+   const sky=D.createElement('div');sky.className='bz-sky';sky.innerHTML=`<i class="bzk-sun">${night?'🌙':''}</i>${night?Array.from({length:26},(_,i)=>`<b class="bzk-st" style="left:${(i*37)%100}%;top:${(i*53)%38}%;animation-delay:${(i%7)*.4}s"></b>`).join(''):''}${Array.from({length:5},(_,i)=>`<em class="bzk-cl" style="top:${6+i*7}%;animation-duration:${60+i*25}s;animation-delay:-${i*17}s;scale:${1-i*.12}">☁️</em>`).join('')}<div class="bzk-mt b"></div><div class="bzk-mt f"></div>${k==='vol'?'<div class="bzk-vol">🌋</div>':''}${k==='wat'?'<div class="bzk-sea"></div>':''}`;o.prepend(sky)}catch(e){}
   D.body.append(o);cur={k,o,cam:cam||lastCam[k]||{x:(WW-innerWidth)/2,y:(WH-innerHeight)/2},z:(()=>{try{const v=parseFloat(localStorage.getItem('pa_bzz'));if(v>0)return v}catch(e){}return innerWidth<600?.8:1})(),sel:null,wt:0};bindDrag(o);apply();
   if(fresh||needGen(k)){d=await genBiome(k)}if(!cur||cur.o!==o)return;d=BD()[k];o.querySelector('.bz-load').remove();
   if(!d||d.cl!=null){o.querySelector('.bz-pk').innerHTML='';o.querySelector('.bz-tip').textContent=d&&d.cl!=null?'¡Has despejado la zona! Sal y vuelve a entrar para encontrar más Pokémon':'No se pudo explorar la zona. Revisa tu conexión';}
@@ -25842,7 +25878,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  function chronOpen(){if(!cur)return;let pn=cur.o.querySelector('.bzchron');if(pn){pn.remove();return}pn=D.createElement('div');pn.className='bzchron';cur.o.append(pn);chronPaint(pn)}
  const zMin=()=>{const vp=cur.o.querySelector('.bz-vp');return Math.min(1,Math.max(vp.clientWidth/WW,vp.clientHeight/WH)*.98)},Z_MAX=3;
  function apply(){if(!cur)return;const vp=cur.o.querySelector('.bz-vp'),z=cur.z=Math.max(zMin(),Math.min(Z_MAX,cur.z||1)),w=vp.clientWidth/z,h=vp.clientHeight/z,c=cur.cam;
-  c.x=w>=WW?(WW-w)/2:Math.max(0,Math.min(WW-w,c.x));c.y=h>=WH?(WH-h)/2:Math.max(0,Math.min(WH-h,c.y));{const t3=bzCam()==='3d',hx=vp.clientWidth/2,hy=vp.clientHeight/2;cur.o.classList.toggle('bzcam3d',t3);cur.o.classList.toggle('bzspr3d',bzMode()!=='art');cur.o.querySelector('.bz-w').style.transform=t3?`translate(${hx}px,${hy}px) rotateX(38deg) translate(${-hx}px,${-hy}px) scale(${z}) translate3d(${-c.x}px,${-c.y}px,0)`:`scale(${z}) translate3d(${-c.x}px,${-c.y}px,0)`};lastCam[cur.k]={x:c.x,y:c.y};lastZ[cur.k]=z;mmView();if(cur.zs!==z){cur.zs=z;clearTimeout(cur.zt);cur.zt=setTimeout(()=>{try{localStorage.setItem('pa_bzz',String(Math.round(z*1000)/1000))}catch(e){}},250)}const zl=cur.o.querySelector('.bz-zl');if(zl)zl.textContent=Math.round(z*100)+'%'}
+  c.x=w>=WW?(WW-w)/2:Math.max(0,Math.min(WW-w,c.x));c.y=h>=WH?(WH-h)/2:Math.max(0,Math.min(WH-h,c.y));{const t3=bzCam()==='3d',hx=vp.clientWidth/2,hy=vp.clientHeight/2;cur.o.classList.toggle('bzcam3d',t3);cur.o.classList.toggle('bzspr3d',bzMode()!=='art');cur.o.querySelector('.bz-w').style.transform=t3?`translate(${hx}px,${hy}px) rotateX(56deg) translate(${-hx}px,${-hy}px) scale(${z}) translate3d(${-c.x}px,${-c.y}px,0)`:`scale(${z}) translate3d(${-c.x}px,${-c.y}px,0)`};lastCam[cur.k]={x:c.x,y:c.y};lastZ[cur.k]=z;mmView();if(cur.zs!==z){cur.zs=z;clearTimeout(cur.zt);cur.zt=setTimeout(()=>{try{localStorage.setItem('pa_bzz',String(Math.round(z*1000)/1000))}catch(e){}},250)}const zl=cur.o.querySelector('.bz-zl');if(zl)zl.textContent=Math.round(z*100)+'%'}
  function zoomAt(nz,fx,fy){if(!cur)return;const vp=cur.o.querySelector('.bz-vp'),r=vp.getBoundingClientRect();fx=fx==null?r.width/2:fx-r.left;fy=fy==null?r.height/2:fy-r.top;const z0=cur.z,wx=cur.cam.x+fx/z0,wy=cur.cam.y+fy/z0;cur.z=Math.max(zMin(),Math.min(Z_MAX,nz));cur.cam.x=wx-fx/cur.z;cur.cam.y=wy-fy/cur.z;apply()}
  function bindDrag(o){const vp=o.querySelector('.bz-vp');let st=null,vx=0,vy=0,raf=0,lt=0;const PT=new Map();let pin=null;
   vp.addEventListener('pointerdown',e=>{if(e.button)return;PT.set(e.pointerId,{x:e.clientX,y:e.clientY});cancelAnimationFrame(raf);
