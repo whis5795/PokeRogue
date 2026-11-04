@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.8</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.9</div>
 </section>
 
 <section id="team" class="scr">
@@ -1256,18 +1256,21 @@ $('#pP').onclick=()=>{if(B.adv&&act('p'))info(act('p'))};
 async function bag(){R.team.forEach(m=>{try{evoFill(m)}catch(e){}});
   const MM=$('#mod');
   try{for(;;){
-    const inB=$('#battle').classList.contains('on'),ks=Object.keys(ITEM).filter(k=>R.bag[k]>0&&!(inB&&BALLK.includes(k))),it=[...ks.map(k=>({k,t:ITEM[k].n,c:'×'+R.bag[k],ic:IC[k],d:ITEM[k].d})),...R.tms.map((t,i)=>({k:'tm'+i,t:'MT '+t.n,c:'',ic:isImg('tm-'+t.t,'tm'),d:`${ES[t.t]} · ${t.p?'poder '+t.p:'Estado'}${window.MX?' · '+MX.describe(t):''}`})),...R.rel.map(i=>({r:1,t:REL[i].n,c:'',ic:isImg(RSP[i],'relic'),d:'Reliquia: '+REL[i].d}))];
+    const inB=$('#battle').classList.contains('on'),PIN=(()=>{try{return JSON.parse(localStorage.getItem('pa_pin')||'[]')}catch(e){return[]}})(),ks=Object.keys(ITEM).filter(k=>R.bag[k]>0&&!(inB&&BALLK.includes(k))).sort((a,b)=>{const x=PIN.indexOf(a),y=PIN.indexOf(b);return(x<0?99:x)-(y<0?99:y)}),it=[...ks.map(k=>({k,t:ITEM[k].n,c:'×'+R.bag[k],ic:IC[k],d:ITEM[k].d})),...R.tms.map((t,i)=>({k:'tm'+i,t:'MT '+t.n,c:'',ic:isImg('tm-'+t.t,'tm'),d:`${ES[t.t]} · ${t.p?'poder '+t.p:'Estado'}${window.MX?' · '+MX.describe(t):''}`})),...R.rel.map(i=>({r:1,t:REL[i].n,c:'',ic:isImg(RSP[i],'relic'),d:'Reliquia: '+REL[i].d}))];
     const N=Math.max(12,Math.ceil(it.length/4)*4);
     const x=await new Promise(res=>{
       const m=$('#mod');
-      m.innerHTML=`<div class="box bagb"><h3>${IC.bag} Mochila</h3>${hearts()}<small>${IC.coin} ${nf(R.money)} Pokémonedas</small><div class="sg">${Array.from({length:N},(_,i)=>it[i]?`<button class="sl${!it[i].r&&window.__itUseful&&!__itUseful(it[i].k)?' nu':''}" data-s="${i}" data-k="${it[i].k||''}" data-c="${bagCat(it[i])}">${it[i].ic}<b>${it[i].c}</b><small>${it[i].t}</small></button>`:'<div class="sl e"></div>').join('')}</div><div id="sd"><small>Toca un objeto para ver qué hace.</small></div>${R.ach?'<button class="act" id="ac">🏆 Logros y recompensas'+(achReady()?' · 🎁 '+achReady():'')+'</button>':''}<button class="act" id="pd">Pokédex</button><button class="act" id="gd">Guías (PDF)</button><button class="act" id="cl">Cerrar</button></div>`;
+      m.innerHTML=`<div class="box bagb"><h3>${IC.bag} Mochila</h3>${hearts()}<small>${IC.coin} ${nf(R.money)} Pokémonedas</small><div class="sg">${Array.from({length:N},(_,i)=>it[i]?`<button class="sl${!it[i].r&&window.__itUseful&&!__itUseful(it[i].k)?' nu':''}${PIN.includes(it[i].k)?' pin':''}" data-s="${i}" data-k="${it[i].k||''}" data-c="${bagCat(it[i])}">${it[i].ic}<b>${it[i].c}</b><small>${it[i].t}</small></button>`:'<div class="sl e"></div>').join('')}</div><div id="sd"><small>Toca un objeto para ver qué hace.</small></div>${!inB&&(ks.length+R.tms.length)>0?'<button class="act" id="bsm">🧺 Vender varios</button>':''}${R.ach?'<button class="act" id="ac">🏆 Logros y recompensas'+(achReady()?' · 🎁 '+achReady():'')+'</button>':''}<button class="act" id="pd">Pokédex</button><button class="act" id="gd">Guías (PDF)</button><button class="act" id="cl">Cerrar</button></div>`;
       m.style.display='flex';let sel=-1;m.addEventListener('bagtab',()=>{sel=-1});m.addEventListener('chestrefresh',()=>{m.style.display='none';res('r')},{once:true});if(!MM.classList.contains('keep')){const bx=m.firstElementChild;if(bx)bx.addEventListener('animationend',e=>{if(e.animationName=='bxin')MM.classList.add('keep')})}
       $$('.sl[data-s]').forEach(b=>b.onclick=()=>{const i=+b.dataset.s,o=it[i];
         if(sel==i&&!o.r){m.style.display='none';res(o.k)}
-        else{sel=i;$$('.sl').forEach(z=>z.classList.remove('on'));b.classList.add('on');$('#sd').innerHTML=`<b>${o.t}</b><br><small>${o.d}${o.r?'':' · Toca otra vez para usar'}</small>`}});
+        else{sel=i;$$('.sl').forEach(z=>z.classList.remove('on'));b.classList.add('on');$('#sd').innerHTML=`<b>${o.t}</b><br><small>${o.d}${o.r?'':' · Toca otra vez para usar'}</small>${!o.r&&ITEM[o.k]?`<button type="button" class="bpin${PIN.includes(o.k)?' on':''}">${PIN.includes(o.k)?'📌 Fijado arriba · quitar':'📌 Fijar arriba'}</button>`:''}`;
+          const pb=$('#sd .bpin');if(pb)pb.onclick=e=>{e.stopPropagation();const L=PIN.filter(z=>z!==o.k);if(!PIN.includes(o.k)){L.unshift(o.k);if(L.length>8){toast('📌 Como mucho 8 objetos fijados: se soltó el más antiguo')}}try{localStorage.setItem('pa_pin',JSON.stringify(L.slice(0,8)))}catch(_){}try{beep(PIN.includes(o.k)?520:880,.06,'triangle')}catch(_){}toast(PIN.includes(o.k)?'📌 '+o.t+' ya no está fijado':'📌 '+o.t+' fijado arriba de la mochila');m.style.display='none';res('r')}}});
+      if($('#bsm'))$('#bsm').onclick=()=>{m.style.display='none';res('sm')};
       $('#cl').onclick=()=>{m.classList.add('out');setTimeout(()=>{m.classList.remove('out');m.style.display='none';res(0)},150)};$('#pd').onclick=()=>{m.style.display='none';res('p')};$('#gd').onclick=()=>{m.style.display='none';res('g')};if($('#ac'))$('#ac').onclick=()=>{m.style.display='none';res('a')}});
     if(!x)return;
     if(x=='r')continue;
+    if(x=='sm'){try{await window.sellMany()}catch(e){console.error(e)}continue}
     if(x=='p'){await openPokedex();continue}
     if(x=='g'){await guide();continue}
     if(x=='a'){await showAch();continue}
@@ -5258,7 +5261,7 @@ const DEF=[
   {k:'bznonar',t:'Sin narrador en los biomas',d:'Dentro de los biomas no aparece el narrador que cuenta lo que pasa entre los Pokémon (la Crónica 📜 sigue guardando todo)',b:1},
   {k:'bztop',t:'Botones del bioma arriba',d:'Dentro de los biomas, el botón para volver a la isla (y los de información) van arriba a la izquierda, como antes, en vez de abajo',b:1},
   {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
-  {k:'bz3d',t:'Biomas: Pokémon',d:'Cómo se ven los Pokémon dentro de los biomas: ilustraciones, modelos 3D animados o modelos 3D en alta definición',o:[['art','Ilustraciones'],['anim','3D animados'],['hd','3D HD']]},{k:'m3dq',t:'Modelos 3D',d:'Animados: se mueven, pero tienen poca resolución · Alta definición: modelos 3D nítidos y grandes (de Pokémon HOME), sin animación',o:[['anim','Animados'],['home','Alta definición']]},{k:'no3d',t:'Sin modelos 3D: combates normales',d:'Aventura, salvajes, entrenadores y gimnasios: se ven las ilustraciones de siempre en lugar de los modelos 3D animados',b:1},
+  {k:'nobuzon',t:'Sin resumen al volver',d:'No mostrar el buzón «Mientras no estabas» al volver al juego después de un rato',b:1},{k:'bz3d',t:'Biomas: Pokémon',d:'Cómo se ven los Pokémon dentro de los biomas: ilustraciones, modelos 3D animados o modelos 3D en alta definición',o:[['art','Ilustraciones'],['anim','3D animados'],['hd','3D HD']]},{k:'m3dq',t:'Modelos 3D',d:'Animados: se mueven, pero tienen poca resolución · Alta definición: modelos 3D nítidos y grandes (de Pokémon HOME), sin animación',o:[['anim','Animados'],['home','Alta definición']]},{k:'no3d',t:'Sin modelos 3D: combates normales',d:'Aventura, salvajes, entrenadores y gimnasios: se ven las ilustraciones de siempre en lugar de los modelos 3D animados',b:1},
   {k:'no3dRaid',t:'Sin modelos 3D: megaincursiones',d:'El megajefe y vuestros Pokémon se ven con las ilustraciones de siempre',b:1},
   {k:'no3dPvp',t:'Sin modelos 3D: PvP',d:'En los combates contra amigos se ven las ilustraciones de siempre',b:1},
   {k:'no3dCoop',t:'Sin modelos 3D: Torre 2 vs 2',d:'En los combates dobles se ven las ilustraciones de siempre',b:1},
@@ -8653,7 +8656,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'55.8',t:'Cargando Pokédex',s:'cur',l:[
+ {v:'55.9',t:'Vender varios, objetos fijados y buzón',s:'cur',l:[
+  '🧺 Mochila: nuevo botón «Vender varios» para vender muchos objetos distintos (y MT) de una vez: eliges cuántos de cada uno con ＋/−, «Todo» o «Sobrantes» (deja 1 de cada), ves el total y lo vendes con un toque. Se puede deshacer unos segundos',
+  '📌 Mochila: fija tus objetos favoritos (hasta 8) para que salgan siempre primero: toca el objeto y pulsa «📌 Fijar arriba». Llevan una chincheta y borde dorado',
+  '📬 Buzón «Mientras no estabas»: si vuelves al juego después de 15 minutos o más, una tarjeta te resume lo que te espera (huevos, expediciones de vuelta, megaincursiones, misiones, premios del día, sobres…) con un botón «Ir» para cada cosa, y los avisos que llegaron mientras tanto',
+  '⚙️ Se puede desactivar en Ajustes → QoL → «Sin resumen al volver»'
+ ]},
+ {v:'55.8',t:'Cargando Pokédex',s:'prev',l:[
   '📖 Al abrir la Pokédex (desde la mochila o el menú) sale un cartel de «Cargando Pokédex…» que se cierra solo en cuanto está lista'
  ]},
  {v:'55.7',t:'Modo 3D en los biomas',s:'prev',l:[
@@ -12426,10 +12435,52 @@ MD.addEventListener('click',e=>{
  let row=D.querySelector('.fabrow');
  if(!row){row=D.createElement('div');row.className='fabrow';D.body.append(row);own=row}
  L.forEach(x=>{row.append(x);mine.push(x)})});
+/* v55.9: vender varios objetos a la vez */
+window.sellMany=()=>new Promise(res=>{const PIN=(()=>{try{return JSON.parse(localStorage.getItem('pa_pin')||'[]')}catch(e){return[]}})();
+ const L=[...Object.keys(ITEM).filter(k=>(R.bag[k]|0)>0).map(k=>({id:'i:'+k,k,ic:IC[k]||'🎁',n:ITEM[k].n,max:R.bag[k]|0,p:itPrice(k)})),...(R.tms||[]).map((t,i)=>({id:'t:'+i,t,ic:(typeof isImg=='function'?isImg('tm-'+t.t,'tm'):'💿'),n:'MT '+t.n,max:1,p:tmPrice(t)}))];
+ const q={};const o=D.createElement('div');o.id='smv';
+ const tot=()=>L.reduce((a,x)=>a+(q[x.id]|0)*x.p,0),cnt=()=>L.reduce((a,x)=>a+(q[x.id]|0),0);
+ const row=x=>`<div class="smr${q[x.id]?' on':''}" data-r="${x.id}"><span class="smi">${x.ic}</span><div class="smn"><b>${x.n}${PIN.includes(x.k)?' 📌':''}</b><small>Tienes ${x.max} · ${IC.coin}${nf(x.p)} c/u</small></div><div class="smq">${x.max>1?`<button type="button" data-a="-">−</button><em>${q[x.id]|0}</em><button type="button" data-a="+">＋</button><button type="button" data-a="all" class="sma">Todo</button>`:`<button type="button" data-a="tg" class="smt">${q[x.id]?'✔ Vender':'Vender'}</button>`}</div></div>`;
+ const paint=()=>{const n=cnt();o.innerHTML=`<div class="smw"><div class="smh"><b>🧺 Vender varios</b><button type="button" data-a="x" class="smx" aria-label="Cerrar">✕</button></div><small class="smd">Marca cuántos quieres vender de cada objeto (se paga la mitad de su precio). Podrás deshacerlo unos segundos.</small><div class="smb"><button type="button" data-a="none">Quitar todo</button><button type="button" data-a="dup">Sobrantes (dejar 1 de cada)</button></div><div class="sml">${L.map(row).join('')}</div><div class="smf"><span>${n} objeto${n==1?'':'s'} · <b>${IC.coin} ${nf(tot())}</b></span><button type="button" data-a="go" class="smgo"${n?'':' disabled'}>💰 Vender</button></div></div>`};
+ const close=v=>{o.remove();res(v)};
+ o.addEventListener('click',e=>{if(e.target===o)return close(0);const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,r=b.closest('[data-r]'),x=r&&L.find(z=>z.id===r.dataset.r);
+  if(a==='x')return close(0);
+  if(a==='none'){for(const k in q)delete q[k]}
+  else if(a==='dup'){L.forEach(z=>{if(z.k&&z.max>1)q[z.id]=z.max-1})}
+  else if(x&&a==='+')q[x.id]=Math.min(x.max,(q[x.id]|0)+1);
+  else if(x&&a==='-')q[x.id]=Math.max(0,(q[x.id]|0)-1);
+  else if(x&&a==='all')q[x.id]=q[x.id]===x.max?0:x.max;
+  else if(x&&a==='tg')q[x.id]=q[x.id]?0:1;
+  else if(a==='go'){const S=L.filter(z=>q[z.id]>0).map(z=>({z,n:Math.min(q[z.id],z.k?(R.bag[z.k]|0):1)})).filter(v=>v.n>0);if(!S.length)return;let g=0;const tm=[];
+   S.forEach(({z,n})=>{if(z.k){R.bag[z.k]-=n;g+=z.p*n}else{const i=R.tms.indexOf(z.t);if(i>=0){R.tms.splice(i,1);tm.push([i,z.t]);g+=z.p}}});R.money+=g;
+   const N=S.reduce((a,v)=>a+v.n,0);try{saveRun()}catch(_){}try{beep(520,.12,'triangle')}catch(_){}toast(`💰 Vendiste ${N} objeto${N>1?'s':''}: +${nf(g)} Pokémonedas`);
+   try{window.__undo&&__undo(`💰 ${N} objeto${N>1?'s':''} vendido${N>1?'s':''}`,()=>{S.forEach(({z,n})=>{if(z.k)R.bag[z.k]=(R.bag[z.k]|0)+n});tm.reverse().forEach(([i,t])=>R.tms.splice(Math.min(i,R.tms.length),0,t));R.money=Math.max(0,R.money-g);try{saveRun()}catch(_){}toast('↩ Venta deshecha')})}catch(_){}
+   return close(1)}
+  const sc=o.querySelector('.sml').scrollTop;paint();o.querySelector('.sml').scrollTop=sc});
+ paint();D.body.append(o)});
 new MutationObserver(()=>{if((MD.style.display==='none'||!MD.style.display))drop()}).observe(MD,{attributes:true,attributeFilter:['style','class']});
 new MutationObserver(()=>{if(!isBag())drop()}).observe(MD,{childList:true});
 })();</script>
 <style id="sellbag_css">
+#mod .sl.pin{box-shadow:inset 0 0 0 2px #fbbf24}#mod .sl.pin::before{content:"📌";position:absolute;top:-4px;left:-3px;font-size:16px;z-index:3;pointer-events:none;filter:drop-shadow(0 1px 2px #000a)}#mod .sl.pin{outline:2px solid #fbbf24;outline-offset:-2px}#mod .sl{position:relative}
+#mod #sd .bpin{display:block;margin:7px auto 0;padding:6px 12px;border-radius:999px;border:1px solid #fbbf2466;background:#fbbf2418;color:#fde68a;font:800 12px system-ui;cursor:pointer}#mod #sd .bpin.on{background:#fbbf24;color:#3b1d00}
+#smv{position:fixed;inset:0;z-index:100060;display:flex;align-items:center;justify-content:center;padding:14px;background:#05030dcc;animation:pdlIn .15s ease-out}
+#smv .smw{width:min(460px,100%);max-height:min(88vh,760px);display:flex;flex-direction:column;border-radius:20px;background:linear-gradient(180deg,#1e1b4b,#0f0a2a);border:2px solid #a78bfa66;box-shadow:0 20px 50px #000c;color:#fff;overflow:hidden}
+#smv .smh{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 4px;font:900 17px system-ui}
+#smv .smx{width:34px;height:34px;border-radius:50%;border:0;background:#ffffff1a;color:#fff;font:900 15px system-ui;cursor:pointer}
+#smv .smd{padding:0 14px;color:#c4b5fd;font:600 12px system-ui}
+#smv .smb{display:flex;gap:6px;padding:8px 14px}#smv .smb button{flex:1;padding:7px;border-radius:10px;border:1px solid #ffffff2a;background:#ffffff10;color:#e9d5ff;font:800 11.5px system-ui;cursor:pointer}
+#smv .sml{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:2px 10px 8px}
+#smv .smr{display:flex;align-items:center;gap:9px;padding:7px 8px;margin:4px 0;border-radius:12px;background:#ffffff0c;border:1px solid #ffffff14}
+#smv .smr.on{background:#22c55e1f;border-color:#22c55e88}
+#smv .smi{width:34px;height:34px;flex:none;display:grid;place-items:center}#smv .smi svg,#smv .smi img{width:32px;height:32px}
+#smv .smn{flex:1;min-width:0}#smv .smn b{display:block;font:800 13px system-ui;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#smv .smn small{color:#a5b4fc;font:600 11px system-ui}
+#smv .smq{display:flex;align-items:center;gap:4px;flex:none}#smv .smq button{min-width:30px;height:30px;border-radius:9px;border:0;background:#ffffff1c;color:#fff;font:900 15px system-ui;cursor:pointer}
+#smv .smq em{min-width:22px;text-align:center;font:900 14px system-ui;font-style:normal}
+#smv .smq .sma,#smv .smq .smt{padding:0 9px;font:800 11.5px system-ui}#smv .smr.on .smt{background:#22c55e;color:#052e16}
+#smv .smf{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-top:1px solid #ffffff1a;background:#0008;font:700 13px system-ui}
+#smv .smgo{padding:11px 18px;border-radius:12px;border:0;background:linear-gradient(#86efac,#16a34a);color:#052e16;font:900 14px system-ui;cursor:pointer}#smv .smgo:disabled{opacity:.4}
+
 .fabsell.fabsale{background:linear-gradient(#86efac,#16a34a)!important;color:#052e16!important;border-color:#fff!important;box-shadow:0 10px 24px #000b,0 0 18px #22c55e88}
 .fabrow{flex-wrap:wrap;justify-content:center;width:max-content;max-width:calc(100vw - 24px)}
 .fabsell.fabsale.arm{background:linear-gradient(#fde047,#f59e0b)!important;color:#3b1d00!important}
@@ -22051,6 +22102,22 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 .b3d .b3-band{left:0;right:0;top:46%;height:8%}
 .b3d .b3-btn{width:28%;height:28%;margin:-14% 0 0 -14%;box-shadow:0 0 0 3px #111,inset 0 -2px 3px #0004}
 .b3d .b3-hl{left:20%;top:9%;width:30%;height:20%}
+
+/* v55.9: buzón «Mientras no estabas» */
+#buzv{position:fixed;inset:0;z-index:100065;display:flex;align-items:center;justify-content:center;padding:16px;background:#05030d00;transition:background .2s}
+#buzv.on{background:#05030dcc}
+#buzv .bzw2{width:min(420px,100%);max-height:86vh;overflow-y:auto;border-radius:22px;padding:14px;background:linear-gradient(180deg,#312e81,#1e1b4b 60%,#0f0a2a);border:2px solid #fbbf2477;box-shadow:0 22px 50px #000c,0 0 30px #fbbf2422;color:#fff;transform:translateY(16px) scale(.96);opacity:0;transition:transform .22s cubic-bezier(.2,1.3,.4,1),opacity .2s}
+#buzv.on .bzw2{transform:none;opacity:1}
+#buzv .bzh2{display:flex;align-items:center;gap:10px}#buzv .bzh2>div{flex:1}#buzv .bzh2 b{display:block;font:900 18px system-ui}#buzv .bzh2 small{color:#c7d2fe;font:600 12px system-ui}
+#buzv .bzic{font-size:34px;animation:buzB 1.2s ease-in-out infinite alternate}@keyframes buzB{to{transform:rotate(-8deg) translateY(-2px)}}
+#buzv .bzx2{width:34px;height:34px;border-radius:50%;border:0;background:#ffffff1a;color:#fff;font:900 15px system-ui;cursor:pointer}
+#buzv .bzsec2{margin:12px 2px 6px;color:#fde68a;font:900 11px system-ui;letter-spacing:.08em;text-transform:uppercase}
+#buzv .bzr2{display:flex;align-items:center;gap:10px;padding:9px;margin:5px 0;border-radius:14px;background:#ffffff10;border:1px solid #ffffff1a}
+#buzv .bzi2{font-size:22px;width:30px;text-align:center}#buzv .bzr2>div{flex:1;min-width:0}#buzv .bzr2 b{display:block;font:800 13.5px system-ui}#buzv .bzr2 small{color:#c7d2fe;font:600 11.5px system-ui}
+#buzv .bzr2 button{padding:8px 14px;border-radius:10px;border:0;background:linear-gradient(#fde047,#f59e0b);color:#3b1d00;font:900 12.5px system-ui;cursor:pointer}
+#buzv .bzn2{display:flex;flex-direction:column;gap:4px}#buzv .bzn2 div{padding:7px 10px;border-radius:10px;background:#0004;font:600 12px system-ui;color:#e0e7ff}
+#buzv .bzok2{display:block;width:100%;margin-top:14px;padding:12px;border-radius:14px;border:0;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;font:900 14px system-ui;cursor:pointer}
+#mod .sl.pin.nu{opacity:.8;filter:grayscale(.35)}
 </style>
 <script id="v37js">
 (()=>{
@@ -22807,7 +22874,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   first=false;badge(S);if(P&&P.isConnected)paintP()}
  setTimeout(poll,2500);setInterval(poll,20000);
  D.addEventListener('visibilitychange',()=>{if(!D.hidden)poll()});
- window.__ntf={scan,poll,open:openP};
+ window.__ntf={scan,poll,open:openP,act};
 })();
 /* ---------- Colecciones con recompensas (de toda la cuenta, según la Pokédex) ---------- */
 (()=>{const D=document,Q=s=>D.querySelector(s),KEY='pa_col';
@@ -26763,6 +26830,37 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
   const done=()=>{if(ld){ld.classList.add('out');const l=ld;ld=null;setTimeout(()=>l.remove(),250)}mo.disconnect();clearTimeout(tm)};
   const mo=new MutationObserver(()=>{if(D.getElementById('pdx'))requestAnimationFrame(()=>requestAnimationFrame(done))});mo.observe(D.body,{childList:true});const tm=setTimeout(done,15000);
   let r;try{r=_o.apply(this,arguments)}catch(e){done();throw e}if(r&&r.catch)r.catch(()=>done());return r};
+})();
+
+/* ---------- v55.9: buzón «Mientras no estabas» (resumen al volver) ---------- */
+(()=>{const D=document,LK='pa_seen',MIN=15*60000;
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const get=()=>{try{return+localStorage.getItem(LK)||0}catch(e){return 0}},put=()=>{try{localStorage.setItem(LK,String(Date.now()))}catch(e){}};
+ const off=()=>{try{return typeof S=='object'&&S&&(S.nobuzon||S.ntf===false)}catch(e){return false}};
+ const dur=ms=>{const m=Math.round(ms/60000);if(m<60)return m+' min';const h=Math.floor(m/60);if(h<24)return h+' h'+(m%60?' '+(m%60)+' min':'');const d=Math.floor(h/24);return d+' día'+(d>1?'s':'')+(h%24?' '+(h%24)+' h':'')};
+ const busy=()=>!!(D.querySelector('#battle.on')||D.querySelector('#bzv')||D.querySelector('#smv')||D.querySelector('#bzbox')||(()=>{const m=D.getElementById('mod');return m&&getComputedStyle(m).display!=='none'})());
+ let since=0,pend=0,ov=null,tries=0;
+ function rows(){const R0=[];
+  try{const S0=window.__ntf&&__ntf.scan();(S0&&S0.ready||[]).forEach(o=>R0.push({ic:({egg:'🥚',lvl:'⚡',tcg:'🃏',raid:'🌋',col:'🏅',exp:'🧭',chal:'🏆',fest:'🎉',msn:'📜'})[o.c]||'🔔',h:String(o.h||'').replace(/^🌋 /,''),d:o.d||'',go:()=>{try{__ntf.act(o)}catch(e){}}}))}catch(e){}
+  try{if(window.__login&&__login.can())R0.unshift({ic:'🎁',h:'Premio diario listo',d:'Recoge el premio de hoy antes de que cambie el día.',go:()=>{try{__login.open()}catch(e){}}})}catch(e){}
+  return R0}
+ function notes(){try{const L=JSON.parse(localStorage.getItem('pa_tlog')||'[]');return L.filter(x=>x.d>since).slice(0,8)}catch(e){return[]}}
+ function show(){const R0=rows(),N=notes();if(!R0.length&&!N.length){pend=0;return}pend=0;
+  if(ov)ov.remove();ov=D.createElement('div');ov.id='buzv';
+  ov.innerHTML=`<div class="bzw2"><div class="bzh2"><span class="bzic">📬</span><div><b>Mientras no estabas</b><small>Estuviste fuera ${dur(Date.now()-since)}</small></div><button type="button" class="bzx2" data-a="x" aria-label="Cerrar">✕</button></div>
+   ${R0.length?`<div class="bzsec2">Listo para ti</div>${R0.map((o,i)=>`<div class="bzr2"><span class="bzi2">${o.ic}</span><div><b>${esc(o.h)}</b><small>${esc(o.d)}</small></div><button type="button" data-a="go:${i}">Ir</button></div>`).join('')}`:''}
+   ${N.length?`<div class="bzsec2">Avisos que llegaron</div><div class="bzn2">${N.map(x=>`<div>${esc(x.t)}</div>`).join('')}</div>`:''}
+   <button type="button" class="bzok2" data-a="x">¡Entendido!</button></div>`;
+  ov.addEventListener('click',e=>{if(e.target===ov)return cl();const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a;if(a==='x')return cl();if(a.startsWith('go:')){const o=R0[+a.slice(3)];cl();if(o)setTimeout(o.go,200)}});
+  D.body.append(ov);requestAnimationFrame(()=>ov&&ov.classList.add('on'));try{beep(784,.07,'triangle');setTimeout(()=>beep(1046,.08,'triangle'),90)}catch(_){}}
+ function cl(){if(!ov)return;const o=ov;ov=null;o.classList.remove('on');setTimeout(()=>o.remove(),200)}
+ function tryShow(){if(!pend)return;if(off()){pend=0;return}if(busy()&&tries++<40){setTimeout(tryShow,4000);return}show()}
+ function back(){const t=get();put();if(t&&Date.now()-t>=MIN&&!off()){since=t;pend=1;tries=0;setTimeout(tryShow,3500)}}
+ back();
+ setInterval(()=>{if(!D.hidden)put()},30000);
+ D.addEventListener('visibilitychange',()=>{if(D.hidden)put();else back()});
+ addEventListener('pagehide',put);
+ window.__buzon={show:()=>{since=get()-1;pend=1;show()},rows};
 })();
 
 })();</script>
