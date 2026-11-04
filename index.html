@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.5</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.6</div>
 </section>
 
 <section id="team" class="scr">
@@ -8650,7 +8650,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'55.5',t:'Modelos 3D en la Pokédex',s:'cur',l:[
+ {v:'55.6',t:'Efectos de ataque mejorados',s:'cur',l:[
+  '💥 Nuevos efectos según la clase de cada movimiento, que se suman a los de su tipo: puñetazos con onda de choque, patadas con estela, mordiscos con mandíbulas que se cierran, zarpazos con tres cortes, rayos que cruzan la pantalla, esferas de energía, ondas expansivas, terremotos que agrietan el suelo, lluvias de meteoros, torbellinos, explosiones, embestidas con líneas de velocidad, drenajes que devuelven la vida y nubes de polvo o esporas',
+  '⚡ El atacante carga energía del color de su tipo antes de atacar (más cuanto más potente es el movimiento); los golpes supereficaces sueltan un anillo dorado, los críticos un destello de líneas y los movimientos muy potentes hacen vibrar la cámara',
+  '🧭 Aventura multiplayer: con modelos 3D, tus Pokémon ya no salen de espaldas: miran al frente hacia los rivales (la vista es de lado)',
+  '🎮 Versión propia para los modelos 3D: se lanzan hacia el rival con profundidad (se acercan o se alejan de la cámara), giran al usar movimientos de estado, se elevan al usar ataques especiales, y el que recibe el golpe se inclina y retrocede en 3D (más si es supereficaz)'
+ ]},
+ {v:'55.5',t:'Modelos 3D en la Pokédex',s:'prev',l:[
   '📖 En la ficha de cada Pokémon de la Pokédex hay botones para ver su 🖼️ ilustración, su 🎮 modelo 3D animado (de frente o de espaldas) y su 💎 modelo 3D HD. También funcionan con la versión shiny'
  ]},
  {v:'55.4',t:'Modelos 3D en todos los modos y pestaña QoL',s:'prev',l:[
@@ -17087,7 +17093,7 @@ function units(s){const sc=Q('#masc');if(!sc)return;const want={},hs=s.seats.fil
  for(const k in UN)if(!want[k]){const e=UN[k].el;delete UN[k];const a=e.animate([{opacity:1},{opacity:0}],{duration:300});a.onfinish=()=>e.remove()}
  for(const k in want){const w=want[k];let u=UN[k];
   if(!u||u.id!==w.m.id){if(u)u.el.remove();const e=D.createElement('div');e.className='ma-u '+w.side;e.dataset.s=w.side;e.dataset.i=w.i;
-   e.innerHTML=`<i class="ma-ar"></i><div class="ma-hb"><i></i><b></b></div><span class="ma-tg"></span><span class="ma-sts"></span>${w.side==='h'&&w.m.cls&&CLS[w.m.cls]?`<i class="ma-ci" data-cinfo="${w.m.cls}" style="--c:${CLS[w.m.cls].c}" role="button" aria-label="Habilidades de la clase">i</i>`:''}<img src="${window.art3?art3(w.m.id,w.m.sh,w.side==='h','no3dMpa'):art(w.m.id,w.m.sh)}" alt="" onload="try{fit3d(this,1.3)}catch(_){}" onerror="if(/\/showdown\//.test(this.src)){this.style.width='';this.src='${art(w.m.id,w.m.sh)}';return}this.onerror=null;this.src='${mini(w.m.id,w.m.sh)}';this.style.imageRendering='pixelated'">`;sc.append(e);
+   e.innerHTML=`<i class="ma-ar"></i><div class="ma-hb"><i></i><b></b></div><span class="ma-tg"></span><span class="ma-sts"></span>${w.side==='h'&&w.m.cls&&CLS[w.m.cls]?`<i class="ma-ci" data-cinfo="${w.m.cls}" style="--c:${CLS[w.m.cls].c}" role="button" aria-label="Habilidades de la clase">i</i>`:''}<img src="${window.art3?art3(w.m.id,w.m.sh,false,'no3dMpa'):art(w.m.id,w.m.sh)}" alt="" onload="try{fit3d(this,1.3)}catch(_){}" onerror="if(/\/showdown\//.test(this.src)){this.style.width='';this.src='${art(w.m.id,w.m.sh)}';return}this.onerror=null;this.src='${mini(w.m.id,w.m.sh)}';this.style.imageRendering='pixelated'">`;sc.append(e);
    u=UN[k]={el:e,id:w.m.id,s:w.side,i:w.i};if(w.side==='e')e.animate([{transform:'translateX(80vw)'},{transform:'translateX(-50%)'}],{duration:650+w.i*120,easing:'cubic-bezier(.2,1,.4,1)'})}
   const e=u.el;e.style.left=w.x+'%';e.style.setProperty('--y',w.y+'%');e.style.setProperty('--z',Math.round(w.y/4));
   const q=Math.max(0,w.m.hp/w.m.max),sh=w.m.shd|0;e.querySelector('.ma-hb i').style.width=(q*100*w.m.max/(w.m.max+sh))+'%';const hb=e.querySelector('.ma-hb b');hb.style.left=(q*100*w.m.max/(w.m.max+sh))+'%';hb.style.width=(sh*100/(w.m.max+sh))+'%';
@@ -21950,6 +21956,7 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #pdx .dp3 button.on{background:linear-gradient(180deg,#7c3aed,#5b21b6);border-color:#c4b5fd}
 #pdx #dpimg.dp3d{image-rendering:auto;object-fit:contain;transform:scale(1.15)}
 #pdx #dpimg.dphd{object-fit:contain}
+#mpa .ma-u.h img[src*="/showdown/"],#mpa .ma-u.h img[src*="/other/home/"]{scale:-1 1}
 </style>
 <script id="v37js">
 (()=>{
@@ -26584,6 +26591,66 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
 #homeov .htp.hgrid button[hidden]{display:none!important}
 #homeov .htp.hgrid button em{position:absolute;top:6px;right:6px;margin:0!important;font-style:normal;min-width:20px;height:20px;border-radius:10px;background:#fde047;color:#111;font:900 11px/20px system-ui;letter-spacing:0;text-align:center;display:none}
 #homeov .htp.hgrid button em.on{display:block}`;D.head.append(st);
+})();
+
+/* ---------- v55.6: efectos de ataque mejorados (por clase de movimiento y por tipo) y versión propia para los modelos 3D ---------- */
+(()=>{if(typeof window.fxAttack!=='function'||typeof window.hit!=='function')return;const D=document;
+ const AR=()=>typeof arena!=='undefined'?arena:D.getElementById('arena');
+ const sp=()=>Math.max(1,(typeof S=='object'&&S&&S.speed)||1),fxOn=()=>!(typeof S=='object'&&S&&S.fx===false);
+ const W8=ms=>new Promise(r=>setTimeout(r,ms/sp()));
+ const C=t=>(typeof COL=='object'&&COL[t])||'#fff';
+ /* clase del movimiento según su nombre (en español) */
+ const ARC=[['punch',/pu[ñn]o|golpe|pu[ñn]etazo|gancho|meteoropu|ultrapu/i],['kick',/patada|pisot|talonazo|coz|doble patada/i],['bite',/mordisc|colmillo|triturar|mordida|dentellada/i],['slash',/garra|cuchillada|corte|tajo|filo|cortefuria|guillotina|hoja aguda|tijera|navaja|aire afilado|espada/i],
+  ['beam',/rayo|l[aá]ser|hiper|solar|destello|haz|aurora|ca[ñn][oó]n|psicorrayo|cometa|disparo/i],['orb',/bola|esfera|pulso|aura|bomba|proyectil|balas?|lodo|semilla|shuriken|estrella/i],['wave',/onda|ola|surf|chorro|ruido|grito|canto|vozarr|sonido|v[oó]rtice|torbellino|hidrobomba/i],
+  ['quake',/terremoto|temblor|magnitud|fisura|derrumbe|terratemblor|pisot[oó]n|terrat/i],['rain',/meteoro|lluvia|avalancha|tormenta|ventisca|granizo|erupci|cascada|roca afilada|lanzarrocas|desenrollar|nieve/i],['vortex',/remolino|tornado|danza|giro|torbellino|ciclón|huracán|vendaval/i],
+  ['blast',/explosi|autodestruc|estallido|bomba|megaton|detonaci|sofoco/i],['tackle',/placaje|embestida|carga|derribo|envite|ataque r[aá]pido|velocidad|acr[oó]bata|v[oó]ltio|giro bola|testarazo|cabezazo|rodada|doble filo|ataque ala|plancha/i],['drain',/drenad|absorber|megagot|gigadren|chupavidas|beso drenaje|sanguin|parasito/i],['powder',/polvo|espora|somn[ií]fero|toxi|niebla|humo|gas|aroma|polen/i]];
+ const arcOf=mv=>{const n=String(mv&&mv.n||'');for(const [k,r] of ARC)if(r.test(n))return k;if(!mv||!mv.p)return'status';return mv.ph?'tackle':'orb'};
+ const isM3=s=>{try{const i=D.querySelector('#'+s+'S img');return !!i&&(i.classList.contains('sd3')||i.classList.contains('sdh'))}catch(e){return false}};
+ const dv=(w,h,css)=>{const d=D.createElement('div');d.className='fxp afx';d.style.cssText=`width:${w}px;height:${h}px;margin:${-h/2}px 0 0 ${-w/2}px;${css}`;AR().append(d);return d};
+ const go=(d,ks,ms,o)=>d.animate(ks,Object.assign({duration:ms/sp(),easing:'ease-out',fill:'forwards'},o||{})).finished.then(()=>d.remove(),()=>d.remove());
+ const T=(x,y,r,sc,op)=>({transform:`translate(${x}px,${y}px) rotate(${r||0}deg) scale(${sc==null?1:sc})`,opacity:op==null?1:op});
+ /* ---- efectos por clase de movimiento (se suman a los de cada tipo) ---- */
+ const IMP={
+  punch:(x,y,c)=>{go(dv(70,70,`border-radius:50%;background:radial-gradient(circle,#fff 0 18%,${c} 40%,transparent 70%)`),[T(x,y,0,.2),T(x,y,0,1.6,0)],380);for(let i=0;i<6;i++){const a=i/6*6.28;go(dv(34,6,`background:linear-gradient(90deg,#fff,${c});border-radius:3px`),[T(x+Math.cos(a)*20,y+Math.sin(a)*20,a*57.3,1),T(x+Math.cos(a)*80,y+Math.sin(a)*80,a*57.3,.4,0)],360)}},
+  kick:(x,y,c)=>{IMP.punch(x,y-20,c);go(dv(120,14,`background:linear-gradient(90deg,transparent,#fff,${c},transparent);border-radius:7px`),[T(x-80,y+30,-25,.5),T(x+60,y-30,-25,1.2,0)],320)},
+  bite:(x,y,c)=>{for(const sgn of [-1,1]){const d=dv(90,40,`background:repeating-linear-gradient(90deg,#fff 0 12px,transparent 12px 18px);clip-path:polygon(0 0,100% 0,100% 30%,90% 100%,80% 30%,70% 100%,60% 30%,50% 100%,40% 30%,30% 100%,20% 30%,10% 100%,0 30%)`);d.style.transformOrigin='50% 50%';go(d,[T(x,y+sgn*60,sgn>0?180:0,1,0),T(x,y+sgn*60,sgn>0?180:0,1,1),T(x,y+sgn*12,sgn>0?180:0,1,1),T(x,y+sgn*12,sgn>0?180:0,1,0)],420)}},
+  slash:(x,y,c)=>{for(let i=0;i<3;i++)setTimeout(()=>go(dv(150,8,`background:linear-gradient(90deg,transparent,#fff 40%,${c} 60%,transparent);border-radius:4px;box-shadow:0 0 12px ${c}`),[T(x-70,y-50+i*30,35,.2),T(x+20,y+10+i*30,35,1.3),T(x+70,y+40+i*30,35,1.4,0)],300),i*80/sp())},
+  beam:(x,y,c,x1,y1)=>{const g=Math.atan2(y-y1,x-x1)*57.3,L=Math.hypot(x-x1,y-y1);const d=dv(L,34,`background:linear-gradient(0deg,transparent,${c} 25%,#fff 50%,${c} 75%,transparent);border-radius:17px;box-shadow:0 0 30px ${c};transform-origin:0 50%;margin:-17px 0 0 0`);go(d,[{transform:`translate(${x1}px,${y1}px) rotate(${g}deg) scaleX(0) scaleY(.3)`,opacity:1},{transform:`translate(${x1}px,${y1}px) rotate(${g}deg) scaleX(1) scaleY(1)`,opacity:1,offset:.35},{transform:`translate(${x1}px,${y1}px) rotate(${g}deg) scaleX(1) scaleY(1.2)`,opacity:.9,offset:.7},{transform:`translate(${x1}px,${y1}px) rotate(${g}deg) scaleX(1) scaleY(0)`,opacity:0}],620);IMP.blast(x,y,c,1)},
+  orb:(x,y,c)=>{go(dv(80,80,`border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,${c} 55%,transparent 72%);box-shadow:0 0 30px ${c}`),[T(x,y,0,.3),T(x,y,0,1.4,.8),T(x,y,0,2,0)],420)},
+  wave:(x,y,c)=>{for(let i=0;i<4;i++)go(dv(60,60,`border-radius:50%;border:5px solid ${c};box-shadow:0 0 14px ${c}`),[T(x,y,0,.2),T(x,y,0,3.2,0)],700,{delay:i*110/sp()})},
+  quake:(x,y,c)=>{const a=AR();a.animate([0,1,2,3,4,5,6,7].map(i=>({transform:`translate(${i%2?12:-12}px,${i%3?-6:6}px)`})).concat([{transform:'none'}]),{duration:620/sp()});for(let i=0;i<5;i++)go(dv(16,110,`background:linear-gradient(#fde68a,#a16207);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%)`),[T(x+(i-2)*40,y+90,0,.2,0),T(x+(i-2)*40,y+40,0,1,1),T(x+(i-2)*40,y+60,0,1,0)],520,{delay:i*50/sp()})},
+  rain:(x,y,c)=>{for(let i=0;i<10;i++){const ox=(Math.random()-.5)*160;go(dv(16,40,`background:linear-gradient(transparent,${c},#fff);border-radius:8px;box-shadow:0 0 10px ${c}`),[T(x+ox+40,y-260,15,1,0),T(x+ox+40,y-200,15,1,1),T(x+ox,y+10,15,1,1),T(x+ox,y+20,15,.3,0)],460,{delay:i*50/sp(),easing:'ease-in'})}},
+  vortex:(x,y,c)=>{for(let i=0;i<3;i++)go(dv(110,110,`border-radius:50%;border:6px solid transparent;border-top-color:${c};border-left-color:#fff;filter:drop-shadow(0 0 8px ${c})`),[T(x,y,0,.4),T(x,y,540,1.1+i*.2),T(x,y,900,1.5,0)],760,{delay:i*90/sp()})},
+  blast:(x,y,c,small)=>{const z=small?1:1.6;go(dv(140*z,140*z,`border-radius:50%;background:radial-gradient(circle,#fff 0 15%,#fde047 30%,${c} 55%,transparent 72%)`),[T(x,y,0,.2),T(x,y,0,1.3),T(x,y,0,1.8,0)],560);if(!small&&typeof fxFlash=='function')fxFlash('#fff',.5);for(let i=0;i<14;i++){const a=Math.random()*6.28,l=60+Math.random()*90;go(dv(10,10,`background:${i%2?'#fde047':c};border-radius:50%;box-shadow:0 0 8px ${c}`),[T(x,y),T(x+Math.cos(a)*l*z,y+Math.sin(a)*l*z,0,.3,0)],600)}},
+  tackle:(x,y,c)=>{for(let i=0;i<5;i++)go(dv(70,6,`background:linear-gradient(90deg,transparent,#fff);border-radius:3px`),[T(x-140,y-30+i*15,0,1,0),T(x-60,y-30+i*15,0,1,1),T(x,y-30+i*15,0,1,0)],260,{delay:i*25/sp()});IMP.punch(x,y,'#fff')},
+  drain:(x,y,c,x1,y1)=>{for(let i=0;i<10;i++){const k=[T(x,y,0,.6)];k.push(T((x+x1)/2+(Math.random()-.5)*90,(y+y1)/2+(Math.random()-.5)*90,0,1));k.push(T(x1,y1,0,.5,0));go(dv(12,12,`background:#4ade80;border-radius:50%;box-shadow:0 0 10px #22c55e`),k,700,{delay:i*45/sp(),easing:'ease-in-out'})}},
+  powder:(x,y,c)=>{for(let i=0;i<16;i++){const ox=(Math.random()-.5)*150,oy=(Math.random()-.5)*110;go(dv(14,14,`background:radial-gradient(circle,#fff,${c} 60%,transparent 70%);border-radius:50%`),[T(x+ox*.3,y-90,0,.4,0),T(x+ox,y+oy,0,1.2,.9),T(x+ox,y+oy+30,0,.6,0)],900,{delay:i*30/sp()})}},
+  status:(x,y,c)=>{go(dv(120,120,`border-radius:50%;border:4px dashed ${c};box-shadow:0 0 18px ${c}`),[T(x,y,0,.3),T(x,y,180,1.3,.8),T(x,y,360,1.6,0)],700)}};
+ /* ---- aura de carga del atacante (más grande cuanto más potente) ---- */
+ function charge(x,y,c,pw){const n=pw>=100?3:pw>=70?2:1;for(let i=0;i<n;i++)go(dv(120,120,`border-radius:50%;background:radial-gradient(circle,transparent 45%,${c}55 60%,transparent 72%)`),[T(x,y,0,1.8,0),T(x,y,0,1,.9),T(x,y,0,.3,0)],420,{delay:i*90/sp(),easing:'ease-in'})}
+ /* ---- versión 3D: movimientos con profundidad para los modelos ---- */
+ function move3d(s,mv,arc){const a=typeof el=='function'?el(s):null;if(!a)return null;const P=s==='p',dir=P?1:-1;
+  const ph=!!mv.ph||arc==='tackle'||arc==='punch'||arc==='kick'||arc==='bite'||arc==='slash';
+  if(arc==='status')return a.animate([{transform:'perspective(600px) rotateY(0) scale(1)'},{transform:'perspective(600px) rotateY(180deg) scale(1.08)',offset:.5},{transform:'perspective(600px) rotateY(360deg) scale(1)'}],{duration:700/sp(),easing:'ease-in-out'});
+  if(ph)return a.animate([{transform:'perspective(700px) translate3d(0,0,0) rotateY(0)'},{transform:`perspective(700px) translate3d(${-dir*18}px,${dir*10}px,-60px) rotateY(${-dir*18}deg) scale(.92)`,offset:.25},{transform:`perspective(700px) translate3d(${dir*120}px,${-dir*70}px,${P?-180:180}px) rotateY(${dir*10}deg) scale(${P?.9:1.25})`,offset:.55},{transform:`perspective(700px) translate3d(${dir*100}px,${-dir*60}px,${P?-160:160}px) scale(${P?.9:1.2})`,offset:.65},{transform:'perspective(700px) translate3d(0,0,0) rotateY(0)'}],{duration:560/sp(),easing:'cubic-bezier(.3,0,.3,1)'});
+  return a.animate([{transform:'perspective(700px) translateY(0) rotateX(0) scale(1)',filter:'none'},{transform:'perspective(700px) translateY(-14px) rotateX(18deg) scale(1.08)',filter:`drop-shadow(0 0 18px ${C(mv.t)}) brightness(1.3)`,offset:.45},{transform:`perspective(700px) translateY(-6px) rotateX(-10deg) translateZ(40px) scale(1.12)`,filter:`drop-shadow(0 0 26px ${C(mv.t)}) brightness(1.5)`,offset:.65},{transform:'perspective(700px) translateY(0) rotateX(0) scale(1)',filter:'none'}],{duration:600/sp(),easing:'ease-in-out'})}
+ function knock3d(s,mv,e){const d=typeof el=='function'?el(s):null;if(!d)return;const P=s==='p',dir=P?-1:1,k=e>1?1.5:e<1?.6:1;
+  d.animate([{transform:'perspective(700px) rotateX(0) rotateY(0) translate3d(0,0,0)'},{transform:`perspective(700px) rotateX(${-22*k}deg) rotateY(${dir*28*k}deg) translate3d(${dir*30*k}px,${-10*k}px,${-80*k}px)`,offset:.3},{transform:`perspective(700px) rotateX(${8*k}deg) rotateY(${-dir*10*k}deg) translate3d(${-dir*8}px,0,0)`,offset:.65},{transform:'perspective(700px) rotateX(0) rotateY(0) translate3d(0,0,0)'}],{duration:620/sp(),easing:'ease-out'})}
+ /* ---- enganche con el combate ---- */
+ const _fx=window.fxAttack;
+ window.fxAttack=async function(s,mv){const arc=arcOf(mv);window.__lastArc=arc;
+  if(fxOn()&&mv){try{const a=el(s),[x,y]=ctr(a);charge(x,y,C(mv.t),mv.p|0)}catch(_){}}
+  let m3=null;if(isM3(s)&&mv){try{m3=move3d(s,mv,arc)}catch(_){}}
+  const r=await _fx.apply(this,arguments);
+  return r};
+ const _ht=window.hit;
+ window.hit=async function(s,r,mv){try{if(fxOn()&&mv&&r&&r.d){const o=s==='p'?'e':'p',d=el(s),a=el(o),[x,y]=ctr(d),[x1,y1]=ctr(a),c=C(mv.t),arc=arcOf(mv);(IMP[arc]||IMP.orb)(x,y,c,x1,y1);
+   if((mv.p|0)>=100||r.e>1){try{AR().animate([{transform:'scale(1)'},{transform:'scale(1.045)',offset:.3},{transform:'scale(1)'}],{duration:380/sp(),easing:'ease-out'})}catch(_){}}
+   if(r.e>1){go(dv(160,160,`border-radius:50%;border:6px solid #fde047;box-shadow:0 0 24px #fde047`),[T(x,y,0,.2),T(x,y,0,2.2,0)],520)}
+   if(r.crit){for(let i=0;i<8;i++){const g=i*45;go(dv(90,5,`background:linear-gradient(90deg,#fff,transparent);border-radius:3px`),[T(x,y,g,.3),T(x+Math.cos(g/57.3)*90,y+Math.sin(g/57.3)*90,g,1.2,0)],420)}}
+   if(isM3(s))knock3d(s,mv,r.e)}}catch(e){}
+  return _ht.apply(this,arguments)};
+ window.__afx={arcOf,IMP};
 })();
 
 })();</script>
