@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v54.5</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v54.6</div>
 </section>
 
 <section id="team" class="scr">
@@ -8626,7 +8626,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'54.5',t:'✕ en el aviso de versión nueva',s:'cur',l:[
+ {v:'54.6',t:'Narrador arriba',s:'cur',l:[
+  '🎙️ El narrador de los biomas ahora sale en la parte de arriba'
+ ]},
+ {v:'54.5',t:'✕ en el aviso de versión nueva',s:'prev',l:[
   '✕ El aviso «Nueva versión · Toca para actualizar» (el de abajo, que salía en mitad de los combates) también tiene su ✕ para ocultarlo 5 minutos, y ahora sale arriba para no tapar los botones. Ya no pueden salir los dos avisos a la vez'
  ]},
  {v:'54.4',t:'Sociedades en los biomas',s:'prev',l:[
@@ -21811,6 +21814,10 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #updb{position:fixed;left:50%;top:calc(8px + env(safe-area-inset-top));bottom:auto;translate:-50% 0;z-index:200;display:flex;align-items:center;gap:6px;width:max-content;max-width:94vw}
 #updb .updgo{position:static!important;translate:none!important;left:auto!important;bottom:auto!important;min-width:0}
 #updb .updx{flex:none;width:40px;height:40px;border-radius:50%;border:2px solid #ffffff55;background:#1e1b4bee;color:#fff;font:900 15px system-ui;box-shadow:0 8px 22px #000a;cursor:pointer}
+/* v54.6: narrador arriba */
+#bzv .bznar{top:calc(62px + env(safe-area-inset-top));bottom:auto;transform:translate(-50%,-16px)}
+#bzv .bznar.on{transform:translate(-50%,0)}
+#bzv .bzsoc-ban{top:calc(142px + env(safe-area-inset-top))}
 </style>
 <script id="v37js">
 (()=>{
