@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v54.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -8626,7 +8626,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'54.9',t:'Arreglo de la pestaña Biomas',s:'cur',l:[
+ {v:'55.0',t:'Cada evento con su animación exclusiva',s:'cur',l:[
+  '🎬 Todos los eventos de los biomas (más de 90) terminan con su propia animación exclusiva, distinta para cada uno: órbitas, ochos, zigzags, péndulos, saltos de muelle, moonwalk, volteretas laterales, tornados, gelatina, crecer, cabezazos, puntillas, desmayos, levitar girando, carreras, enrollarse, sustos, balanceos, cohetes, vibrar, reverencias, saludos, destellos, siluetas, arcoíris y encoger y estallar',
+  '✨ Con efectos únicos en el escenario: corazones dibujados entre los dos Pokémon, espirales, fuentes, puentes de partículas, órbitas, explosiones, ondas, confeti, burbujas, rayos, anillos de energía, palabras («¡Hola!», «¡Choca!», «¡Ja!»…), lluvias y coronas que bajan del cielo',
+  '🏆 Los finales de las historias, los poderes de cada tipo, las combinaciones, los eventos de los clanes, los de grupo, los de pareja, los de solitario y hasta comer, dormir o animar a un amigo tienen la suya'
+ ]},
+ {v:'54.9',t:'Arreglo de la pestaña Biomas',s:'prev',l:[
   '🐛 Arreglado: la pestaña «Biomas» mostraba el mapa de la Ruta en lugar de la isla (un fallo de la v54.8)'
  ]},
  {v:'54.8',t:'Vida propia en los biomas',s:'prev',l:[
@@ -21867,6 +21872,9 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #bzv .bzsoc-ban{width:max-content}
 #bzv .bz-card{flex-wrap:wrap}
 #bzv .bz-card .bzbiow{flex:1 1 100%!important;min-width:100%;padding-top:6px;border-top:1px solid #ffffff1f}
+/* v55.0: firmas de los eventos */
+#bzv .bzwp{position:absolute;font-style:normal;pointer-events:none;z-index:6;filter:drop-shadow(0 2px 3px #0009);will-change:transform,opacity;white-space:nowrap;font-weight:900;color:#fff;text-shadow:0 2px 0 #000,0 0 8px #000a}
+#bzv .bzring{position:absolute;width:120px;height:120px;border-radius:50%;border:5px solid #fde047;pointer-events:none;z-index:5;box-shadow:0 0 18px currentColor}
 </style>
 <script id="v37js">
 (()=>{
@@ -25352,8 +25360,8 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
    const d={x:b.dataset.x-a.dataset.x,y:b.dataset.y-a.dataset.y};story=1;a.classList.add('st');b.classList.add('st');const A=MD(a),Bm=MD(b);
    try{if(A&&Bm&&(A.lost===Bm.u||Bm.lost===A.u)){/* rivales: el que perdió huye o pide la revancha */const lo=A.lost===Bm.u?a:b,wi=lo===a?b:a,dd=lo===a?d:{x:-d.x,y:-d.y};
      if(Math.random()<.45){bub(lo,'❗');await W8(400);bub(lo,'😰');mv(lo,-dd.x*.8,-dd.y*.8);await W8(500);bub(wi,'😤');await W8(1500)}else{bub(lo,'😠');await W8(500);bub(lo,'¡Revancha!',1500,'say');await W8(900);await brawl(lo,wi,dd,1)}}
-    else if(A&&Bm&&A.fr===Bm.u){const F=[STORIES[2],STORIES[3],STORIES[4],STORIES[5]];await F[Math.random()*F.length|0](a,b,d)}
-    else await STORIES[Math.random()*STORIES.length|0](a,b,d)}catch(e){}finally{a.classList.remove('st');b.classList.remove('st');story=0}return}}
+    else if(A&&Bm&&A.fr===Bm.u){const fi=2+(Math.random()*4|0);await STORIES[fi](a,b,d);await sigFx(['amistad','pelea','perseguirse','comida','siesta2','cancion','saludo'][fi],a,b)}
+    else{const si=Math.random()*STORIES.length|0;await STORIES[si](a,b,d);await sigFx(['amistad','pelea','perseguirse','comida','siesta2','cancion','saludo'][si],a,b)}}catch(e){}finally{a.classList.remove('st');b.classList.remove('st');story=0}return}}
  function wander(){if(!cur||D.hidden)return;try{socTick()}catch(e){console.error('soc',e)}if(Math.random()<.38)tell();cur.o.querySelectorAll('.bzp').forEach(b=>{if(b.classList.contains('st'))return;if(!b.classList.contains('sel')&&Math.random()<.12)act(b);if(Math.random()<(b.classList.contains('hurt')?.75:.45)||b.classList.contains('sel'))return;if(socHome(b))return;const m=MD(b);if(m&&m.fr!=null){const f=cur.o.querySelector(`.bzp[data-u="${m.fr}"]`);if(f&&Math.random()<.6){const fx=f.dataset.x-b.dataset.x,fy=f.dataset.y-b.dataset.y,dl=Math.hypot(fx,fy)||1,k2=Math.max(0,(dl-110)/dl);mv(b,fx*k2+(Math.random()*40-20),fy*k2+(Math.random()*30-15));return}}const sc=b.classList.contains('hurt')?.5:1,dx=Math.round((Math.random()*120-60)*sc),dy=Math.round((Math.random()*70-35)*sc);mv(b,dx,dy)})}
 
  /* ================= v54.4: sociedades en los biomas =================
@@ -25473,6 +25481,82 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  window.__bzEv2={async test(){const out=[];const L=L0();for(const a of ARCS){try{const d={};if(a.id==='amor'&&SOC.clans.length<2){out.push(a.id+':skip');continue}for(const f of a.ch){await f(d);await W8(300)}out.push(a.id+':ok')}catch(e){out.push(a.id+':ERR '+e.message)}}for(const t in TPOW){try{await TPOW[t][1](L[2]);out.push(t+':ok')}catch(e){out.push(t+':ERR '+e.message)}}for(const s2 of SYN){try{await s2[2](L[0],L[1],{x:BX(L[1])-BX(L[0]),y:BY(L[1])-BY(L[0])});out.push(s2[1].slice(0,10)+':ok')}catch(e){out.push(s2[1]+':ERR '+e.message)}}try{for(const u in SOC.lf){SOC.lf[u].food=5;SOC.lf[u].en=50;SOC.lf[u].joy=50}await needAct(L);out.push('need:ok')}catch(e){out.push('need:ERR '+e.message)}return out.join(' ')}};
  window.__bzEv={async test(){const out=[];const L=[...cur.o.querySelectorAll('.bzp')];for(const [n,f] of GRP){try{const a=L[0],G=[a,...near(a,L,2000).slice(0,4)];await f(G);G.forEach(b=>mv(b,0,0));out.push(n+':ok')}catch(e){out.push(n+':ERR '+e.message)}}for(const [n,f] of SOLO){try{await f(L[1]);out.push(n+':ok')}catch(e){out.push(n+':ERR '+e.message)}}for(const [n,f] of INT2){try{const a=L[0],b=L[1];await f(a,b,{x:BX(b)-BX(a),y:BY(b)-BY(a)});out.push(n+':ok')}catch(e){out.push(n+':ERR '+e.message)}}return out.join(' ')}};
 
+
+ /* ================= v55.0: una animación exclusiva (firma) para cada evento ================= */
+ /* movimientos nuevos */
+ const MO={
+  orbit:(a,b)=>{if(!b)return AN.spin(a);const [ax,ay]=posOf(a),[bx,by]=posOf(b),dx=bx-ax,dy=by-ay,F=[];for(let i=0;i<=16;i++){const k=i/16*Math.PI*2;F.push({transform:`translate(${dx+Math.cos(k+Math.PI)*-dx*.0+Math.cos(k)*90-90}px,${Math.sin(k)*50}px)`})}F[0].transform=F[16].transform='translate(0,0)';return an(a,F,1400)},
+  fig8:a=>an(a,Array.from({length:17},(_,i)=>{const k=i/16*Math.PI*2;return{transform:`translate(${Math.sin(k)*60}px,${Math.sin(2*k)*24}px)`}}),1500),
+  zigzag:a=>an(a,[0,1,2,3,4,5,6].map(i=>({transform:`translate(${i*18-54}px,${i%2?-22:0}px)`})).concat([{transform:'translate(0,0)'}]),900),
+  pendulum:a=>an(a,[0,24,-20,14,-8,4,0].map(r=>({transform:`rotate(${r}deg)`,transformOrigin:'50% 0%'})),1300),
+  pogo:a=>an(a,Array.from({length:11},(_,i)=>({transform:`translateY(${i%2?-26:0}px) scale(${i%2?.92:1.08},${i%2?1.08:.92})`})),1100),
+  moonwalk:a=>an(a,[{transform:'translateX(0) rotate(0)'},{transform:'translateX(-30px) rotate(-8deg)',offset:.3},{transform:'translateX(-60px) rotate(-8deg)',offset:.6},{transform:'translateX(-60px) rotate(0) scale(1.1)',offset:.75},{transform:'translateX(0) rotate(0)'}],1500),
+  cartwheel:a=>an(a,[{transform:'translateX(-70px) rotate(0)'},{transform:'translateX(0) translateY(-30px) rotate(180deg)',offset:.5},{transform:'translateX(70px) rotate(360deg)',offset:.85},{transform:'translateX(0) rotate(360deg)'}],1100),
+  tornado:a=>an(a,[{transform:'rotate(0) scale(1)'},{transform:'translateY(-40px) rotate(720deg) scale(.7)',offset:.6},{transform:'translateY(0) rotate(1080deg) scale(1.1)',offset:.85},{transform:'rotate(1080deg) scale(1)'}],1200),
+  jelly:a=>an(a,[[1,1],[1.25,.75],[.8,1.2],[1.12,.88],[.94,1.06],[1.03,.97],[1,1]].map(([x,y])=>({transform:`scale(${x},${y})`})),900),
+  grow:a=>an(a,[{transform:'scale(1)'},{transform:'scale(1.12)',offset:.2},{transform:'scale(1.02)',offset:.3},{transform:'scale(1.25)',offset:.5},{transform:'scale(1.05)',offset:.6},{transform:'scale(1.4)',offset:.8},{transform:'scale(1)'}],1400),
+  headbang:a=>an(a,Array.from({length:9},(_,i)=>({transform:`rotate(${i%2?14:-4}deg) translateY(${i%2?8:0}px)`})),900),
+  tiptoe:a=>an(a,Array.from({length:7},(_,i)=>({transform:`translateY(${i%2?-12:0}px) scale(${i%2?.92:1},${i%2?1.12:1})`})),1300),
+  swoon:a=>an(a,[{transform:'rotate(0)'},{transform:'rotate(-70deg) translateY(10px)',offset:.35},{transform:'rotate(-70deg) translateY(10px)',offset:.6},{transform:'rotate(8deg)',offset:.85},{transform:'rotate(0)'}],1500),
+  shakehead:a=>an(a,[0,1,2,3,4,5].map(i=>({transform:`scaleX(${i%2?-1:1}) rotate(${i%2?6:-6}deg)`})).concat([{transform:'scaleX(1)'}]),900),
+  levspin:a=>an(a,[{transform:'translateY(0) rotateY(0)'},{transform:'translateY(-50px) rotateY(360deg)',offset:.5},{transform:'translateY(0) rotateY(720deg)'}],1800),
+  bouncerun:a=>an(a,Array.from({length:9},(_,i)=>({transform:`translate(${Math.sin(i/8*Math.PI*2)*80}px,${i%2?-20:0}px)`})),1300),
+  curl:a=>an(a,[{transform:'scale(1) rotate(0)'},{transform:'scale(.55) rotate(-90deg)',offset:.4},{transform:'scale(.55) rotate(-270deg)',offset:.7},{transform:'scale(1.25) rotate(-360deg)',offset:.88},{transform:'scale(1) rotate(-360deg)'}],1300),
+  startle:a=>an(a,[{transform:'translate(0,0)'},{transform:'translate(-40px,-50px) scale(1.15)',offset:.25},{transform:'translate(-40px,0) scale(1.1,.9)',offset:.5},{transform:'translate(0,0)'}],900),
+  sway:a=>an(a,[0,-10,10,-10,10,0].map(r=>({transform:`rotate(${r}deg) translateX(${r}px)`})),1800),
+  leanin:(a,b)=>{const d=b?(BX(b)>BX(a)?1:-1):1;an(a,[{transform:'rotate(0)'},{transform:`rotate(${18*d}deg) translateX(${12*d}px)`,offset:.4},{transform:`rotate(${18*d}deg) translateX(${12*d}px)`,offset:.7},{transform:'rotate(0)'}],1300);if(b)an(b,[{transform:'rotate(0)'},{transform:`rotate(${-18*d}deg) translateX(${-12*d}px)`,offset:.4},{transform:`rotate(${-18*d}deg) translateX(${-12*d}px)`,offset:.7},{transform:'rotate(0)'}],1300)},
+  rocket:a=>an(a,[{transform:'translateY(0) scale(1,1)'},{transform:'translateY(10px) scale(1.2,.7)',offset:.2},{transform:'translateY(-160px) scale(.8,1.25)',offset:.55},{transform:'translateY(-160px) scale(1)',offset:.65},{transform:'translateY(0) scale(1.2,.8)',offset:.9},{transform:'translateY(0) scale(1)'}],1400),
+  vibrate:a=>an(a,Array.from({length:16},(_,i)=>({transform:`translate(${(i%2?3:-3)}px,${(i%3?2:-2)}px)`})),800),
+  bowdeep:a=>an(a,[{transform:'rotate(0) scale(1)'},{transform:'rotate(40deg) scale(.95)',offset:.35},{transform:'rotate(40deg) scale(.95)',offset:.7},{transform:'rotate(0) scale(1)'}],1500),
+  wave:a=>an(a,[0,-16,16,-16,16,0].map(r=>({transform:`rotate(${r}deg)`,transformOrigin:'50% 100%'})),1100),
+  flash:a=>an(a,[{filter:'brightness(1)'},{filter:'brightness(3)',offset:.15},{filter:'brightness(1)',offset:.3},{filter:'brightness(3)',offset:.45},{filter:'brightness(1)'}],900),
+  silhouette:a=>an(a,[{filter:'brightness(1)'},{filter:'brightness(0) drop-shadow(0 0 12px #fff)',offset:.4},{filter:'brightness(0) drop-shadow(0 0 12px #fff)',offset:.6},{filter:'brightness(1.6)',offset:.8},{filter:'brightness(1)'}],1600),
+  rainbow:a=>an(a,[0,60,120,180,240,300,360].map(h=>({filter:`hue-rotate(${h}deg) saturate(1.6)`})),1500),
+  shrinkpop:a=>an(a,[{transform:'scale(1)'},{transform:'scale(.2)',opacity:.4,offset:.45},{transform:'scale(1.35)',opacity:1,offset:.75},{transform:'scale(1)'}],1100)};
+ /* formaciones de partículas en el mundo */
+ function wpt(x,y,e,o){const L=cur&&cur.o.querySelector('.bz-soc');if(!L)return;const el=D.createElement('i');el.className='bzwp';el.textContent=e;el.style.left=x+'px';el.style.top=y+'px';el.style.fontSize=(o.fs||26)+'px';L.append(el);
+  el.animate(o.fr||[{transform:'translate(-50%,-50%) scale(.2)',opacity:0},{transform:'translate(-50%,-50%) scale(1)',opacity:1,offset:.3},{transform:`translate(calc(-50% + ${o.dx||0}px),calc(-50% + ${o.dy||0}px)) scale(.8)`,opacity:0}],{duration:o.ms||1400,delay:o.dl||0,easing:o.ez||'ease-out',fill:'backwards'}).finished.then(()=>el.remove(),()=>el.remove())}
+ const FO={
+  heart:(a,b,e)=>{const [ax,ay]=posOf(a),[bx,by]=b?posOf(b):[ax,ay],cx=(ax+bx)/2,cy=(ay+by)/2-110;for(let i=0;i<16;i++){const t=i/16*Math.PI*2,x=16*Math.pow(Math.sin(t),3),y=-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t));wpt(cx+x*5,cy+y*5,e,{dl:i*60,ms:1700,fs:22})}},
+  spiral:(a,b,e)=>{const [x,y]=posOf(a);for(let i=0;i<14;i++){const k=i*.7,r=20+i*10;wpt(x,y-50,e,{dx:Math.cos(k)*r,dy:Math.sin(k)*r*.6,dl:i*55,ms:1300,fs:22})}},
+  fountain:(a,b,e)=>{const [x,y]=posOf(a);for(let i=0;i<12;i++){const dx=(Math.random()-.5)*200;wpt(x,y-60,e,{fr:[{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{transform:`translate(calc(-50% + ${dx*.5}px),calc(-50% - 140px)) scale(1)`,opacity:1,offset:.45},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + 40px)) scale(.8)`,opacity:0}],dl:i*70,ms:1300,ez:'ease-in-out'})}},
+  bridge:(a,b,e)=>{if(!b)return FO.spiral(a,b,e);const [ax,ay]=posOf(a),[bx,by]=posOf(b);for(let i=0;i<=10;i++){const t=i/10,x=ax+(bx-ax)*t,y=ay+(by-ay)*t-60-Math.sin(t*Math.PI)*110;wpt(x,y,e,{dl:i*70,ms:1500,fs:22})}},
+  orbit:(a,b,e)=>{const [x,y]=posOf(a);for(let i=0;i<8;i++){const k0=i/8*Math.PI*2;wpt(x,y-50,e,{fr:Array.from({length:9},(_,j)=>{const k=k0+j/8*Math.PI*2;return{transform:`translate(calc(-50% + ${Math.cos(k)*80}px),calc(-50% + ${Math.sin(k)*36}px))`,opacity:j===0||j===8?0:1}}),ms:1600,ez:'linear',fs:20})}},
+  burst:(a,b,e)=>{const [x,y]=posOf(a);for(let i=0;i<12;i++){const k=i/12*Math.PI*2;wpt(x,y-50,e,{dx:Math.cos(k)*140,dy:Math.sin(k)*100,ms:1000,fs:24})}},
+  sine:(a,b,e)=>{const [ax,ay]=posOf(a),[bx]=b?posOf(b):[ax+300];for(let i=0;i<12;i++){const t=i/11;wpt(Math.min(ax,bx)-60+Math.abs(bx-ax+120)*t,ay-90+Math.sin(t*Math.PI*3)*30,e,{dl:i*60,ms:1300,fs:20})}},
+  confetti:(a,b,e)=>{const [x,y]=posOf(a);for(let i=0;i<16;i++){const dx=(Math.random()-.5)*300;wpt(x+dx,y-260,Array.isArray(e)?e[i%e.length]:e,{dy:280+Math.random()*60,dx:(Math.random()-.5)*60,dl:i*50,ms:1600,ez:'ease-in',fs:20})}},
+  bubbles:(a,b,e)=>{const [x,y]=posOf(a);for(let i=0;i<10;i++){const dx=(Math.random()-.5)*120;wpt(x+dx,y-30,e,{fr:[{transform:'translate(-50%,-50%) scale(.3)',opacity:0},{transform:`translate(calc(-50% + ${dx*.3+10}px),calc(-50% - 70px)) scale(1)`,opacity:1,offset:.4},{transform:`translate(calc(-50% - 10px),calc(-50% - 150px)) scale(1.2)`,opacity:.9,offset:.8},{transform:'translate(-50%,calc(-50% - 170px)) scale(1.6)',opacity:0}],dl:i*90,ms:1600,fs:20})}},
+  bolt:(a,b,e)=>{const [x,y]=posOf(a);for(let i=0;i<7;i++){wpt(x+(i%2?24:-24),y-260+i*34,e,{fr:[{transform:'translate(-50%,-50%) scale(1)',opacity:0},{opacity:1,offset:.1},{transform:'translate(-50%,-50%) scale(1)',opacity:0}],dl:i*40,ms:600,fs:28})}},
+  word:(a,b,e)=>{const [x,y]=posOf(a);wpt(x,y-150,e,{fr:[{transform:'translate(-50%,-50%) scale(0) rotate(-20deg)',opacity:0},{transform:'translate(-50%,-50%) scale(1.3) rotate(6deg)',opacity:1,offset:.25},{transform:'translate(-50%,-50%) scale(1) rotate(0)',opacity:1,offset:.7},{transform:'translate(-50%,-80%) scale(1)',opacity:0}],ms:1600,fs:30})},
+  ring:(a,b,e,col)=>{const [x,y]=posOf(a);const L=cur&&cur.o.querySelector('.bz-soc');if(!L)return;for(let i=0;i<3;i++){const r=D.createElement('i');r.className='bzring';r.style.left=x+'px';r.style.top=(y-40)+'px';r.style.borderColor=col||'#fde047';L.append(r);r.animate([{transform:'translate(-50%,-50%) scale(.2)',opacity:1},{transform:'translate(-50%,-50%) scale(2.6)',opacity:0}],{duration:1200,delay:i*220,easing:'ease-out',fill:'backwards'}).finished.then(()=>r.remove(),()=>r.remove())}if(e)FO.word(a,b,e)},
+  rise:(a,b,e)=>{const [x,y]=posOf(a);for(let i=0;i<9;i++)wpt(x+(i-4)*22,y,e,{dy:-170-Math.random()*40,dl:i*80,ms:1500,fs:20})},
+  rain:(a,b,e)=>{const [x,y]=posOf(a);for(let i=0;i<14;i++){const dx=(Math.random()-.5)*220;wpt(x+dx,y-220,e,{dy:230,dl:i*60,ms:900,ez:'ease-in',fs:18})}},
+  crown:(a,b,e)=>{const [x,y]=posOf(a);wpt(x,y-260,e,{fr:[{transform:'translate(-50%,-50%) scale(.5)',opacity:0},{transform:'translate(-50%,-50%) scale(1.2)',opacity:1,offset:.3},{transform:'translate(-50%,calc(-50% + 150px)) scale(1)',opacity:1,offset:.8},{transform:'translate(-50%,calc(-50% + 150px)) scale(1)',opacity:0}],ms:1800,fs:42});FO.orbit(a,b,'✨')}};
+ /* cada evento con su firma: [movimiento del protagonista, movimiento del otro, formación, partícula(s), color] */
+ const SIG={
+  /* clásicas */
+  amistad:['leanin','leanin','heart','💛'],pelea:['vibrate','startle','bolt','💢','#f87171'],perseguirse:['bouncerun','zigzag','sine','💨'],comida:['jelly','headbang','fountain','🍎'],siesta2:['curl','curl','bubbles','💤'],cancion:['sway','sway','sine','🎵'],saludo:['wave','wave','word','¡Hola!'],
+  /* íntimas */
+  acicalarse:['tiptoe','jelly','orbit','✨'],baya:['headbang','grow','fountain','🍓'],acurrucarse:['curl','curl','heart','🫂'],regalo:['bowdeep','rocket','confetti',['🎁','🎀','✨']],estrellas:['levspin','levspin','rain','⭐'],baile:['moonwalk','cartwheel','sine','💃'],consolar:['leanin','leanin','rise','💗'],jugar:['zigzag','bouncerun','burst','😆'],proteger:['grow','curl','ring','🛡️','#60a5fa'],'reconciliación':['bowdeep','bowdeep','bridge','🤝'],
+  /* parejas nuevas */
+  'chocar los cinco':['pogo','pogo','word','¡Choca!'],'abrazo giratorio':['orbit','tornado','heart','💖'],serenata:['sway','swoon','sine','🎶'],carrera:['bouncerun','zigzag','ring','🏁','#facc15'],cosquillas:['vibrate','jelly','burst','🤣'],picnic:['headbang','headbang','fountain','🍰'],secreto:['leanin','startle','word','🤫'],foto:['flash','flash','ring','📸','#fff'],espejo:['shakehead','shakehead','spiral','🪞'],flor:['bowdeep','swoon','heart','🌸'],'salto doble':['rocket','rocket','burst','⭐'],construir:['headbang','headbang','rise','🧱'],
+  /* grupo */
+  corro:['orbit','sway','orbit','🎶'],coro:['sway','sway','sine','🎼'],ola:['rocket','rocket','sine','🌊'],pelota:['pogo','pogo','bridge','⚽'],fogata:['sway','sway','rise','🔥'],desfile:['tiptoe','tiptoe','confetti',['🎺','🥁','🎊']],'foto de grupo':['flash','flash','ring','📸','#fff'],torre:['tornado','swoon','spiral','💫'],
+  /* en solitario */
+  entrenar:['cartwheel',null,'burst','💥'],mariposa:['bouncerun',null,'spiral','🦋'],estirarse:['tiptoe',null,'rise','✨'],olfatear:['headbang',null,'fountain','🌰'],siesta:['curl',null,'bubbles','💤'],susto:['startle',null,'word','¡Ah!'],lluvia:['vibrate',null,'rain','💧'],contemplar:['levspin',null,'rain','✨'],fantasma:['silhouette',null,'orbit','👻'],
+  /* poderes de tipo */
+  t_grass:['grow',null,'rise','🌱'],t_water:['jelly',null,'fountain','💧'],t_fire:['vibrate',null,'rise','🔥'],t_electric:['flash',null,'bolt','⚡'],t_ice:['shrinkpop',null,'rain','❄️'],t_psychic:['levspin',null,'orbit','🔮'],t_ground:['headbang',null,'burst','🟫'],t_rock:['jelly',null,'burst','🪨'],t_bug:['pendulum',null,'spiral','🕸️'],t_ghost:['silhouette',null,'spiral','👻'],t_dragon:['grow',null,'ring','🐉','#a78bfa'],t_fairy:['rainbow',null,'heart','💖'],t_steel:['flash',null,'burst','⚙️'],t_poison:['jelly',null,'bubbles','🫧'],t_fighting:['pogo',null,'word','¡Ja!'],t_flying:['rocket',null,'confetti','🪶'],t_dark:['silhouette',null,'spiral','🌑'],t_normal:['headbang',null,'rise','🍲'],
+  /* combinaciones */
+  s_vapor:['levspin','levspin','bridge','🌈'],s_jardin:['grow','grow','spiral','🌷'],s_calambre:['vibrate','vibrate','bolt','⚡'],s_castanas:['headbang','headbang','fountain','🌰'],s_sauna:['sway','sway','bubbles','♨️'],s_volar:['rocket','rocket','confetti','🪶'],s_levitar:['levspin','levspin','orbit','🔮'],s_look:['rainbow','tiptoe','heart','💄'],s_sparring:['pogo','pogo','ring','🥋','#f97316'],s_polen:['pendulum','grow','spiral','🐝'],s_arco:['jelly','jelly','bridge','🪨'],s_farolillos:['flash','flash','rise','🏮'],
+  /* necesidades */
+  n_comer:['headbang',null,'fountain','😋'],n_dormir:['curl',null,'bubbles','💤'],n_animar:['leanin','leanin','heart','🤗'],
+  /* clanes */
+  c_cuentos:['sway',null,'rise','📖'],c_cosecha:['headbang',null,'fountain','🌾'],c_comercio:['bowdeep',null,'bridge','🔄'],c_fiesta:['cartwheel',null,'confetti',['🎉','🎊']],c_alianza:['bowdeep',null,'ring','🤝','#34d399'],c_festival:['rocket',null,'confetti',['🎆','✨']],c_sabios:['bowdeep',null,'rise','📜'],c_estrella:['levspin',null,'rain','☄️'],c_corona:['grow',null,'crown','👑'],
+  /* finales de las historias */
+  a_huevo:['tiptoe',null,'heart','🐣'],a_tesoro:['rocket',null,'fountain','💎'],a_extraviado:['leanin','leanin','heart','💖'],a_tormenta:['levspin',null,'confetti','🌈'],a_torneo:['grow',null,'crown','🏆'],a_amor:['leanin','leanin','heart','💒'],a_banquete:['headbang',null,'fountain','🍲'],a_leyenda:['bowdeep',null,'rain','🌟']};
+ const SYNK={'crean vapor y aparece un arcoíris':'s_vapor','hacen florecer un jardín':'s_jardin','se dan un calambrazo al jugar':'s_calambre','asan castañas juntos':'s_castanas','se montan una sauna':'s_sauna','salen a volar juntos':'s_volar','juegan a levitar':'s_levitar','se hacen un cambio de look':'s_look','entrenan un combate amistoso':'s_sparring','polinizan las flores':'s_polen','levantan un arco de piedra':'s_arco','iluminan la noche con farolillos':'s_farolillos'};
+ async function sigFx(key,a,b){const S2=SIG[key];if(!S2||!a||!a.isConnected||!cur)return;try{const [m1,m2,fo,e,col]=S2;if(m1&&MO[m1])MO[m1](a,b);if(b&&b.isConnected&&m2&&MO[m2]&&m1!=='leanin')MO[m2](b,a);if(fo&&FO[fo])FO[fo](a,b,e,col);await W8(1100)}catch(_){}}
+ window.__bzSig={SIG,MO,FO,test:async()=>{const L=[...cur.o.querySelectorAll('.bzp')];const out=[];for(const k in SIG){try{await sigFx(k,L[0],L[1]);out.push(k)}catch(e){out.push(k+':ERR')}}return out.length+' firmas'}};
  /* ================= v54.8: vida propia en los biomas =================
     personalidades, necesidades, poderes de tipo que cambian el bioma, combinaciones entre tipos,
     historias por capítulos (huevo, tesoro, tormenta, torneo, amor entre clanes, extraviado, banquete, visita legendaria)
@@ -25509,7 +25593,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   flying:['vuela en círculos',async b=>{AN.float(b);pt(b,['🪶','💨'],{n:6,up:1});await W8(2200)}],
   dark:['se esconde en las sombras',async b=>{an(b,[{opacity:1},{opacity:.15,offset:.4},{opacity:.15,offset:.7},{opacity:1}],1800);await W8(1900);bub(b,'😏')}],
   normal:['cocina algo rico',async b=>{bub(b,'🍳');AN.nod(b);await W8(900);pt(b,['🍲','💨'],{n:5,up:1});const [x,y]=posOf(b);decoAt(x+50,y+30,'🍲',26)}]};
- async function typeSolo(L){const C=L.filter(b=>TY(b).length);if(!C.length)return false;const b=pk2(C);const t=TY(b)[0],P=TPOW[t]||TPOW.normal;story=1;b.classList.add('st');try{await P[1](b);deed(b,P[0]);if(Math.random()<.6)socLog(TICON[t]||'✨',`${NM(b)} ${P[0]}`)}catch(e){}finally{b.classList.remove('st');story=0}return true}
+ async function typeSolo(L){const C=L.filter(b=>TY(b).length);if(!C.length)return false;const b=pk2(C);const t=TY(b)[0],P=TPOW[t]||TPOW.normal;story=1;b.classList.add('st');try{await P[1](b);await sigFx('t_'+t,b);deed(b,P[0]);if(Math.random()<.6)socLog(TICON[t]||'✨',`${NM(b)} ${P[0]}`)}catch(e){}finally{b.classList.remove('st');story=0}return true}
  const TICON={grass:'🌱',water:'💧',fire:'🔥',electric:'⚡',ice:'❄️',psychic:'🔮',ground:'🟫',rock:'🪨',bug:'🕸️',ghost:'👻',dragon:'🐉',fairy:'✨',steel:'⚙️',poison:'🫧',fighting:'💪',flying:'🪶',dark:'🌑',normal:'🍳'};
  /* ---- combinaciones entre tipos ---- */
  const SYN=[
@@ -25527,13 +25611,13 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   [['electric',null],'iluminan la noche con farolillos',async(a,b,d)=>{if(ph()!=='night')return'skip';pt(a,['⚡','🏮'],{n:6,up:1});const [x,y]=posOf(a);decoAt(x-40,y-30,'🏮',28,'lamp');decoAt(x+d.x,y+d.y-30,'🏮',28,'lamp');await W8(1000)}]];
  const synFor=(a,b)=>{const ta=TY(a),tb=TY(b);if(!ta.length||!tb.length)return null;for(const s2 of SYN){const [x,y]=s2[0];if(ta.includes(x)&&(y==null||tb.includes(y)))return{s:s2,a,b};if(tb.includes(x)&&(y==null||ta.includes(y)))return{s:s2,a:b,b:a}}return null};
  async function synergy(L){for(let t=0;t<8;t++){const a=pk2(L),nb=near(a,L,520);if(!nb.length)continue;const b=pk2(nb),r=synFor(a,b);if(!r)continue;const A=r.a,B=r.b,d={x:BX(B)-BX(A),y:BY(B)-BY(A)};story=1;A.classList.add('st');B.classList.add('st');
-   try{const ok=await r.s[2](A,B,d);if(ok!=='skip'){affAdd(U(A),U(B),10,NM(A),NM(B));deed(A,r.s[1]+' con '+NM(B));deed(B,r.s[1]+' con '+NM(A));socLog('🤝',`${NM(A)} y ${NM(B)} ${r.s[1]}`)}}catch(e){}finally{A.classList.remove('st');B.classList.remove('st');story=0}return true}return false}
+   try{const ok=await r.s[2](A,B,d);if(ok!=='skip'){await sigFx(SYNK[r.s[1]],A,B);affAdd(U(A),U(B),10,NM(A),NM(B));deed(A,r.s[1]+' con '+NM(B));deed(B,r.s[1]+' con '+NM(A));socLog('🤝',`${NM(A)} y ${NM(B)} ${r.s[1]}`)}}catch(e){}finally{A.classList.remove('st');B.classList.remove('st');story=0}return true}return false}
  /* ---- necesidades: comer, dormir y estar con los suyos ---- */
  function needsTick(){if(!SOC||!SOC.lf)return;const night=ph()==='night';for(const u in SOC.lf){const l=SOC.lf[u];l.food=Math.max(0,l.food-(l.p==='glotón'?1.6:.9));l.en=Math.max(0,l.en-(night?1.4:.6));l.joy=Math.max(0,Math.min(100,l.joy-.5+(clanOf(+u)?.4:0)))}}
  async function needAct(L){if(!SOC||!SOC.lf)return false;const H=L.filter(b=>{const l=LF(U(b));return l&&(l.food<25||l.en<22||l.joy<25)});if(!H.length)return false;const b=pk2(H),l=LF(U(b));story=1;b.classList.add('st');
-  try{if(l.en<22){bub(b,'💤',3400);AN.rock(b);await W8(3300);l.en=100;deed(b,'durmió una buena siesta')}
-   else if(l.food<25){bub(b,'🤤');AN.nod(b);await W8(700);const fr=near(b,L,500).find(o=>affG(U(o),U(b))>=20);if(fr){mv(fr,(BX(b)-BX(fr))*.6,(BY(b)-BY(fr))*.6);await W8(1000);bub(fr,'🍎');pt(b,'🍎',{n:1,up:1,big:1});affAdd(U(fr),U(b),12,NM(fr),NM(b));socLog('🍎',`${NM(fr)} comparte su comida con ${NM(b)}, que tenía hambre`);deed(fr,'compartió su comida con '+NM(b))}else{pt(b,pk2(['🍎','🍓','🍄','🌰']),{n:1,up:1,big:1});deed(b,'buscó comida él solo')}AN.squash(b);bub(b,'😋');l.food=100;await W8(900)}
-   else{bub(b,'😔',2000);AN.bow(b);await W8(1300);const fr=near(b,L,600).sort((x,y)=>affG(U(y),U(b))-affG(U(x),U(b)))[0];if(fr&&affG(U(fr),U(b))>=10){mv(fr,(BX(b)-BX(fr))*.7,(BY(b)-BY(fr))*.7);await W8(1100);bub(fr,'🤗');AN.twirl(b);pt(b,'💗',{n:6,up:1});l.joy=90;affAdd(U(fr),U(b),14,NM(fr),NM(b));socLog('🤗',`${NM(b)} estaba triste y ${NM(fr)} fue a animarle`);deed(fr,'animó a '+NM(b))}else{l.joy+=25;await W8(600)}}}catch(e){}finally{b.classList.remove('st');story=0}return true}
+  try{if(l.en<22){bub(b,'💤',3400);AN.rock(b);await W8(3300);await sigFx('n_dormir',b);l.en=100;deed(b,'durmió una buena siesta')}
+   else if(l.food<25){bub(b,'🤤');AN.nod(b);await W8(700);const fr=near(b,L,500).find(o=>affG(U(o),U(b))>=20);if(fr){mv(fr,(BX(b)-BX(fr))*.6,(BY(b)-BY(fr))*.6);await W8(1000);bub(fr,'🍎');pt(b,'🍎',{n:1,up:1,big:1});affAdd(U(fr),U(b),12,NM(fr),NM(b));socLog('🍎',`${NM(fr)} comparte su comida con ${NM(b)}, que tenía hambre`);deed(fr,'compartió su comida con '+NM(b))}else{pt(b,pk2(['🍎','🍓','🍄','🌰']),{n:1,up:1,big:1});deed(b,'buscó comida él solo')}await sigFx('n_comer',b);bub(b,'😋');l.food=100;await W8(400)}
+   else{bub(b,'😔',2000);AN.bow(b);await W8(1300);const fr=near(b,L,600).sort((x,y)=>affG(U(y),U(b))-affG(U(x),U(b)))[0];if(fr&&affG(U(fr),U(b))>=10){mv(fr,(BX(b)-BX(fr))*.7,(BY(b)-BY(fr))*.7);await W8(1100);bub(fr,'🤗');AN.twirl(b);pt(b,'💗',{n:6,up:1});l.joy=90;affAdd(U(fr),U(b),14,NM(fr),NM(b));socLog('🤗',`${NM(b)} estaba triste y ${NM(fr)} fue a animarle`);await sigFx('n_animar',fr,b);deed(fr,'animó a '+NM(b))}else{l.joy+=25;await W8(600)}}}catch(e){}finally{b.classList.remove('st');story=0}return true}
  /* la personalidad cambia lo rápido que se encariñan */
  const persK=(ua,ub,v)=>{if(!SOC||!SOC.lf||v<=0)return v;let k=1;[ua,ub].forEach(u=>{const p=(SOC.lf[u]||{}).p;if(p==='cariñoso')k*=1.35;else if(p==='gruñón')k*=.6;else if(p==='tímido'&&affG(ua,ub)<40)k*=.7;else if(p==='noble')k*=1.1});return Math.round(v*k)};
  /* ---- historias por capítulos ---- */
@@ -25572,7 +25656,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
    async A=>{const id=pk2([144,145,146,249,250,384,483,484,487,643,644,716,717,791,792,890]);const im=D.createElement('img');im.className='bzlegend';im.src=art(id,0);cur.o.append(im);setTimeout(()=>im.remove(),7000);L0().forEach(b=>{bub(b,'😮');AN.jump(b,20)});CH('La visita legendaria','Una sombra gigantesca cruza el cielo… ¡un Pokémon legendario!');await W8(3000);L0().forEach(b=>AN.bow(b));await W8(1500);L0().forEach(b=>{const [x,y]=posOf(b);if(Math.random()<.4)decoAt(x,y+40,'🌟',22)});socLog('🌟','A su paso, el bioma se llena de luz. Esta noche se recordará siempre',true)}]}];
  async function arcTick(){if(!SOC||story||!cur||Date.now()<SOC.arcT)return false;
   if(!SOC.arc){const ok=ARCS.filter(a=>!SOC.arcDone.has(a.id)&&SOC.era>=a.min&&(!a.need||a.need()));if(!ok.length){SOC.arcT=Date.now()+30000;return false}const a=pk2(ok);SOC.arc={a,i:0,d:{}}}
-  const A=SOC.arc;story=1;try{await A.a.ch[A.i](A.d)}catch(e){console.error('arco',e)}finally{story=0}A.i++;if(A.i>=A.a.ch.length){SOC.arcDone.add(A.a.id);SOC.arc=null;SOC.arcT=Date.now()+50000+Math.random()*30000}else SOC.arcT=Date.now()+22000+Math.random()*12000;return true}
+  const A=SOC.arc;story=1;try{await A.a.ch[A.i](A.d);if(A.i===A.a.ch.length-1){const who=btn(A.d.b)||btn(A.d.a)||(()=>{const L=L0();return L[0]})();await sigFx('a_'+A.a.id,who,btn(A.d.a)&&btn(A.d.b)?btn(A.d.b):null)}}catch(e){console.error('arco',e)}finally{story=0}A.i++;if(A.i>=A.a.ch.length){SOC.arcDone.add(A.a.id);SOC.arc=null;SOC.arcT=Date.now()+50000+Math.random()*30000}else SOC.arcT=Date.now()+22000+Math.random()*12000;return true}
  /* el bebé sigue a su protector */
  function babyTick(){const B=SOC&&SOC.baby;if(!B||!B.el.isConnected)return;const p=btn(B.p);if(!p)return;const [x,y]=posOf(p);B.el.style.left=(x+50)+'px';B.el.style.top=(y-10)+'px'}
  /* biografía en la ficha al tocar un Pokémon */
@@ -25580,8 +25664,8 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   const nm2=u=>{const b=btn(u);return b?esc(NM(b)):'?'};
   return`<small class="bzbio">${l.pi} <b>${l.p[0].toUpperCase()+l.p.slice(1)}</b> · ${mo[0]} ${mo[1]}${c?` · 🏯 ${esc(c.name)}${c.ld===m.u?' (líder)':''}`:''}${bf!=null&&bv>=20?` · ${lvlT(bv)[0]} ${nm2(bf)}`:''}${rv!=null&&rvv<=-20?` · 💢 ${nm2(rv)}`:''}${l.d.length?`<br>📖 ${l.d.slice(-3).map(esc).join(' · ')}`:''}</small>`}
  async function runGroup(L){if(!cur)return false;const a=pk2(L),nb=near(a,L,460);if(nb.length<2)return false;const G=[a,...nb.slice(0,Math.min(4,nb.length))];story=1;G.forEach(b=>b.classList.add('st'));
-  try{const e=pk2(GRP),r=await e[1](G);if(r&&SOC){socLog('🎉',`${G.map(NM).slice(0,3).join(', ')}${G.length>3?' y compañía':''} ${r}`);for(const x of G)for(const y of G)if(U(x)<U(y))affAdd(U(x),U(y),5,NM(x),NM(y))}}catch(e){}finally{G.forEach(b=>{b.classList.remove('st');mv(b,0,0)});story=0}return true}
- async function runSolo(L){const b=pk2(L);story=1;b.classList.add('st');try{const opts=SOLO.filter(x=>x[0]!=='fantasma'||(MD(b)&&(MD(b).types||[]).includes('ghost')));const e=pk2(opts),r=await e[1](b);if(r&&SOC&&Math.random()<.5)socLog('🐾',`${NM(b)} ${r}`)}catch(e){}finally{b.classList.remove('st');story=0}return true}
+  try{const e=pk2(GRP),r=await e[1](G);if(r){G.forEach((g,i)=>{const S2=SIG[e[0]];if(S2&&MO[S2[1]||S2[0]])setTimeout(()=>MO[S2[i?1:0]||S2[0]](g),i*120)});await sigFx(e[0],G[0],G[1])}if(r&&SOC){socLog('🎉',`${G.map(NM).slice(0,3).join(', ')}${G.length>3?' y compañía':''} ${r}`);for(const x of G)for(const y of G)if(U(x)<U(y))affAdd(U(x),U(y),5,NM(x),NM(y))}}catch(e){}finally{G.forEach(b=>{b.classList.remove('st');mv(b,0,0)});story=0}return true}
+ async function runSolo(L){const b=pk2(L);story=1;b.classList.add('st');try{const opts=SOLO.filter(x=>x[0]!=='fantasma'||(MD(b)&&(MD(b).types||[]).includes('ghost')));const e=pk2(opts),r=await e[1](b);await sigFx(e[0],b);if(r&&SOC&&Math.random()<.5)socLog('🐾',`${NM(b)} ${r}`)}catch(e){}finally{b.classList.remove('st');story=0}return true}
  /* ---- historias íntimas entre Pokémon que ya se quieren ---- */
  const INT=[
   ['acicalarse',async(a,b,d)=>{mv(a,d.x*.6,d.y*.6);await W8(1200);bub(a,'✨');AN.nod(a);pt(b,'✨',{n:6,ring:1,r:70});fxAt(b,'💗','hit',900);await W8(900);bub(b,'☺️');hop(b);await W8(900);return[10,'se acicalan con cariño']}],
@@ -25598,8 +25682,8 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  async function socStory(L){/* elige una pareja con historia */const pairs=[];for(const a of L)for(const b of L){if(U(a)>=U(b))continue;const v=affG(U(a),U(b));const dd=Math.hypot(BX(a)-BX(b),BY(a)-BY(b));if(dd>700)continue;if(v>=15||v<=-15)pairs.push([a,b,v])}
   if(!pairs.length)return false;const [a0,b0,v]=pk2(pairs),sw=Math.random()<.5,a=sw?b0:a0,b=sw?a0:b0,d={x:BX(b)-BX(a),y:BY(b)-BY(a)};
   story=1;a.classList.add('st');b.classList.add('st');try{let r=null,nm2;
-   if(v>=15){const opts=INT.concat(INT2).filter(x=>x[0]!=='consolar'||(MD(b)&&MD(b).hurt));const s2=pk2(opts);r=await s2[1](a,b,d)}
-   else if(v<=-15){if(Math.random()<.3){r=await RIV[0][1](a,b,d)}else{await brawl(a,b,d,1);r=null}}
+   if(v>=15){const opts=INT.concat(INT2).filter(x=>x[0]!=='consolar'||(MD(b)&&MD(b).hurt));const s2=pk2(opts);r=await s2[1](a,b,d);if(r)await sigFx(s2[0],a,b)}
+   else if(v<=-15){if(Math.random()<.3){r=await RIV[0][1](a,b,d);await sigFx('reconciliación',a,b)}else{await brawl(a,b,d,1);await sigFx('pelea',a,b);r=null}}
    if(r){affAdd(U(a),U(b),r[0],NM(a),NM(b));deed(a,r[1]+' ('+NM(b)+')');if(Math.random()<.35||r[0]>=14)socLog('💗',r[1].startsWith('le ')?`${NM(a)} ${r[1]} a ${NM(b)}`:`${NM(a)} y ${NM(b)} ${r[1]}`)}}catch(e){}finally{a.classList.remove('st');b.classList.remove('st');story=0}return true}
  /* ---- clanes ---- */
  function formClans(force){if(!SOC||!cur)return;const L=[...cur.o.querySelectorAll('.bzp')];const P=new Map(L.map(b=>[U(b),U(b)]));const f=x=>{while(P.get(x)!==x)x=P.get(x);return x};
@@ -25641,7 +25725,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   /* los conocidos se van cogiendo cariño poco a poco */if(Math.random()<.5){const L=[...cur.o.querySelectorAll('.bzp')];if(L.length>1){const a=pk2(L),b=pk2(L);if(a!==b&&Math.hypot(BX(a)-BX(b),BY(a)-BY(b))<600)affAdd(U(a),U(b),2+SOC.era,NM(a),NM(b))}}
   if(SOC.era>=2&&Math.random()<.2)formClans(false);
   SOC.clans.forEach(c=>{const lv=Math.max(0,Math.min(4,SOC.era-2));if(c.mem.size>=2||lv===0)build(c,lv)});
-  if(SOC.era>=3&&n>SOC.nextEv&&!story&&SOC.clans.length){SOC.nextEv=n+(16000+Math.random()*14000);const ok=EVS.filter(x=>x[0]<=SOC.era);const ev=pk2(ok);try{ev[1](pk2(SOC.clans))}catch(e){}}
+  if(SOC.era>=3&&n>SOC.nextEv&&!story&&SOC.clans.length){SOC.nextEv=n+(16000+Math.random()*14000);const ok=EVS.filter(x=>x[0]<=SOC.era);const ev=pk2(ok),cl=pk2(SOC.clans),EK=['c_cuentos','c_cosecha','c_comercio','c_fiesta','c_alianza','c_festival','c_sabios','c_estrella','c_corona'];try{ev[1](cl);setTimeout(()=>{try{sigFx(EK[EVS.indexOf(ev)],btn(cl.ld))}catch(_){}},1500)}catch(e){}}
   socHud()}
  /* los miembros de un clan pasan más tiempo cerca de su hogar */
  function socHome(b){if(!SOC||SOC.era<3)return false;const c=clanOf(U(b));if(!c||Math.random()<.4)return false;const dx=c.cx-BX(b)+(Math.random()*220-110),dy=c.cy-BY(b)+40+(Math.random()*120-60);mv(b,dx,dy);return true}
