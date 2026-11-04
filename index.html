@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.0</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.1</div>
 </section>
 
 <section id="team" class="scr">
@@ -8653,11 +8653,16 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'56.0',t:'Poké Balls en 3D',s:'cur',l:[
+ {v:'56.1',t:'Arreglos en los biomas 3D',s:'cur',l:[
+  '👻 Arreglado: en los biomas 3D muchos Pokémon no aparecían (solo se veía su sombra en el suelo); ahora se cargan todos al entrar',
+  '🏔️ El suelo ya no se corta: desaparece la franja gris entre las montañas y el terreno y el borde del mapa que se veía al moverte; el horizonte toma el color real del bioma',
+  '📱 Suelo infinito más estable en móviles'
+ ]},
+ {v:'56.0',t:'Poké Balls en 3D',s:'prev',l:[
   '⚾ Al capturar, las Balls tienen diseño 3D: esfera con luz y sombra, brillo, banda negra y botón, girando en el aire, y cada una con su diseño (Súper Ball con franjas rojas, Ultra Ball con sus marcas amarillas, Nido, Red, Oceano con olas, Amor con corazones y la Megaball de evento dorada)',
   '⚙️ Se puede volver al icono plano en Ajustes → QoL → «Sin Poké Balls 3D»'
  ]},
- {v:'55.9',t:'Biomas 3D mucho más bonitos',s:'prev',l:[
+ {v:'55.9',t:'Biomas 3D mucho más bonitos',l:[
   '🌄 Con la cámara 3D en los biomas: cielo con sol y nubes que se mueven (de noche, luna y estrellas que titilan), montañas lejanas del color de cada bioma (volcán humeante en el Volcán y mar en la Costa), suelo que llega hasta el horizonte sin bordes vacíos, niebla de distancia, viñeta y sombras tumbadas en el suelo bajo cada Pokémon'
  ]},
  {v:'55.8',t:'Cargando Pokédex',s:'prev',l:[
@@ -22034,6 +22039,12 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 @keyframes b3Spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 .bthr.cg .b3d .b3-btn,.bt-ball.ok .b3d .b3-btn{animation:b3Glow .5s ease-in-out infinite alternate}
 @keyframes b3Glow{to{background:radial-gradient(circle at 40% 35%,#fff,#fde047 55%,#f59e0b);box-shadow:0 0 0 5px #111,0 0 18px #fde047}}
+
+/* v56.1: biomas 3D: suelo infinito estable en móviles y horizonte del mismo color que el terreno */
+#bzv.bzcam3d .bz-w::before{inset:-1800px -1800px -360px -1800px;background:var(--gnd)}
+#bzv.bznight .bz-sky{background:linear-gradient(#0b1030 0%,#1e2a5a calc(var(--hz,14%) - 6%),#41507f calc(var(--hz,14%) + 1%),var(--gnd) calc(var(--hz,14%) + 9%),var(--gnd) 100%)}
+#bzv .bz-sky{background:linear-gradient(#4aa8e8 0%,#8fd0f5 calc(var(--hz,14%) - 6%),#e6f6fd calc(var(--hz,14%) + 1%),var(--gnd) calc(var(--hz,14%) + 9%),var(--gnd) 100%)}
+#bzv.bzcam3d .bzp .bzr img{content-visibility:visible}
 </style>
 <script id="v37js">
 (()=>{
@@ -25449,7 +25460,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  /* v55.7: modo 3D en los biomas: modelos animados o HD (ajuste «Biomas: Pokémon») y cámara inclinada (ajuste «Biomas: cámara») */
  const bzMode=()=>{try{return(typeof S=='object'&&S&&S.bz3d)||'art'}catch(e){return'art'}},bzCam=()=>{try{return(typeof S=='object'&&S&&S.bzcam)||'flat'}catch(e){return'flat'}};
  const bzSrc=m=>{const a=art(m.id,m.sh),md=bzMode();if(md==='art'||typeof a!=='string'||!a.includes('/other/official-artwork/'))return a;return md==='hd'?a.replace('/other/official-artwork/','/other/home/'):a.replace('/other/official-artwork/','/other/showdown/').replace(/\.png$/,'.gif')};
- function pkH(m){const s=bzSize(m);return`<button type="button" class="bzp${m.sh?' sh':''}${m.alpha?' al':''}" data-id="${m.id}" data-u="${m.u}" data-n="${esc(nmS(m))}" data-x="${m.x}" data-y="${m.y}" style="left:${m.x}px;top:${m.y}px;width:${s}px;height:${s}px;--dl:${(-(m.u*.53)%3).toFixed(2)}s" aria-label="${esc((m.sh?'Shiny ':'')+(m.alpha?'Alfa ':'')+nmS(m))}"><span class="bzr"><img src="${bzSrc(m)}" alt="" draggable="false" loading="lazy" onerror="if(this.src!=='${art(m.id,m.sh)}'&&!this.dataset.f){this.dataset.f=1;this.src='${art(m.id,m.sh)}';return}this.onerror=null;this.src='${mini(m.id,m.sh)}'"></span>${m.sh?'<i class="hds"></i><i class="hds b"></i><i class="hds c"></i>':''}</button>`}
+ function pkH(m){const s=bzSize(m);return`<button type="button" class="bzp${m.sh?' sh':''}${m.alpha?' al':''}" data-id="${m.id}" data-u="${m.u}" data-n="${esc(nmS(m))}" data-x="${m.x}" data-y="${m.y}" style="left:${m.x}px;top:${m.y}px;width:${s}px;height:${s}px;--dl:${(-(m.u*.53)%3).toFixed(2)}s" aria-label="${esc((m.sh?'Shiny ':'')+(m.alpha?'Alfa ':'')+nmS(m))}"><span class="bzr"><img src="${bzSrc(m)}" alt="" draggable="false" decoding="async" onerror="if(this.src!=='${art(m.id,m.sh)}'&&!this.dataset.f){this.dataset.f=1;this.src='${art(m.id,m.sh)}';return}this.onerror=null;this.src='${mini(m.id,m.sh)}'"></span>${m.sh?'<i class="hds"></i><i class="hds b"></i><i class="hds c"></i>':''}</button>`}
  async function enterBiome(k,cam,fresh){const r=live();if(!r)return;let d=BD()[k];if(fresh){delete lastCam[k]}const hadCam=!!cam;
   close2();const o=D.createElement('div');o.id='bzv';o.className='bz-'+k;const i=BI(k),lv=window.zoneLv&&i>=0?zoneLv(i):0;
   o.innerHTML=`<div class="bz-vp"><div class="bz-w" style="width:${WW}px;height:${WH}px"><canvas class="bz-bg" width="${WW}" height="${WH}"></canvas><div class="bz-pk"></div></div></div>
@@ -25464,6 +25475,9 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   if(fresh||needGen(k)){d=await genBiome(k)}if(!cur||cur.o!==o)return;d=BD()[k];o.querySelector('.bz-load').remove();
   if(!d||d.cl!=null){o.querySelector('.bz-pk').innerHTML='';o.querySelector('.bz-tip').textContent=d&&d.cl!=null?'¡Has despejado la zona! Sal y vuelve a entrar para encontrar más Pokémon':'No se pudo explorar la zona. Revisa tu conexión';}
   try{drawBG(o.querySelector('.bz-bg'),k,(d&&d.seed)||7)}catch(e){console.error(e)}mmBg();
+  /* v56.1: el suelo infinito y el horizonte toman el color real del terreno (sin franjas ni bordes del mapa) */
+  try{const cv=o.querySelector('.bz-bg'),cx=cv.getContext('2d'),W=cv.width,H=cv.height,a=[0,0,0];let n=0;for(let i=0;i<40;i++){const x=(i*137)%W,y=i%2?((i*71)%40):H-1-((i*71)%40),q=cx.getImageData(x|0,y|0,1,1).data;a[0]+=q[0];a[1]+=q[1];a[2]+=q[2];n++}
+   const c=a.map(v=>Math.round(v/n)),hx=v=>v.map(z=>Math.max(0,Math.min(255,z)).toString(16).padStart(2,'0')).join('');o.style.setProperty('--gnd','#'+hx(c));o.style.setProperty('--gnd2','#'+hx(c.map(z=>z*.9)))}catch(e){}
   if(!hadCam&&d&&d.g&&d.g.length){const g0=d.g[0].m,cx=g0.reduce((a,m)=>a+m.x,0)/g0.length,cy=g0.reduce((a,m)=>a+m.y,0)/g0.length,vp=o.querySelector('.bz-vp');cur.cam={x:cx-vp.clientWidth/2/cur.z,y:cy-vp.clientHeight/2/cur.z};apply()}
   paintPk();cur.wt=setInterval(wander,2600);try{if(d&&d.cl==null)socStart(k)}catch(e){console.error('soc',e)}setTimeout(()=>{const t=o.querySelector('.bz-tip');if(t)t.classList.add('off')},3500)}
  /* v48.7: minimapa (toca para ir) y botón para saltar al siguiente Pokémon */
