@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v54.7</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v54.8</div>
 </section>
 
 <section id="team" class="scr">
@@ -8626,7 +8626,16 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'54.7',t:'Biomas mucho más animados',s:'cur',l:[
+ {v:'54.8',t:'Vida propia en los biomas',s:'cur',l:[
+  '🧠 Cada Pokémon del bioma tiene personalidad (valiente, tímido, juguetón, gruñón, soñador, glotón, curioso, noble, travieso o cariñoso): cambia con quién se lleva bien, lo rápido que coge cariño y el papel que tiene en las historias',
+  '🍎 Necesidades: tienen hambre, sueño y ganas de compañía. Buscan comida (o un amigo se la comparte), se echan siestas, y si están tristes un amigo va a animarles',
+  '🌸 Poderes de tipo que cambian el bioma: los Planta hacen brotar flores, los Agua dejan charcos, los Fuego encienden hogueras, los Hielo ponen muñecos de nieve, los Eléctrico cuelgan farolillos de noche, los Roca apilan piedras, los Bicho tejen telarañas, los Psíquico hacen levitar rocas… (18 tipos). Cuanto más te quedas, más cambia el paisaje',
+  '🌈 Combinaciones entre tipos: Fuego + Agua crean un arcoíris, Planta + Agua un jardín, Bicho + Planta polinizan, Tierra + Roca levantan un arco de piedra, Fuego + Hielo una sauna, los Volador se llevan a sus amigos a volar, los Psíquico les hacen levitar… (12 combinaciones)',
+  '📖 Historias por capítulos con su final: El huevo misterioso (nace un pequeño que sigue a su protector), El tesoro perdido (¡y te regalan un objeto!), El extraviado, La gran tormenta (corren a sus refugios y luego sale un arcoíris), El gran torneo, Amor entre clanes (acaba en boda), El gran banquete y La visita legendaria',
+  '🪪 Al tocar un Pokémon del bioma verás su biografía: personalidad, cómo se siente, su clan, su mejor amigo, su rival y lo último que ha hecho',
+  '🎙️ Con el narrador activado ya no sale además el cartel grande (no se repite lo mismo dos veces)'
+ ]},
+ {v:'54.7',t:'Biomas mucho más animados',s:'prev',l:[
   '🤸 Animaciones exclusivas para los Pokémon de los biomas: volteretas, giros, saltos con aplastamiento, piruetas, reverencias, temblores, latidos, flotar, estirarse, desfilar, esconderse y brillos, con partículas (corazones, notas, estrellas, confeti, pétalos, lluvia…)',
   '💞 12 escenas de pareja nuevas: chocar los cinco, abrazo giratorio, serenata, carrera, cosquillas, picnic, contarse un secreto, hacerse una foto, imitarse, regalar una flor, acrobacias juntos y construir algo (muñeco de nieve en la montaña, castillo de arena en la costa…)',
   '🎉 8 eventos de grupo: bailar en corro, cantar a coro, hacer la ola, jugar a la pelota, reunirse alrededor de una fogata a contar historias, desfile, foto de grupo e intentar hacer una torre (y caerse)',
@@ -21833,6 +21842,28 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #bzv .bzbfly{position:absolute;font-style:normal;font-size:28px;transform:translate(-50%,-50%);transition:left .8s ease-in-out,top .8s ease-in-out;z-index:5;animation:bzFly .3s ease-in-out infinite alternate}
 @keyframes bzFly{to{transform:translate(-50%,-50%) scaleX(.6)}}
 @media (prefers-reduced-motion:reduce){.bzp .bzpt,#bzv .bzflash{display:none}}
+/* v54.8: vida propia en los biomas */
+#bzv .bzdeco{z-index:0;opacity:.95}
+#bzv .bzdeco.pud{opacity:.6;filter:blur(.3px) drop-shadow(0 0 6px #60a5fa)}
+#bzv .bzdeco.lamp{filter:drop-shadow(0 0 14px #fbbf24)}
+#bzv .bzdeco.lev{animation:bzsPop .6s backwards,bzLev 2s ease-in-out infinite alternate}
+@keyframes bzLev{to{transform:translate(-50%,-80%)}}
+#bzv .bzdeco.egg{animation:bzsPop .6s backwards,bzEgg 1.6s ease-in-out infinite}
+@keyframes bzEgg{0%,80%,100%{transform:translate(-50%,-50%) rotate(0)}85%{transform:translate(-50%,-50%) rotate(-10deg)}92%{transform:translate(-50%,-50%) rotate(10deg)}}
+#bzv .bzbaby{position:absolute;width:48px;height:48px;transform:translate(-50%,-80%);image-rendering:pixelated;transition:left 2.4s ease-in-out,top 2.4s ease-in-out;z-index:2;filter:drop-shadow(0 4px 3px #0008);animation:bzBaby .6s ease-in-out infinite alternate}
+@keyframes bzBaby{to{transform:translate(-50%,-95%)}}
+#bzv.bzstorm .bz-vp{filter:brightness(.55) saturate(.7) contrast(1.05);transition:filter 1.2s}
+#bzv.bzstorm .bz-vp::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(105deg,#ffffff00 0 10px,#cbd5e155 10px 11px);background-size:200% 200%;animation:bzRain .5s linear infinite;z-index:3}
+@keyframes bzRain{to{background-position:-40px 120px}}
+#bzv .bzlegend{position:absolute;top:18%;left:-40%;width:min(70vw,520px);z-index:27;pointer-events:none;filter:brightness(0) opacity(.55) blur(1px);animation:bzLeg 6.5s ease-in-out forwards}
+@keyframes bzLeg{0%{left:-50%;transform:translateY(0) scale(.8)}50%{transform:translateY(-30px) scale(1)}100%{left:110%;transform:translateY(10px) scale(.9)}}
+#bzv .bz-card .bzbio{display:block;margin-top:3px;font:700 11px/1.35 system-ui;color:#fde68a}
+#bzv .bz-card .bzbio b{color:#fff}
+#bzv .bz-card small.bzbio{white-space:normal!important;opacity:1;overflow-wrap:anywhere}
+#bzv .bz-card small.bzbio b{display:inline;font-size:inherit}
+#bzv .bzsoc-ban{width:max-content}
+#bzv .bz-card{flex-wrap:wrap}
+#bzv .bz-card .bzbiow{flex:1 1 100%!important;min-width:100%;padding-top:6px;border-top:1px solid #ffffff1f}
 </style>
 <script id="v37js">
 (()=>{
@@ -25306,10 +25337,11 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   const ax=k*ddx,ay=k*ddy,an=Math.hypot(ax,ay)||1,ux=ax/an,uy=ay/an;/* dirección: del ganador hacia el perdedor */
   const ls=spr(los);if(ls)ls.animate([{transform:'rotate(0)'},{transform:`translate(${ux*40}px,-34px) rotate(${(ux>=0?1:-1)*35}deg)`,offset:.4},{transform:`translate(${ux*60}px,0) rotate(${(ux>=0?1:-1)*15}deg)`,offset:.75},{transform:'rotate(0)'}],{duration:800,easing:'ease-out'});
   if(aw)mv(b,ddx*.3+ux*50,ddy*.3+uy*30);else mv(a,-ddx*.25+ux*50,-ddy*.25+uy*30);bub(los,'😵',1600);await W8(900);hop(win);bub(win,'😤');await W8(700);hop(win);fxAt(win,'✨','win',900);bub(win,(W0.wins|0)>=1?'👑':'💪',1500);await W8(900);bub(los,'💧',1500);
-  L0.hurt=1;L0.lost=W0.u;W0.wins=(W0.wins|0)+1;W0.beat=L0.u;if(W0.hurt&&Math.random()<.5)delete W0.hurt;if(L0.fr===W0.u){delete L0.fr;delete W0.fr}try{affAdd(W0.u,L0.u,-22,NM(win),NM(los));if(SOC&&Math.random()<.5)socLog('💥',`${NM(win)} gana una pelea contra ${NM(los)}`)}catch(_){}tag(win);tag(los);try{saveRun()}catch(e){}await W8(1300)}
+  L0.hurt=1;L0.lost=W0.u;W0.wins=(W0.wins|0)+1;W0.beat=L0.u;if(W0.hurt&&Math.random()<.5)delete W0.hurt;if(L0.fr===W0.u){delete L0.fr;delete W0.fr}try{affAdd(W0.u,L0.u,-22,NM(win),NM(los));deed(win,'ganó una pelea a '+NM(los));deed(los,'perdió una pelea contra '+NM(win));if(SOC&&Math.random()<.5)socLog('💥',`${NM(win)} gana una pelea contra ${NM(los)}`)}catch(_){}tag(win);tag(los);try{saveRun()}catch(e){}await W8(1300)}
  window.__bzStory=async(ua,ub)=>{const a=cur.o.querySelector(`.bzp[data-u="${ua}"]`),b=cur.o.querySelector(`.bzp[data-u="${ub}"]`);story=1;a.classList.add('st');b.classList.add('st');try{await brawl(a,b,{x:b.dataset.x-a.dataset.x,y:b.dataset.y-a.dataset.y})}finally{a.classList.remove('st');b.classList.remove('st');story=0}};
  async function tell(){if(!cur||story||D.hidden)return;const L=[...cur.o.querySelectorAll('.bzp')].filter(b=>!b.classList.contains('sel'));if(L.length<2)return;
   if(SOC&&Math.random()<socP()){if(await socStory(L))return}
+  if(SOC){if(await arcTick())return;if(Math.random()<.35&&await needAct(L))return;const r1=Math.random();if(r1<.14){if(await synergy(L))return}else if(r1<.28){if(await typeSolo(L))return}}
   {const r0=Math.random();if(r0<.17){if(await runGroup(L))return}else if(r0<.32){if(await runSolo(L))return}}
   /* el Alfa reúne a su manada */
   const al=L.find(b=>b.classList.contains('al'));if(al&&Math.random()<.18){story=1;try{bub(al,'❗');hop(al);await W8(500);L.filter(b=>b!==al&&Math.hypot(b.dataset.x-al.dataset.x,b.dataset.y-al.dataset.y)<420).forEach(b=>{mv(b,(al.dataset.x-b.dataset.x)*.35,(al.dataset.y-b.dataset.y)*.35);setTimeout(()=>bub(b,'❗',1200),300)});await W8(2200)}finally{story=0}return}
@@ -25338,8 +25370,8 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   SOC={k,t:0,last:Date.now(),era:0,aff:new Map(),clans:[],log:[],nextEv:0,cid:0,seen:new Set()};
   /* cada visita empieza de cero: se olvidan amistades, rivalidades y peleas de la visita anterior */
   try{allMons(BD()[k]).forEach(m=>{delete m.fr;delete m.lost;delete m.wins;delete m.hurt;delete m.beat});saveRun()}catch(e){}
-  NQ.length=0;socMount();socLog('🌱',`Llegas a ${ZN[k]?ZN[k].n:'la zona'}. Los Pokémon te miran con curiosidad…`)}
- function socStop(){if(!SOC)return;if(SOC.fight)return;try{allMons(BD()[SOC.k]).forEach(m=>{delete m.fr;delete m.lost;delete m.wins;delete m.hurt;delete m.beat});saveRun()}catch(e){}SOC=null}
+  NQ.length=0;socMount();try{lifeInit()}catch(e){console.error(e)}socLog('🌱',`Llegas a ${ZN[k]?ZN[k].n:'la zona'}. Los Pokémon te miran con curiosidad…`)}
+ function socStop(){if(!SOC)return;if(SOC.fight)return;try{cur&&cur.o.classList.remove('bzstorm')}catch(_){}try{allMons(BD()[SOC.k]).forEach(m=>{delete m.fr;delete m.lost;delete m.wins;delete m.hurt;delete m.beat});saveRun()}catch(e){}SOC=null}
  function socMount(){if(!cur||!SOC)return;const w=cur.o.querySelector('.bz-w');if(!w)return;let L=w.querySelector('.bz-soc');if(!L){L=D.createElement('div');L.className='bz-soc';w.insertBefore(L,w.querySelector('.bz-pk'))}
   L.innerHTML='';SOC.clans.forEach(c=>c.st.forEach(x=>drawSt(L,x)));SOC.roads&&SOC.roads.forEach(r=>drawRoad(L,r));
   const hud=cur.o.querySelector('.bz-hud');if(hud&&!hud.querySelector('.bz-chr')){const b=D.createElement('button');b.type='button';b.className='bz-chr';b.dataset.b='chron';hud.insertBefore(b,hud.querySelector('.bz-i'));}
@@ -25349,7 +25381,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  const drawRoad=(L,r)=>{const e=D.createElement('i');e.className='bzroad';const dx=r.x2-r.x1,dy=r.y2-r.y1,len=Math.hypot(dx,dy);e.style.left=r.x1+'px';e.style.top=r.y1+'px';e.style.width=len+'px';e.style.transform=`rotate(${Math.atan2(dy,dx)}rad)`;L.prepend(e)};
  function addSt(c,e,dx,dy,s,cls,lbl){const x={e,x:c.cx+dx,y:c.cy+dy,s,c:cls,col:c.col,lbl};c.st.push(x);const L=cur&&cur.o.querySelector('.bz-soc');if(L)drawSt(L,x);return x}
  function socLog(ic,txt,big){if(!SOC)return;const mm=Math.floor(SOC.t/60),ss=Math.floor(SOC.t%60);SOC.log.push({ic,txt,tm:`${mm}:${String(ss).padStart(2,'0')}`,big:!!big});if(SOC.log.length>160)SOC.log.shift();socHud();
-  if(big&&cur){let b=cur.o.querySelector('.bzsoc-ban');if(b)b.remove();b=D.createElement('div');b.className='bzsoc-ban';b.innerHTML=`<i>${ic}</i><span>${txt}</span>`;cur.o.append(b);setTimeout(()=>b.classList.add('out'),4200);setTimeout(()=>b.remove(),4800);try{bp(988,.08);setTimeout(()=>bp(1318,.1),120)}catch(_){}}
+  if(big&&cur&&!narOn()){let b=cur.o.querySelector('.bzsoc-ban');if(b)b.remove();b=D.createElement('div');b.className='bzsoc-ban';b.innerHTML=`<i>${ic}</i><span>${txt}</span>`;cur.o.append(b);setTimeout(()=>b.classList.add('out'),4200);setTimeout(()=>b.remove(),4800);try{bp(988,.08);setTimeout(()=>bp(1318,.1),120)}catch(_){}}
   const pn=cur&&cur.o.querySelector('.bzchron');if(pn)chronPaint(pn);narr(ic,txt,big)}
  /* ---- narrador: cuenta lo último que ha pasado (se puede quitar en Ajustes) ---- */
  const NQ=[];let nBusy=0;
@@ -25363,7 +25395,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   await W8(Math.min(6500,2600+full.length*35));if(!NQ.length&&b.isConnected){b.classList.remove('on')}await W8(350);narNext()}
  const affG=(a,b)=>SOC?SOC.aff.get(kk(a,b))||0:0;
  const lvlT=v=>v>=80?['💞','inseparables']:v>=50?['💛','mejores amigos']:v>=20?['😊','amigos']:v<=-50?['⚔️','enemigos']:v<=-20?['💢','rivales']:null;
- function affAdd(ua,ub,v,na,nb){if(!SOC||ua===ub)return;const k=kk(ua,ub),o=SOC.aff.get(k)||0,n=Math.max(-100,Math.min(100,o+v));SOC.aff.set(k,n);const a=lvlT(o),b=lvlT(n);
+ function affAdd(ua,ub,v,na,nb){if(!SOC||ua===ub)return;try{v=persK(ua,ub,v)}catch(_){}const k=kk(ua,ub),o=SOC.aff.get(k)||0,n=Math.max(-100,Math.min(100,o+v));SOC.aff.set(k,n);try{if(v>0&&SOC.lf){[ua,ub].forEach(u=>{const l=SOC.lf[u];if(l)l.joy=Math.min(100,l.joy+v*.6)})}}catch(_){}const a=lvlT(o),b=lvlT(n);
   if(b&&(!a||a[1]!==b[1])&&Math.abs(n)>Math.abs(o)){const t=b[1];if(t==='inseparables')socLog('💞',`${na} y ${nb} se han vuelto inseparables`,true);else if(t==='mejores amigos')socLog('💛',`${na} y ${nb} ahora son mejores amigos`);else if(t==='amigos')socLog('😊',`${na} y ${nb} se han hecho amigos`);else if(t==='enemigos')socLog('⚔️',`${na} y ${nb} se han declarado enemigos`);else socLog('💢',`${na} y ${nb} se tienen manía`)}}
  const U=b=>+b.dataset.u,BX=b=>+b.dataset.x,BY=b=>+b.dataset.y;
  const btn=u=>cur&&cur.o.querySelector(`.bzp[data-u="${u}"]`);
@@ -25402,7 +25434,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  const INT2=[
   ['chocar los cinco',async(a,b,d)=>{mv(a,d.x*.5,d.y*.5);await W8(1000);AN.jump(a,50);AN.jump(b,50);await W8(300);pt(a,['✋','💥','✨'],{n:7,r:70,big:1});await W8(700);bub(a,'😎');bub(b,'😎');await W8(800);return[9,'chocan los cinco']}],
   ['abrazo giratorio',async(a,b,d)=>{mv(a,d.x*.75,d.y*.75);await W8(1200);AN.twirl(a);AN.twirl(b);pt(b,'💖',{n:10,ring:1,r:90});await W8(1200);bub(a,'🥰');await W8(800);return[13,'se dan un abrazo con vuelta incluida']}],
-  ['serenata',async(a,b,d)=>{AN.bow(a);await W8(900);for(let i=0;i<3;i++){pt(a,['🎵','🎶'],{n:3,up:1,r:120});AN.nod(a);await W8(700)}AN.pulse(b);pt(b,'💗',{n:6,up:1});bub(b,'😍');await W8(900);return[14,'canta una serenata']}],
+  ['serenata',async(a,b,d)=>{AN.bow(a);await W8(900);for(let i=0;i<3;i++){pt(a,['🎵','🎶'],{n:3,up:1,r:120});AN.nod(a);await W8(700)}AN.pulse(b);pt(b,'💗',{n:6,up:1});bub(b,'😍');await W8(900);return[14,'le canta una serenata']}],
   ['carrera',async(a,b,d)=>{bub(a,'🏁');await W8(600);AN.squash(a);AN.squash(b);await W8(300);mv(a,d.x*.2-160,d.y*.2);mv(b,-d.x*.2-150,-d.y*.2);dust(a,b);await W8(1200);mv(a,0,0);mv(b,0,0);dust(a,b);await W8(1300);const w=Math.random()<.5?a:b;AN.flip(w);pt(w,['🏆','✨'],{n:6,up:1});bub(w,'😤');await W8(1000);return[8,'echan una carrera']}],
   ['cosquillas',async(a,b,d)=>{mv(a,d.x*.7,d.y*.7);await W8(1100);bub(a,'😏');await W8(400);AN.wiggle(b);AN.shiver(b);pt(b,['😂','🤣'],{n:5,up:1});await W8(800);AN.wiggle(b);bub(b,'🤣');await W8(900);return[10,'le hace cosquillas']}],
   ['picnic',async(a,b,d)=>{bub(a,'🧺');mv(a,d.x*.5,d.y*.5);await W8(1100);pt(a,['🍎','🍓','🍰','🥪'],{n:6,r:60,up:1});await W8(600);AN.nod(a);AN.nod(b);bub(b,'😋');await W8(1100);AN.squash(a);await W8(500);return[11,'hacen un picnic']}],
@@ -25435,7 +25467,115 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   ['lluvia',async(b)=>{rainOn(b,'💧',12);await W8(500);AN.shiver(b);bub(b,'☔');await W8(1400);return null}],
   ['contemplar',async(b)=>{bub(b,ph()==='night'?'🌙':'☀️',1800);AN.float(b);await W8(2200);return null}],
   ['fantasma',async(b)=>{const m=MD(b);if(!m||!(m.types||[]).includes('ghost'))return null;AN.ghost(b);pt(b,'👻',{n:3,up:1});await W8(1600);return'hace travesuras fantasmales'}]];
+ window.__bzEv2={async test(){const out=[];const L=L0();for(const a of ARCS){try{const d={};if(a.id==='amor'&&SOC.clans.length<2){out.push(a.id+':skip');continue}for(const f of a.ch){await f(d);await W8(300)}out.push(a.id+':ok')}catch(e){out.push(a.id+':ERR '+e.message)}}for(const t in TPOW){try{await TPOW[t][1](L[2]);out.push(t+':ok')}catch(e){out.push(t+':ERR '+e.message)}}for(const s2 of SYN){try{await s2[2](L[0],L[1],{x:BX(L[1])-BX(L[0]),y:BY(L[1])-BY(L[0])});out.push(s2[1].slice(0,10)+':ok')}catch(e){out.push(s2[1]+':ERR '+e.message)}}try{for(const u in SOC.lf){SOC.lf[u].food=5;SOC.lf[u].en=50;SOC.lf[u].joy=50}await needAct(L);out.push('need:ok')}catch(e){out.push('need:ERR '+e.message)}return out.join(' ')}};
  window.__bzEv={async test(){const out=[];const L=[...cur.o.querySelectorAll('.bzp')];for(const [n,f] of GRP){try{const a=L[0],G=[a,...near(a,L,2000).slice(0,4)];await f(G);G.forEach(b=>mv(b,0,0));out.push(n+':ok')}catch(e){out.push(n+':ERR '+e.message)}}for(const [n,f] of SOLO){try{await f(L[1]);out.push(n+':ok')}catch(e){out.push(n+':ERR '+e.message)}}for(const [n,f] of INT2){try{const a=L[0],b=L[1];await f(a,b,{x:BX(b)-BX(a),y:BY(b)-BY(a)});out.push(n+':ok')}catch(e){out.push(n+':ERR '+e.message)}}return out.join(' ')}};
+
+ /* ================= v54.8: vida propia en los biomas =================
+    personalidades, necesidades, poderes de tipo que cambian el bioma, combinaciones entre tipos,
+    historias por capítulos (huevo, tesoro, tormenta, torneo, amor entre clanes, extraviado, banquete, visita legendaria)
+    y la biografía de cada Pokémon al tocarlo. Todo se pierde al salir del bioma. */
+ const PERS=[['valiente','🦁'],['tímido','🙈'],['juguetón','🎈'],['gruñón','😾'],['soñador','💭'],['glotón','🍖'],['curioso','🔍'],['noble','🎖️'],['travieso','😜'],['cariñoso','🤗']];
+ const LF=u=>SOC&&SOC.lf&&SOC.lf[u];
+ const PER=b=>{const l=b&&LF(U(b));return l?l.p:''};
+ const TY=b=>{const l=b&&LF(U(b));return(l&&l.ty)||[]};
+ const deed=(b,t)=>{const l=b&&LF(U(b));if(!l)return;l.d.push(t);if(l.d.length>8)l.d.shift()};
+ function lifeInit(){if(!SOC||!cur)return;SOC.lf={};SOC.deco=0;SOC.arc=null;SOC.arcDone=new Set();SOC.arcT=Date.now()+45000;
+  [...cur.o.querySelectorAll('.bzp')].forEach(b=>{const u=U(b),m=MD(b);const pi=(u*7919+(m?m.id:0))%PERS.length;SOC.lf[u]={p:PERS[pi][0],pi:PERS[pi][1],food:60+Math.random()*40,en:60+Math.random()*40,joy:50+Math.random()*30,d:[],ty:(m&&m.types)||null};
+   if(!SOC.lf[u].ty&&m&&typeof getD==='function')getD(m.id).then(dd=>{if(SOC&&SOC.lf&&SOC.lf[u])SOC.lf[u].ty=(dd&&dd.types)||[]}).catch(()=>{})})}
+ const moodOf=l=>!l?'':l.en<22?['😪','agotado']:l.food<22?['🤤','hambriento']:l.joy<25?['😔','triste']:l.joy>80?['🤩','eufórico']:l.joy>55?['😊','contento']:['🙂','tranquilo'];
+ /* decoraciones que los Pokémon dejan en el bioma (crecen con el tiempo; máx. 70) */
+ function decoAt(x,y,e,sz,cls){if(!SOC||!cur||SOC.deco>=70)return null;const L=cur.o.querySelector('.bz-soc');if(!L)return null;SOC.deco++;const el=D.createElement('i');el.className='bzs pop bzdeco'+(cls?' '+cls:'');el.textContent=e;el.style.left=x+'px';el.style.top=y+'px';el.style.fontSize=(sz||30)+'px';L.append(el);return el}
+ const posOf=b=>{const t=(b.style.translate||'0px 0px').split(' ').map(v=>parseFloat(v)||0);return[BX(b)+t[0],BY(b)+(t[1]||0)]};
+ /* ---- poderes de tipo: cada Pokémon cambia el bioma a su manera ---- */
+ const TPOW={
+  grass:['hace brotar flores',async b=>{AN.glow(b,'#4ade80');pt(b,['🌱','🍃'],{n:8,ring:1,r:80});await W8(900);const [x,y]=posOf(b);for(let i=0;i<4;i++)decoAt(x+(Math.random()-.5)*180,y+30+Math.random()*60,pk2(['🌸','🌼','🌷','🌻','🍀']),26)}],
+  water:['crea un charco y chapotea',async b=>{AN.squash(b);rainOn(b,'💧',10);await W8(900);const [x,y]=posOf(b);decoAt(x+20,y+40,'💧',34,'pud');AN.jump(b,40);pt(b,'💦',{n:6,up:1})}],
+  fire:['enciende una hoguera',async b=>{AN.glow(b,'#f97316');pt(b,'🔥',{n:6,up:1,r:90});await W8(800);const [x,y]=posOf(b);decoAt(x+60,y+30,'🔥',32,'fire')}],
+  electric:['ilumina el bioma con chispas',async b=>{AN.shiver(b);pt(b,['⚡','✨'],{n:10,ring:1,r:110});await W8(700);if(ph()==='night'){const [x,y]=posOf(b);decoAt(x-50,y-20,'🏮',28,'lamp')}}],
+  ice:['cubre el suelo de nieve',async b=>{AN.glow(b,'#93c5fd');rainOn(b,'❄️',12);await W8(1000);const [x,y]=posOf(b);decoAt(x+50,y+30,Math.random()<.5?'⛄':'🧊',32)}],
+  psychic:['hace levitar piedras',async b=>{AN.float(b);const [x,y]=posOf(b);const r=decoAt(x+60,y-10,'🪨',26,'lev');pt(b,'🔮',{n:4,up:1});await W8(2200)}],
+  ground:['cava un agujero',async b=>{AN.nod(b);AN.nod(b);pt(b,['🟫','💨'],{n:8,r:60});await W8(900);const [x,y]=posOf(b);decoAt(x,y+50,'🕳️',30)}],
+  rock:['apila rocas',async b=>{for(let i=0;i<3;i++){AN.squash(b);await W8(400)}const [x,y]=posOf(b);decoAt(x+60,y+20,'🪨',34)}],
+  bug:['teje una telaraña',async b=>{AN.wiggle(b);await W8(800);const [x,y]=posOf(b);decoAt(x-60,y-40,'🕸️',36)}],
+  ghost:['asusta a todos con travesuras',async b=>{AN.ghost(b);pt(b,['👻','💜'],{n:5,up:1});await W8(900);near(b,[...cur.o.querySelectorAll('.bzp')],420).forEach(o=>{AN.shiver(o);bub(o,'😱')})}],
+  dragon:['lanza un rugido que retumba',async b=>{AN.stretch(b);await W8(500);pt(b,['💥','🐉'],{n:8,ring:1,r:120});near(b,[...cur.o.querySelectorAll('.bzp')],500).forEach(o=>{AN.jump(o,30);bub(o,'❗')});await W8(900)}],
+  fairy:['lo llena todo de brillos',async b=>{AN.twirl(b);pt(b,['✨','💖','🌟'],{n:12,ring:1,r:120});await W8(1000);const [x,y]=posOf(b);decoAt(x+40,y-30,'✨',26)}],
+  steel:['forja una herramienta',async b=>{for(let i=0;i<3;i++){AN.nod(b);pt(b,'✨',{n:3,r:40});await W8(400)}const [x,y]=posOf(b);decoAt(x+50,y+30,pk2(['⚙️','🔧','🛡️']),28)}],
+  poison:['hace burbujas venenosas',async b=>{pt(b,['🫧','💜'],{n:10,up:1,r:120});AN.wiggle(b);await W8(1000)}],
+  fighting:['entrena golpeando un tronco',async b=>{const [x,y]=posOf(b);const t=decoAt(x+70,y+10,'🪵',34);for(let i=0;i<3;i++){AN.dash(b,70,0);pt(b,'💥',{n:2,r:50});await W8(500)}bub(b,'💪')}],
+  flying:['vuela en círculos',async b=>{AN.float(b);pt(b,['🪶','💨'],{n:6,up:1});await W8(2200)}],
+  dark:['se esconde en las sombras',async b=>{an(b,[{opacity:1},{opacity:.15,offset:.4},{opacity:.15,offset:.7},{opacity:1}],1800);await W8(1900);bub(b,'😏')}],
+  normal:['cocina algo rico',async b=>{bub(b,'🍳');AN.nod(b);await W8(900);pt(b,['🍲','💨'],{n:5,up:1});const [x,y]=posOf(b);decoAt(x+50,y+30,'🍲',26)}]};
+ async function typeSolo(L){const C=L.filter(b=>TY(b).length);if(!C.length)return false;const b=pk2(C);const t=TY(b)[0],P=TPOW[t]||TPOW.normal;story=1;b.classList.add('st');try{await P[1](b);deed(b,P[0]);if(Math.random()<.6)socLog(TICON[t]||'✨',`${NM(b)} ${P[0]}`)}catch(e){}finally{b.classList.remove('st');story=0}return true}
+ const TICON={grass:'🌱',water:'💧',fire:'🔥',electric:'⚡',ice:'❄️',psychic:'🔮',ground:'🟫',rock:'🪨',bug:'🕸️',ghost:'👻',dragon:'🐉',fairy:'✨',steel:'⚙️',poison:'🫧',fighting:'💪',flying:'🪶',dark:'🌑',normal:'🍳'};
+ /* ---- combinaciones entre tipos ---- */
+ const SYN=[
+  [['fire','water'],'crean vapor y aparece un arcoíris',async(a,b,d)=>{pt(a,'🔥',{n:5,up:1});pt(b,'💧',{n:5,up:1});await W8(800);pt(a,'💨',{n:8,ring:1,r:110});await W8(700);const [x,y]=posOf(a);decoAt(x+d.x/2,y+d.y/2-80,'🌈',56,'sky');AN.jump(a,40);AN.jump(b,40)}],
+  [['grass','water'],'hacen florecer un jardín',async(a,b,d)=>{rainOn(a,'💧',8);await W8(700);AN.glow(a,'#4ade80');const [x,y]=posOf(a);for(let i=0;i<6;i++){const k=i/6*Math.PI*2;decoAt(x+Math.cos(k)*110,y+40+Math.sin(k)*50,pk2(['🌷','🌸','🌺','🌻']),26)}await W8(800)}],
+  [['electric','water'],'se dan un calambrazo al jugar',async(a,b,d)=>{pt(a,'⚡',{n:6,ring:1});await W8(400);AN.shiver(b);AN.shiver(a);bub(a,'😵');bub(b,'😵');await W8(1000);bub(a,'😂');bub(b,'😂');await W8(700)}],
+  [['fire','grass'],'asan castañas juntos',async(a,b,d)=>{const [x,y]=posOf(a);decoAt(x+d.x/2,y+d.y/2+30,'🔥',30,'fire');await W8(600);pt(a,'🌰',{n:5,up:1});pt(b,'😋',{n:2,up:1});AN.nod(a);AN.nod(b);await W8(1000)}],
+  [['ice','fire'],'se montan una sauna',async(a,b,d)=>{pt(a,'♨️',{n:6,up:1});pt(b,'♨️',{n:6,up:1});AN.rock(a);AN.rock(b);bub(a,'😌');bub(b,'😌');await W8(1600)}],
+  [['flying',null],'salen a volar juntos',async(a,b,d)=>{mv(a,d.x*.8,d.y*.8);await W8(900);AN.float(a);AN.float(b);pt(a,'🪶',{n:5,up:1});await W8(2200);bub(b,'🤩')}],
+  [['psychic',null],'juegan a levitar',async(a,b,d)=>{AN.glow(a,'#c084fc');await W8(400);AN.float(b);pt(b,'🔮',{n:6,ring:1});await W8(2200);bub(b,'😲')}],
+  [['fairy',null],'se hacen un cambio de look',async(a,b,d)=>{AN.twirl(a);pt(b,['✨','🎀','💄'],{n:10,ring:1,r:90});await W8(900);AN.twirl(b);bub(b,'💅');await W8(800)}],
+  [['fighting','fighting'],'entrenan un combate amistoso',async(a,b,d)=>{for(let i=0;i<4;i++){AN.dash(i%2?b:a,i%2?-d.x:d.x,i%2?-d.y:d.y);pt(i%2?a:b,'💥',{n:2,r:40});await W8(450)}AN.bow(a);AN.bow(b);await W8(900)}],
+  [['bug','grass'],'polinizan las flores',async(a,b,d)=>{pt(a,['🌸','🐝'],{n:8,ring:1,r:100});const [x,y]=posOf(b);for(let i=0;i<3;i++)decoAt(x+(Math.random()-.5)*160,y+30,'🌸',24);await W8(1200)}],
+  [['ground','rock'],'levantan un arco de piedra',async(a,b,d)=>{for(let i=0;i<3;i++){AN.squash(a);AN.squash(b);await W8(400)}const [x,y]=posOf(a);decoAt(x+d.x/2,y+d.y/2-20,'🌉',52);await W8(600)}],
+  [['electric',null],'iluminan la noche con farolillos',async(a,b,d)=>{if(ph()!=='night')return'skip';pt(a,['⚡','🏮'],{n:6,up:1});const [x,y]=posOf(a);decoAt(x-40,y-30,'🏮',28,'lamp');decoAt(x+d.x,y+d.y-30,'🏮',28,'lamp');await W8(1000)}]];
+ const synFor=(a,b)=>{const ta=TY(a),tb=TY(b);if(!ta.length||!tb.length)return null;for(const s2 of SYN){const [x,y]=s2[0];if(ta.includes(x)&&(y==null||tb.includes(y)))return{s:s2,a,b};if(tb.includes(x)&&(y==null||ta.includes(y)))return{s:s2,a:b,b:a}}return null};
+ async function synergy(L){for(let t=0;t<8;t++){const a=pk2(L),nb=near(a,L,520);if(!nb.length)continue;const b=pk2(nb),r=synFor(a,b);if(!r)continue;const A=r.a,B=r.b,d={x:BX(B)-BX(A),y:BY(B)-BY(A)};story=1;A.classList.add('st');B.classList.add('st');
+   try{const ok=await r.s[2](A,B,d);if(ok!=='skip'){affAdd(U(A),U(B),10,NM(A),NM(B));deed(A,r.s[1]+' con '+NM(B));deed(B,r.s[1]+' con '+NM(A));socLog('🤝',`${NM(A)} y ${NM(B)} ${r.s[1]}`)}}catch(e){}finally{A.classList.remove('st');B.classList.remove('st');story=0}return true}return false}
+ /* ---- necesidades: comer, dormir y estar con los suyos ---- */
+ function needsTick(){if(!SOC||!SOC.lf)return;const night=ph()==='night';for(const u in SOC.lf){const l=SOC.lf[u];l.food=Math.max(0,l.food-(l.p==='glotón'?1.6:.9));l.en=Math.max(0,l.en-(night?1.4:.6));l.joy=Math.max(0,Math.min(100,l.joy-.5+(clanOf(+u)?.4:0)))}}
+ async function needAct(L){if(!SOC||!SOC.lf)return false;const H=L.filter(b=>{const l=LF(U(b));return l&&(l.food<25||l.en<22||l.joy<25)});if(!H.length)return false;const b=pk2(H),l=LF(U(b));story=1;b.classList.add('st');
+  try{if(l.en<22){bub(b,'💤',3400);AN.rock(b);await W8(3300);l.en=100;deed(b,'durmió una buena siesta')}
+   else if(l.food<25){bub(b,'🤤');AN.nod(b);await W8(700);const fr=near(b,L,500).find(o=>affG(U(o),U(b))>=20);if(fr){mv(fr,(BX(b)-BX(fr))*.6,(BY(b)-BY(fr))*.6);await W8(1000);bub(fr,'🍎');pt(b,'🍎',{n:1,up:1,big:1});affAdd(U(fr),U(b),12,NM(fr),NM(b));socLog('🍎',`${NM(fr)} comparte su comida con ${NM(b)}, que tenía hambre`);deed(fr,'compartió su comida con '+NM(b))}else{pt(b,pk2(['🍎','🍓','🍄','🌰']),{n:1,up:1,big:1});deed(b,'buscó comida él solo')}AN.squash(b);bub(b,'😋');l.food=100;await W8(900)}
+   else{bub(b,'😔',2000);AN.bow(b);await W8(1300);const fr=near(b,L,600).sort((x,y)=>affG(U(y),U(b))-affG(U(x),U(b)))[0];if(fr&&affG(U(fr),U(b))>=10){mv(fr,(BX(b)-BX(fr))*.7,(BY(b)-BY(fr))*.7);await W8(1100);bub(fr,'🤗');AN.twirl(b);pt(b,'💗',{n:6,up:1});l.joy=90;affAdd(U(fr),U(b),14,NM(fr),NM(b));socLog('🤗',`${NM(b)} estaba triste y ${NM(fr)} fue a animarle`);deed(fr,'animó a '+NM(b))}else{l.joy+=25;await W8(600)}}}catch(e){}finally{b.classList.remove('st');story=0}return true}
+ /* la personalidad cambia lo rápido que se encariñan */
+ const persK=(ua,ub,v)=>{if(!SOC||!SOC.lf||v<=0)return v;let k=1;[ua,ub].forEach(u=>{const p=(SOC.lf[u]||{}).p;if(p==='cariñoso')k*=1.35;else if(p==='gruñón')k*=.6;else if(p==='tímido'&&affG(ua,ub)<40)k*=.7;else if(p==='noble')k*=1.1});return Math.round(v*k)};
+ /* ---- historias por capítulos ---- */
+ const L0=()=>[...cur.o.querySelectorAll('.bzp')];
+ const pickP=(L,p)=>L.find(b=>PER(b)===p)||pk2(L);
+ const CH=(t,txt)=>socLog('📖',`${t}: ${txt}`,true);
+ const ARCS=[
+  {id:'huevo',n:'El huevo misterioso',min:1,ch:[
+   async A=>{const L=L0(),b=pickP(L,'cariñoso');A.b=U(b);const [x,y]=posOf(b);A.egg=decoAt(x+50,y+40,'🥚',34,'egg');AN.jump(b,40);bub(b,'❗');CH('El huevo misterioso · Capítulo 1',`${NM(b)} encuentra un huevo abandonado y decide cuidarlo`)},
+   async A=>{const b=btn(A.b);if(!b)return;const L=L0(),fs=near(b,L,600).slice(0,3);fs.forEach(o=>mv(o,(BX(b)-BX(o))*.6,(BY(b)-BY(o))*.6));await W8(1300);const fi=fs.find(o=>TY(o).includes('fire'));if(fi){pt(fi,'🔥',{n:5,up:1});CH('El huevo misterioso · Capítulo 2',`${NM(fi)} da calor al huevo mientras ${NM(b)} vigila`)}else{fs.forEach(o=>bub(o,'🫂'));CH('El huevo misterioso · Capítulo 2',`Los amigos de ${NM(b)} se turnan para darle calor al huevo`)}if(A.egg)an({querySelector:()=>A.egg},[{transform:'translate(-50%,-50%) rotate(0)'},{transform:'translate(-50%,-50%) rotate(-12deg)'},{transform:'translate(-50%,-50%) rotate(12deg)'},{transform:'translate(-50%,-50%) rotate(0)'}],700)},
+   async A=>{const b=btn(A.b);if(!b||!A.egg)return;A.egg.textContent='🐣';pt(b,['✨','🎉'],{n:12,ring:1,r:120});await W8(900);A.egg.remove();const m=MD(b),L=cur.o.querySelector('.bz-soc');const im=D.createElement('img');im.className='bzbaby';im.src=mini(m?m.id:25,0);L.append(im);SOC.baby={el:im,p:A.b};AN.flip(b);bub(b,'🥹');deed(b,'cuidó un huevo hasta que nació su pequeño');CH('El huevo misterioso · Final',`¡El huevo se abre! Nace un pequeño ${NM(b)} que ya no se separa de su protector`)}]},
+  {id:'tesoro',n:'El tesoro perdido',min:1,ch:[
+   async A=>{const L=L0(),b=pickP(L,'curioso');A.b=U(b);AN.peek(b);pt(b,'🗺️',{n:1,up:1,big:1});CH('El tesoro perdido · Capítulo 1',`${NM(b)} encuentra un viejo mapa enterrado`)},
+   async A=>{const b=btn(A.b);if(!b)return;const fs=near(b,L0(),600).slice(0,3);fs.forEach(o=>mv(o,(BX(b)-BX(o))*.5,(BY(b)-BY(o))*.5));await W8(1200);for(let i=0;i<3;i++){[b,...fs].forEach(o=>{AN.nod(o);pt(o,['⛏️','🟫'],{n:2,r:50})});await W8(600)}CH('El tesoro perdido · Capítulo 2',`${NM(b)} y sus amigos cavan donde marca la X…`)},
+   async A=>{const b=btn(A.b);if(!b)return;const [x,y]=posOf(b);const c=decoAt(x+40,y+40,'🧰',40);await W8(700);if(c)c.textContent='💰';pt(b,['💎','🪙','✨'],{n:14,ring:1,r:130});AN.flip(b);let gift='';try{if(live()){R.bag=R.bag||{};const k=pk2(['pot','sup','rev']);if(typeof ITEM=='object'&&ITEM[k]){R.bag[k]=(R.bag[k]|0)+1;saveRun();gift=ITEM[k].n}}}catch(e){}deed(b,'encontró un tesoro');CH('El tesoro perdido · Final',`¡Encuentran el tesoro! ${gift?`Y te regalan una ${gift} por mirarles con tanto interés 🎁`:'Lo comparten entre todos'}`);if(gift)try{toast('🎁 Los Pokémon del bioma te regalan: '+gift)}catch(_){}}]},
+  {id:'extraviado',n:'El extraviado',min:2,ch:[
+   async A=>{const L=L0(),b=L.slice().sort((x,y)=>((MD(x)||{}).lvl|0)-((MD(y)||{}).lvl|0))[0];A.b=U(b);bub(b,'😢',2400);mv(b,(Math.random()<.5?-1:1)*320,200);deed(b,'se perdió en el bioma');CH('El extraviado · Capítulo 1',`El pequeño ${NM(b)} se aleja demasiado y se pierde`)},
+   async A=>{const b=btn(A.b);if(!b)return;near(b,L0(),900).slice(0,4).forEach((o,i)=>setTimeout(()=>{bub(o,'❓');mv(o,(Math.random()-.5)*300,(Math.random()-.5)*160)},i*300));CH('El extraviado · Capítulo 2',`Todos salen a buscar a ${NM(b)}…`)},
+   async A=>{const b=btn(A.b);if(!b)return;const f=near(b,L0(),2000).sort((x,y)=>affG(U(y),U(b))-affG(U(x),U(b)))[0];if(f){mv(b,0,0);mv(f,(BX(b)-BX(f))*.7,(BY(b)-BY(f))*.7);await W8(1500);AN.twirl(b);AN.twirl(f);pt(b,'💖',{n:10,ring:1});affAdd(U(f),U(b),30,NM(f),NM(b));deed(f,'encontró a '+NM(b)+' cuando se perdió');CH('El extraviado · Final',`¡${NM(f)} encuentra a ${NM(b)}! Vuelven juntos y lo celebran`)}}]},
+  {id:'tormenta',n:'La gran tormenta',min:3,ch:[
+   async A=>{cur.o.classList.add('bzstorm');L0().forEach(b=>{if(Math.random()<.6)bub(b,'😨')});CH('La gran tormenta · Capítulo 1','El cielo se oscurece: se acerca una tormenta')},
+   async A=>{const fl=()=>{const f=D.createElement('i');f.className='bzflash';cur.o.append(f);setTimeout(()=>f.remove(),500)};fl();setTimeout(fl,900);L0().forEach(b=>{const c=clanOf(U(b));if(c)mv(b,c.cx-BX(b)+(Math.random()-.5)*160,c.cy-BY(b)+40);else AN.shiver(b)});CH('La gran tormenta · Capítulo 2','Truenos y relámpagos: todos corren a refugiarse en sus campamentos')},
+   async A=>{cur.o.classList.remove('bzstorm');const c=SOC.clans[0];if(c)addSt(c,'🌈',0,-200,70,'pop sky');L0().forEach(b=>{AN.jump(b,40);mv(b,0,0)});CH('La gran tormenta · Final','La tormenta pasa y un arcoíris enorme cruza el cielo. Están todos a salvo')}]},
+  {id:'torneo',n:'El gran torneo',min:3,ch:[
+   async A=>{const L=L0(),c=SOC.clans[0];const x=c?c.cx:BX(L[0]),y=c?c.cy+220:BY(L[0]);A.ring=decoAt(x,y,'🏟️',64);CH('El gran torneo · Capítulo 1','Se anuncia un gran torneo: los más fuertes se apuntan')},
+   async A=>{const L=L0().filter(b=>PER(b)==='valiente'||PER(b)==='gruñón'||(MD(b)||{}).alpha);const P=(L.length>=2?L:L0()).slice(0,4);A.p=P.map(U);for(let i=0;i+1<P.length;i+=2){await brawl(P[i],P[i+1],{x:BX(P[i+1])-BX(P[i]),y:BY(P[i+1])-BY(P[i])})}CH('El gran torneo · Capítulo 2','Primeras rondas: golpes, polvo y mucha emoción')},
+   async A=>{const P=(A.p||[]).map(btn).filter(Boolean);const w=P.sort((x,y)=>((MD(y)||{}).wins|0)-((MD(x)||{}).wins|0))[0];if(!w)return;AN.flip(w);AN.glow(w,'#fde047');pt(w,['🏆','🎉','✨'],{n:14,ring:1,r:130});fireworks({cx:BX(w),cy:BY(w)});deed(w,'ganó el gran torneo');CH('El gran torneo · Final',`¡${NM(w)} gana el torneo y se convierte en el campeón del bioma!`)}]},
+  {id:'amor',n:'Amor entre clanes',min:4,need:()=>SOC.clans.length>=2,ch:[
+   async A=>{const [c1,c2]=SOC.clans;const a=btn([...c1.mem].find(u=>u!==c1.ld)||c1.ld),b=btn([...c2.mem].find(u=>u!==c2.ld)||c2.ld);if(!a||!b)return;A.a=U(a);A.b=U(b);mv(a,(BX(b)-BX(a))*.5,(BY(b)-BY(a))*.5);await W8(1300);pt(a,'💗',{n:6,up:1});pt(b,'💗',{n:6,up:1});affAdd(U(a),U(b),40,NM(a),NM(b));CH('Amor entre clanes · Capítulo 1',`${NM(a)} y ${NM(b)}, de clanes distintos, se enamoran a escondidas`)},
+   async A=>{const [c1,c2]=SOC.clans;const l1=btn(c1.ld),l2=btn(c2.ld);if(l1)bub(l1,'💢');if(l2)bub(l2,'💢');CH('Amor entre clanes · Capítulo 2','Los líderes se enteran y se enfadan: ¡sus clanes no se llevan bien!')},
+   async A=>{const [c1,c2]=SOC.clans;const a=btn(A.a),b=btn(A.b);if(a&&b){AN.bow(a);AN.bow(b)}await W8(900);c1.mem.forEach(u=>c2.mem.forEach(v=>affAdd(u,v,10,'','')));decoAt((c1.cx+c2.cx)/2,(c1.cy+c2.cy)/2,'💒',60);fireworks({cx:(c1.cx+c2.cx)/2,cy:(c1.cy+c2.cy)/2},'💖');CH('Amor entre clanes · Final',`El valor de la pareja une a los dos clanes. ¡Lo celebran con una boda!`)}]},
+  {id:'banquete',n:'El gran banquete',min:4,ch:[
+   async A=>{const L=L0(),b=pickP(L,'glotón');A.b=U(b);bub(b,'🍲');pt(b,['🥕','🍄','🍅'],{n:6,up:1});CH('El gran banquete · Capítulo 1',`${NM(b)} prepara una sopa gigante para todo el bioma`)},
+   async A=>{const b=btn(A.b);if(!b)return;const [x,y]=posOf(b);decoAt(x+60,y+40,'🍲',44);L0().slice(0,8).forEach((o,i)=>setTimeout(()=>{mv(o,(BX(b)-BX(o))*.6+(Math.random()-.5)*200,(BY(b)-BY(o))*.6+(Math.random()-.5)*100);bub(o,'😋')},i*150));for(const u in SOC.lf)SOC.lf[u].food=100;CH('El gran banquete · Final','¡Todos comen juntos! Nadie pasará hambre hoy')}]},
+  {id:'leyenda',n:'La visita legendaria',min:6,ch:[
+   async A=>{const id=pk2([144,145,146,249,250,384,483,484,487,643,644,716,717,791,792,890]);const im=D.createElement('img');im.className='bzlegend';im.src=art(id,0);cur.o.append(im);setTimeout(()=>im.remove(),7000);L0().forEach(b=>{bub(b,'😮');AN.jump(b,20)});CH('La visita legendaria','Una sombra gigantesca cruza el cielo… ¡un Pokémon legendario!');await W8(3000);L0().forEach(b=>AN.bow(b));await W8(1500);L0().forEach(b=>{const [x,y]=posOf(b);if(Math.random()<.4)decoAt(x,y+40,'🌟',22)});socLog('🌟','A su paso, el bioma se llena de luz. Esta noche se recordará siempre',true)}]}];
+ async function arcTick(){if(!SOC||story||!cur||Date.now()<SOC.arcT)return false;
+  if(!SOC.arc){const ok=ARCS.filter(a=>!SOC.arcDone.has(a.id)&&SOC.era>=a.min&&(!a.need||a.need()));if(!ok.length){SOC.arcT=Date.now()+30000;return false}const a=pk2(ok);SOC.arc={a,i:0,d:{}}}
+  const A=SOC.arc;story=1;try{await A.a.ch[A.i](A.d)}catch(e){console.error('arco',e)}finally{story=0}A.i++;if(A.i>=A.a.ch.length){SOC.arcDone.add(A.a.id);SOC.arc=null;SOC.arcT=Date.now()+50000+Math.random()*30000}else SOC.arcT=Date.now()+22000+Math.random()*12000;return true}
+ /* el bebé sigue a su protector */
+ function babyTick(){const B=SOC&&SOC.baby;if(!B||!B.el.isConnected)return;const p=btn(B.p);if(!p)return;const [x,y]=posOf(p);B.el.style.left=(x+50)+'px';B.el.style.top=(y-10)+'px'}
+ /* biografía en la ficha al tocar un Pokémon */
+ function bioHTML(m){if(!SOC||!SOC.lf)return'';const l=SOC.lf[m.u];if(!l)return'';const mo=moodOf(l),c=clanOf(m.u);let bf=null,rv=null,bv=0,rvv=0;for(const [k,v] of SOC.aff){const [a,b]=k.split('|').map(Number);if(a!==m.u&&b!==m.u)continue;const o=a===m.u?b:a;if(v>bv){bv=v;bf=o}if(v<rvv){rvv=v;rv=o}}
+  const nm2=u=>{const b=btn(u);return b?esc(NM(b)):'?'};
+  return`<small class="bzbio">${l.pi} <b>${l.p[0].toUpperCase()+l.p.slice(1)}</b> · ${mo[0]} ${mo[1]}${c?` · 🏯 ${esc(c.name)}${c.ld===m.u?' (líder)':''}`:''}${bf!=null&&bv>=20?` · ${lvlT(bv)[0]} ${nm2(bf)}`:''}${rv!=null&&rvv<=-20?` · 💢 ${nm2(rv)}`:''}${l.d.length?`<br>📖 ${l.d.slice(-3).map(esc).join(' · ')}`:''}</small>`}
  async function runGroup(L){if(!cur)return false;const a=pk2(L),nb=near(a,L,460);if(nb.length<2)return false;const G=[a,...nb.slice(0,Math.min(4,nb.length))];story=1;G.forEach(b=>b.classList.add('st'));
   try{const e=pk2(GRP),r=await e[1](G);if(r&&SOC){socLog('🎉',`${G.map(NM).slice(0,3).join(', ')}${G.length>3?' y compañía':''} ${r}`);for(const x of G)for(const y of G)if(U(x)<U(y))affAdd(U(x),U(y),5,NM(x),NM(y))}}catch(e){}finally{G.forEach(b=>{b.classList.remove('st');mv(b,0,0)});story=0}return true}
  async function runSolo(L){const b=pk2(L);story=1;b.classList.add('st');try{const opts=SOLO.filter(x=>x[0]!=='fantasma'||(MD(b)&&(MD(b).types||[]).includes('ghost')));const e=pk2(opts),r=await e[1](b);if(r&&SOC&&Math.random()<.5)socLog('🐾',`${NM(b)} ${r}`)}catch(e){}finally{b.classList.remove('st');story=0}return true}
@@ -25457,7 +25597,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   story=1;a.classList.add('st');b.classList.add('st');try{let r=null,nm2;
    if(v>=15){const opts=INT.concat(INT2).filter(x=>x[0]!=='consolar'||(MD(b)&&MD(b).hurt));const s2=pk2(opts);r=await s2[1](a,b,d)}
    else if(v<=-15){if(Math.random()<.3){r=await RIV[0][1](a,b,d)}else{await brawl(a,b,d,1);r=null}}
-   if(r){affAdd(U(a),U(b),r[0],NM(a),NM(b));if(Math.random()<.35||r[0]>=14)socLog('💗',`${NM(a)} ${r[1]} a ${NM(b)}`.replace(' a '+NM(b),r[1].startsWith('le ')?' a '+NM(b):' con '+NM(b)).replace(/ con (.*) con /,' con $1 '))}}catch(e){}finally{a.classList.remove('st');b.classList.remove('st');story=0}return true}
+   if(r){affAdd(U(a),U(b),r[0],NM(a),NM(b));deed(a,r[1]+' ('+NM(b)+')');if(Math.random()<.35||r[0]>=14)socLog('💗',r[1].startsWith('le ')?`${NM(a)} ${r[1]} a ${NM(b)}`:`${NM(a)} y ${NM(b)} ${r[1]}`)}}catch(e){}finally{a.classList.remove('st');b.classList.remove('st');story=0}return true}
  /* ---- clanes ---- */
  function formClans(force){if(!SOC||!cur)return;const L=[...cur.o.querySelectorAll('.bzp')];const P=new Map(L.map(b=>[U(b),U(b)]));const f=x=>{while(P.get(x)!==x)x=P.get(x);return x};
   for(const [k,v] of SOC.aff){if(v<20)continue;const [a,b]=k.split('|').map(Number);if(!P.has(a)||!P.has(b))continue;const ra=f(a),rb=f(b);if(ra!==rb)P.set(ra,rb)}
@@ -25493,7 +25633,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  const fireworks=(c,e)=>{const L=cur&&cur.o.querySelector('.bz-soc');if(!L)return;for(let i=0;i<9;i++)setTimeout(()=>{if(!L.isConnected)return;const f=D.createElement('i');f.className='bzfw';f.textContent=e||pk2(['🎆','🎇','✨','💥']);f.style.left=(c.cx+Math.random()*360-180)+'px';f.style.top=(c.cy-120-Math.random()*200)+'px';L.append(f);setTimeout(()=>f.remove(),1400)},i*260)};
  const trade=(c,o)=>{const L=cur&&cur.o.querySelector('.bz-soc');if(!L)return;const f=D.createElement('i');f.className='bztr';f.textContent=pk2(['🍓','💎','🍯','🐚','🪶','🍄']);f.style.left=c.cx+'px';f.style.top=(c.cy+40)+'px';L.append(f);requestAnimationFrame(()=>{f.style.left=o.cx+'px';f.style.top=(o.cy+40)+'px'});setTimeout(()=>f.remove(),2600)};
  const duel=async(c,o)=>{if(story)return;const a=btn(c.ld),b=btn(o.ld);if(!a||!b)return;story=1;a.classList.add('st');b.classList.add('st');try{await brawl(a,b,{x:BX(b)-BX(a),y:BY(b)-BY(a)})}catch(e){}finally{a.classList.remove('st');b.classList.remove('st');story=0}const W=MD(a)&&MD(a).beat===U(b)?c:o;socLog('🏆',`El campeón ${dl(W)} gana el duelo`)};
- function socTick(){if(!SOC||!cur||D.hidden)return;const n=Date.now();SOC.t+=Math.min(6,(n-SOC.last)/1000);SOC.last=n;const e=eraOf(SOC.t);
+ function socTick(){if(!SOC||!cur||D.hidden)return;const n=Date.now();SOC.t+=Math.min(6,(n-SOC.last)/1000);SOC.last=n;const e=eraOf(SOC.t);try{if(!SOC.lf)lifeInit();needsTick();babyTick()}catch(_){}
   if(e!==SOC.era){SOC.era=e;const E=ERAS[e];socLog(E[1],`Comienza una nueva era: ${E[2]}`,true);if(e>=2)formClans(true)}
   /* los conocidos se van cogiendo cariño poco a poco */if(Math.random()<.5){const L=[...cur.o.querySelectorAll('.bzp')];if(L.length>1){const a=pk2(L),b=pk2(L);if(a!==b&&Math.hypot(BX(a)-BX(b),BY(a)-BY(b))<600)affAdd(U(a),U(b),2+SOC.era,NM(a),NM(b))}}
   if(SOC.era>=2&&Math.random()<.2)formClans(false);
@@ -25531,7 +25671,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
 
  function selMon(p,m){cur.sel=m.u;cur.o.querySelectorAll('.bzp.sel').forEach(x=>x.classList.remove('sel'));p.classList.add('sel');p.style.translate='0 0';bp(m.sh?1175:m.alpha?520:700);
   const c=cur.o.querySelector('.bz-card');c.hidden=false;const tok=c._tok=(c._tok|0)+1;const own=(()=>{try{if([...(R.team||[]),...(R.box||[])].some(x=>x&&x.id==m.id))return 1}catch(e){}try{return !!JSON.parse(localStorage.getItem('pokerogue_pokedex_v1')||'{}').c[m.id]}catch(e){return 0}})();
-  c.innerHTML=`<img src="${mini(m.id,m.sh)}" alt=""><div><b>${m.sh?'✨ ':''}${esc(nmS(m))}${own?`<span class="own" title="Ya capturado" aria-label="Ya capturado">${(typeof IC==='object'&&IC.ball)||'⚪'}</span>`:''}${m.alpha?' <em class="bzca">Alfa</em>':''}</b><small>Nv. ${m.lvl}${m.sh?' · ¡Shiny!':''}${m.alpha?' · más fuerte':''}${own?'':' · <b class="bznew">🆕 Nuevo</b>'}</small><small class="bzty"></small>${(()=>{const L=allMons(BD()[cur.k]),f=u=>{const x=L.find(y=>y.u===u);return x?esc(nmS(x)):null},o=[];if(m.fr!=null&&f(m.fr))o.push('🤝 Amigo de '+f(m.fr));if(m.beat!=null&&f(m.beat))o.push('🏆 Ganó a '+f(m.beat)+((m.wins|0)>1?' (×'+m.wins+')':''));if(m.lost!=null&&f(m.lost))o.push('🩹 Perdió contra '+f(m.lost));return o.length?`<small class="bzrel">${o.join(' · ')}</small>`:''})()}</div><button type="button" data-b="fight">⚔️ Combatir</button><button type="button" class="bz-cx" data-b="x" aria-label="Cerrar">✕</button>`;
+  c.innerHTML=`<img src="${mini(m.id,m.sh)}" alt=""><div><b>${m.sh?'✨ ':''}${esc(nmS(m))}${own?`<span class="own" title="Ya capturado" aria-label="Ya capturado">${(typeof IC==='object'&&IC.ball)||'⚪'}</span>`:''}${m.alpha?' <em class="bzca">Alfa</em>':''}</b><small>Nv. ${m.lvl}${m.sh?' · ¡Shiny!':''}${m.alpha?' · más fuerte':''}${own?'':' · <b class="bznew">🆕 Nuevo</b>'}</small><small class="bzty"></small>${(()=>{const L=allMons(BD()[cur.k]),f=u=>{const x=L.find(y=>y.u===u);return x?esc(nmS(x)):null},o=[];if(m.fr!=null&&f(m.fr))o.push('🤝 Amigo de '+f(m.fr));if(m.beat!=null&&f(m.beat))o.push('🏆 Ganó a '+f(m.beat)+((m.wins|0)>1?' (×'+m.wins+')':''));if(m.lost!=null&&f(m.lost))o.push('🩹 Perdió contra '+f(m.lost));return o.length?`<small class="bzrel">${o.join(' · ')}</small>`:''})()}</div><button type="button" data-b="fight">⚔️ Combatir</button><button type="button" class="bz-cx" data-b="x" aria-label="Cerrar">✕</button>${(()=>{try{const h=bioHTML(m);return h?`<div class="bzbiow">${h}</div>`:''}catch(e){return''}})()}`;
   /* tipos del salvaje y cómo le va a tu primer Pokémon */
   (async()=>{try{const dd=await getD(m.id);if(c._tok!==tok||!c.querySelector('.bzty'))return;const ty=dd.types||[],ld=R.team[R.li||0]||R.team[0];let best=0,bn='';if(ld&&ld.moves)ld.moves.forEach(v=>{if(!v.p)return;const e=eff(v.t,ty);if(e>best){best=e;bn=v.n}});
    const tag=(window.__wishHas&&__wishHas(m.id))?'<em class="bzm up">⭐ En tu lista de deseados</em>':''; /* v50.3: sin efectividad · v51.4: aviso de deseado */
