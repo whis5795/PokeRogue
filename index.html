@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -8656,7 +8656,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'55.9',t:'Vender varios, objetos fijados y buzón',s:'cur',l:[
+ {v:'56.0',t:'Botón para cerrar el panel de la casa',s:'cur',l:[
+  '✕ El panel de botones de la casa (Sobres, Girar cámara, Expediciones, Minijuegos…) vuelve a tener un botón para cerrarlo, en su esquina de arriba a la derecha'
+ ]},
+ {v:'55.9',t:'Vender varios, objetos fijados y buzón',s:'prev',l:[
   '🧺 Mochila: nuevo botón «Vender varios» para vender muchos objetos distintos (y MT) de una vez: eliges cuántos de cada uno con ＋/−, «Todo» o «Sobrantes» (deja 1 de cada), ves el total y lo vendes con un toque. Se puede deshacer unos segundos',
   '📌 Mochila: fija tus objetos favoritos (hasta 8) para que salgan siempre primero: toca el objeto y pulsa «📌 Fijar arriba». Llevan una chincheta y borde dorado',
   '📬 Buzón «Mientras no estabas»: si vuelves al juego después de 15 minutos o más, una tarjeta te resume lo que te espera (huevos, expediciones de vuelta, megaincursiones, misiones, premios del día, sobres…) con un botón «Ir» para cada cosa, y los avisos que llegaron mientras tanto',
@@ -26741,10 +26744,10 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
 })();
 /* ---------- v54.3: la pestaña «MÁS» de la casa se despliega en el hueco entre la casa y los botones de abajo (3 arriba y 4 abajo) ---------- */
 (()=>{const D=document,Q=s=>D.querySelector(s);let tab=null,htp=null,home=null,obs=null;
- const vis=()=>[...htp.children].filter(b=>!b.hidden&&getComputedStyle(b).display!=='none');
+ const vis=()=>[...htp.children].filter(b=>!b.classList.contains('hgx')&&!b.hidden&&getComputedStyle(b).display!=='none');
  function layout(){const ov=Q('#homeov');if(!ov||!htp)return false;const sc=ov.querySelector('.hscene:not(.side)')||ov.querySelector('.hscene'),ft=ov.querySelector('#hft');if(!sc||!ft)return false;
   /* v54.4: panel compacto (2 filas de ~50 px). Si el hueco es pequeño, se apoya sobre los botones de abajo tapando un poco la casa */const PH=Math.min(150,Math.max(116,(ft.getBoundingClientRect().top-sc.getBoundingClientRect().bottom)-20)),bot=ft.getBoundingClientRect().top-8,gap=bot-(sc.getBoundingClientRect().bottom+8),top=gap>=PH?sc.getBoundingClientRect().bottom+8+(gap-PH)/2:bot-PH;
-  if(htp.parentNode!==ov){[...htp.children].forEach(x=>{if(x.dataset.bg)return;const c=getComputedStyle(x);x.dataset.bg=1;x.style.backgroundImage=c.backgroundImage;x.style.backgroundColor=c.backgroundColor;x.style.borderColor=c.borderColor;x.style.color=c.color});home=htp.parentNode;ov.append(htp)}htp.classList.add('hgrid');if(!tab.classList.contains('hgm'))tab.classList.add('hgm');/* (classList.add siempre cuenta como cambio para el observador) */htp.style.top=top+'px';htp.style.height=PH+'px';
+  if(htp.parentNode!==ov){[...htp.children].forEach(x=>{if(x.dataset.bg)return;const c=getComputedStyle(x);x.dataset.bg=1;x.style.backgroundImage=c.backgroundImage;x.style.backgroundColor=c.backgroundColor;x.style.borderColor=c.borderColor;x.style.color=c.color});home=htp.parentNode;ov.append(htp)}htp.classList.add('hgrid');/* v56.0: botón ✕ para cerrar el panel */if(!htp.querySelector('.hgx')){const x=D.createElement('button');x.type='button';x.className='hgx';x.setAttribute('aria-label','Cerrar');x.textContent='✕';x.dataset.bg=1;x.addEventListener('click',e=>{e.stopPropagation();tab.classList.remove('open')});htp.append(x)}if(!tab.classList.contains('hgm'))tab.classList.add('hgm');/* (classList.add siempre cuenta como cambio para el observador) */htp.style.top=top+'px';htp.style.height=PH+'px';
   const L=vis(),n=L.length,a=Math.floor(n/2),b=n-a;L.forEach((x,i)=>{x.style.gridColumn='span '+(i<a?12/a:12/b)});htp.style.gridTemplateRows=a?'1fr 1fr':'1fr';return true}
  function restore(){if(!htp)return;htp.classList.remove('hgrid');if(tab&&tab.classList.contains('hgm'))tab.classList.remove('hgm');htp.style.top=htp.style.height=htp.style.gridTemplateRows='';[...htp.children].forEach(x=>x.style.gridColumn='');if(home&&htp.parentNode!==home)home.append(htp)}
  function sync(){if(!tab)return;if(tab.classList.contains('open')){if(!layout())restore()}else restore()}
@@ -26756,6 +26759,8 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
  const st=D.createElement('style');st.textContent=`#homeov .htp.hgrid{position:fixed!important;left:12px;right:12px;z-index:62;display:grid!important;grid-template-columns:repeat(12,1fr);gap:10px;padding:12px!important;border:2px solid #fbbf2488!important;border-radius:22px;background:#1a0f33f5!important;box-shadow:0 14px 34px #000c!important;animation:hgIn .22s cubic-bezier(.2,1.2,.4,1);box-sizing:border-box;max-width:720px;margin:0 auto}
 @keyframes hgIn{from{opacity:0;transform:translateY(14px) scale(.97)}}
 #homeov #htab.hgm .htk{opacity:0;pointer-events:none}
+#homeov .htp .hgx{display:none}
+#homeov .htp.hgrid .hgx{display:grid!important;place-items:center;position:absolute!important;top:-13px;right:-9px;width:30px!important;height:30px!important;padding:0!important;border-radius:50%!important;border:2px solid #fbbf24!important;background:#2a1650!important;color:#fde68a!important;font:900 14px system-ui!important;box-shadow:0 4px 10px #000a!important;z-index:2;grid-column:auto!important}
 #homeov .htp.hgrid{gap:7px!important;padding:8px!important;border-radius:18px!important}
 #homeov .htp.hgrid button{position:relative;display:flex!important;align-items:center;border:2px solid;cursor:pointer;box-shadow:0 6px 14px #0009;font-weight:900!important;text-transform:uppercase;min-width:0!important;flex-direction:column;justify-content:center;gap:4px!important;padding:4px 3px!important;border-radius:13px!important;font-size:8.5px!important;letter-spacing:.3px!important;text-align:center;line-height:1.15;white-space:normal}
 #homeov .htp.hgrid button span{font-size:17px!important}
