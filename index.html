@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.3</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.4</div>
 </section>
 
 <section id="team" class="scr">
@@ -389,7 +389,12 @@ const SD3=(id,sh,bk)=>`https://raw.githubusercontent.com/PokeAPI/sprites/master/
 const use3d=()=>{try{return !(typeof S=='object'&&S&&S.no3d)}catch(e){return true}};
 const sprId=m=>m.megaOn&&megaCap(m)?megaSpr(m):m.id;
 const can3d=id=>use3d()&&typeof id==='number'&&id>0&&!(window.CART&&(CART[id]||CART[id+'_s']));
-const front=m=>{const id=sprId(m);return can3d(id)?SD3(id,m.sh,0):art(id,m.sh)},back=m=>{const id=sprId(m);return can3d(id)?SD3(id,m.sh,1):art(id,m.sh)};
+/* v55.4: modelos 3D también en otros modos, cada uno con su ajuste (no3dRaid, no3dPvp, no3dCoop, no3dMpa) */
+/* calidad: «anim» = modelos animados (Showdown, baja resolución) · «home» = modelos en alta definición sin animación (Pokémon HOME) */
+window.to3d=(u,bk)=>{if(typeof u!=='string'||!u.includes('/other/official-artwork/'))return null;let q='anim';try{q=(typeof S=='object'&&S&&S.m3dq)||'anim'}catch(e){}return q==='home'?u.replace('/other/official-artwork/','/other/home/'):u.replace('/other/official-artwork/','/other/showdown/'+(bk?'back/':'')).replace(/\.png$/,'.gif')};
+window.art3=(id,sh,bk,key)=>{let off=false;try{off=!!(typeof S=='object'&&S&&S[key||'no3d'])}catch(e){}const u=art(id,sh);if(off)return u;return to3d(u,bk)||u};
+window.fit3d=(i,k)=>{if(!i||!/\/showdown\//.test(i.currentSrc||i.src)||!i.naturalWidth)return;i.style.width='';const W=parseFloat(getComputedStyle(i).width)||120;i.style.width=Math.round(Math.max(W*.45,Math.min(W*(k||1.5),i.naturalWidth*W/105)))+'px'};
+const front=m=>{const id=sprId(m),a=art(id,m.sh);return can3d(id)&&to3d(a,0)||a},back=m=>{const id=sprId(m),a=art(id,m.sh);return can3d(id)&&to3d(a,1)||a};
 const megaName=m=>(m.megaOn&&megaCap(m)?'Mega ':'')+(m.megaOn&&window.MEGABASE&&MEGABASE[m.id]?MEGABASE[m.id]:m.name.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()))+(m.megaOn&&megaCap(m)&&m.mfs?' '+((window.MEGALBL&&MEGALBL[m.id+'|'+m.mfs])||m.mfs.toUpperCase()):'');
 const nm=m=>(m.sh?'✨ ':'')+(m.nick||megaName(m))+(m.rb>0?' ⭐'+Math.min(8,m.rb):'');
 /* ---------- Etiquetas de Pokémon especiales (Legendario / Singular / Ultraente / Paradoja) ---------- */
@@ -587,7 +592,7 @@ function setMon(s){
   const m=act(s);
   $('#'+s+'P').innerHTML=`<b>${nm(m)}</b>${tgb(m.id)}<small> Nv.${m.lvl}</small><span class="sb" id="${s}St"></span><div class="ty">${m.types.map(t=>`<i style="background:${COL[t]}">${ES[t]}</i>`).join('')}${m.teraOn?`<i class="tc">${TCI}${ES[m.tera]}</i>`:''}${m.megaOn?`<i class="tc">⚡MEGA</i>`:''}</div><div class="hb"><div id="${s}B"></div></div><small id="${s}H"></small>${s=='e'&&B.tr&&B.c&&B.c.n?`<div class="tb" id="eTb"><span class="bls">${Array.from({length:6},()=>`<i class="bl n">${BALL}</i>`).join('')}</span><em>${B.c.n}</em></div>`:''}`;
   if(s=='e'&&m.sh&&!m._shs){m._shs=1;try{ach('shs')}catch(e){}}
-  bar(s);const i=$('#'+s+'S img');const u=s=='p'?back(m):front(m);i.className=/\/showdown\//.test(u)?'sd3':'';i.style.width='';const fit3=()=>{if(!i.classList.contains('sd3')||!i.naturalWidth)return;i.style.width='';const W=parseFloat(getComputedStyle(i).width)||160;/* los modelos tienen su tamaño real: un Pikachu se ve más pequeño que un Charizard */i.style.width=Math.round(Math.max(W*.45,Math.min(W*1.5,i.naturalWidth*W/105)))+'px'};i.onload=fit3;i.onerror=()=>{i.onerror=null;i.src=art(sprId(m),m.sh);i.className='art'};i.src=u;if(i.complete)fit3();setTimeout(fit3,60);
+  bar(s);const i=$('#'+s+'S img');const u=s=='p'?back(m):front(m);i.className=/\/showdown\//.test(u)?'sd3':/\/other\/home\//.test(u)?(s=='p'?'sdh sdb':'sdh'):'';i.style.width='';const fit3=()=>{if(!i.classList.contains('sd3')||!i.naturalWidth)return;i.style.width='';const W=parseFloat(getComputedStyle(i).width)||160;/* los modelos tienen su tamaño real: un Pikachu se ve más pequeño que un Charizard */i.style.width=Math.round(Math.max(W*.45,Math.min(W*1.5,i.naturalWidth*W/105)))+'px'};i.onload=fit3;i.onerror=()=>{i.onerror=null;i.src=art(sprId(m),m.sh);i.className='art'};i.src=u;if(i.complete)fit3();setTimeout(fit3,60);
   el(s).classList.toggle('tera',m.teraOn);el(s).classList.toggle('idle',S.anim)}
 function bar(s){stb(s);if(s=='e')updBalls();const m=act(s),p=m.hp/m.max*100,b=$('#'+s+'B');b.style.width=p+'%';b.style.background=p>50?'#4ade80':p>20?'#facc15':'#ef4444';$('#'+s+'H').textContent=m.hp+'/'+m.max}
 function ctr(e){const a=arena.getBoundingClientRect(),r=e.getBoundingClientRect();return[r.left-a.left+r.width/2,r.top-a.top+r.height/2]}
@@ -5231,21 +5236,28 @@ const DEF=[
   {k:'rounds',t:'Rondas (aventura)',d:'Longitud de la aventura. Infinitas: no tiene final',o:[[20,'20 rondas'],[40,'40 rondas'],[60,'60 rondas'],[80,'80 rondas'],[100,'100 rondas'],[120,'120 rondas'],['inf','∞ Infinitas']]},
   {k:'lives',t:'Vidas',d:'Infinitas: al caer, tu equipo se cura y sigues sin perder vidas',o:[[3,'3 vidas'],['inf','∞ Infinitas']]},
   {k:'speed',t:'Velocidad de combate',o:[[1,'1×'],[2,'2×'],[3,'3×'],[4,'4×']]},
-  {k:'qvic',t:'Victoria rápida',d:'La pantalla de premios de cada combate ganado se cierra sola',b:1},
-  {k:'qcap',t:'Captura rápida',d:'Lanzar la Ball dura un instante en vez de la animación larga',b:1},
-  {k:'qevo',t:'Evolución rápida',d:'La animación de evolución va a toda velocidad',b:1},
-  {k:'bznonar',t:'Sin narrador en los biomas',d:'Dentro de los biomas no aparece el narrador que cuenta lo que pasa entre los Pokémon (la Crónica 📜 sigue guardando todo)',b:1},{k:'bztop',t:'Botones del bioma arriba',d:'Dentro de los biomas, el botón para volver a la isla (y los de información) van arriba a la izquierda, como antes, en vez de abajo',b:1},
-  {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
-  {k:'no3d',t:'Sin modelos 3D en combate',d:'En los combates se ven las ilustraciones de siempre en lugar de los modelos 3D animados (de frente el rival y de espaldas el tuyo)',b:1},{k:'noko',t:'Sin golpe final a cámara lenta',d:'El ataque que gana el combate se ve normal, sin zoom, cámara lenta ni «¡K.O.!»',b:1},
-  {k:'cenq',t:'Sin diálogos de la enfermera',d:'En el Centro Pokémon la enfermera cura a tu equipo sin hablar (sin bocadillos de texto)',b:1},
-  {k:'autoheal',t:'Curar tras cada combate',d:'Al ganar un combate de la aventura usa solo las pociones justas de tu mochila para curar al equipo',b:1},
-  {k:'frnt',t:'Avisos de amigos',d:'Te avisa cuando un amigo captura un shiny o un legendario, gana una medalla, consigue un título o reacciona a tu vitrina',b:1},
-  {k:'ntf',t:'Avisos y notificaciones',d:'Todos los carteles del juego y la campanita del menú. Desactivado: no sale NINGÚN cartel ni aviso (las invitaciones de amigos sí siguen llegando)',b:1},
   {k:'pname',t:'Nombre de jugador',d:'Lo ven tus amigos, las salas multijugador, los torneos y las megaincursiones',x:1},
   {k:'theme',t:'Tema',d:'Oscuro, claro o según tu dispositivo. El tema claro está en pruebas: si ves algo raro, vuelve al oscuro',o:[['dark','Oscuro'],['light','Claro'],['auto','Automático']]},
   {k:'gender',t:'Personaje',d:'Combates de gimnasio',o:[['m','Chico'],['f','Chica']]},
   {k:'dn',t:'Ciclo día y noche',d:'Por turnos: cambia cada pocas rondas · Hora real: sigue el reloj de tu dispositivo',o:[['turn','Por turnos'],['real','Hora real'],['off','Desactivado']]},
   {k:'hroam',t:'Pokémon sueltos por casa',d:'Equipo: si no eliges compañeros, tu equipo pasea por la casa · Quietos: no se mueven',o:[['team','Equipo'],['pets','Solo compañeros'],['still','Quietos']]}]],
+ ['qol','✨','QoL',[
+  {k:'qvic',t:'Victoria rápida',d:'La pantalla de premios de cada combate ganado se cierra sola',b:1},
+  {k:'qcap',t:'Captura rápida',d:'Lanzar la Ball dura un instante en vez de la animación larga',b:1},
+  {k:'qevo',t:'Evolución rápida',d:'La animación de evolución va a toda velocidad',b:1},
+  {k:'bznonar',t:'Sin narrador en los biomas',d:'Dentro de los biomas no aparece el narrador que cuenta lo que pasa entre los Pokémon (la Crónica 📜 sigue guardando todo)',b:1},
+  {k:'bztop',t:'Botones del bioma arriba',d:'Dentro de los biomas, el botón para volver a la isla (y los de información) van arriba a la izquierda, como antes, en vez de abajo',b:1},
+  {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
+  {k:'m3dq',t:'Modelos 3D',d:'Animados: se mueven, pero tienen poca resolución · Alta definición: modelos 3D nítidos y grandes (de Pokémon HOME), sin animación',o:[['anim','Animados'],['home','Alta definición']]},{k:'no3d',t:'Sin modelos 3D: combates normales',d:'Aventura, salvajes, entrenadores y gimnasios: se ven las ilustraciones de siempre en lugar de los modelos 3D animados',b:1},
+  {k:'no3dRaid',t:'Sin modelos 3D: megaincursiones',d:'El megajefe y vuestros Pokémon se ven con las ilustraciones de siempre',b:1},
+  {k:'no3dPvp',t:'Sin modelos 3D: PvP',d:'En los combates contra amigos se ven las ilustraciones de siempre',b:1},
+  {k:'no3dCoop',t:'Sin modelos 3D: Torre 2 vs 2',d:'En los combates dobles se ven las ilustraciones de siempre',b:1},
+  {k:'no3dMpa',t:'Sin modelos 3D: Aventura multiplayer',d:'Héroes y rivales se ven con las ilustraciones de siempre',b:1},
+  {k:'noko',t:'Sin golpe final a cámara lenta',d:'El ataque que gana el combate se ve normal, sin zoom, cámara lenta ni «¡K.O.!»',b:1},
+  {k:'cenq',t:'Sin diálogos de la enfermera',d:'En el Centro Pokémon la enfermera cura a tu equipo sin hablar (sin bocadillos de texto)',b:1},
+  {k:'autoheal',t:'Curar tras cada combate',d:'Al ganar un combate de la aventura usa solo las pociones justas de tu mochila para curar al equipo',b:1},
+  {k:'frnt',t:'Avisos de amigos',d:'Te avisa cuando un amigo captura un shiny o un legendario, gana una medalla, consigue un título o reacciona a tu vitrina',b:1},
+  {k:'ntf',t:'Avisos y notificaciones',d:'Todos los carteles del juego y la campanita del menú. Desactivado: no sale NINGÚN cartel ni aviso (las invitaciones de amigos sí siguen llegando)',b:1}]],
  ['snd','🔊','Sonido',[
   {k:'snd',t:'Sonido',d:'Activar o silenciar todos los sonidos',b:1},
   {k:'vol',t:'Volumen',s:1}]],
@@ -6548,7 +6560,7 @@ function pvBuild(){
 function pvUpd(s,sn,fx){
   const k=pvK(s),el=pvO.querySelector('.pvside.'+k),a=sn[s].a,m=P.t[s][a],st=sn[s].m[a],hp=Math.max(0,st[0]),q=Math.max(0,hp/m.max*100);
   const mgx=!!st[3]&&megaCap(m),img=el.querySelector('.pvg'),key=m.id+'|'+a+'|'+(m.sh?1:0)+'|'+(mgx?'M'+(m.mfs||''):'');
-  if(img.dataset.k!==key){const wasMega=mgx&&img.dataset.k&&img.dataset.k.split('|')[1]===String(a);img.dataset.k=key;img.src=mgx?art(megaSpr(m),m.sh):art(m.id,m.sh);img.onerror=function(){this.onerror=null;this.src=mini(m.id,m.sh)};img.classList.remove('hit');img.classList.remove('in');img.classList.remove('mgin');void img.offsetWidth;img.classList.add(wasMega?'mgin':'in');setTimeout(()=>{img.classList.remove('in');img.classList.remove('mgin')},900);el.classList.remove('ko')}
+  if(img.dataset.k!==key){const wasMega=mgx&&img.dataset.k&&img.dataset.k.split('|')[1]===String(a);img.dataset.k=key;{const sid=mgx?megaSpr(m):m.id,u3=(typeof sid==='number'&&window.art3)?art3(sid,m.sh,k==='me','no3dPvp'):art(sid,m.sh);img.classList.toggle('sd3',/\/showdown\//.test(u3));img.style.width='';img.onload=()=>{try{fit3d(img,1.4)}catch(_){}};img.src=u3;img.onerror=function(){if(/\/showdown\//.test(this.src)){this.classList.remove('sd3');this.style.width='';this.src=art(sid,m.sh);return}this.onerror=null;this.src=mini(m.id,m.sh)}}img.classList.remove('hit');img.classList.remove('in');img.classList.remove('mgin');void img.offsetWidth;img.classList.add(wasMega?'mgin':'in');setTimeout(()=>{img.classList.remove('in');img.classList.remove('mgin')},900);el.classList.remove('ko')}
   el.classList.toggle('mega',mgx);
   el.querySelector('.pvn b').textContent=nm(m);el.querySelector('.pvn small').textContent='Nv.'+m.lvl;
   el.querySelector('.pvty').innerHTML=tyChips(m)+(st[1]?`<em class="${st[1]}">${SN[st[1]]||st[1]}</em>`:'')+(st[2]?'<em>confuso</em>':'')+(sn[s].a===a&&sn[s].x?sn[s].x:'');
@@ -8631,7 +8643,14 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'55.3',t:'Modelos 3D en combate',s:'cur',l:[
+ {v:'55.4',t:'Modelos 3D en todos los modos y pestaña QoL',s:'cur',l:[
+  '🎮 Modelos 3D animados también en las megaincursiones (el megajefe y vuestros Pokémon), el PvP, la Torre 2 vs 2 y la Aventura multiplayer: los rivales de frente y los tuyos de espaldas',
+  '⚙️ Cada modo tiene su propio ajuste para quitar los modelos 3D: combates normales, megaincursiones, PvP, Torre 2 vs 2 y Aventura multiplayer',
+  '🖼️ Nuevo ajuste «Modelos 3D»: Animados (se mueven, menos resolución) o Alta definición (modelos 3D nítidos de Pokémon HOME, sin animación)',
+  '⬅️ El botón para salir de Ajustes ahora es flotante: siempre está a mano aunque bajes',
+  '✨ Nueva pestaña «QoL» en Ajustes con todos los interruptores que antes estaban en «Juego» (victoria, captura y evolución rápidas, narrador, mapa simple, modelos 3D, enfermera, curar tras combate, avisos…)'
+ ]},
+ {v:'55.3',t:'Modelos 3D en combate',s:'prev',l:[
   '🎮 Vuelven los modelos 3D animados de los Pokémon en los combates: el rival se ve de frente y tu Pokémon de espaldas, moviéndose (también shiny y megaevolucionados). Si algún Pokémon no tiene modelo, se ve su ilustración de siempre',
   '⚙️ Se pueden quitar en Ajustes → «Sin modelos 3D en combate»'
  ]},
@@ -14406,7 +14425,7 @@ ${!w.open?(()=>{const run=getRun(),n=run&&run.bag&&run.bag.mrinv|0,P=100000000,m
   b.innerHTML=`<div class="mr-btop"><b>${esc(s.boss.n)} <small style="font:800 12px system-ui">Nv.${s.boss.lvl}</small></b><span class="mr-tmr" id="mrt">10:00</span><button class="mr-x mr-tyb" data-a="stypes" aria-label="Tabla de tipos" title="Tabla de tipos">📊</button><button class="mr-x" data-a="bexit" aria-label="Abandonar" style="margin-left:0;width:36px;height:36px">✕</button></div>
   <div class="mr-bhp"><div class="mr-hpb"><i class="mr-hg" id="mrbg"></i><i class="mr-h" id="mrbh"></i><i class="mr-s" id="mrbs"></i></div><div class="mr-hpt"><span id="mrhpt"></span><span id="mrhpp"></span></div></div>
   <div class="mr-bst" id="mrbst"></div><div class="mr-bcd" id="mrbcd"><i></i><span>⚔️ Próximo ataque</span></div><div class="mr-bmv" id="mrbmv"></div>
-  <div class="mr-arena"><div class="mr-boss" id="mrboss"><div class="mr-shield"></div><img src="${s.boss.art}" alt=""></div><div class="mr-allies" id="mrall"></div></div>
+  <div class="mr-arena"><div class="mr-boss" id="mrboss"><div class="mr-shield"></div>${(()=>{let off=false;try{off=!!S.no3dRaid}catch(e){}const u3=!off&&window.to3d?to3d(s.boss.art,0):null;return u3?`<img class="mr-b3d" src="${u3}" alt="" onerror="this.onerror=null;this.classList.remove('mr-b3d');this.src='${s.boss.art}'">`:`<img src="${s.boss.art}" alt="">`})()}</div><div class="mr-allies" id="mrall"></div></div>
   <div class="mr-teamfx" id="mrtf"></div>
   <div class="mr-log" id="mrlog"></div>
   <div class="mr-party" id="mrparty"></div>
@@ -14432,7 +14451,7 @@ ${!w.open?(()=>{const run=getRun(),n=run&&run.bag&&run.bag.mrinv|0,P=100000000,m
   if(box.dataset.n!=s.players.length)box.dataset.n=s.players.length;
   if(box._k!==key){box._k=key;
    box.innerHTML=s.players.map(p=>`<div class="mr-pc${p.pid===NETR.id?' mr-me':''}" data-pid="${p.pid}"><img src="${mini(p.id,p.sh)}" alt=""><div class="mr-in"><b>${esc(p.nick||cap(p.name).replace(/-/g,' '))}${p.rb?`<em class="mr-rb">★${p.rb}</em>`:''}</b><div class="mr-hpb"><i class="mr-h"></i></div><div class="mr-chips"></div></div><span class="mr-cd"></span></div>`).join('');
-   if(ar)ar.innerHTML=s.players.map(p=>`<div class="mr-al${p.pid===NETR.id?' mr-me':''}" data-pid="${p.pid}"><img src="${mini(p.id,p.sh)}" alt=""><i></i></div>`).join('')}
+   if(ar)ar.innerHTML=s.players.map(p=>{const u3=window.art3?art3(p.id,p.sh,1,'no3dRaid'):'';const d3=/\/showdown\//.test(u3);return`<div class="mr-al${p.pid===NETR.id?' mr-me':''}${d3?' mr-3d':''}" data-pid="${p.pid}"><img src="${d3?u3:mini(p.id,p.sh)}" alt="" onerror="this.onerror=null;this.parentNode.classList.remove('mr-3d');this.src='${mini(p.id,p.sh)}'"><i></i></div>`}).join('')}
   s.players.forEach((p,ix)=>{const c=box.children[ix],a=ar&&ar.children[ix];if(!c)return;const q=Math.max(0,p.hp/p.max),cdp=p.ko?0:Math.max(0,Math.min(100,(p.ready-t)/p.cdms*100)),ch=[];
    for(const k in p.stg)if(p.stg[k])ch.push(`<i class="mr-chip" style="--c:${p.stg[k]>0?'#16a34a':'#dc2626'}">${SGN[k]}${p.stg[k]>0?'+':''}${p.stg[k]}</i>`);if(p.sub)ch.push('<i class="mr-chip" style="--c:#a16207">SUST</i>');
    {const pk=!!UI.apk&&!p.ko&&!p.gone;c.classList.toggle('mr-pk',pk);if(pk)c.dataset.a='al:'+UI.apk.i+':'+p.pid;else delete c.dataset.a}
@@ -17058,7 +17077,7 @@ function units(s){const sc=Q('#masc');if(!sc)return;const want={},hs=s.seats.fil
  for(const k in UN)if(!want[k]){const e=UN[k].el;delete UN[k];const a=e.animate([{opacity:1},{opacity:0}],{duration:300});a.onfinish=()=>e.remove()}
  for(const k in want){const w=want[k];let u=UN[k];
   if(!u||u.id!==w.m.id){if(u)u.el.remove();const e=D.createElement('div');e.className='ma-u '+w.side;e.dataset.s=w.side;e.dataset.i=w.i;
-   e.innerHTML=`<i class="ma-ar"></i><div class="ma-hb"><i></i><b></b></div><span class="ma-tg"></span><span class="ma-sts"></span>${w.side==='h'&&w.m.cls&&CLS[w.m.cls]?`<i class="ma-ci" data-cinfo="${w.m.cls}" style="--c:${CLS[w.m.cls].c}" role="button" aria-label="Habilidades de la clase">i</i>`:''}<img src="${art(w.m.id,w.m.sh)}" alt="" onerror="this.onerror=null;this.src='${mini(w.m.id,w.m.sh)}';this.style.imageRendering='pixelated'">`;sc.append(e);
+   e.innerHTML=`<i class="ma-ar"></i><div class="ma-hb"><i></i><b></b></div><span class="ma-tg"></span><span class="ma-sts"></span>${w.side==='h'&&w.m.cls&&CLS[w.m.cls]?`<i class="ma-ci" data-cinfo="${w.m.cls}" style="--c:${CLS[w.m.cls].c}" role="button" aria-label="Habilidades de la clase">i</i>`:''}<img src="${window.art3?art3(w.m.id,w.m.sh,w.side==='h','no3dMpa'):art(w.m.id,w.m.sh)}" alt="" onload="try{fit3d(this,1.3)}catch(_){}" onerror="if(/\/showdown\//.test(this.src)){this.style.width='';this.src='${art(w.m.id,w.m.sh)}';return}this.onerror=null;this.src='${mini(w.m.id,w.m.sh)}';this.style.imageRendering='pixelated'">`;sc.append(e);
    u=UN[k]={el:e,id:w.m.id,s:w.side,i:w.i};if(w.side==='e')e.animate([{transform:'translateX(80vw)'},{transform:'translateX(-50%)'}],{duration:650+w.i*120,easing:'cubic-bezier(.2,1,.4,1)'})}
   const e=u.el;e.style.left=w.x+'%';e.style.setProperty('--y',w.y+'%');e.style.setProperty('--z',Math.round(w.y/4));
   const q=Math.max(0,w.m.hp/w.m.max),sh=w.m.shd|0;e.querySelector('.ma-hb i').style.width=(q*100*w.m.max/(w.m.max+sh))+'%';const hb=e.querySelector('.ma-hb b');hb.style.left=(q*100*w.m.max/(w.m.max+sh))+'%';hb.style.width=(sh*100/(w.m.max+sh))+'%';
@@ -21906,6 +21925,15 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 /* v55.3: modelos 3D animados en combate */
 #battle .spr img.sd3{scale:1 1!important;image-rendering:auto;object-fit:contain;aspect-ratio:1;height:auto}
 #pS img.sd3{transform-origin:50% 100%}
+/* v55.4: modelos 3D en otros modos */
+#pvo .pvg.sd3,#coop .cb-spr img.sd3{image-rendering:auto;scale:1 1!important}
+#mrd .mr-al.mr-3d img{width:84px;height:84px;object-fit:contain;image-rendering:auto}
+#mrd .mr-boss img.mr-b3d{object-fit:contain;image-rendering:auto;min-height:40%}
+/* v55.4: botón flotante para salir de Ajustes y modelos HD */
+#set>header .bk{position:fixed;top:calc(10px + env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;box-shadow:0 6px 18px #000b,0 0 0 2px #ffffff33}
+#set>header h2{margin-left:58px}
+#battle .spr img.sdh{scale:1 1!important;image-rendering:auto;object-fit:contain}
+#battle .spr img.sdh.sdb{scale:-1 1!important}
 </style>
 <script id="v37js">
 (()=>{
@@ -21977,7 +22005,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const putRun=run=>{if(run===liveR()){try{saveRun()}catch(e){}}else try{localStorage.setItem('pa_run',JSON.stringify(run))}catch(e){}};
  const best=()=>{try{return+localStorage.getItem('pa_coop_best')||0}catch(e){return 0}},setBest=v=>{try{if(v>best())localStorage.setItem('pa_coop_best',String(v))}catch(e){}};
  const artOf=(id,sh)=>{let a='',m='';try{a=art(id,sh)}catch(e){}try{m=mini(id,sh)}catch(e){}return{a:a||m,m}};
- const img=(id,sh,cls)=>{const s=artOf(id,sh);return`<img${cls?` class="${cls}"`:''} data-s="${id}_${sh?1:0}" src="${s.a}" alt="" draggable="false" onerror="this.onerror=null;this.src='${s.m}'">`};
+ const img=(id,sh,cls,bk)=>{const s=artOf(id,sh);/* v55.4: modelos 3D (ajuste propio: no3dCoop) */let u=s.a;try{if(bk!=null&&!(typeof S=='object'&&S&&S.no3dCoop)&&window.to3d){const t=to3d(s.a,bk);if(t)u=t}}catch(e){}const d3=u!==s.a;return`<img${cls||d3?` class="${(cls||'')+(d3?' sd3':'')}"`:''} data-s="${id}_${sh?1:0}" src="${u}" alt="" draggable="false"${d3?' onload="try{fit3d(this,1.4)}catch(_){}"':''} onerror="if(this.classList.contains('sd3')){this.classList.remove('sd3');this.style.width='';this.src='${s.a}';return}this.onerror=null;this.src='${s.m}'">`};
  const miniI=(id,sh)=>{let m='';try{m=mini(id,sh)}catch(e){}return`<img data-s="m${id}_${sh?1:0}" src="${m}" alt="" draggable="false">`};
  /* v37.4: actualización en el sitio (solo cambia lo que cambia): sin parpadeos al refrescar, las barras de PS se deslizan y las imágenes no se recargan */
  function mkd(a,b){const A=a.childNodes,B=b.childNodes;for(let i=0;i<B.length;i++){const n=B[i],o=A[i];if(!o){a.appendChild(n.cloneNode(true));continue}
@@ -22204,7 +22232,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const preAll=(L,ms)=>Promise.race([Promise.all(L.filter(Boolean).map(pre)),sl(ms||900)]);
  function sprite(k,m,force){const w=O.querySelector(`.cb-mon[data-s="${k}"]`);if(!w)return;const sp=w.querySelector('.cb-spr'),key=m?m.id+'_'+(m.sh?1:0):'';
   if(force&&sp.dataset.k===key&&sp.querySelector('img'))force=0;
-  if(force||sp.dataset.k!==key){sp.dataset.k=key;if(!m)sp.innerHTML='';else{const t=D.createElement('div');t.innerHTML=img(m.id,m.sh);const ni=t.firstChild,olds=[...sp.querySelectorAll('img')];
+  if(force||sp.dataset.k!==key){sp.dataset.k=key;if(!m)sp.innerHTML='';else{const t=D.createElement('div');t.innerHTML=img(m.id,m.sh,null,k[0]==='a');const ni=t.firstChild,olds=[...sp.querySelectorAll('img')];
     if(!olds.length)sp.append(ni);else{ni.style.opacity='0';sp.append(ni);let dn=0;const done=()=>{if(dn)return;dn=1;olds.forEach(o=>o.remove());ni.style.opacity=''};if(ni.complete&&ni.naturalWidth)done();else{ni.addEventListener('load',done,{once:true});ni.addEventListener('error',done,{once:true});setTimeout(done,1500)}}}}w.classList.toggle('ko',!!(m&&m.ko));w.classList.toggle('empty',!m);w.classList.toggle('tera',!!(m&&m.tOn));if(m&&m.tOn)w.style.setProperty('--tc',tyC(m.tera));w.classList.toggle('mine',k[0]==='a'&&ST&&+k[1]===(me==='h'?0:1))}
  function card(k,m,hp){const c=O.querySelector(`.cb-card[data-c="${k}"]`);if(!c)return;if(!m){if(c._h){c._h='';c.innerHTML=''}c.className='cb-card empty';return}
   const v=hp!=null?hp:m.hp,q=Math.max(0,v)/m.max,col=q>.5?'#22c55e':q>.2?'#eab308':'#ef4444',foe=k[0]==='f',mine=!foe&&+k[1]===(me==='h'?0:1);
