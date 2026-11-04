@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -5091,11 +5091,14 @@ window.pickTarget=(k,ls,inB)=>new Promise(res=>{
  if(multi){q('#pkm').onclick=()=>{n--;upd()};q('#pkp').onclick=()=>{n++;upd()};q('#pkx').onclick=()=>{n=cap(ls[sel]);upd()}}
  q('#pkc').onclick=()=>done(null);q('#pkg').onclick=()=>done({m:ls[sel],n:multi?n:1});
  upd()});
+/* v56.0: Poké Balls en 3D (esfera con luz, sombra, banda, botón brillante y diseño de cada tipo) */
+window.ball3d=k=>{const B={pb:['#ef4444','#991b1b',''],gb:['#2563eb','#1e3a8a','gb'],ub:['#1f2937','#030712','ub'],nb:['#22c55e','#14532d','nb'],rb:['#f97316','#9a3412','rb'],ob:['#06b6d4','#155e75','ob'],ab:['#f472b6','#9d174d','ab'],mrb:['#facc15','#a16207','mrb'],ball:['#ef4444','#991b1b','']}[k]||['#ef4444','#991b1b',''];
+ return`<span class="b3d" style="--t:${B[0]};--td:${B[1]}"><span class="b3-spin"><i class="b3-top"></i><i class="b3-dec ${B[2]}"></i></span><i class="b3-band"></i><i class="b3-btn"></i><i class="b3-sh"></i><i class="b3-hl"></i></span>`};
 /* ===== animación de captura estilo Pokémon ===== */
 window.ballAnim=(m,k,ok)=>new Promise(async res=>{
  const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'||S.qcap),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
  const o=document.createElement('div');o.className='bthr';
- o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt=""><div class="bt-sh"></div><div class="bt-ball">${IC[k]||IC.ball}</div><div class="bt-dots"><i></i><i></i><i></i></div><div class="bt-msg"></div>`;
+ o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt=""><div class="bt-sh"></div><div class="bt-ball">${(()=>{try{if(typeof S!=="undefined"&&S.noball3d)throw 0;return ball3d(k)}catch(e){return IC[k]||IC.ball}})()}</div><div class="bt-dots"><i></i><i></i><i></i></div><div class="bt-msg"></div>`;
  document.body.append(o);
  const mon=o.querySelector('.bt-mon'),ball=o.querySelector('.bt-ball'),dots=[...o.querySelectorAll('.bt-dots i')],msg=o.querySelector('.bt-msg'),sh=o.querySelector('.bt-sh');
  let fast=1;o.onclick=()=>{fast=3};
@@ -5255,7 +5258,7 @@ const DEF=[
   {k:'bznonar',t:'Sin narrador en los biomas',d:'Dentro de los biomas no aparece el narrador que cuenta lo que pasa entre los Pokémon (la Crónica 📜 sigue guardando todo)',b:1},
   {k:'bztop',t:'Botones del bioma arriba',d:'Dentro de los biomas, el botón para volver a la isla (y los de información) van arriba a la izquierda, como antes, en vez de abajo',b:1},
   {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
-  {k:'bz3d',t:'Biomas: Pokémon',d:'Cómo se ven los Pokémon dentro de los biomas: ilustraciones, modelos 3D animados o modelos 3D en alta definición',o:[['art','Ilustraciones'],['anim','3D animados'],['hd','3D HD']]},{k:'bzcam',t:'Biomas: cámara',d:'Plana: vista desde arriba como siempre · 3D: la cámara se inclina y el bioma se ve en perspectiva, con los Pokémon de pie y el cielo al fondo',o:[['flat','Plana'],['3d','3D']]},{k:'m3dq',t:'Modelos 3D',d:'Animados: se mueven, pero tienen poca resolución · Alta definición: modelos 3D nítidos y grandes (de Pokémon HOME), sin animación',o:[['anim','Animados'],['home','Alta definición']]},{k:'no3d',t:'Sin modelos 3D: combates normales',d:'Aventura, salvajes, entrenadores y gimnasios: se ven las ilustraciones de siempre en lugar de los modelos 3D animados',b:1},
+  {k:'bz3d',t:'Biomas: Pokémon',d:'Cómo se ven los Pokémon dentro de los biomas: ilustraciones, modelos 3D animados o modelos 3D en alta definición',o:[['art','Ilustraciones'],['anim','3D animados'],['hd','3D HD']]},{k:'bzcam',t:'Biomas: cámara',d:'Plana: vista desde arriba como siempre · 3D: la cámara se inclina y el bioma se ve en perspectiva, con los Pokémon de pie y el cielo al fondo',o:[['flat','Plana'],['3d','3D']]},{k:'noball3d',t:'Sin Poké Balls 3D',d:'Al capturar, la Ball se ve con su icono plano de siempre en lugar del diseño 3D',b:1},{k:'m3dq',t:'Modelos 3D',d:'Animados: se mueven, pero tienen poca resolución · Alta definición: modelos 3D nítidos y grandes (de Pokémon HOME), sin animación',o:[['anim','Animados'],['home','Alta definición']]},{k:'no3d',t:'Sin modelos 3D: combates normales',d:'Aventura, salvajes, entrenadores y gimnasios: se ven las ilustraciones de siempre en lugar de los modelos 3D animados',b:1},
   {k:'no3dRaid',t:'Sin modelos 3D: megaincursiones',d:'El megajefe y vuestros Pokémon se ven con las ilustraciones de siempre',b:1},
   {k:'no3dPvp',t:'Sin modelos 3D: PvP',d:'En los combates contra amigos se ven las ilustraciones de siempre',b:1},
   {k:'no3dCoop',t:'Sin modelos 3D: Torre 2 vs 2',d:'En los combates dobles se ven las ilustraciones de siempre',b:1},
@@ -5349,7 +5352,7 @@ const colOf=k=>BC[k]||(k&&k.startsWith('bt_')&&typeof COL!='undefined'&&COL[k.sl
 window.ballAnim=(m,k,ok)=>new Promise(async res=>{
  const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'||S.qcap),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
  const o=document.createElement('div');o.className='bthr';
- o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt=""><div class="bt-sh"></div><div class="bt-ball">${IC[k]||IC.ball}</div><div class="bt-dots"><i></i><i></i><i></i></div><div class="bt-msg"></div>`;
+ o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt=""><div class="bt-sh"></div><div class="bt-ball">${(()=>{try{if(typeof S!=="undefined"&&S.noball3d)throw 0;return ball3d(k)}catch(e){return IC[k]||IC.ball}})()}</div><div class="bt-dots"><i></i><i></i><i></i></div><div class="bt-msg"></div>`;
  document.body.append(o);
  const mon=o.querySelector('.bt-mon'),ball=o.querySelector('.bt-ball'),dots=[...o.querySelectorAll('.bt-dots i')],msg=o.querySelector('.bt-msg'),sh=o.querySelector('.bt-sh');
  let fast=1;o.onclick=()=>{fast=3};
@@ -8650,7 +8653,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'55.9',t:'Biomas 3D mucho más bonitos',s:'cur',l:[
+ {v:'56.0',t:'Poké Balls en 3D',s:'cur',l:[
+  '⚾ Al capturar, las Balls tienen diseño 3D: esfera con luz y sombra, brillo, banda negra y botón, girando en el aire, y cada una con su diseño (Súper Ball con franjas rojas, Ultra Ball con sus marcas amarillas, Nido, Red, Oceano con olas, Amor con corazones y la Megaball de evento dorada)',
+  '⚙️ Se puede volver al icono plano en Ajustes → QoL → «Sin Poké Balls 3D»'
+ ]},
+ {v:'55.9',t:'Biomas 3D mucho más bonitos',s:'prev',l:[
   '🌄 Con la cámara 3D en los biomas: cielo con sol y nubes que se mueven (de noche, luna y estrellas que titilan), montañas lejanas del color de cada bioma (volcán humeante en el Volcán y mar en la Costa), suelo que llega hasta el horizonte sin bordes vacíos, niebla de distancia, viñeta y sombras tumbadas en el suelo bajo cada Pokémon'
  ]},
  {v:'55.8',t:'Cargando Pokédex',s:'prev',l:[
@@ -10916,7 +10923,7 @@ const colOf=k=>BC[k]||(k&&String(k).startsWith('bt_')&&typeof COL!='undefined'&&
 window.ballAnim=(m,k,ok)=>new Promise(async res=>{
  const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'||S.qcap),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
  const o=D.createElement('div');o.className='bthr';
- o.innerHTML=`<div class="bt-vig"></div><div class="bt-red"></div><img class="bt-mon" src="${art(m.id,m.sh)}" alt=""><div class="bt-sh"></div><div class="bt-ball">${IC[k]||IC.ball}</div><div class="bt-dots"><i></i><i></i><i></i></div><div class="bt-msg"></div><div class="bt-flash"></div><div class="bt-hint">Toca para acelerar</div>`;
+ o.innerHTML=`<div class="bt-vig"></div><div class="bt-red"></div><img class="bt-mon" src="${art(m.id,m.sh)}" alt=""><div class="bt-sh"></div><div class="bt-ball">${(()=>{try{if(typeof S!=="undefined"&&S.noball3d)throw 0;return ball3d(k)}catch(e){return IC[k]||IC.ball}})()}</div><div class="bt-dots"><i></i><i></i><i></i></div><div class="bt-msg"></div><div class="bt-flash"></div><div class="bt-hint">Toca para acelerar</div>`;
  D.body.append(o);
  const mon=o.querySelector('.bt-mon'),ball=o.querySelector('.bt-ball'),dots=[...o.querySelectorAll('.bt-dots i')],msg=o.querySelector('.bt-msg'),sh=o.querySelector('.bt-sh'),vig=o.querySelector('.bt-vig'),red=o.querySelector('.bt-red'),fl=o.querySelector('.bt-flash'),hint=o.querySelector('.bt-hint');
  let fast=1;o.onclick=()=>{fast=3;hint.style.opacity=0};
@@ -11110,7 +11117,7 @@ const PH=['¡Nyeh, nyeh, nyeh!','¡Chao, cazador!','¡Atrápame si puedes!','¡F
 window.escapeTaunt=(m,k)=>new Promise(async res=>{
  const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'||S.qcap),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
  const o=D.createElement('div');o.className='bthr tz';
- o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt="" style="animation:none"><div class="bt-sh on"></div><div class="bt-ball">${IC[k]||IC.ball}</div><div class="bt-msg"></div><div class="bt-hint">Toca para acelerar</div>`;
+ o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt="" style="animation:none"><div class="bt-sh on"></div><div class="bt-ball">${(()=>{try{if(typeof S!=="undefined"&&S.noball3d)throw 0;return ball3d(k)}catch(e){return IC[k]||IC.ball}})()}</div><div class="bt-msg"></div><div class="bt-hint">Toca para acelerar</div>`;
  D.body.append(o);
  const mon=o.querySelector('.bt-mon'),ball=o.querySelector('.bt-ball'),msg=o.querySelector('.bt-msg'),sh=o.querySelector('.bt-sh'),hint=o.querySelector('.bt-hint');
  let fast=1,done=0;o.onclick=()=>{fast=3;hint.style.opacity=0};
@@ -18991,7 +18998,7 @@ window.TAUNTS=['Lengua y baile','Bostezo aburrido','Muecas','Pose de campeón','
 window.escapeTaunt=(m,k,force,stay)=>new Promise(async res=>{
  const lite=typeof S!='undefined'&&(S.fx===false||S.gfx==='calc'||S.qcap),sp=Math.max(.5,Math.min((typeof S!='undefined'&&S.speed)||1,3));
  const o=D.createElement('div');o.className='bthr tz';
- o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt="" style="animation:none"><div class="bt-sh on"></div><div class="bt-ball">${IC[k]||IC.ball}</div><div class="bt-msg"></div><div class="bt-hint">Toca para acelerar</div>`;
+ o.innerHTML=`<img class="bt-mon" src="${art(m.id,m.sh)}" alt="" style="animation:none"><div class="bt-sh on"></div><div class="bt-ball">${(()=>{try{if(typeof S!=="undefined"&&S.noball3d)throw 0;return ball3d(k)}catch(e){return IC[k]||IC.ball}})()}</div><div class="bt-msg"></div><div class="bt-hint">Toca para acelerar</div>`;
  D.body.append(o);
  /* continuación sin corte de ballAnim: misma escena, sin fundido de entrada y se retira la capa anterior */
  const PV=window.__btPrev;window.__btPrev=null;o.style.animation='none';if(PV)PV.remove();const HO=!!PV;
@@ -22007,6 +22014,26 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #bzv.bzcam3d .bzp .bzr img{filter:drop-shadow(0 4px 3px #0005) brightness(1.04) saturate(1.08)}
 
 #bzv.bzcam3d{--hz:22%}
+/* v56.0: Poké Balls 3D en la captura */
+.bt-ball .b3d{position:relative;display:block;width:92px;height:92px;border-radius:50%;overflow:hidden;background:#f8fafc;box-shadow:0 18px 26px #0008,inset 0 0 0 3px #111}
+.b3d .b3-spin{position:absolute;inset:0;border-radius:50%;animation:b3Spin 1.2s linear infinite}
+.bthr .b3d .b3-spin{animation-play-state:running}
+.b3d .b3-top{position:absolute;left:0;right:0;top:0;height:50%;background:linear-gradient(180deg,var(--t),var(--td))}
+.b3d .b3-dec{position:absolute;inset:0;border-radius:50%;pointer-events:none}
+.b3d .b3-dec.gb{background:radial-gradient(ellipse 18% 30% at 22% 30%,#ef4444 60%,#0000 62%),radial-gradient(ellipse 18% 30% at 78% 30%,#ef4444 60%,#0000 62%)}
+.b3d .b3-dec.ub{background:linear-gradient(90deg,#0000 18%,#facc15 18% 30%,#0000 30% 70%,#facc15 70% 82%,#0000 82%) top/100% 34% no-repeat}
+.b3d .b3-dec.nb{background:radial-gradient(circle at 30% 22%,#bef264 0 8%,#0000 9%),radial-gradient(circle at 70% 18%,#bef264 0 6%,#0000 7%),radial-gradient(circle at 50% 34%,#bef264 0 7%,#0000 8%)}
+.b3d .b3-dec.rb{background:repeating-linear-gradient(60deg,#0000 0 9px,#fde04788 9px 13px) top/100% 48% no-repeat}
+.b3d .b3-dec.ob{background:repeating-radial-gradient(circle at 50% 120%,#0000 0 8px,#a5f3fc88 8px 11px) top/100% 48% no-repeat}
+.b3d .b3-dec.ab{background:radial-gradient(circle at 36% 26%,#fff 0 7%,#0000 8%),radial-gradient(circle at 46% 26%,#fff 0 7%,#0000 8%),conic-gradient(from 135deg at 41% 33%,#fff 0 90deg,#0000 90deg) top/100% 48% no-repeat}
+.b3d .b3-dec.mrb{background:radial-gradient(circle at 50% 24%,#fff7 0 10%,#0000 11%),repeating-conic-gradient(from 0deg at 50% 50%,#fff3 0 10deg,#0000 10deg 20deg) top/100% 48% no-repeat}
+.b3d .b3-band{position:absolute;left:-2%;right:-2%;top:45%;height:10%;background:#111;box-shadow:0 1px 0 #fff3}
+.b3d .b3-btn{position:absolute;left:50%;top:50%;width:30%;height:30%;margin:-15% 0 0 -15%;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff,#e2e8f0 55%,#94a3b8);box-shadow:0 0 0 5px #111,inset 0 -2px 3px #0004}
+.b3d .b3-sh{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 36% 30%,#0000 0 45%,#0003 65%,#000a 100%);pointer-events:none}
+.b3d .b3-hl{position:absolute;left:18%;top:10%;width:34%;height:22%;border-radius:50%;background:radial-gradient(ellipse at center,#fffd,#fff0 70%);transform:rotate(-25deg);pointer-events:none}
+@keyframes b3Spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.bthr.cg .b3d .b3-btn,.bt-ball.ok .b3d .b3-btn{animation:b3Glow .5s ease-in-out infinite alternate}
+@keyframes b3Glow{to{background:radial-gradient(circle at 40% 35%,#fff,#fde047 55%,#f59e0b);box-shadow:0 0 0 5px #111,0 0 18px #fde047}}
 </style>
 <script id="v37js">
 (()=>{
