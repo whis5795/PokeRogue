@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.2</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.3</div>
 </section>
 
 <section id="team" class="scr">
@@ -8656,7 +8656,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'56.2',t:'Avisos de compra de la tienda al instante',s:'cur',l:[
+ {v:'56.3',t:'Efectos de ataque en su sitio',s:'cur',l:[
+  '🎯 Arreglado: algunos efectos de ataque (el aura de carga de los ataques potentes, las ondas, la lluvia de rocas, los remolinos, el polvo…) aparecían un instante en la esquina de arriba a la izquierda de la pantalla antes de empezar; ahora salen siempre sobre el Pokémon que ataca o recibe el golpe'
+ ]},
+ {v:'56.2',t:'Avisos de compra de la tienda al instante',s:'prev',l:[
   '🛒 Arreglado: al comprar muchas veces seguidas con el selector de cantidad, los avisos de compra se ponían en cola y seguían saliendo segundos después con objetos que ya no eran los que estabas comprando. Ahora la tienda tiene su propio aviso arriba que se actualiza al momento, suma las compras seguidas del mismo objeto y muestra cuántos tienes'
  ]},
  {v:'56.1',t:'Botón «Vender varios» más visible',s:'prev',l:[
@@ -26796,7 +26799,7 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
  const arcOf=mv=>{const n=String(mv&&mv.n||'');for(const [k,r] of ARC)if(r.test(n))return k;if(!mv||!mv.p)return'status';return mv.ph?'tackle':'orb'};
  const isM3=s=>{try{const i=D.querySelector('#'+s+'S img');return !!i&&(i.classList.contains('sd3')||i.classList.contains('sdh'))}catch(e){return false}};
  const dv=(w,h,css)=>{const d=D.createElement('div');d.className='fxp afx';d.style.cssText=`width:${w}px;height:${h}px;margin:${-h/2}px 0 0 ${-w/2}px;${css}`;AR().append(d);return d};
- const go=(d,ks,ms,o)=>d.animate(ks,Object.assign({duration:ms/sp(),easing:'ease-out',fill:'forwards'},o||{})).finished.then(()=>d.remove(),()=>d.remove());
+ const go=(d,ks,ms,o)=>(d.style.opacity='0',d.animate(ks,Object.assign({duration:ms/sp(),easing:'ease-out',fill:'both'},o||{}))).finished.then(()=>d.remove(),()=>d.remove());
  const T=(x,y,r,sc,op)=>({transform:`translate(${x}px,${y}px) rotate(${r||0}deg) scale(${sc==null?1:sc})`,opacity:op==null?1:op});
  /* ---- efectos por clase de movimiento (se suman a los de cada tipo) ---- */
  const IMP={
