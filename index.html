@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.1</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.2</div>
 </section>
 
 <section id="team" class="scr">
@@ -8653,12 +8653,16 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'56.1',t:'Arreglos en los biomas 3D',s:'cur',l:[
+ {v:'56.2',t:'Biomas 3D sin cortes en móviles',s:'cur',l:[
+  '📱 Arreglado: en algunos móviles el suelo de los biomas 3D solo se dibujaba a medias (la parte de cerca quedaba lisa) y las montañas y el volcán desaparecían; el escenario 3D ahora pesa mucho menos para la tarjeta gráfica del móvil',
+  '☁️ Nubes más fluidas'
+ ]},
+ {v:'56.1',t:'Arreglos en los biomas 3D',s:'prev',l:[
   '👻 Arreglado: en los biomas 3D muchos Pokémon no aparecían (solo se veía su sombra en el suelo); ahora se cargan todos al entrar',
   '🏔️ El suelo ya no se corta: desaparece la franja gris entre las montañas y el terreno y el borde del mapa que se veía al moverte; el horizonte toma el color real del bioma',
   '📱 Suelo infinito más estable en móviles'
  ]},
- {v:'56.0',t:'Poké Balls en 3D',s:'prev',l:[
+ {v:'56.0',t:'Poké Balls en 3D',l:[
   '⚾ Al capturar, las Balls tienen diseño 3D: esfera con luz y sombra, brillo, banda negra y botón, girando en el aire, y cada una con su diseño (Súper Ball con franjas rojas, Ultra Ball con sus marcas amarillas, Nido, Red, Oceano con olas, Amor con corazones y la Megaball de evento dorada)',
   '⚙️ Se puede volver al icono plano en Ajustes → QoL → «Sin Poké Balls 3D»'
  ]},
@@ -22045,6 +22049,13 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #bzv.bznight .bz-sky{background:linear-gradient(#0b1030 0%,#1e2a5a calc(var(--hz,14%) - 6%),#41507f calc(var(--hz,14%) + 1%),var(--gnd) calc(var(--hz,14%) + 9%),var(--gnd) 100%)}
 #bzv .bz-sky{background:linear-gradient(#4aa8e8 0%,#8fd0f5 calc(var(--hz,14%) - 6%),#e6f6fd calc(var(--hz,14%) + 1%),var(--gnd) calc(var(--hz,14%) + 9%),var(--gnd) 100%)}
 #bzv.bzcam3d .bzp .bzr img{content-visibility:visible}
+
+/* v56.2: biomas 3D ligeros para la GPU del móvil (evita trozos del suelo y montañas sin dibujar) */
+#bzv.bzcam3d .bz-w::before{display:none}
+#bzv.bzcam3d .bzp .bzr img{filter:none}
+#bzv .bzk-cl{left:0;animation-name:bzCl2;will-change:transform}
+@keyframes bzCl2{from{transform:translateX(-30vw)}to{transform:translateX(115vw)}}
+#bzv .bzk-vol{filter:none;text-shadow:0 0 18px #f97316}
 </style>
 <script id="v37js">
 (()=>{
@@ -25476,7 +25487,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   if(!d||d.cl!=null){o.querySelector('.bz-pk').innerHTML='';o.querySelector('.bz-tip').textContent=d&&d.cl!=null?'¡Has despejado la zona! Sal y vuelve a entrar para encontrar más Pokémon':'No se pudo explorar la zona. Revisa tu conexión';}
   try{drawBG(o.querySelector('.bz-bg'),k,(d&&d.seed)||7)}catch(e){console.error(e)}mmBg();
   /* v56.1: el suelo infinito y el horizonte toman el color real del terreno (sin franjas ni bordes del mapa) */
-  try{const cv=o.querySelector('.bz-bg'),cx=cv.getContext('2d'),W=cv.width,H=cv.height,a=[0,0,0];let n=0;for(let i=0;i<40;i++){const x=(i*137)%W,y=i%2?((i*71)%40):H-1-((i*71)%40),q=cx.getImageData(x|0,y|0,1,1).data;a[0]+=q[0];a[1]+=q[1];a[2]+=q[2];n++}
+  try{const cv=o.querySelector('.bz-bg'),sm=D.createElement('canvas');sm.width=sm.height=16;const sx=sm.getContext('2d',{willReadFrequently:true});sx.drawImage(cv,0,0,16,16);const q=sx.getImageData(0,0,16,16).data,a=[0,0,0];let n=0;for(let i=0;i<q.length;i+=4){a[0]+=q[i];a[1]+=q[i+1];a[2]+=q[i+2];n++}
    const c=a.map(v=>Math.round(v/n)),hx=v=>v.map(z=>Math.max(0,Math.min(255,z)).toString(16).padStart(2,'0')).join('');o.style.setProperty('--gnd','#'+hx(c));o.style.setProperty('--gnd2','#'+hx(c.map(z=>z*.9)))}catch(e){}
   if(!hadCam&&d&&d.g&&d.g.length){const g0=d.g[0].m,cx=g0.reduce((a,m)=>a+m.x,0)/g0.length,cy=g0.reduce((a,m)=>a+m.y,0)/g0.length,vp=o.querySelector('.bz-vp');cur.cam={x:cx-vp.clientWidth/2/cur.z,y:cy-vp.clientHeight/2/cur.z};apply()}
   paintPk();cur.wt=setInterval(wander,2600);try{if(d&&d.cl==null)socStart(k)}catch(e){console.error('soc',e)}setTimeout(()=>{const t=o.querySelector('.bz-tip');if(t)t.classList.add('off')},3500)}
