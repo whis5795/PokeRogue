@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.0</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.1</div>
 </section>
 
 <section id="team" class="scr">
@@ -8626,7 +8626,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'55.0',t:'Cada evento con su animación exclusiva',s:'cur',l:[
+ {v:'55.1',t:'Mochila con desplazamiento',s:'cur',l:[
+  '🎒 Aventura multiplayer: la mochila (y la tienda y las demás ventanas) se pueden desplazar con el dedo cuando tienes muchos objetos; antes los de abajo quedaban fuera de la pantalla'
+ ]},
+ {v:'55.0',t:'Cada evento con su animación exclusiva',s:'prev',l:[
   '🎬 Todos los eventos de los biomas (más de 90) terminan con su propia animación exclusiva, distinta para cada uno: órbitas, ochos, zigzags, péndulos, saltos de muelle, moonwalk, volteretas laterales, tornados, gelatina, crecer, cabezazos, puntillas, desmayos, levitar girando, carreras, enrollarse, sustos, balanceos, cohetes, vibrar, reverencias, saludos, destellos, siluetas, arcoíris y encoger y estallar',
   '✨ Con efectos únicos en el escenario: corazones dibujados entre los dos Pokémon, espirales, fuentes, puentes de partículas, órbitas, explosiones, ondas, confeti, burbujas, rayos, anillos de energía, palabras («¡Hola!», «¡Choca!», «¡Ja!»…), lluvias y coronas que bajan del cielo',
   '🏆 Los finales de las historias, los poderes de cada tipo, las combinaciones, los eventos de los clanes, los de grupo, los de pareja, los de solitario y hasta comer, dormir o animar a un amigo tienen la suya'
@@ -21875,6 +21878,9 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 /* v55.0: firmas de los eventos */
 #bzv .bzwp{position:absolute;font-style:normal;pointer-events:none;z-index:6;filter:drop-shadow(0 2px 3px #0009);will-change:transform,opacity;white-space:nowrap;font-weight:900;color:#fff;text-shadow:0 2px 0 #000,0 0 8px #000a}
 #bzv .bzring{position:absolute;width:120px;height:120px;border-radius:50%;border:5px solid #fde047;pointer-events:none;z-index:5;box-shadow:0 0 18px currentColor}
+/* v55.1: las ventanas de la Aventura multiplayer (mochila, tienda…) se pueden desplazar si tienen mucho contenido */
+#mpa .ma-pop>div{max-height:calc(100% - 4px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;box-sizing:border-box}
+#mpa .ma-pop .mbs+.ma-it{max-height:none;overflow:visible}
 </style>
 <script id="v37js">
 (()=>{
