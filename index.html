@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.6</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v55.7</div>
 </section>
 
 <section id="team" class="scr">
@@ -5255,7 +5255,7 @@ const DEF=[
   {k:'bznonar',t:'Sin narrador en los biomas',d:'Dentro de los biomas no aparece el narrador que cuenta lo que pasa entre los Pokémon (la Crónica 📜 sigue guardando todo)',b:1},
   {k:'bztop',t:'Botones del bioma arriba',d:'Dentro de los biomas, el botón para volver a la isla (y los de información) van arriba a la izquierda, como antes, en vez de abajo',b:1},
   {k:'smap',t:'Mapa simple',d:'Cambia el mapa ilustrado por botones flotantes con todos los lugares a los que puedes entrar',b:1},
-  {k:'m3dq',t:'Modelos 3D',d:'Animados: se mueven, pero tienen poca resolución · Alta definición: modelos 3D nítidos y grandes (de Pokémon HOME), sin animación',o:[['anim','Animados'],['home','Alta definición']]},{k:'no3d',t:'Sin modelos 3D: combates normales',d:'Aventura, salvajes, entrenadores y gimnasios: se ven las ilustraciones de siempre en lugar de los modelos 3D animados',b:1},
+  {k:'bz3d',t:'Biomas: Pokémon',d:'Cómo se ven los Pokémon dentro de los biomas: ilustraciones, modelos 3D animados o modelos 3D en alta definición',o:[['art','Ilustraciones'],['anim','3D animados'],['hd','3D HD']]},{k:'bzcam',t:'Biomas: cámara',d:'Plana: vista desde arriba como siempre · 3D: la cámara se inclina y el bioma se ve en perspectiva, con los Pokémon de pie y el cielo al fondo',o:[['flat','Plana'],['3d','3D']]},{k:'m3dq',t:'Modelos 3D',d:'Animados: se mueven, pero tienen poca resolución · Alta definición: modelos 3D nítidos y grandes (de Pokémon HOME), sin animación',o:[['anim','Animados'],['home','Alta definición']]},{k:'no3d',t:'Sin modelos 3D: combates normales',d:'Aventura, salvajes, entrenadores y gimnasios: se ven las ilustraciones de siempre en lugar de los modelos 3D animados',b:1},
   {k:'no3dRaid',t:'Sin modelos 3D: megaincursiones',d:'El megajefe y vuestros Pokémon se ven con las ilustraciones de siempre',b:1},
   {k:'no3dPvp',t:'Sin modelos 3D: PvP',d:'En los combates contra amigos se ven las ilustraciones de siempre',b:1},
   {k:'no3dCoop',t:'Sin modelos 3D: Torre 2 vs 2',d:'En los combates dobles se ven las ilustraciones de siempre',b:1},
@@ -8650,7 +8650,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'55.6',t:'Efectos de ataque mejorados',s:'cur',l:[
+ {v:'55.7',t:'Modo 3D en los biomas',s:'cur',l:[
+  '🌲 Modo 3D en los biomas, personalizable en Ajustes → QoL: «Biomas: Pokémon» (ilustraciones, 3D animados o 3D HD) y «Biomas: cámara» (plana o 3D, con la cámara inclinada en perspectiva, los Pokémon de pie y el cielo al fondo)'
+ ]},
+ {v:'55.6',t:'Efectos de ataque mejorados',s:'prev',l:[
   '💥 Nuevos efectos según la clase de cada movimiento, que se suman a los de su tipo: puñetazos con onda de choque, patadas con estela, mordiscos con mandíbulas que se cierran, zarpazos con tres cortes, rayos que cruzan la pantalla, esferas de energía, ondas expansivas, terremotos que agrietan el suelo, lluvias de meteoros, torbellinos, explosiones, embestidas con líneas de velocidad, drenajes que devuelven la vida y nubes de polvo o esporas',
   '⚡ El atacante carga energía del color de su tipo antes de atacar (más cuanto más potente es el movimiento); los golpes supereficaces sueltan un anillo dorado, los críticos un destello de líneas y los movimientos muy potentes hacen vibrar la cámara',
   '🧭 Aventura multiplayer: con modelos 3D, tus Pokémon ya no salen de espaldas: miran al frente hacia los rivales (la vista es de lado)',
@@ -21957,6 +21960,13 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #pdx #dpimg.dp3d{image-rendering:auto;object-fit:contain;transform:scale(1.15)}
 #pdx #dpimg.dphd{object-fit:contain}
 #mpa .ma-u.h img[src*="/showdown/"],#mpa .ma-u.h img[src*="/other/home/"]{scale:-1 1}
+/* v55.7: modo 3D en los biomas */
+#bzv.bzcam3d .bz-vp{perspective:900px;perspective-origin:50% 35%}
+#bzv.bzcam3d .bz-w,#bzv.bzcam3d .bz-pk,#bzv.bzcam3d .bz-soc{transform-style:preserve-3d}
+#bzv.bzcam3d .bzp{rotate:x -38deg;transform-origin:50% 85%}
+#bzv.bzcam3d .bzs,#bzv.bzcam3d .bzwp,#bzv.bzcam3d .bzbaby{rotate:x -38deg}
+#bzv.bzcam3d .bz-vp::before{content:"";position:absolute;left:0;right:0;top:0;height:28%;z-index:2;pointer-events:none;background:linear-gradient(#87ceeb,#bfe3f5 55%,#0000)}
+#bzv.bzspr3d .bzp .bzr img{object-fit:contain;image-rendering:auto}
 </style>
 <script id="v37js">
 (()=>{
@@ -25369,7 +25379,10 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  const needGen=(k)=>{const r=live(),d=BD()[k];return!d||(d.cl!=null&&r.round>d.cl)||(d.t!=null&&r.round-d.t>=8)||(!d.cl&&!(d.g||[]).some(g=>g.m.length))};
  const allMons=d=>d&&d.g?d.g.flatMap(g=>g.m):[];
  const bzSize=m=>m.alpha?190:118;
- function pkH(m){const s=bzSize(m);return`<button type="button" class="bzp${m.sh?' sh':''}${m.alpha?' al':''}" data-id="${m.id}" data-u="${m.u}" data-n="${esc(nmS(m))}" data-x="${m.x}" data-y="${m.y}" style="left:${m.x}px;top:${m.y}px;width:${s}px;height:${s}px;--dl:${(-(m.u*.53)%3).toFixed(2)}s" aria-label="${esc((m.sh?'Shiny ':'')+(m.alpha?'Alfa ':'')+nmS(m))}"><span class="bzr"><img src="${art(m.id,m.sh)}" alt="" draggable="false" loading="lazy" onerror="this.onerror=null;this.src='${mini(m.id,m.sh)}'"></span>${m.sh?'<i class="hds"></i><i class="hds b"></i><i class="hds c"></i>':''}</button>`}
+ /* v55.7: modo 3D en los biomas: modelos animados o HD (ajuste «Biomas: Pokémon») y cámara inclinada (ajuste «Biomas: cámara») */
+ const bzMode=()=>{try{return(typeof S=='object'&&S&&S.bz3d)||'art'}catch(e){return'art'}},bzCam=()=>{try{return(typeof S=='object'&&S&&S.bzcam)||'flat'}catch(e){return'flat'}};
+ const bzSrc=m=>{const a=art(m.id,m.sh),md=bzMode();if(md==='art'||typeof a!=='string'||!a.includes('/other/official-artwork/'))return a;return md==='hd'?a.replace('/other/official-artwork/','/other/home/'):a.replace('/other/official-artwork/','/other/showdown/').replace(/\.png$/,'.gif')};
+ function pkH(m){const s=bzSize(m);return`<button type="button" class="bzp${m.sh?' sh':''}${m.alpha?' al':''}" data-id="${m.id}" data-u="${m.u}" data-n="${esc(nmS(m))}" data-x="${m.x}" data-y="${m.y}" style="left:${m.x}px;top:${m.y}px;width:${s}px;height:${s}px;--dl:${(-(m.u*.53)%3).toFixed(2)}s" aria-label="${esc((m.sh?'Shiny ':'')+(m.alpha?'Alfa ':'')+nmS(m))}"><span class="bzr"><img src="${bzSrc(m)}" alt="" draggable="false" loading="lazy" onerror="if(this.src!=='${art(m.id,m.sh)}'&&!this.dataset.f){this.dataset.f=1;this.src='${art(m.id,m.sh)}';return}this.onerror=null;this.src='${mini(m.id,m.sh)}'"></span>${m.sh?'<i class="hds"></i><i class="hds b"></i><i class="hds c"></i>':''}</button>`}
  async function enterBiome(k,cam,fresh){const r=live();if(!r)return;let d=BD()[k];if(fresh){delete lastCam[k]}const hadCam=!!cam;
   close2();const o=D.createElement('div');o.id='bzv';o.className='bz-'+k;const i=BI(k),lv=window.zoneLv&&i>=0?zoneLv(i):0;
   o.innerHTML=`<div class="bz-vp"><div class="bz-w" style="width:${WW}px;height:${WH}px"><canvas class="bz-bg" width="${WW}" height="${WH}"></canvas><div class="bz-pk"></div></div></div>
@@ -25820,7 +25833,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  function chronOpen(){if(!cur)return;let pn=cur.o.querySelector('.bzchron');if(pn){pn.remove();return}pn=D.createElement('div');pn.className='bzchron';cur.o.append(pn);chronPaint(pn)}
  const zMin=()=>{const vp=cur.o.querySelector('.bz-vp');return Math.min(1,Math.max(vp.clientWidth/WW,vp.clientHeight/WH)*.98)},Z_MAX=3;
  function apply(){if(!cur)return;const vp=cur.o.querySelector('.bz-vp'),z=cur.z=Math.max(zMin(),Math.min(Z_MAX,cur.z||1)),w=vp.clientWidth/z,h=vp.clientHeight/z,c=cur.cam;
-  c.x=w>=WW?(WW-w)/2:Math.max(0,Math.min(WW-w,c.x));c.y=h>=WH?(WH-h)/2:Math.max(0,Math.min(WH-h,c.y));cur.o.querySelector('.bz-w').style.transform=`scale(${z}) translate3d(${-c.x}px,${-c.y}px,0)`;lastCam[cur.k]={x:c.x,y:c.y};lastZ[cur.k]=z;mmView();if(cur.zs!==z){cur.zs=z;clearTimeout(cur.zt);cur.zt=setTimeout(()=>{try{localStorage.setItem('pa_bzz',String(Math.round(z*1000)/1000))}catch(e){}},250)}const zl=cur.o.querySelector('.bz-zl');if(zl)zl.textContent=Math.round(z*100)+'%'}
+  c.x=w>=WW?(WW-w)/2:Math.max(0,Math.min(WW-w,c.x));c.y=h>=WH?(WH-h)/2:Math.max(0,Math.min(WH-h,c.y));{const t3=bzCam()==='3d',hx=vp.clientWidth/2,hy=vp.clientHeight/2;cur.o.classList.toggle('bzcam3d',t3);cur.o.classList.toggle('bzspr3d',bzMode()!=='art');cur.o.querySelector('.bz-w').style.transform=t3?`translate(${hx}px,${hy}px) rotateX(38deg) translate(${-hx}px,${-hy}px) scale(${z}) translate3d(${-c.x}px,${-c.y}px,0)`:`scale(${z}) translate3d(${-c.x}px,${-c.y}px,0)`};lastCam[cur.k]={x:c.x,y:c.y};lastZ[cur.k]=z;mmView();if(cur.zs!==z){cur.zs=z;clearTimeout(cur.zt);cur.zt=setTimeout(()=>{try{localStorage.setItem('pa_bzz',String(Math.round(z*1000)/1000))}catch(e){}},250)}const zl=cur.o.querySelector('.bz-zl');if(zl)zl.textContent=Math.round(z*100)+'%'}
  function zoomAt(nz,fx,fy){if(!cur)return;const vp=cur.o.querySelector('.bz-vp'),r=vp.getBoundingClientRect();fx=fx==null?r.width/2:fx-r.left;fy=fy==null?r.height/2:fy-r.top;const z0=cur.z,wx=cur.cam.x+fx/z0,wy=cur.cam.y+fy/z0;cur.z=Math.max(zMin(),Math.min(Z_MAX,nz));cur.cam.x=wx-fx/cur.z;cur.cam.y=wy-fy/cur.z;apply()}
  function bindDrag(o){const vp=o.querySelector('.bz-vp');let st=null,vx=0,vy=0,raf=0,lt=0;const PT=new Map();let pin=null;
   vp.addEventListener('pointerdown',e=>{if(e.button)return;PT.set(e.pointerId,{x:e.clientX,y:e.clientY});cancelAnimationFrame(raf);
