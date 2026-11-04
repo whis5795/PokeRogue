@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v54.2</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v54.3</div>
 </section>
 
 <section id="team" class="scr">
@@ -8626,7 +8626,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'54.2',t:'Aviso de versión nueva con ✕',s:'cur',l:[
+ {v:'54.3',t:'Casa más cómoda',s:'cur',l:[
+  '🐾 Casa: tocar a un Pokémon una vez lo acaricia. Para abrir su menú (mover, quitar, tamaño o su ficha) hay que mantenerlo pulsado: brilla mientras lo mantienes y vibra al abrirse',
+  '🗂️ La pestaña «MÁS» de la casa ahora se despliega en el hueco entre la casa y los botones de abajo, con botones grandes en dos filas (3 arriba y 4 abajo). Si la pantalla es muy baja, se abre como antes'
+ ]},
+ {v:'54.2',t:'Aviso de versión nueva con ✕',s:'prev',l:[
   '✕ El aviso «Hay una versión nueva» tiene un botón para ocultarlo durante 5 minutos (después vuelve a salir si todavía no has actualizado)'
  ]},
  {v:'54.1',t:'Legendex con tus capturas de antes',s:'prev',l:[
@@ -13193,7 +13197,7 @@ const FACT=['Pikachu fue elegido mascota porque su nombre y su diseño eran fác
 let lastF=0;
 ov.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a;
  if(a==='deco'){openDeco();return}
- if(a.startsWith('pet:')){const c=C(),j=+a.slice(4),pt=c&&c.pets[j];if(!pt)return;let n='este Pokémon';try{const P=[...(R.team||[]),...(R.box||[])],m=P[pt.i]&&P[pt.i].id===pt.id?P[pt.i]:P.find(x=>x.id===pt.id);if(m)n=nm(m)}catch(e){}
+ if(a.startsWith('pet:')){/* v54.3: tocar = acariciar; el menú solo se abre manteniendo pulsado */if(!b.__lp)return;b.__lp=0;const c=C(),j=+a.slice(4),pt=c&&c.pets[j];if(!pt)return;let n='este Pokémon';try{const P=[...(R.team||[]),...(R.box||[])],m=P[pt.i]&&P[pt.i].id===pt.id?P[pt.i]:P.find(x=>x.id===pt.id);if(m)n=nm(m)}catch(e){}
   const RS=window.__rooms;ask('🐾 Compañero',`<b>${esc(n)}</b> pasea por ${RS?'la '+RS.name(RS.cur()):'tu casa'}.<br><small>Puedes llevarlo a otra habitación o quitarlo de la casa (se vuelve a poner desde «Decorar → Compañeros»).</small>`,[RS?'🚪 Mover a '+RS.mvLabel():'Mover','Quitar de la casa','📏 Cambiar tamaño','Dejarlo']).then(r=>{if(r===0&&RS){RS.movePet(j);return}if(r===2){tab='pets';openDeco();return}if(r!==1)return;c.pets.splice(j,1);try{saveRun()}catch(e){}try{HM.render()}catch(e){}applyLook();toast('🐾 '+n+' vuelve a descansar')});return}
  if(!a.startsWith('f:'))return;const id=a.slice(2),now=Date.now();if(now-lastF<350)return;lastF=now;
  setTimeout(()=>{try{
@@ -24512,7 +24516,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  function pet(m,el){if(!m||!live())return;const r=R.round|0;if(m.frP===r){toast(`💕 ${nmS(m)} ya recibió mimos esta ronda`);return}m.frP=r;const g=add(m,4);try{saveRun()}catch(_){}
   try{const rc=el.getBoundingClientRect();for(let i=0;i<5;i++){const h=D.createElement('i');h.className='frh';h.textContent='💕';h.style.left=(rc.left+rc.width/2+(rnd()*40-20))+'px';h.style.top=(rc.top+rc.height*.3)+'px';h.style.animationDelay=(i*.08)+'s';D.body.append(h);setTimeout(()=>h.remove(),1400)}beep(880,.06,'triangle');setTimeout(()=>beep(1175,.08,'triangle'),80)}catch(_){}
   const L=lvOf(m);toast(`💕 ${nmS(m)} disfruta de tus mimos (+${g}) · ${hearts(L[1])} ${L[2]}`)}
- D.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('#homeov .hroam,#homeov .hpet');if(!el||!live())return;
+ D.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('#homeov .hroam,#homeov .hpet');if(!el||!live()||el.__lp)return;
   try{let m=null;if(el.classList.contains('hroam'))m=R.team[+el.dataset.r];else{const H=window.__HOME&&__HOME.H&&__HOME.H(),c=H&&H.c,pt=c&&c.pets&&c.pets[+String(el.dataset.a||'').slice(4)];if(pt){const P=[...(R.team||[]),...(R.box||[])];m=P[pt.i]&&P[pt.i].id===pt.id?P[pt.i]:P.find(x=>x.id===pt.id)}}
    if(m)pet(m,el)}catch(_){}},true);
  /* ficha del Pokémon */
@@ -25967,6 +25971,46 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
   try{if(a){if(a.id===BI&&w&&typeof checkEvo=='function')await checkEvo();delete a._kg;if(a.id===KG){try{toast('👑 ¡Bisharp ha evolucionado a Kingambit!')}catch(_){}}try{saveRun()}catch(_){}}}catch(e){console.error('kingambit',e)}return r};
  /* el texto de evolución en la ficha */
  window.__kgEvoTxt='❓ Evoluciona de una forma misteriosa…';
+})();
+
+/* ---------- v54.3: casa: tocar a un Pokémon lo acaricia; mantenerlo pulsado abre su menú ---------- */
+(()=>{const D=document,W=window,SEL='#homeov .hpet,#homeov .hroam';let T=0,el0=null,sx=0,sy=0,lpAt=0,prog=false;
+ const cancel=()=>{clearTimeout(T);el0=null};
+ W.addEventListener('pointerdown',e=>{const el=e.target.closest&&e.target.closest(SEL);if(!el)return;const ov=D.getElementById('homeov');if(ov&&ov.classList.contains('hedit'))return;
+  el0=el;sx=e.clientX;sy=e.clientY;clearTimeout(T);el.classList.add('hlp');
+  T=setTimeout(()=>{el.classList.remove('hlp');if(el0!==el)return;el0=null;lpAt=Date.now();try{navigator.vibrate&&navigator.vibrate(25)}catch(_){}try{beep(520,.06,'triangle')}catch(_){}menu(el)},500)},true);
+ W.addEventListener('pointerup',e=>{if(el0)el0.classList.remove('hlp');cancel()},true);
+ W.addEventListener('pointercancel',e=>{if(el0)el0.classList.remove('hlp');cancel()},true);
+ W.addEventListener('pointermove',e=>{if(el0&&Math.hypot(e.clientX-sx,e.clientY-sy)>14){el0.classList.remove('hlp');cancel()}},true);
+ W.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest(SEL))e.preventDefault()},true);
+ /* el «clic» que llega al soltar tras mantener pulsado no acaricia ni hace nada más */
+ W.addEventListener('click',e=>{if(prog)return;const el=e.target.closest&&e.target.closest(SEL);if(!el)return;if(Date.now()-lpAt<800){e.stopImmediatePropagation();e.preventDefault()}},true);
+ function menu(el){if(el.classList.contains('hpet')){el.__lp=1;prog=true;try{el.click()}finally{prog=false;setTimeout(()=>{el.__lp=0},50)}return}
+  try{const m=R.team[+el.dataset.r];if(m&&typeof W.info==='function')W.info(m)}catch(e){console.error(e)}}
+ const st=D.createElement('style');st.textContent=`#homeov .hpet,#homeov .hroam{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}#homeov .hlp{filter:drop-shadow(0 0 8px #fde047) brightness(1.15);transition:filter .45s}`;D.head.append(st);
+})();
+/* ---------- v54.3: la pestaña «MÁS» de la casa se despliega en el hueco entre la casa y los botones de abajo (3 arriba y 4 abajo) ---------- */
+(()=>{const D=document,Q=s=>D.querySelector(s);let tab=null,htp=null,home=null,obs=null;
+ const vis=()=>[...htp.children].filter(b=>!b.hidden&&getComputedStyle(b).display!=='none');
+ function layout(){const ov=Q('#homeov');if(!ov||!htp)return false;const sc=ov.querySelector('.hscene:not(.side)')||ov.querySelector('.hscene'),ft=ov.querySelector('#hft');if(!sc||!ft)return false;
+  const top=sc.getBoundingClientRect().bottom+10,bot=ft.getBoundingClientRect().top-10;if(bot-top<130)return false;
+  if(htp.parentNode!==ov){[...htp.children].forEach(x=>{if(x.dataset.bg)return;const c=getComputedStyle(x);x.dataset.bg=1;x.style.backgroundImage=c.backgroundImage;x.style.backgroundColor=c.backgroundColor;x.style.borderColor=c.borderColor;x.style.color=c.color});home=htp.parentNode;ov.append(htp)}htp.classList.add('hgrid');if(!tab.classList.contains('hgm'))tab.classList.add('hgm');/* (classList.add siempre cuenta como cambio para el observador) */htp.style.top=top+'px';htp.style.height=(bot-top)+'px';
+  const L=vis(),n=L.length,a=Math.floor(n/2),b=n-a;L.forEach((x,i)=>{x.style.gridColumn='span '+(i<a?12/a:12/b)});htp.style.gridTemplateRows=a?'1fr 1fr':'1fr';return true}
+ function restore(){if(!htp)return;htp.classList.remove('hgrid');if(tab&&tab.classList.contains('hgm'))tab.classList.remove('hgm');htp.style.top=htp.style.height=htp.style.gridTemplateRows='';[...htp.children].forEach(x=>x.style.gridColumn='');if(home&&htp.parentNode!==home)home.append(htp)}
+ function sync(){if(!tab)return;if(tab.classList.contains('open')){if(!layout())restore()}else restore()}
+ const t=setInterval(()=>{tab=Q('#homeov #htab');if(!tab)return;htp=tab.querySelector('.htp');if(!htp)return;clearInterval(t);
+  obs=new MutationObserver(sync);obs.observe(tab,{attributes:true,attributeFilter:['class']});
+  /* con el panel fuera de la pestaña, tocarlo no debe cerrarla antes de tiempo; tocar fuera sí la cierra */
+  htp.addEventListener('click',e=>{e.stopPropagation();if(e.target.closest('button'))setTimeout(()=>tab.classList.remove('open'),0)});
+  addEventListener('resize',sync)},700);
+ const st=D.createElement('style');st.textContent=`#homeov .htp.hgrid{position:fixed!important;left:12px;right:12px;z-index:62;display:grid!important;grid-template-columns:repeat(12,1fr);gap:10px;padding:12px!important;border:2px solid #fbbf2488!important;border-radius:22px;background:#1a0f33f5!important;box-shadow:0 14px 34px #000c!important;animation:hgIn .22s cubic-bezier(.2,1.2,.4,1);box-sizing:border-box;max-width:720px;margin:0 auto}
+@keyframes hgIn{from{opacity:0;transform:translateY(14px) scale(.97)}}
+#homeov #htab.hgm .htk{opacity:0;pointer-events:none}
+#homeov .htp.hgrid button{position:relative;display:flex!important;align-items:center;border:2px solid;cursor:pointer;box-shadow:0 6px 14px #0009;font-weight:900!important;text-transform:uppercase;min-width:0!important;flex-direction:column;justify-content:center;gap:4px!important;padding:8px 4px!important;border-radius:18px!important;font-size:10.5px!important;letter-spacing:.6px!important;text-align:center;line-height:1.15;white-space:normal}
+#homeov .htp.hgrid button span{font-size:24px!important}
+#homeov .htp.hgrid button[hidden]{display:none!important}
+#homeov .htp.hgrid button em{position:absolute;top:6px;right:6px;margin:0!important;font-style:normal;min-width:20px;height:20px;border-radius:10px;background:#fde047;color:#111;font:900 11px/20px system-ui;letter-spacing:0;text-align:center;display:none}
+#homeov .htp.hgrid button em.on{display:block}`;D.head.append(st);
 })();
 
 })();</script>
