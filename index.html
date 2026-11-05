@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v57.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -5290,7 +5290,7 @@ const old=[...sec.querySelectorAll(':scope > .row')];old.forEach(r=>{if(r.queryS
 const dataRows=old.filter(r=>!r.querySelector('[data-s]')),slot=document.getElementById('slotbox');
 const root=document.createElement('div');root.id='setx';const tabs=document.createElement('div');tabs.className='tabs';root.append(tabs);
 const val=(k)=>S[k];
-const lbl=(d)=>{const f=d.o.find(x=>x[0]===S[d.k]);return f?f[1]:String(S[d.k])};
+const ev=(d)=>S[d.k]==null&&d.o&&d.o.length?d.o[0][0]:S[d.k];const lbl=(d)=>{const f=d.o.find(x=>x[0]===ev(d));return f?f[1]:String(ev(d))};
 const panels={};let cur=localStorage.getItem('pa_stab')||'game';if(!DEF.some(c=>c[0]===cur))cur='game';
 function setOpt(k,v){S[k]=v;try{save()}catch(e){}if(k=='smap'&&window.__smapRefresh)__smapRefresh();
  if(k=='gfx'){try{applyGfx(1)}catch(e){}}
@@ -5306,7 +5306,7 @@ const rows={};
 DEF.forEach(([id,ic,name,items])=>{
  const tb=document.createElement('button');tb.type='button';tb.className='tab';tb.dataset.c=id;tb.innerHTML=`<span>${ic}</span>${name}`;tb.onclick=()=>{cur=id;try{localStorage.setItem('pa_stab',id)}catch(e){}closeAll();refresh()};tabs.append(tb);
  const p=document.createElement('div');p.className='sp';p.dataset.c=id;panels[id]=p;
- items.forEach(d=>{const r=document.createElement('div');r.className='row'+(d.s?' vol':'');rows[d.k]={d,r};
+ items.forEach(d=>{const r=document.createElement('div');r.className='row'+(d.s?' vol':'');r.dataset.k=d.k;rows[d.k]={d,r};
   const lb=`<div class="lb">${d.t}${d.d?`<small class="sd">${d.d}</small>`:''}</div>`;
   if(d.x){r.innerHTML=lb+`<button type="button" class="pnb"></button>`;r.querySelector('.pnb').onclick=()=>window.changeName&&changeName()}
   else if(d.b){r.innerHTML=lb+`<button type="button" class="tg" role="switch"></button>`;r.querySelector('.tg').onclick=()=>setOpt(d.k,!S[d.k])}
@@ -5329,7 +5329,7 @@ function refresh(){
   if(d.x){const b=r.querySelector('.pnb');let n='';try{n=window.__pname()}catch(e){}b.textContent='✏️ '+n}
   else if(d.b)r.querySelector('.tg').classList.toggle('on',!!S[k]);
   else if(d.s){const i=r.querySelector('input');i.value=S.vol;r.querySelector('.sxp').textContent=S.vol+'%';r.classList.toggle('off',!S.snd)}
-  else{r.querySelector('.dd>button').textContent=lbl(d);r.querySelectorAll('.pop button').forEach(b=>b.classList.toggle('on',b.dataset.v===String(S[k])))}}}
+  else{r.querySelector('.dd>button').textContent=lbl(d);r.querySelectorAll('.pop button').forEach(b=>b.classList.toggle('on',b.dataset.v===String(ev(d))))}}}
 window.__setRefresh=()=>{try{refresh()}catch(e){}};
 const _rs=window.renderSet;window.renderSet=function(){try{_rs.apply(this,arguments)}catch(e){}try{refresh()}catch(e){}};
 refresh();applyVol();
@@ -8660,7 +8660,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'56.9',t:'Tema claro mejorado y Plaza',s:'cur',l:[
+ {v:'57.0',t:'Ajustes renovados',s:'cur',l:[
+  '⚙️ Ajustes rediseñados: tarjetas modernas con un icono para cada opción, interruptores más grandes con ✓, menús desplegables más claros y pestañas que se ven todas a la vez en el móvil',
+  '🔍 Buscador de ajustes: escribe (por ejemplo «3D», «narrador» o «sonido») y aparecen al momento las opciones de todas las pestañas que coinciden',
+  '🔢 Cada pestaña muestra cuántas opciones tiene activadas',
+  '🛠️ Arreglado: «Tema» y «Pokémon sueltos por casa» mostraban «undefined» si nunca se habían cambiado'
+ ]},
+ {v:'56.9',t:'Tema claro mejorado y Plaza',s:'prev',l:[
   '☀️ Tema claro: el Centro Pokémon ya no se ve oscuro (se queda con sus colores rosas de siempre), fondo más suave, cambio de tema con transición y el tema deja de estar «en pruebas»',
   '🎓 Quitado el Entrenador de movimientos de la Plaza del pueblo: ahora está en el Centro Pokémon («🔄 Recordar movimientos»)'
  ]},
@@ -22319,6 +22325,47 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 html{transition:filter .35s ease,background-color .35s}
 html.lt{background:#f7f5fc}
 html.lt ::selection{background:#93c5fd;color:#111}
+/* v57.0: ajustes renovados */
+#set{background:radial-gradient(120% 50% at 50% 0%,#4c1d9555,transparent 60%),linear-gradient(180deg,#151127,#0b0918)!important}
+#set>header h2{font-size:24px}
+#setx{max-width:760px;margin:6px auto 4px!important}
+#setx .sx-srch{display:flex;align-items:center;gap:8px;margin:2px 2px 10px;padding:9px 12px;border-radius:14px;background:#ffffff0d;border:1.5px solid #ffffff1f;box-shadow:inset 0 2px 6px #0006;transition:border-color .2s,box-shadow .2s}
+#setx .sx-srch:focus-within{border-color:#a78bfa;box-shadow:inset 0 2px 6px #0006,0 0 0 3px #8b5cf633}
+#setx .sx-srch input{flex:1;min-width:0;border:0;background:none;color:#fff;font:600 14px system-ui;outline:none}
+#setx .sx-srch input::placeholder{color:#a5b4fc99}
+#setx .sx-srch input::-webkit-search-cancel-button{display:none}
+#setx .sx-srch button{display:none;width:26px;height:26px;border-radius:50%;border:0;background:#ffffff1f;color:#fff;font:900 12px system-ui;cursor:pointer}
+#setx .sx-srch.has button{display:grid;place-items:center}
+#setx .tabs{display:grid!important;grid-template-columns:repeat(3,1fr);gap:6px!important;overflow:visible!important;padding:0 2px 10px!important}
+@media (min-width:720px){#setx .tabs{grid-template-columns:repeat(6,1fr)}}
+#setx .tab{position:relative;padding:9px 6px!important;border-radius:13px!important;border:1.5px solid #ffffff1a!important;background:#ffffff0d!important;color:#c7d2fe!important;box-shadow:none!important;font-size:12.5px!important;transition:background .2s,transform .15s}
+#setx .tab:active{transform:scale(.96)}
+#setx .tab.on{background:linear-gradient(180deg,#8b5cf6,#6d28d9)!important;color:#fff!important;border-color:#c4b5fd!important;box-shadow:0 6px 16px #6d28d955,inset 0 1px 0 #ffffff44!important}
+#setx .tab .sx-n{position:absolute;top:-6px;right:-4px;min-width:18px;height:18px;padding:0 4px;box-sizing:border-box;border-radius:9px;background:#22c55e;color:#052e16;font:900 10.5px/18px system-ui;font-style:normal;text-align:center;box-shadow:0 2px 6px #0008}
+#set .sp .row{display:flex!important;align-items:center;gap:11px;padding:11px 12px!important;margin:0 0 8px!important;border-radius:16px!important;border:1.5px solid #ffffff14!important;background:linear-gradient(180deg,#ffffff0f,#ffffff06)!important;box-shadow:0 4px 12px #0005!important;transition:border-color .2s,background .2s}
+#set .sp .row:hover{border-color:#a78bfa55!important;background:linear-gradient(180deg,#ffffff15,#ffffff08)!important}
+#set .sp .row .sx-ic{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:19px;background:linear-gradient(145deg,#312e81,#1e1b4b);border:1px solid #6366f155;box-shadow:inset 0 1px 0 #ffffff22}
+#set .sp .row .lb{font:800 14px system-ui;color:#f1f5f9;padding-right:4px!important}
+#set .sp .row small.sd{opacity:1!important;color:#a5b4fc;font:500 11.5px/1.3 system-ui!important;margin-top:3px!important}
+#set .sp .row.vol{flex-wrap:wrap}
+#set .sp .row.vol .lb{flex:1 1 calc(100% - 50px)}
+#set .row .tg{width:54px!important;height:30px!important;border:0!important;background:#0b0918!important;box-shadow:inset 0 2px 5px #000a,0 0 0 1.5px #ffffff22!important}
+#set .row .tg::after{top:3px!important;left:3px!important;width:24px!important;height:24px!important;background:#64748b!important;box-shadow:0 2px 4px #0008!important;content:""!important;display:grid;place-items:center;font:900 13px system-ui;color:#6d28d9}
+#set .row .tg.on{background:linear-gradient(90deg,#7c3aed,#a78bfa)!important;box-shadow:inset 0 2px 5px #0006,0 0 12px #8b5cf688!important}
+#set .row .tg.on::after{left:27px!important;background:#fff!important;content:"✓"!important}
+#set .row .dd>button{min-width:104px!important;padding:8px 12px!important;border-radius:12px!important;border:1.5px solid #a78bfa88!important;background:linear-gradient(180deg,#4c1d95,#312e81)!important;color:#fff!important;font:800 13px system-ui!important;box-shadow:0 3px 10px #0007!important}
+#set .row .pop{border-radius:16px!important;border:1.5px solid #a78bfa!important;background:#1a1530f7!important;backdrop-filter:blur(8px);min-width:190px!important}
+#set .row .pnb{padding:8px 12px!important;border-radius:12px!important;border:1.5px solid #ffffff2a!important;background:#ffffff12!important;color:#fff!important;font:800 13px system-ui!important;box-shadow:none!important;max-width:46vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#set .sp .row>button:not(.tg):not(.pnb){border-radius:12px!important}
+#setx .sx-ph{display:none}
+#setx.sx-q .tabs{opacity:.35;pointer-events:none}
+#setx.sx-q .sp{display:none!important}
+#setx.sx-q .sp.sx-has{display:block!important}
+#setx.sx-q .sp.sx-has .sx-ph{display:flex;align-items:center;gap:6px;margin:6px 4px 6px;color:#fde68a;font:900 12px system-ui;letter-spacing:.4px;text-transform:uppercase}
+#setx .sp .row.sx-hide{display:none!important}
+#setx .sx-none{display:none;text-align:center;padding:24px 10px;color:#a5b4fc;font:700 13px system-ui}
+#setx .sp.on{animation:sxIn .22s ease-out}
+@keyframes sxIn{from{opacity:0;transform:translateY(6px)}}
 </style>
 <script id="v37js">
 (()=>{
@@ -27158,6 +27205,29 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
   if(!o.querySelector('.cx-sign')){const w=o.querySelector('.cwall');if(w){const g=D.createElement('div');g.className='cx-sign';g.innerHTML='<i class="cx-lg"></i><b>CENTRO POKÉMON</b>';w.append(g)}}
   if(!m.querySelector('.cx-scr')){const sc=D.createElement('span');sc.className='cx-scr';sc.innerHTML='<i></i>';m.prepend(sc)}
   new MutationObserver(()=>{const on=m.classList.contains('on');if(on&&!o.classList.contains('cx-heal')){o.classList.add('cx-heal');const L=D.createElement('div');L.className='cx-hearts';L.innerHTML=Array.from({length:18},(_,i)=>`<i style="--x:${(i*53)%100}%;--d:${(i*.17).toFixed(2)}s;--s:${(.7+(i%5)*.12).toFixed(2)}">${i%3?'♥':'✚'}</i>`).join('');o.append(L);setTimeout(()=>L.remove(),4200)}else if(!on)o.classList.remove('cx-heal')}).observe(m,{attributes:true,attributeFilter:['class']})}).observe(D.body,{childList:true});
+})();
+
+/* ---------- v57.0: ajustes renovados (iconos, buscador, contador de activados) ---------- */
+(()=>{const D=document;
+ const IC={rounds:'🏁',lives:'❤️',speed:'⏩',pname:'🪪',theme:'🌓',gender:'🧑',dn:'🌗',hroam:'🐾',qvic:'🏆',qcap:'⚾',qevo:'🧬',bznonar:'🗣️',bztop:'⬆️',smap:'🗺️',nobuzon:'📬',bz3d:'🐉',m3dq:'💎',no3d:'🚫',no3dRaid:'🌋',no3dPvp:'⚔️',no3dCoop:'🤝',no3dMpa:'🧭',noko:'💥',cenq:'🤫',autoheal:'💊',frnt:'👥',ntf:'🔔',snd:'🔊',vol:'🎚️',fx:'✨',mareo:'🌀',entryAnim:'🎬',gfx:'🖥️'};
+ const TXT={'Modo de pantalla':'📱','Orientación':'🔄','Borrar equipo guardado':'🗑️','Borrar partida guardada (aventura)':'🗑️'};
+ const norm=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+ function deco(){const root=D.getElementById('setx');if(!root)return false;if(root.dataset.v57)return true;root.dataset.v57=1;
+  /* icono en cada fila */
+  root.querySelectorAll('.sp .row').forEach(r=>{if(r.querySelector('.sx-ic'))return;const lb=r.querySelector('.lb')||r.firstElementChild;if(!lb)return;const t=(lb.childNodes[0]&&lb.childNodes[0].textContent||'').trim();const all=r.textContent||'';const e=IC[r.dataset.k]||TXT[t]||(/Borrar/.test(all)?'🗑️':/Modo de pantalla/.test(all)?'📱':/Orientaci/.test(all)?'🔄':'⚙️');const i=D.createElement('span');i.className='sx-ic';i.textContent=e;r.prepend(i)});
+  /* buscador */
+  const sb=D.createElement('div');sb.className='sx-srch';sb.innerHTML='<span>🔍</span><input type="search" placeholder="Buscar un ajuste… (ej.: 3D, narrador, sonido)" autocomplete="off"><button type="button" aria-label="Borrar búsqueda">✕</button>';
+  const tabs=root.querySelector('.tabs');root.insertBefore(sb,tabs);const inp=sb.querySelector('input'),x=sb.querySelector('button');const em=D.createElement('div');em.className='sx-none';em.textContent='No hay ningún ajuste con ese nombre';root.append(em);
+  const run=()=>{const q=norm(inp.value.trim());root.classList.toggle('sx-q',!!q);sb.classList.toggle('has',!!q);let n=0;
+   root.querySelectorAll('.sp .row').forEach(r=>{const hit=!q||norm(r.textContent).includes(q);r.classList.toggle('sx-hide',!hit);if(q&&hit)n++});
+   root.querySelectorAll('.sp').forEach(p=>{const any=[...p.querySelectorAll('.row')].some(r=>!r.classList.contains('sx-hide'));p.classList.toggle('sx-has',!!q&&any)});
+   em.style.display=q&&!n?'block':'none'};
+  inp.addEventListener('input',run);x.onclick=()=>{inp.value='';run();inp.focus()};
+  /* nombre de pestaña en los resultados */
+  root.querySelectorAll('.sp').forEach(p=>{const t=root.querySelector(`.tab[data-c="${p.dataset.c}"]`);if(t&&!p.querySelector('.sx-ph')){const h=D.createElement('div');h.className='sx-ph';h.innerHTML=t.innerHTML;p.prepend(h)}});
+  return true}
+ function count(){const root=D.getElementById('setx');if(!root)return;root.querySelectorAll('.tab').forEach(t=>{const p=root.querySelector(`.sp[data-c="${t.dataset.c}"]`);if(!p)return;const n=p.querySelectorAll('.tg.on').length;let b=t.querySelector('.sx-n');if(!n){if(b)b.remove();return}if(!b){b=D.createElement('em');b.className='sx-n';t.append(b)}if(b.textContent!==String(n))b.textContent=n})}
+ const t=setInterval(()=>{if(deco()){clearInterval(t);count();setInterval(()=>{const s=D.getElementById('set');if(s&&s.offsetParent)count()},700)}},400);
 })();
 
 })();</script>
