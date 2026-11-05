@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.4</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.5</div>
 </section>
 
 <section id="team" class="scr">
@@ -8656,7 +8656,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'56.4',t:'Quitar Pokémon de la vitrina',s:'cur',l:[
+ {v:'56.5',t:'Clima en los biomas',s:'cur',l:[
+  '🌦️ Clima en los biomas: cada 2 horas llega un episodio de clima a cada bioma que dura hasta 10 minutos, con animaciones: lluvia, tormenta eléctrica con rayos y relámpagos, niebla, vendaval de hojas, sol abrasador, nevada, ventisca, lluvia de ceniza en el volcán y tormenta de arena',
+  '🗺️ Cada bioma tiene sus climas propios, y el clima es el mismo para todos los jugadores a la misma hora',
+  '⚔️ Si combates contra un Pokémon del bioma durante el clima, el combate empieza con ese clima (lluvia, sol, granizo o arena)',
+  '⏱️ Arriba a la izquierda del bioma ves el clima actual con su cuenta atrás, o a qué hora llega el próximo; tócalo para más detalles'
+ ]},
+ {v:'56.4',t:'Quitar Pokémon de la vitrina',s:'prev',l:[
   '🏛️ Vitrina: en «✎ Organizar» cada Pokémon tiene una ✕ roja para quitarlo con un toque',
   '🛠️ Arreglado: al tocar un Pokémon de la vitrina, su menú (destacar, mover, quitar) y su ficha se abrían por debajo de la vitrina y no se veían; ahora salen encima'
  ]},
@@ -22144,6 +22150,49 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 /* v56.4: quitar de la vitrina con un toque */
 #vitov .vt-c .vt-del{position:absolute;top:-8px;right:-8px;z-index:5;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#ef4444,#991b1b);border:2px solid #fecaca;color:#fff;font:900 14px system-ui;box-shadow:0 4px 10px #000a;cursor:pointer}
 #vitov .vt-g{padding-top:6px}
+/* v56.5: clima animado en los biomas */
+#bzv .bzw{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden;opacity:0;transition:opacity 1.6s}
+#bzv .bzw.on{opacity:1}
+#bzv .bzw i{position:absolute;top:-10%;left:var(--x);display:block;will-change:transform}
+#bzv .bzw-rain,#bzv .bzw-storm{background:linear-gradient(#1e3a8a33,#1e3a8a14)}
+#bzv .bzw-rain i,#bzv .bzw-storm i{width:2px;height:26px;background:linear-gradient(#dbeafe00,#dbeafeee);animation:bzwRain calc(.65s*var(--s)) linear infinite;animation-delay:calc(-1*var(--d))}
+@keyframes bzwRain{to{transform:translate(-60px,115vh)}}
+#bzv .bzw-storm{background:linear-gradient(#0f0a2a66,#1e1b4b33)}
+#bzv .bzw-storm::after{content:"";position:absolute;inset:0;background:#fef9c3;opacity:0;animation:bzwFlash 6s linear infinite}
+@keyframes bzwFlash{0%,88%,93%,100%{opacity:0}89%{opacity:.75}90%{opacity:.1}91.5%{opacity:.6}}
+#bzv .bzw-bolt{position:absolute;left:62%;top:0;width:44px;height:46%;background:linear-gradient(#fff,#fde047);clip-path:polygon(45% 0,75% 0,55% 38%,80% 38%,25% 100%,42% 50%,18% 50%);filter:drop-shadow(0 0 14px #fde047);opacity:0;animation:bzwBolt 6s linear infinite}
+@keyframes bzwBolt{0%,88%,92%,100%{opacity:0}89%,91%{opacity:1}}
+#bzv .bzw-snow,#bzv .bzw-bliz{background:#e0f2fe22}
+#bzv .bzw-snow i,#bzv .bzw-bliz i{width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff;animation:bzwSnow calc(5s*var(--s)) linear infinite;animation-delay:calc(-2.5*var(--d))}
+@keyframes bzwSnow{0%{transform:translate(0,0)}25%{transform:translate(18px,28vh)}50%{transform:translate(-14px,56vh)}75%{transform:translate(16px,84vh)}100%{transform:translate(0,115vh)}}
+#bzv .bzw-bliz{background:linear-gradient(90deg,#f1f5f955,#e0f2fe22)}
+#bzv .bzw-bliz i{animation:bzwBliz calc(1.3s*var(--s)) linear infinite;animation-delay:calc(-1*var(--d))}
+@keyframes bzwBliz{to{transform:translate(-75vw,115vh)}}
+#bzv .bzw-ash{background:linear-gradient(#7f1d1d33,#44403c22)}
+#bzv .bzw-ash i{width:5px;height:5px;border-radius:50%;background:#78716c;box-shadow:0 0 3px #000;animation:bzwSnow calc(7s*var(--s)) linear infinite;animation-delay:calc(-3*var(--d))}
+#bzv .bzw-ash i:nth-child(4n){background:#f97316;box-shadow:0 0 8px #f97316}
+#bzv .bzw-glow{position:absolute;inset:0;background:radial-gradient(120% 60% at 50% 110%,#f9731644,transparent 70%);animation:bzwPulse 3s ease-in-out infinite alternate}
+@keyframes bzwPulse{to{opacity:.4}}
+#bzv .bzw-sand{background:#d6b98544}
+#bzv .bzw-sand i{left:-10%;top:var(--y);width:26px;height:2px;border-radius:2px;background:#fde68acc;animation:bzwSand calc(1.2s*var(--s)) linear infinite;animation-delay:calc(-1*var(--d))}
+@keyframes bzwSand{to{transform:translate(125vw,4vh)}}
+#bzv .bzw-wind i{left:-10%;top:var(--y);width:14px;height:9px;border-radius:0 80% 0 80%;background:#65a30d;box-shadow:inset 0 0 0 1px #3f6212;animation:bzwLeaf calc(3s*var(--s)) linear infinite;animation-delay:calc(-1.5*var(--d))}
+#bzv .bzw-wind i:nth-child(3n){background:#ca8a04}
+@keyframes bzwLeaf{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(60vw,-6vh) rotate(360deg)}100%{transform:translate(125vw,4vh) rotate(720deg)}}
+#bzv .bzw-fog i{top:auto;bottom:0;left:-50%;width:200%;height:40%;background:radial-gradient(ellipse at center,#e2e8f0aa,#0000 70%);animation:bzwFog 16s ease-in-out infinite alternate}
+#bzv .bzw-fog i:nth-child(2){bottom:30%;animation-duration:22s}#bzv .bzw-fog i:nth-child(3){bottom:58%;opacity:.8;animation-duration:19s}#bzv .bzw-fog i:nth-child(4){bottom:80%;opacity:.6}
+@keyframes bzwFog{to{transform:translateX(22%)}}
+#bzv .bzw-fog{background:#cbd5e133}
+#bzv .bzw-sun{background:radial-gradient(90% 60% at 85% 0%,#fde68a55,transparent 70%)}
+#bzv .bzw-ray{position:absolute;right:-20%;top:-30%;width:90%;height:120%;background:repeating-conic-gradient(from 200deg at 100% 0%,#fef3c744 0 4deg,transparent 4deg 12deg);animation:bzwRay 10s ease-in-out infinite alternate;transform-origin:100% 0}
+#bzv .bzw-ray.r2{animation-duration:14s;opacity:.6}
+@keyframes bzwRay{to{transform:rotate(8deg)}}
+#bzv .bzw-heat{position:absolute;inset:0;background:linear-gradient(transparent 60%,#fb923c22);animation:bzwPulse 2.4s ease-in-out infinite alternate}
+#bzv .bzw-chip{position:absolute;left:10px;top:calc(env(safe-area-inset-top) + 128px);z-index:30;display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;border:1.5px solid #ffffff44;background:#0f0a2acc;color:#fff;font:800 11.5px system-ui;box-shadow:0 4px 12px #0008;cursor:pointer;pointer-events:auto}
+#bzv .bzw-chip small{color:#c7d2fe;font:700 11px system-ui}#bzv .bzw-chip span{font-size:15px}
+#bzv .bzw-chip.on{border-color:#fde047;background:linear-gradient(180deg,#312e81ee,#1e1b4bee);animation:bzwChip 2s ease-in-out infinite alternate}
+#bzv .bzw-chip.on small{color:#fde68a;font-variant-numeric:tabular-nums}
+@keyframes bzwChip{to{box-shadow:0 4px 16px #fde04777}}
 </style>
 <script id="v37js">
 (()=>{
@@ -26891,6 +26940,41 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
  D.addEventListener('visibilitychange',()=>{if(D.hidden)put();else back()});
  addEventListener('pagehide',put);
  window.__buzon={show:()=>{since=get()-1;pend=1;show()},rows};
+})();
+
+/* ---------- v56.5: clima en los biomas: cada 2 horas llega un episodio de clima (máx. 10 min), igual para todos los jugadores ---------- */
+(()=>{const D=document,H2=2*3600e3;
+ const WD={rain:{n:'Lluvia',e:'🌧️',bw:'rain',d:'Los combates del bioma empiezan con lluvia'},storm:{n:'Tormenta eléctrica',e:'⛈️',bw:'rain',d:'Rayos, truenos y lluvia en los combates'},fog:{n:'Niebla',e:'🌫️',d:'Una niebla espesa cubre el bioma'},
+  wind:{n:'Vendaval',e:'🍃',d:'Ráfagas de viento arrastran hojas'},sun:{n:'Sol abrasador',e:'🔆',bw:'sun',d:'Los combates del bioma empiezan con sol'},snow:{n:'Nevada',e:'❄️',bw:'hail',d:'Los combates del bioma empiezan con granizo'},
+  bliz:{n:'Ventisca',e:'🌨️',bw:'hail',d:'Nieve y viento helado; granizo en los combates'},ash:{n:'Lluvia de ceniza',e:'🌋',bw:'sun',d:'El volcán escupe ceniza; sol en los combates'},sand:{n:'Tormenta de arena',e:'🏜️',bw:'sand',d:'Los combates del bioma empiezan con tormenta de arena'}};
+ const BK={for:['rain','storm','fog','wind'],pra:['rain','sun','wind','storm'],mon:['snow','bliz','fog'],vol:['ash','sun','storm'],wat:['rain','storm','sun'],cav:['sand','fog']};
+ const hs=(a,b)=>{let h=2166136261^a;h=Math.imul(h^b,16777619);h^=h>>>13;h=Math.imul(h,2246822507);h^=h>>>16;return(h>>>0)/4294967296};
+ const bkey=k=>[...String(k)].reduce((a,c)=>a*31+c.charCodeAt(0)|0,7);
+ /* episodio del bioma k en el bloque de 2 h que contiene t */
+ function ep(k,t){const s=Math.floor(t/H2),r1=hs(s,bkey(k)),r2=hs(s+77,bkey(k)),r3=hs(s+191,bkey(k)),L=BK[k]||['rain'];const dur=(6+Math.floor(r2*5))*60e3,st=s*H2+Math.floor(r1*(H2-dur));return{k:L[Math.floor(r3*L.length)],st,en:st+dur}}
+ function now(k){const t=Date.now();if(window.__forceW&&t<window.__forceW.en)return window.__forceW;const e=ep(k,t);return t>=e.st&&t<e.en?e:null}
+ function next(k){const t=Date.now();let e=ep(k,t);if(t>=e.en)e=ep(k,t+H2);return e}
+ const mmss=ms=>{const s=Math.max(0,Math.round(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+ const hhmm=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+ const fxH=k=>{const n={rain:60,storm:70,snow:46,bliz:70,ash:40,sand:46,wind:22,fog:4,sun:0}[k]|0;let h='';
+  for(let i=0;i<n;i++)h+=`<i style="--x:${(i*37+((i*i)%13))%100}%;--y:${(i*53)%100}%;--d:${((i*.137)%2).toFixed(2)}s;--s:${(.6+(i%7)*.09).toFixed(2)}"></i>`;
+  if(k==='sun')h='<b class="bzw-ray"></b><b class="bzw-ray r2"></b><b class="bzw-heat"></b>';if(k==='ash')h+='<b class="bzw-glow"></b>';if(k==='storm')h+='<b class="bzw-bolt"></b>';return h};
+ let curK='',curW='',ov=null,chip=null;
+ let lastK='',lastT=0;
+ function paint(){const o=D.getElementById('bzv');if(!o){if(curK){lastK=curK;lastT=Date.now()}curK=curW='';ov=chip=null;return}
+  const k=((o.className.match(/\bbz-([a-z]+)\b/)||[])[1])||'';if(!k)return;const e=now(k),w=e?e.k:'';
+  let fresh=false;if(!ov||!ov.isConnected){ov=D.createElement('div');ov.className='bzw';o.append(ov);fresh=true}
+  if(!chip||!chip.isConnected){chip=D.createElement('button');chip.type='button';chip.className='bzw-chip';chip.onclick=ev=>{ev.stopPropagation();info(k)};o.append(chip)}
+  if(fresh||w!==curW||k!==curK){const first=fresh||k!==curK,prev=curW;curW=w;curK=k;ov.className='bzw'+(w?' on bzw-'+w:'');ov.innerHTML=w?fxH(w):'';
+   if(!first){try{if(w)toast(`${WD[w].e} ¡Cambia el tiempo en el bioma! ${WD[w].n}`);else if(prev)toast('☀️ El clima del bioma se ha calmado')}catch(_){}}}
+  if(w){chip.classList.add('on');chip.innerHTML=`<span>${WD[w].e}</span><b>${WD[w].n}</b><small>${mmss(e.en-Date.now())}</small>`}
+  else{const n=next(k);chip.classList.remove('on');chip.innerHTML=`<span>🌤️</span><small>Clima a las ${hhmm(n.st)}</small>`}}
+ function info(k){const e=now(k),n=e?null:next(k),X=e?WD[e.k]:WD[n.k];
+  try{ask(`${e?X.e+' '+X.n:'🌤️ Clima del bioma'}`,e?`<small>${X.d}.<br>⏳ Termina en ${mmss(e.en-Date.now())}.</small><br><br><small>Cada 2 horas llega un episodio de clima a cada bioma (dura hasta 10 minutos). Es el mismo para todos los jugadores.</small>`:`<small>Ahora el cielo está tranquilo.<br>🔮 Próximo clima: <b>${X.e} ${X.n}</b> a las <b>${hhmm(n.st)}</b> (dura ${Math.round((n.en-n.st)/60000)} min).</small><br><br><small>Cada 2 horas llega un episodio de clima a cada bioma (dura hasta 10 minutos). Es el mismo para todos los jugadores.</small>`,['Entendido'])}catch(_){}}
+ setInterval(paint,1000);
+ /* combates lanzados desde el bioma: empiezan con el clima del bioma */
+ const _m=window.menu;if(typeof _m==='function')window.menu=function(){try{if(typeof B=='object'&&B&&B.c&&B.c.herd&&!B._bzw&&!B.over){B._bzw=1;const k=curK||(Date.now()-lastT<120000?lastK:''),e=k&&now(k),X=e&&WD[e.k];if(X&&X.bw&&!B.wx){B.wx={k:X.bw,t:99,perm:true};try{wxHud()}catch(_){}setTimeout(()=>{try{toast(`${X.e} ${X.n}: el clima del bioma sigue en el combate`)}catch(_){}},400)}}}catch(e){}return _m.apply(this,arguments)};
+ window.__bzw={now,next,ep,WD};
 })();
 
 })();</script>
