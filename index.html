@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v57.0</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v57.1</div>
 </section>
 
 <section id="team" class="scr">
@@ -5254,7 +5254,7 @@ const DEF=[
   {k:'lives',t:'Vidas',d:'Infinitas: al caer, tu equipo se cura y sigues sin perder vidas',o:[[3,'3 vidas'],['inf','∞ Infinitas']]},
   {k:'speed',t:'Velocidad de combate',o:[[1,'1×'],[2,'2×'],[3,'3×'],[4,'4×']]},
   {k:'pname',t:'Nombre de jugador',d:'Lo ven tus amigos, las salas multijugador, los torneos y las megaincursiones',x:1},
-  {k:'theme',t:'Tema',d:'Oscuro, claro o según tu dispositivo (cambia solo cuando tu móvil pasa a modo claro u oscuro)',o:[['dark','Oscuro'],['light','Claro'],['auto','Automático']]},
+  
   {k:'gender',t:'Personaje',d:'Combates de gimnasio',o:[['m','Chico'],['f','Chica']]},
   {k:'dn',t:'Ciclo día y noche',d:'Por turnos: cambia cada pocas rondas · Hora real: sigue el reloj de tu dispositivo',o:[['turn','Por turnos'],['real','Hora real'],['off','Desactivado']]},
   {k:'hroam',t:'Pokémon sueltos por casa',d:'Equipo: si no eliges compañeros, tu equipo pasea por la casa · Quietos: no se mueven',o:[['team','Equipo'],['pets','Solo compañeros'],['still','Quietos']]}]],
@@ -8660,7 +8660,16 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'57.0',t:'Ajustes renovados',s:'cur',l:[
+ {v:'57.1',t:'Mercado renovado y adiós al modo claro',s:'cur',l:[
+  '🧺 Mercado entre amigos renovado con 4 pestañas: 🏪 Mi puesto, 👥 Amigos, 📦 Pedidos y 📊 Ventas, con toldo de mercado y un diseño más claro',
+  '👥 Pestaña Amigos: todos tus amigos con su estado (conectado o no), cuántos artículos tienen en su puesto y desde cuándo; tócalo para entrar y vuelve con ←',
+  '📦 Pestaña Pedidos: tus compras y reservas con su estado (procesando, reservado, recibido o reembolsado)',
+  '📊 Pestaña Ventas: Pokémonedas ganadas, número de ventas, lo que tienes a la venta y su valor, y el historial',
+  '💰 Al vender: botones rápidos de precio (−50%, −20%, precio de tienda, +50%, ×2…) y el precio por unidad al momento',
+  '🔎 En los puestos de tus amigos: filtra por objetos o Pokémon y ordena por precio; los Pokémon shiny brillan',
+  '🌙 Quitado el modo claro: el juego vuelve a verse siempre con su tema oscuro (y se quita la opción «Tema» de Ajustes)'
+ ]},
+ {v:'57.0',t:'Ajustes renovados',s:'prev',l:[
   '⚙️ Ajustes rediseñados: tarjetas modernas con un icono para cada opción, interruptores más grandes con ✓, menús desplegables más claros y pestañas que se ven todas a la vez en el móvil',
   '🔍 Buscador de ajustes: escribe (por ejemplo «3D», «narrador» o «sonido») y aparecen al momento las opciones de todas las pestañas que coinciden',
   '🔢 Cada pestaña muestra cuántas opciones tiene activadas',
@@ -22366,6 +22375,48 @@ html.lt ::selection{background:#93c5fd;color:#111}
 #setx .sx-none{display:none;text-align:center;padding:24px 10px;color:#a5b4fc;font:700 13px system-ui}
 #setx .sp.on{animation:sxIn .22s ease-out}
 @keyframes sxIn{from{opacity:0;transform:translateY(6px)}}
+/* v57.1: mercado entre amigos renovado */
+#mktov .mk-box{width:min(500px,100%)!important;background:linear-gradient(#fffbeb,#fef3c7)!important;box-shadow:0 24px 60px #000b,0 0 0 3px #fde68a55}
+#mktov .mk-aw{height:22px!important;background:repeating-linear-gradient(90deg,#dc2626 0 26px,#fff 26px 52px)!important;border-bottom:0!important;-webkit-mask:radial-gradient(13px at 13px 100%,#0000 98%,#000) 0 0/26px 100% repeat-x;mask:radial-gradient(13px at 13px 100%,#0000 98%,#000) 0 0/26px 100% repeat-x;box-shadow:0 4px 0 #0002}
+#mktov .mk-hd{padding:30px 14px 10px!important;background:linear-gradient(#fde68a,#fef3c7)!important;border-bottom:2px solid #fcd34d}
+#mktov .mk-hd b{font-size:18px!important;color:#78350f;text-shadow:0 1px 0 #fff}
+#mktov .mk-bk{flex:none}
+#mktov .mk-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;position:sticky;top:-10px;z-index:3;margin:-10px -12px 2px;padding:10px 12px 8px;background:linear-gradient(#fef3c7 80%,#fef3c700)}
+#mktov .mk-tabs button{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 2px;border-radius:13px;border:2px solid #fcd34d;background:#fff;color:#92400e;font:800 11px system-ui;cursor:pointer;transition:transform .12s}
+#mktov .mk-tabs button span{font-size:18px}
+#mktov .mk-tabs button:active{transform:scale(.95)}
+#mktov .mk-tabs button.on{background:linear-gradient(#f59e0b,#b45309);border-color:#78350f;color:#fff;box-shadow:0 3px 0 #78350f}
+#mktov .mk-tabs em{position:absolute;top:-6px;right:-4px;min-width:18px;height:18px;padding:0 4px;box-sizing:border-box;border-radius:9px;background:#dc2626;color:#fff;font:900 10.5px/18px system-ui;font-style:normal;box-shadow:0 2px 4px #0005}
+#mktov .mk-tabs em.g{background:#16a34a}
+#mktov .mk-row{transition:transform .12s,box-shadow .12s}
+#mktov .mk-row.sh{border-color:#facc15!important;background:linear-gradient(110deg,#fff 40%,#fef9c3 50%,#fff 60%) 0 0/250% 100%!important;animation:mkSh 3s linear infinite}
+@keyframes mkSh{to{background-position:-250% 0}}
+#mktov button.mk-row{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
+#mktov button.mk-row:active{transform:scale(.98)}
+#mktov .mk-av{position:relative;font:900 20px system-ui!important;color:#fff;background:linear-gradient(135deg,#f59e0b,#b45309)!important;border-radius:50%!important}
+#mktov .mk-av i{position:absolute;right:-1px;bottom:-1px;width:13px;height:13px;border-radius:50%;background:#a8a29e;border:2.5px solid #fff}
+#mktov .mk-av i.on{background:#22c55e;box-shadow:0 0 8px #22c55e}
+#mktov .mk-go{font:900 24px system-ui;color:#b45309;padding:0 4px}
+#mktov .mk-ord .mk-st{font-weight:800;opacity:1!important}
+#mktov .mk-ord.o .mk-st{color:#b45309}#mktov .mk-ord.d .mk-st{color:#15803d}#mktov .mk-ord.r .mk-st{color:#64748b}#mktov .mk-ord.w .mk-st{color:#2563eb}
+#mktov .mk-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#mktov .mk-stats div{display:flex;flex-direction:column;align-items:center;padding:10px 4px;border-radius:14px;background:#fff;border:2px solid #fcd34d;text-align:center}
+#mktov .mk-stats b{font:900 18px system-ui;color:#15803d}#mktov .mk-stats small{font:700 10.5px system-ui;opacity:.75}
+#mktov .mk-pend{padding:8px 10px;border-radius:12px;background:#dcfce7;border:1.5px solid #86efac}
+#mktov .mk-pt{font-weight:800;color:#15803d;opacity:1!important}
+#mktov .mk-flt{display:flex;gap:5px;flex-wrap:wrap}
+#mktov .mk-flt button{padding:6px 11px;border-radius:999px;border:2px solid #fcd34d;background:#fff;color:#92400e;font:800 12px system-ui;cursor:pointer}
+#mktov .mk-flt button.on{background:#f59e0b;border-color:#b45309;color:#fff}
+#mktov .mk-pq{display:flex;flex-wrap:wrap;gap:5px}
+#mktov .mk-pq button{flex:1 1 auto;padding:7px 8px;border-radius:10px;border:2px solid #fcd34d;background:#fff;color:#92400e;font:800 11.5px system-ui;cursor:pointer}
+#mktov .mk-pq button:active{background:#fde68a}
+#mktov .mk-form input{padding:9px 10px;border-radius:12px;border:2px solid #fcd34d;background:#fff;font:800 15px system-ui;color:#3b2416;width:130px;text-align:right}
+#mktov .mk-sel{padding:10px;border-radius:14px;background:#fff;border:2px solid #fcd34d}
+#mktov .mk-hist div{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:10px;background:#fff;margin-bottom:4px;font-size:12.5px;border:1px solid #fde68a}
+#mktov .mk-hist em{font-style:normal;font-weight:900;color:#15803d;white-space:nowrap}
+#mktov .mk-hist small{opacity:.6}
+#mktov .mk-h4{margin:6px 2px 4px;font:900 13px system-ui;color:#92400e}
+#mktov .mk-row.sh .mk-t b{color:#854d0e}
 </style>
 <script id="v37js">
 (()=>{
@@ -24664,35 +24715,48 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  let mklQ='';H.mkl=(o)=>{if(view!=='shop'||o.f!==shopId)return;const L=(Array.isArray(o.l)?o.l:[]).filter(x=>x&&typeof x==='object'&&(x.k==='it'||x.k==='pk')&&(+x.p||0)>0&&(+x.p||0)<=PMAX);const k=String(o.qid||'')+'|'+o.f;if(!o.pg||mklQ!==k){mklQ=k;shopL=L}else{const ids=new Set(shopL.map(x=>x.id));shopL=shopL.concat(L.filter(x=>!ids.has(x.id)))}loaded=true;live1=now();src='live';try{scPut(o.f,{t:now(),l:shopL})}catch(_){}render()};
  setInterval(()=>{const T=TX();let ch=0;for(const k in T){const t=T[k];if(t.st==='wait'&&now()-t.t>25000){if(t.off&&now()-(t.t0||t.t)<7*86400000){t.st='off';ch=1;if(busy===k)busy=''}else{t.st='ref';addMoney(t.p);ch=1;tst('⌛ El vendedor no ha respondido: te devolvemos el dinero');if(busy===k)busy=''}}else if(t.st==='off'){if(now()-(t.t0||t.t)>7*86400000){t.st='ref';addMoney(t.p);ch=1;tst('⌛ Un pedido de hace una semana no se completó: te devolvemos el dinero')}else{let on=false;try{on=FR().isOn(t.f)}catch(_){}if(on&&now()-(t.lt||0)>60000){t.lt=now();t.st='wait';t.t=now();ch=1;send(t.f,{t:'mkb',tx:k,lid:t.lid,p:t.p})}}}else if(t.st!=='wait'&&now()-t.t>14*86400000){delete T[k];ch=1}}if(ch){putTX(T);if(ov&&ov.classList.contains('on'))render()}},5000);
  /* ===== interfaz ===== */
- let ov=null,view='mine',shopId='',shopN='',shopL=[],loaded=false,busy='',pick=null,qT=0,live1=0,src='',srcT=0;
+ let ov=null,view='mine',shopId='',shopN='',shopL=[],loaded=false,busy='',pick=null,qT=0,live1=0,src='',srcT=0,tabM='mine',fromHub=false,fK='all',sK='';
  function el(){if(ov)return ov;ov=D.createElement('div');ov.id='mktov';D.body.append(ov);ov.addEventListener('click',click);ov.addEventListener('input',e=>{if(e.target.matches('[data-in]'))upd()});return ov}
  function ask2(){if(!shopId)return;const id=shopId;live1=0;const c=scGet(id);if(c&&Array.isArray(c.l)){shopL=c.l;loaded=true;src='cache';srcT=c.t}else{loaded=false;src=''}render();send(id,{t:'mkq',qid:uid()});
   fetchStall(id).then(r=>{if(!r||shopId!==id||src==='live')return;if(!srcT||r.t>=srcT){shopL=r.l;loaded=true;src='srv';srcT=r.t;scPut(id,{t:r.t,l:r.l});render()}});
   clearTimeout(qT);qT=setTimeout(()=>{if(view!=='shop'||shopId!==id||src==='live')return;if(!loaded){loaded=true;src='none';shopL=[]}render()},7000)}
- function open(id,n){el();pick=null;busy='';if(id){view='shop';shopId=id;shopN=n||'Amigo';shopL=[];ask2()}else{view='mine';flush();render()}ov.classList.add('on')}
+ function open(id,n,hub){el();pick=null;busy='';fK='all';sK='';if(id){view='shop';fromHub=!!hub;shopId=id;shopN=n||'Amigo';shopL=[];ask2()}else{view='mine';fromHub=false;flush();render()}ov.classList.add('on')}
  function close(){if(ov){ov.classList.remove('on');ov.innerHTML=''}view='mine';shopId=''}
  function render(){const o=el(),r=live(),m=M();let b='';
   if(view==='shop'){
    const ban=src==='live'?`<div class="mk-src on">🟢 ${esc(shopN)} está conectado: la compra es al instante</div>`:src==='cache'||src==='srv'?`<div class="mk-src off">📦 ${esc(shopN)} no está conectado. Ves su puesto como estaba ${agoT(srcT)}.<small>Puedes reservar: pagas ahora y lo recibes en cuanto los dos estéis conectados a la vez (si algo ya se vendió, te devolvemos el dinero).</small></div>`:'';
    b=src==='none'?`<div class="mk-empty">🔌<b>${esc(shopN)} no está conectado</b><small>Todavía no hay ninguna copia de su puesto. Cuando abra el juego, su puesto quedará guardado para que puedas verlo aunque se desconecte.</small></div>`:!loaded?`<div class="mk-wait"><i></i><span>Abriendo el puesto de ${esc(shopN)}…</span></div>`:!shopL.length?`<div class="mk-empty">🧺<b>${esc(shopN)} no tiene nada a la venta</b><small>Dile que ponga cosas en su puesto desde «Amigos → 🛒 Mi puesto».</small></div>`:
-    `<div class="mk-list">${shopL.map(x=>{const ok=r&&(r.money|0)>=x.p;return`<div class="mk-row">${lIcon(x)}<span class="mk-t"><b>${esc(lName(x))}</b><small>${x.k==='pk'?(x.ms.ty||[]).map(t=>(typeof ES!='undefined'&&ES[t])||t).join(' · '):esc((ITEM[x.key]||{}).d||'')}</small></span><button type="button" class="mk-buy" data-m="buy:${esc(x.id)}" ${ok&&!busy&&!resv(x.id)?'':'disabled'}>${busy===x.id?'…':resv(x.id)?'⏳ Reservado':(src==='live'?'':'📦 ')+fmt(x.p)+' '+coin()}</button></div>`}).join('')}</div>`;b=ban+b;
+    `${shopL.length>3?`<div class="mk-flt">${[['all','Todo'],['it','🎒 Objetos'],['pk','🐾 Pokémon']].map(([k,t])=>`<button type="button" data-m="fk:${k}" class="${fK===k?'on':''}">${t}</button>`).join('')}<button type="button" data-m="sk:${sK==='a'?'d':'a'}" class="${sK?'on':''}">💰 ${sK==='a'?'↑':sK==='d'?'↓':'Precio'}</button></div>`:''}<div class="mk-list">${shopL.filter(x=>fK==='all'||x.k===fK).sort((a,b)=>sK==='a'?a.p-b.p:sK==='d'?b.p-a.p:0).map(x=>{const ok=r&&(r.money|0)>=x.p;return`<div class="mk-row${x.k==='pk'&&x.ms&&x.ms.sh?' sh':''}">${lIcon(x)}<span class="mk-t"><b>${esc(lName(x))}</b><small>${x.k==='pk'?(x.ms.ty||[]).map(t=>(typeof ES!='undefined'&&ES[t])||t).join(' · '):esc((ITEM[x.key]||{}).d||'')}</small></span><button type="button" class="mk-buy" data-m="buy:${esc(x.id)}" ${ok&&!busy&&!resv(x.id)?'':'disabled'}>${busy===x.id?'…':resv(x.id)?'⏳ Reservado':(src==='live'?'':'📦 ')+fmt(x.p)+' '+coin()}</button></div>`}).join('')}</div>`;b=ban+b;
    b=`<p class="mk-p">${r?`Tienes <b>${fmt(r.money)} ${coin()}</b>`:'Empieza una aventura para poder comprar.'}</p>`+b+`<button type="button" class="mk-sec" data-m="reload">🔄 Actualizar</button>`}
   else if(pick){b=pickHTML(r)}
-  else{b=`<p class="mk-p">Pon a la venta objetos de tu mochila y Pokémon de tu caja. Tus amigos podrán verlo desde su lista de amigos (🎮 Jugar → Su puesto) aunque no estés conectado, y reservar cosas que recibirán cuando coincidáis conectados.</p>
-   <div class="mk-list">${m.l.length?m.l.map(x=>`<div class="mk-row">${lIcon(x)}<span class="mk-t"><b>${esc(lName(x))}</b><small>${fmt(x.p)} ${coin()}</small></span><button type="button" class="mk-del" data-m="del:${esc(x.id)}">Retirar</button></div>`).join(''):'<div class="mk-empty">🧺<b>Tu puesto está vacío</b></div>'}</div>
+  else{const TB=[['mine','🏪','Mi puesto'],['fr','👥','Amigos'],['ord','📦','Pedidos'],['sal','📊','Ventas']];
+   const T0=TX(),ordL=Object.entries(T0).sort((x,y)=>(y[1].t0||y[1].t)-(x[1].t0||x[1].t)),pendN=ordL.filter(([k,t])=>t.st==='off'||t.st==='wait').length;
+   const tabs=`<div class="mk-tabs">${TB.map(([k,e,t])=>`<button type="button" data-m="tab:${k}" class="${tabM===k?'on':''}"><span>${e}</span>${t}${k==='ord'&&pendN?`<em>${pendN}</em>`:k==='mine'&&m.l.length?`<em class="g">${m.l.length}</em>`:''}</button>`).join('')}</div>`;
+   if(tabM==='fr'){let L={};try{L=FR().list()||{}}catch(_){}const ids=Object.keys(L).sort((x,y)=>{let a=0,c=0;try{a=FR().isOn(x)?1:0;c=FR().isOn(y)?1:0}catch(_){}return c-a});
+    b=tabs+(ids.length?`<p class="mk-p">Toca a un amigo para ver su puesto. Si no está conectado, verás la última copia guardada y podrás reservar.</p><div class="mk-list">${ids.map(id=>{let on=false;try{on=FR().isOn(id)}catch(_){}const c=scGet(id),n=(c&&c.l&&c.l.length)|0,nm2=(L[id]&&L[id].n)||'Amigo';return`<button type="button" class="mk-row mk-fr" data-m="fopen:${esc(id)}"><span class="mk-ic mk-av">${esc(String(nm2).slice(0,1).toUpperCase())}<i class="${on?'on':''}"></i></span><span class="mk-t"><b>${esc(nm2)}</b><small>${on?'🟢 Conectado · compra al instante':'⚪ Desconectado · puedes reservar'}${c?` · ${n} artículo${n===1?'':'s'} (visto ${agoT(c.t)})`:''}</small></span><span class="mk-go">›</span></button>`}).join('')}</div>`:`<div class="mk-empty">👥<b>Aún no tienes amigos</b><small>Añade amigos desde el menú «Amigos» con su código para visitar sus puestos.</small></div>`)}
+   else if(tabM==='ord'){let L={};try{L=FR().list()||{}}catch(_){}const SN={wait:['⏳','Procesando…','w'],off:['📦','Reservado: llegará cuando coincidáis conectados','o'],done:['✅','Recibido','d'],ref:['↩️','Reembolsado','r']};
+    b=tabs+(ordL.length?`<div class="mk-list">${ordL.slice(0,30).map(([k,t])=>{const s2=SN[t.st]||['•',t.st,''];return`<div class="mk-row mk-ord ${s2[2]}"><span class="mk-ic">${s2[0]}</span><span class="mk-t"><b>${esc(t.n||'Compra')}</b><small>${esc((L[t.f]&&L[t.f].n)||'Amigo')} · ${fmt(t.p)} ${coin()} · ${agoT(t.t0||t.t)}</small><small class="mk-st">${s2[1]}</small></span></div>`}).join('')}</div>`:`<div class="mk-empty">📦<b>No has comprado nada todavía</b><small>Tus compras y reservas en los puestos de tus amigos aparecerán aquí.</small></div>`)}
+   else if(tabM==='sal'){const tot=m.hist.reduce((a2,h)=>a2+(+h.p||0),0),val=m.l.reduce((a2,x)=>a2+(+x.p||0),0);
+    b=tabs+`<div class="mk-stats"><div><b>${fmt(tot)}</b><small>${coin()} ganadas (últimas ${m.hist.length})</small></div><div><b>${m.hist.length}</b><small>ventas</small></div><div><b>${m.l.length}</b><small>a la venta · ${fmt(val)} ${coin()}</small></div></div>${m.pend?`<p class="mk-p mk-pend">💰 Pendiente de cobrar: <b>${fmt(m.pend)} ${coin()}</b> (se suma al empezar una aventura)</p>`:''}${m.hist.length?`<h4 class="mk-h4">Últimas ventas</h4><div class="mk-hist">${m.hist.slice(0,20).map(h=>`<div><span>${esc(h.n)} compró <b>${esc(h.w)}</b><small> · ${agoT(h.t)}</small></span><em>+${fmt(h.p)}</em></div>`).join('')}</div>`:`<div class="mk-empty">📊<b>Aún no has vendido nada</b><small>Cuando un amigo te compre algo, lo verás aquí.</small></div>`}`}
+   else{b=tabs+`<p class="mk-p">Pon a la venta objetos de tu mochila y Pokémon de tu caja. Tus amigos lo verán aunque no estés conectado y podrán reservarlo.</p>
    ${r?`<div class="mk-add"><button type="button" data-m="add:it" ${m.l.length>=MKMAX?'disabled':''}>🎒 Vender objeto</button><button type="button" data-m="add:pk" ${m.l.length>=MKMAX||!(r.box||[]).length?'disabled':''}>🐾 Vender Pokémon</button></div>`:'<p class="mk-p">Empieza una aventura para poner cosas a la venta.</p>'}
-   ${m.pend?`<p class="mk-p">💰 Pendiente de cobrar: <b>${fmt(m.pend)} ${coin()}</b> (se suma al empezar una aventura)</p>`:''}
-   ${m.hist.length?`<h4 class="mk-h4">Últimas ventas</h4><div class="mk-hist">${m.hist.slice(0,8).map(h=>`<div><span>${esc(h.n)} compró <b>${esc(h.w)}</b></span><em>+${fmt(h.p)}</em></div>`).join('')}</div>`:''}`}
-  o.innerHTML=`<div class="mk-box"><div class="mk-hd"><span class="mk-aw"></span><b>${view==='shop'?'🛒 Puesto de '+esc(shopN):pick?(pick.k==='it'?'🎒 Vender objeto':'🐾 Vender Pokémon'):'🛒 Mi puesto'}</b><button type="button" class="mk-x" data-m="${pick?'back':'x'}" aria-label="Cerrar">${pick?'←':'✕'}</button></div><div class="mk-body">${b}</div></div>`;o.classList.add('on')}
+   <div class="mk-list">${m.l.length?m.l.map(x=>`<div class="mk-row${x.k==='pk'&&x.ms&&x.ms.sh?' sh':''}">${lIcon(x)}<span class="mk-t"><b>${esc(lName(x))}</b><small class="mk-pt">${fmt(x.p)} ${coin()}${x.k==='it'&&x.q>1?` · ${fmt(x.p/x.q)} c/u`:''}</small></span><button type="button" class="mk-del" data-m="del:${esc(x.id)}">Retirar</button></div>`).join(''):'<div class="mk-empty">🧺<b>Tu puesto está vacío</b><small>Usa los botones de arriba para poner algo a la venta.</small></div>'}</div>
+   ${m.pend?`<p class="mk-p mk-pend">💰 Pendiente de cobrar: <b>${fmt(m.pend)} ${coin()}</b></p>`:''}`}}
+  o.innerHTML=`<div class="mk-box"><div class="mk-hd"><span class="mk-aw"></span>${view==='shop'&&fromHub?'<button type="button" class="mk-x mk-bk" data-m="hub" aria-label="Volver">←</button>':''}<b>${view==='shop'?'🛒 Puesto de '+esc(shopN):pick?(pick.k==='it'?'🎒 Vender objeto':'🐾 Vender Pokémon'):'🧺 Mercado entre amigos'}</b><button type="button" class="mk-x" data-m="${pick?'back':'x'}" aria-label="Cerrar">${pick?'←':'✕'}</button></div><div class="mk-body">${b}</div></div>`;o.classList.add('on')}
  function pickHTML(r){const P=pick;
   if(P.k==='it'){const ks=Object.keys(r.bag||{}).filter(k=>(r.bag[k]|0)>0&&ITEM[k]);
    if(P.key==null)return ks.length?`<div class="mk-grid">${ks.map(k=>`<button type="button" data-m="pi:${esc(k)}">${itIc(k)}<b>${esc(itName(k))}</b><small>×${r.bag[k]}</small></button>`).join('')}</div>`:'<div class="mk-empty">🎒<b>Tu mochila está vacía</b></div>';
-   const mx=Math.max(1,r.bag[P.key]|0);return`<div class="mk-form"><div class="mk-sel">${itIc(P.key)}<b>${esc(itName(P.key))}</b></div><label>Cantidad <input data-in="q" type="number" min="1" max="${mx}" value="${P.q}"></label><label>Precio total (${coin()}) <input data-in="p" type="number" min="1" max="1000000000" value="${P.p}"></label><small class="mk-hint">Precio en tienda: ${fmt(((ITEM[P.key]||{}).p||10))} ${coin()} cada uno</small><button type="button" class="mk-ok" data-m="put">Poner a la venta</button></div>`}
+   const mx=Math.max(1,r.bag[P.key]|0);return`<div class="mk-form"><div class="mk-sel">${itIc(P.key)}<b>${esc(itName(P.key))}</b></div><label>Cantidad <input data-in="q" type="number" min="1" max="${mx}" value="${P.q}"></label><label>Precio total (${coin()}) <input data-in="p" type="number" min="1" max="1000000000" value="${P.p}"></label><small class="mk-hint">Precio en tienda: ${fmt(((ITEM[P.key]||{}).p||10))} ${coin()} cada uno · tu precio: <b class="mk-unit">${fmt(P.p/Math.max(1,P.q))}</b> ${coin()} c/u</small><div class="mk-pq">${[['.5','−50%'],['.8','−20%'],['1','Precio tienda'],['1.5','+50%'],['2','×2']].map(([v,t])=>`<button type="button" data-m="pr:${v}">${t}</button>`).join('')}</div><button type="button" class="mk-ok" data-m="put">Poner a la venta</button></div>`}
   const bx=r.box||[];if(P.i==null)return`<div class="mk-grid">${bx.map((m,i)=>`<button type="button" data-m="pp:${i}"><img src="${mini(m.id,m.sh)}" alt=""><b>${esc(nm(m))}</b><small>Nv.${m.lvl}</small></button>`).join('')}</div>`;
-  const m=bx[P.i];return`<div class="mk-form"><div class="mk-sel"><img src="${mini(m.id,m.sh)}" alt=""><b>${esc(nm(m))} · Nv.${m.lvl}</b></div><label>Precio (${coin()}) <input data-in="p" type="number" min="1" max="1000000000" value="${P.p}"></label><small class="mk-hint">Mientras esté a la venta, sale de tu caja. Si lo retiras, vuelve.</small><button type="button" class="mk-ok" data-m="put">Poner a la venta</button></div>`}
- function upd(){if(!pick)return;const q=ov.querySelector('[data-in="q"]'),p=ov.querySelector('[data-in="p"]');if(q){const n=Math.max(1,Math.min(+q.max||1,q.value|0));if(n!==pick.q){pick.q=n;p.value=pick.p=Math.max(1,((ITEM[pick.key]||{}).p||10)*n)}}if(p)pick.p=Math.max(1,Math.min(PMAX,Math.round(+p.value||0)))}
+  const m=bx[P.i];return`<div class="mk-form"><div class="mk-sel"><img src="${mini(m.id,m.sh)}" alt=""><b>${esc(nm(m))} · Nv.${m.lvl}</b></div><label>Precio (${coin()}) <input data-in="p" type="number" min="1" max="1000000000" value="${P.p}"></label><small class="mk-hint">Mientras esté a la venta, sale de tu caja. Si lo retiras, vuelve.</small><div class="mk-pq">${[['.5','−50%'],['1','Sugerido'],['2','×2'],['5','×5']].map(([v,t])=>`<button type="button" data-m="pr:${v}">${t}</button>`).join('')}</div><button type="button" class="mk-ok" data-m="put">Poner a la venta</button></div>`}
+ function upd(){if(!pick)return;const q=ov.querySelector('[data-in="q"]'),p=ov.querySelector('[data-in="p"]');if(q){const n=Math.max(1,Math.min(+q.max||1,q.value|0));if(n!==pick.q){pick.q=n;p.value=pick.p=Math.max(1,((ITEM[pick.key]||{}).p||10)*n)}}if(p)pick.p=Math.max(1,Math.min(PMAX,Math.round(+p.value||0)));const u=ov.querySelector('.mk-unit');if(u)u.textContent=fmt(pick.p/Math.max(1,pick.q||1))}
  async function click(e){if(e.target===ov){close();return}const b=e.target.closest('[data-m]');if(!b||b.disabled)return;const a=b.dataset.m,r=live();
   if(a==='x')return close();if(a==='back'){pick=null;return render()}if(a==='reload')return ask2();
+  if(a.startsWith('tab:')){tabM=a.slice(4);bp(700,.05);return render()}
+  if(a==='hub'){view='mine';shopId='';fromHub=false;tabM='fr';return render()}
+  if(a.startsWith('fopen:')){const id=a.slice(6);let n='Amigo';try{n=(FR().list()[id]||{}).n||n}catch(_){}return open(id,n,true)}
+  if(a.startsWith('fk:')){fK=a.slice(3);return render()}if(a.startsWith('sk:')){sK=a.slice(3);return render()}
+  if(a.startsWith('pr:')&&pick){const k=+a.slice(3),base=pick.k==='it'?Math.max(1,((ITEM[pick.key]||{}).p||10))*Math.max(1,pick.q):(()=>{const mm=(r&&r.box||[])[pick.i];return mm?Math.max(50,mm.lvl*40+(mm.sh?800:0)):100})();pick.p=Math.max(1,Math.min(PMAX,Math.round(base*k)));const pi=ov.querySelector('[data-in="p"]');if(pi)pi.value=pick.p;const u=ov.querySelector('.mk-unit');if(u)u.textContent=fmt(pick.p/Math.max(1,pick.q||1));bp(760,.04);return}
   if(a==='add:it'){pick={k:'it'};return render()}if(a==='add:pk'){pick={k:'pk'};return render()}
   if(a.startsWith('pi:')){const k=a.slice(3);pick={k:'it',key:k,q:1,p:Math.max(1,(ITEM[k]||{}).p||10)};return render()}
   if(a.startsWith('pp:')){const i=+a.slice(3),m=(r.box||[])[i];if(!m)return;pick={k:'pk',i,p:Math.max(50,m.lvl*40+(m.sh?800:0))};return render()}
@@ -24706,7 +24770,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
    const j=await ask('🛒 Comprar',`${lIcon(x)} <b>${esc(lName(x))}</b><br>por <b>${fmt(x.p)} ${coin()}</b> a ${esc(shopN)}`,['Comprar','Cancelar']);if(j!==0||busy)return;
    if((+r.money||0)<x.p)return tst('No tienes suficientes Pokémonedas');r.money-=x.p;sv();pm();const tx=uid(),T=TX(),isLive=src==='live'&&now()-live1<120000;
    if(!isLive){T[tx]={f:shopId,lid:x.id,p:x.p,st:'off',off:1,t:now(),t0:now(),n:lName(x)};putTX(T);tst(`📦 ¡Reservado! Recibirás ${lName(x)} cuando ${shopN} y tú estéis conectados a la vez`);bp(880);render();return}
-   T[tx]={f:shopId,lid:x.id,p:x.p,st:'wait',t:now()};putTX(T);busy=x.id;render();send(shopId,{t:'mkb',tx,lid:x.id,p:x.p})}}
+   T[tx]={f:shopId,lid:x.id,p:x.p,st:'wait',t:now(),t0:now(),n:lName(x)};putTX(T);busy=x.id;render();send(shopId,{t:'mkb',tx,lid:x.id,p:x.p})}}
  const resv=lid=>{const T=TX();for(const k in T){const t=T[k];if(t.lid===lid&&t.f===shopId&&(t.st==='off'||t.st==='wait'))return true}return false};
  const _sm=window.showMap;window.showMap=function(){const r=_sm.apply(this,arguments);try{flush()}catch(e){}return r};
  window.__mktOpen=open;window.__mkt={M,TX,flush};
@@ -26772,7 +26836,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
 /* ---------- v49.5: ☀️ Tema claro (en pruebas): se invierten los colores de la interfaz; fotos, mapas, biomas y combates se ven como siempre ---------- */
 (()=>{const D=document,H=D.documentElement;
  const mq=(()=>{try{return matchMedia('(prefers-color-scheme: light)')}catch(e){return null}})();
- const want=()=>{let t='dark';try{t=(typeof S=='object'&&S&&S.theme)||'dark'}catch(e){}return t==='light'||(t==='auto'&&!!(mq&&mq.matches))};
+ const want=()=>false;/* v57.1: modo claro retirado */
  const RX=/(?:\p{Extended_Pictographic}|\p{Regional_Indicator}{2})(?:️|⃣|[\u{1F3FB}-\u{1F3FF}]|‍(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})️?)*/gu;
  const SKIP=new Set(['SCRIPT','STYLE','TEXTAREA','INPUT','SELECT','OPTION','NOSCRIPT','TITLE']);
  const okParent=el=>{for(let e=el,i=0;e&&i<40;e=e.parentElement,i++){if(SKIP.has(e.tagName)||e.namespaceURI==='http://www.w3.org/2000/svg'||e.classList&&e.classList.contains('emj')||e.isContentEditable)return false}return true};
