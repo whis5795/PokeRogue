@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.7</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.8</div>
 </section>
 
 <section id="team" class="scr">
@@ -2069,18 +2069,21 @@ const _ocCore=async function(){
   o.innerHTML=`<div class="cfa"><svg class="cfs" viewBox="-60 -66 120 76"><rect x="-60" y="0" width="120" height="10" fill="#86efac"/>${CART}<rect x="-10" y="-20" width="20" height="20" fill="#fff7d6"/><rect class="dl" x="-10" y="-20" width="10" height="20" fill="#bae6fd" stroke="${ink}" stroke-width="1.6"/><rect class="dr" x="0" y="-20" width="10" height="20" fill="#bae6fd" stroke="${ink}" stroke-width="1.6"/></svg></div>
   <div class="cin"><div class="cwall"><div class="clogo"></div><div class="cnurse">${imh(['nurse','nursejoy'],'cen')}</div><div class="ctxt"></div><img class="cchan" src="${art(113)}" alt=""><div class="cmach">${'<i></i>'.repeat(6)}</div><div class="ccnt"></div></div>
   <div class="cpt">${R.team.map(slot).join('')}</div><div class="cdlg"><div class="cbtn"></div></div><button class="pcbtn" id="pcbtn" aria-label="Caja Pokémon"><svg viewBox="0 0 24 24"><path d="M3 8l9-4 9 4v9l-9 4-9-4z" fill="#38bdf8" stroke="#0c4a6e" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 12v9l-9-4V8z" fill="#0ea5e9" stroke="#0c4a6e" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 8l9 4 9-4" fill="none" stroke="#0c4a6e" stroke-width="1.5" stroke-linejoin="round"/><circle cx="16.5" cy="13" r="1.6" fill="#fff" stroke="#0c4a6e" stroke-width="1"/></svg>Caja<i class="pcn"></i></button></div><div class="cfl"></div><div class="cdl"></div><div class="cdr"></div>`;
-  document.body.append(o);o.onclick=e=>{if(!e.target.closest('button'))K.skip=1};
+  document.body.append(o);o.onclick=e=>{if(!e.target.closest('button'))K.skip=1};try{window.__cenUp&&__cenUp(o)}catch(_){}
   const tx=o.querySelector('.ctxt'),bt=o.querySelector('.cbtn'),mach=o.querySelector('.cmach'),nurse=o.querySelector('.cnurse');
   let CR=null;const choose=l=>new Promise(r=>{CR=r;bt.innerHTML=l.map((x,i)=>`<button class="act" data-i="${i}" ${x.off?'disabled':''}>${x.t}</button>`).join('');bt.querySelectorAll('button').forEach(b=>b.onclick=()=>r(+b.dataset.i))});
   const pcb=o.querySelector('#pcbtn'),pcn=()=>{pcb.querySelector('.pcn').textContent=(R.box||[]).length||''};pcn();
-  pcb.onclick=async()=>{if(pcb.disabled)return;pcb.disabled=true;try{await openBox()}finally{pcb.disabled=false}K.skip=0;o.querySelector('.cpt').innerHTML=R.team.map(slot).join('');pcn();if(CR){const f=CR;CR=null;f(-1)}};
+  pcb.onclick=async()=>{if(pcb.disabled)return;pcb.disabled=true;try{await openBox()}finally{pcb.disabled=false}K.skip=0;o.querySelector('.cpt').innerHTML=R.team.map(slot).join('');pcn();try{window.__cenUp&&__cenUp(o)}catch(_){}if(CR){const f=CR;CR=null;f(-1)}};
   const need=()=>{try{return[...R.team,...(R.box||[])].some(m=>m&&(m.hp<m.max||m.s||m.cf||(m.moves||[]).some(v=>v&&v.cp<v.mp)))}catch(e){console.error('Centro need',e);return true}},P=15;R.cenV=(R.cenV||0)+1;const NL=nurseLines(R.cenV);
   try{
     if(R.seen&&R.seen.cen){o.classList.add('op','in','nofx');await wt(60);o.classList.remove('nofx');K.skip=0}else{(R.seen=R.seen||{}).cen=1;saveRun();await wt(250);o.classList.add('op');beep(880,.25,'triangle');await wt(700);beep(1175,.35,'triangle');await wt(1300);o.classList.add('in');await wt(700);K.skip=0;}
     await ty(tx,NL.g||(R.cenFree?'¡Qué mala suerte! Hoy la atención corre por cuenta de la casa. ¿Quieres que cuide de tus Pokémon?':'¡Bienvenido al Centro Pokémon! ¿Quieres que cuide de tus Pokémon?'));if(NL.st>=3)pf(nurse,'♥','#fb7185',NL.st-1);
     for(;;){
-      const free=R.cenFree||CHT.money,ok=need(),i=await choose([{t:ok?`💖 Curar y revivir al equipo${(R.box||[]).length?' y a la Caja':''} — ${free?'Gratis':IC.coin+P}`:'Tu equipo ya está en plena forma',off:!ok||(!free&&R.money<P)},{t:'🚪 Salir del Centro'}]);
-      if(i<0)continue;if(i)break;K.skip=0;
+      const free=R.cenFree||CHT.money,ok=need(),gft=window.__cenGift&&__cenGift.can(),i=await choose([{t:ok?`💖 Curar y revivir al equipo${(R.box||[]).length?' y a la Caja':''} — ${free?'Gratis':IC.coin+P}`:'✨ Tu equipo ya está en plena forma',off:!ok||(!free&&R.money<P)},{t:'🔄 Recordar movimientos',off:!window.__relearn},{t:gft?'🎁 Regalo del día':'🎁 Regalo de hoy recogido',off:!gft},{t:'🚪 Salir del Centro'}]);
+      if(i<0)continue;if(i===3)break;
+      if(i===1){bt.innerHTML='';try{await window.__relearn()}catch(e){console.error(e)}K.skip=0;try{o.querySelector('.cpt').innerHTML=R.team.map(slot).join('');__cenUp(o)}catch(_){}continue}
+      if(i===2){bt.innerHTML='';try{const g=__cenGift.take();if(g){await ty(tx,g.say);pf(nurse,'♥','#fb7185',5);beep(988,.15,'triangle');setTimeout(()=>beep(1319,.2,'triangle'),120);try{toast('🎁 Regalo del Centro: '+g.txt)}catch(_){}const mn=Q('#mn');if(mn)mn.innerHTML=IC.coin+' '+nf(R.money)}}catch(e){console.error(e)}K.skip=0;continue}
+      K.skip=0;const _sum=window.__cenSum?__cenSum():'';
       if(!free)R.money-=P;R.cenFree=0;
       let healed=0,ss=[],lamps=[];const doHeal=()=>{if(healed)return;healed=1;try{healAll()}catch(e){console.error('healAll',e)}try{saveRun()}catch(e){}};
       try{
@@ -2098,6 +2101,7 @@ const _ocCore=async function(){
       try{ss.forEach((s,k)=>{const m=R.team[k];if(!m)return;s.classList.remove('ko','rv');s.classList.add('out','ok');const b=s.querySelector('.hb>div'),h=s.querySelector('.hp');if(b){b.style.width='100%';b.style.background='#4ade80'}if(h)h.textContent=m.max+'/'+m.max;pf(s,'✚','#4ade80',4)})}catch(e){console.error(e)}
       lamps.forEach(l=>l.classList.remove('lit'));mach.classList.remove('on');
       const mn=Q('#mn');if(mn)mn.innerHTML=IC.coin+' '+nf(R.money);if(Q('#tm'))teamBar();saveRun();const pt=Q('#mcet');if(pt)pt.textContent='Curar · 15';
+      try{__cenUp(o)}catch(_){}if(_sum)try{toast(_sum)}catch(_){}
       await wt(1100);await ty(tx,NL.d);if(NL.st>=3)pf(nurse,'♥','#fb7185',NL.st);pcb.disabled=false;
       }catch(e){
         console.error('Centro: error en la animación',e);doHeal();
@@ -8656,7 +8660,15 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'56.7',t:'Nueva pantalla de selección de cartas',s:'cur',l:[
+ {v:'56.8',t:'Centro Pokémon renovado',s:'cur',l:[
+  '🏥 Centro Pokémon renovado: gran cartel luminoso, mostrador, máquina de curación con pantalla y Poké Balls que se iluminan una a una, ola de curación con corazones por toda la sala y destello final',
+  '📋 Panel de estado en la pared: cuántos de tu equipo están sanos, heridos, debilitados, con problemas de estado o con PP gastados, y cuántos de la Caja necesitan cuidados',
+  '🏷️ Cada Pokémon del equipo muestra su estado (envenenado, quemado, dormido…), un aviso si está debilitado y una barra de PP además de la de PS',
+  '🔄 Nuevo servicio: «Recordar movimientos» desde el propio Centro',
+  '🎁 Nuevo: «Regalo del día»: la enfermera te da un pequeño regalo una vez al día (pociones, Balls, Revivir…)',
+  '🧾 Al curar, un resumen de lo que se ha hecho: PS recuperados, Pokémon revividos, estados curados y PP restaurados'
+ ]},
+ {v:'56.7',t:'Nueva pantalla de selección de cartas',s:'prev',l:[
   '🃏 Pantalla de selección de cartas rediseñada: cartas grandes con el color de su tipo (entrenador, salvaje, tienda, evento, gimnasio, jefe, Centro Pokémon), brillo holográfico, fondo animado y el entrenador flotando',
   '📊 Cada carta muestra de un vistazo su dificultad (Fácil / Normal / Difícil), estrellas, nivel, cuántos Pokémon lleva el rival y sus recompensas (Pokémonedas, experiencia y probabilidad de objeto)',
   '🎯 Consejo de nivel en cada combate: «A tu nivel», «Por debajo de tu nivel» o «Por encima de tu nivel» según la media de tu equipo',
@@ -22252,6 +22264,52 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #cards:has(>.cx2) .ca.cx2:only-of-type{flex-basis:min(260px,80%)!important}
 #cards .ca.cx2 .cx-top{justify-content:center}
 #cards .ca.cx2 .cx-art .cx-df{position:absolute;left:6px;top:6px;z-index:2}
+/* v56.8: Centro Pokémon renovado */
+#cen .cwall{background:radial-gradient(120% 70% at 50% 0%,#fff1f2 0,transparent 60%),repeating-linear-gradient(90deg,#fce7f3 0 34px,#fbcfe8 34px 36px),linear-gradient(#fbcfe8,#ffe4e6)!important}
+#cen .cwall::after{content:"";position:absolute;left:0;right:0;bottom:34px;height:30%;background:linear-gradient(transparent,#fda4af33);pointer-events:none}
+#cen .cx-sign{position:absolute;left:50%;top:calc(env(safe-area-inset-top) + 10px);transform:translateX(-50%);z-index:3;display:flex;align-items:center;gap:8px;padding:7px 14px 7px 8px;border-radius:16px;background:linear-gradient(180deg,#e11d48,#9f1239);border:3px solid #fff;box-shadow:0 0 0 3px #fb7185,0 8px 20px #9f123966,0 0 30px #fb718588;animation:cxSign 2.4s ease-in-out infinite alternate}
+#cen .cx-sign b{color:#fff;font:900 15px system-ui;letter-spacing:1.5px;text-shadow:0 0 10px #fff,0 2px 0 #881337;white-space:nowrap}
+#cen .cx-lg{width:30px;height:30px;border-radius:50%;background:linear-gradient(#fff 0 45%,#881337 45% 55%,#fff 55%);border:2.5px solid #881337;position:relative;box-shadow:0 0 12px #fff}
+#cen .cx-lg::after{content:"✚";position:absolute;inset:0;display:grid;place-items:center;color:#e11d48;font:900 13px system-ui}
+@keyframes cxSign{to{box-shadow:0 0 0 3px #fb7185,0 8px 20px #9f123966,0 0 46px #fb7185cc}}
+#cen .cdec .brd{top:calc(env(safe-area-inset-top) + 64px)!important}
+#cen .cx-stat{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(min(15vh,120px) + 52px);z-index:2;width:min(92%,380px);box-sizing:border-box;padding:7px 9px;border-radius:14px;background:#ffffffd9;border:2px solid #fda4af;box-shadow:0 6px 16px #9f123933;text-align:center;backdrop-filter:blur(3px)}
+#cen .cx-stat b{display:block;color:#9f1239;font:900 11.5px system-ui;letter-spacing:.3px;margin-bottom:4px}
+#cen .cx-stat div{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
+#cen .cx-stat span{padding:2px 7px;border-radius:999px;font:800 10.5px system-ui;white-space:nowrap;border:1px solid #0001}
+#cen .cx-stat .g{background:#dcfce7;color:#166534}#cen .cx-stat .y{background:#fef9c3;color:#854d0e}#cen .cx-stat .r{background:#fee2e2;color:#991b1b}#cen .cx-stat .p{background:#f3e8ff;color:#6b21a8}#cen .cx-stat .b{background:#dbeafe;color:#1e40af}#cen .cx-stat .w{background:#f1f5f9;color:#334155}
+#cen .cwall .ctxt{z-index:7!important}
+#cen .ccnt{height:40px!important;background:linear-gradient(#fff 0,#fff1f2 40%,#fecdd3 100%)!important;border-top:5px solid #e11d48!important;box-shadow:0 -4px 12px #9f123933,inset 0 6px 0 #fff}
+#cen .ccnt::before{content:"";position:absolute;left:0;right:0;top:8px;height:4px;background:repeating-linear-gradient(90deg,#fb7185 0 18px,transparent 18px 30px);opacity:.5}
+#cen .cmach{padding:7px 9px 8px!important;border-radius:14px 14px 6px 6px!important;background:linear-gradient(#f8fafc,#cbd5e1)!important;border:3px solid #475569!important;flex-wrap:wrap;max-width:118px;justify-content:center;box-shadow:0 6px 14px #0004}
+#cen .cmach .cx-scr{flex:0 0 100%;height:16px;margin-bottom:4px;border-radius:5px;background:#0f172a;border:2px solid #334155;position:relative;overflow:hidden}
+#cen .cmach .cx-scr i{position:absolute;inset:0;background:linear-gradient(90deg,transparent,#4ade80,transparent);transform:translateX(-100%);opacity:.0}
+#cen .cmach.on .cx-scr i{opacity:1;animation:cxScan .7s linear infinite}
+@keyframes cxScan{to{transform:translateX(100%)}}
+#cen .cmach i:not(.cx-scr i){width:15px!important;height:15px!important;background:radial-gradient(circle at 50% 50%,#94a3b8 0 22%,#475569 24%)!important}
+#cen .cmach i.lit{background:linear-gradient(#ef4444 0 44%,#1f2937 44% 56%,#fff 56%)!important;box-shadow:0 0 12px #fb7185,0 0 0 2px #fff!important;animation:cxBall .4s ease-out}
+@keyframes cxBall{from{transform:scale(1.8) translateY(-10px);opacity:0}}
+#cen .cs{position:relative}
+#cen .cs .cx-b{position:absolute;left:4px;top:4px;z-index:2;padding:1px 6px;border-radius:999px;background:var(--c,#64748b);color:#fff;font:900 8.5px system-ui;box-shadow:0 2px 4px #0004;max-width:calc(100% - 8px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#cen .cs .cx-b.ko{background:#374151}
+#cen .cs .cx-pp{height:3px;margin:1px 2px 2px;border-radius:3px;background:#0002;overflow:hidden}
+#cen .cs .cx-pp i{display:block;height:100%;background:linear-gradient(90deg,#60a5fa,#3b82f6);border-radius:3px;transition:width .8s}
+#cen .cs.ok .cx-b{display:none}
+#cen.cx-heal .cpt{animation:cxFloor 1.2s ease-in-out infinite}
+@keyframes cxFloor{50%{box-shadow:inset 0 0 60px #4ade8077}}
+#cen .cx-hearts{position:absolute;inset:0;pointer-events:none;z-index:8;overflow:hidden}
+#cen .cx-hearts i{position:absolute;left:var(--x);bottom:-30px;font-style:normal;font-size:calc(22px*var(--s));color:#fb7185;text-shadow:0 0 10px #fff;animation:cxHeart 3s ease-out forwards;animation-delay:var(--d);opacity:0}
+#cen .cx-hearts i:nth-child(3n){color:#4ade80}
+@keyframes cxHeart{0%{opacity:0;transform:translateY(0) scale(.6)}15%{opacity:1}100%{opacity:0;transform:translateY(-85vh) translateX(20px) scale(1.2)}}
+#cen .cbtn{display:grid!important;grid-template-columns:1fr 1fr;gap:6px}
+#cen .cbtn .act:first-child{grid-column:1/-1;background:linear-gradient(180deg,#fb7185,#e11d48)!important;border-color:#fecdd3!important;color:#fff!important;font-weight:900}
+#cen .cbtn .act:first-child:disabled{background:linear-gradient(180deg,#86efac,#16a34a)!important;opacity:.9;color:#052e16!important}
+#cen .cbtn .act:last-child{grid-column:1/-1}
+#cen .cbtn:has(.act:only-child) .act{grid-column:1/-1}
+#cen .cdec .brd{display:none!important}
+#cen .cx-stat{top:calc(env(safe-area-inset-top) + 62px);bottom:auto!important}
+#cen .cx-sign{padding:6px 12px 6px 7px}#cen .cx-sign b{font-size:13px;letter-spacing:1px}#cen .cx-lg{width:26px;height:26px}
+#cen .cx-sign{gap:6px;padding:5px 10px 5px 6px}#cen .cx-sign b{font-size:12px;letter-spacing:.5px}#cen .cx-lg{width:22px;height:22px}#cen .cx-lg::after{font-size:11px}
 </style>
 <script id="v37js">
 (()=>{
@@ -27062,6 +27120,36 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
   return`<button type="button" class="ca cx2 k-${c.k}${big?' cx-big':''}" style="--k:${col};--kd:${dk};--d:${(i*.09).toFixed(2)}s" aria-label="${esc(lbl+': '+(c.n||''))}"><span class="cx-holo"></span><span class="cx-top"><span class="cx-kind">${e} ${esc(lbl)}</span></span><span class="cx-art"><span class="cx-bg"></span><span class="cx-ped"></span>${art}${tag}${pips}</span><span class="cx-name">${esc(c.n||lbl)}</span>${fight?`<span class="cx-meta">${stars}<b>Nv.${lv}</b>${c.np>1?`<small>· ${c.np} Pokémon</small>`:''}</span>`:`<span class="cx-meta"><small>${c.k==='shop'?'Compra antes del próximo combate':c.k==='ev'?'Algo inesperado te espera…':c.k==='cen'?'Cura gratis a todo tu equipo':''}</small></span>`}<span class="cx-rw">${rw}</span>${hint}</button>`}catch(err){console.error(err);return _old(c,i,n)}};
  /* al elegir: la carta elegida brilla y las demás se apagan */
  D.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#cards .ca.cx2');if(!b||(typeof R=='object'&&R&&R.lock))return;b.classList.add('cx-pick');b.parentNode.querySelectorAll('.ca.cx2').forEach(x=>{if(x!==b)x.classList.add('cx-dim')});setTimeout(()=>{b.classList.remove('cx-pick');b.parentNode&&b.parentNode.querySelectorAll('.cx-dim').forEach(x=>x.classList.remove('cx-dim'))},1600)},true);
+})();
+
+/* ---------- v56.8: Centro Pokémon renovado (panel de estado, insignias, regalo del día, resumen al curar) ---------- */
+(()=>{const D=document;
+ const ST={psn:['☠️','Envenenado','#a855f7'],tox:['☠️','Gravemente envenenado','#7e22ce'],brn:['🔥','Quemado','#f97316'],par:['⚡','Paralizado','#eab308'],slp:['💤','Dormido','#64748b'],frz:['❄️','Congelado','#38bdf8']};
+ const ppF=m=>{const L=(m.moves||[]).filter(Boolean);if(!L.length)return 1;let a=0,b=0;L.forEach(v=>{const mx=v.mp>0?v.mp:(v.pp>0?v.pp:20);a+=Math.max(0,Math.min(mx,v.cp==null?mx:v.cp));b+=mx});return b?a/b:1};
+ const hurt=m=>m&&(m.hp<m.max||m.s||ppF(m)<1);
+ function stat(){const T=(typeof R=='object'&&R&&R.team)||[],X=(R&&R.box)||[];const c={ok:0,hu:0,ko:0,st:0,pp:0};
+  T.forEach(m=>{if(!m)return;if(m.hp<=0)c.ko++;else if(m.hp<m.max)c.hu++;if(m.s&&m.hp>0)c.st++;if(ppF(m)<1)c.pp++;if(!hurt(m))c.ok++});c.bx=X.filter(hurt).length;return c}
+ function up(o){if(!o)return;const w=o.querySelector('.cwall');if(!w)return;const c=stat();let p=w.querySelector('.cx-stat');if(!p){p=D.createElement('div');p.className='cx-stat';w.append(p)}
+  const ch=[];if(c.ok)ch.push(`<span class="g">💚 ${c.ok} sano${c.ok>1?'s':''}</span>`);if(c.hu)ch.push(`<span class="y">💔 ${c.hu} herido${c.hu>1?'s':''}</span>`);if(c.ko)ch.push(`<span class="r">💀 ${c.ko} debilitado${c.ko>1?'s':''}</span>`);if(c.st)ch.push(`<span class="p">🧪 ${c.st} con estado</span>`);if(c.pp)ch.push(`<span class="b">🔋 ${c.pp} con PP gastados</span>`);if(c.bx)ch.push(`<span class="w">📦 ${c.bx} en la Caja</span>`);
+  p.innerHTML=`<b>📋 Estado del equipo</b><div>${ch.join('')||'<span class="g">✨ Todo en plena forma</span>'}</div>`;
+  /* insignias en las tarjetas */
+  const T=R.team||[];o.querySelectorAll('.cpt .cs').forEach((s,i)=>{const m=T[i];if(!m)return;s.querySelectorAll('.cx-b,.cx-pp').forEach(x=>x.remove());
+   const st=m.hp>0&&ST[m.s];if(st){const b=D.createElement('span');b.className='cx-b';b.style.setProperty('--c',st[2]);b.textContent=st[0]+' '+st[1];s.append(b)}
+   else if(m.hp<=0){const b=D.createElement('span');b.className='cx-b ko';b.textContent='💀 Debilitado';s.append(b)}
+   const f=ppF(m),pp=D.createElement('div');pp.className='cx-pp';pp.innerHTML=`<i style="width:${Math.round(f*100)}%"></i>`;pp.title='PP';const hb=s.querySelector('.hb');if(hb)hb.after(pp);else s.append(pp)})}
+ window.__cenUp=up;
+ window.__cenSum=()=>{const T=[...((R&&R.team)||[]),...((R&&R.box)||[])];let hp=0,rv=0,st=0,pp=0;T.forEach(m=>{if(!m)return;if(m.hp<=0)rv++;else if(m.hp<m.max)hp+=m.max-m.hp;if(m.s)st++;if(ppF(m)<1)pp++});
+  const L=[];if(hp)L.push(`❤️ ${hp} PS`);if(rv)L.push(`💫 ${rv} revivido${rv>1?'s':''}`);if(st)L.push(`🧪 ${st} estado${st>1?'s':''}`);if(pp)L.push(`🔋 PP de ${pp}`);return L.length?'🏥 Curado: '+L.join(' · '):''};
+ /* regalo del día */
+ const day=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()},GK='pa_cengift';
+ const POOL=[['pot',3,'¡Toma, unas Pociones para el camino!'],['sup',2,'Unas Superpociones, por si acaso.'],['rev',1,'Un Revivir… ¡ojalá no lo necesites!'],['gb',3,'¡Unas Súper Balls para tu próxima captura!'],['ub',1,'Una Ultra Ball. Úsala bien, ¿vale?'],['eth',1,'Un Éter para recuperar PP.'],['can',1,'¡Un Caramelo Raro! No se lo digas a nadie.']];
+ window.__cenGift={can:()=>{try{return localStorage.getItem(GK)!==day()}catch(e){return false}},take:()=>{if(!window.__cenGift.can())return null;const W=[30,22,14,18,7,6,3];let t=Math.random()*W.reduce((a,b)=>a+b,0),i=0;for(;i<W.length;i++){if((t-=W[i])<0)break}const [k,n,say]=POOL[Math.min(i,POOL.length-1)];
+  if(!(typeof ITEM=='object'&&ITEM[k]))return null;R.bag[k]=(R.bag[k]|0)+n;try{localStorage.setItem(GK,day())}catch(e){}try{saveRun()}catch(e){}return{say,txt:`${n}× ${ITEM[k].n}`}}};
+ /* ola de curación mientras la máquina trabaja */
+ new MutationObserver(()=>{const o=D.getElementById('cen');if(!o)return;const m=o.querySelector('.cmach');if(!m||m.__cx)return;m.__cx=1;
+  if(!o.querySelector('.cx-sign')){const w=o.querySelector('.cwall');if(w){const g=D.createElement('div');g.className='cx-sign';g.innerHTML='<i class="cx-lg"></i><b>CENTRO POKÉMON</b>';w.append(g)}}
+  if(!m.querySelector('.cx-scr')){const sc=D.createElement('span');sc.className='cx-scr';sc.innerHTML='<i></i>';m.prepend(sc)}
+  new MutationObserver(()=>{const on=m.classList.contains('on');if(on&&!o.classList.contains('cx-heal')){o.classList.add('cx-heal');const L=D.createElement('div');L.className='cx-hearts';L.innerHTML=Array.from({length:18},(_,i)=>`<i style="--x:${(i*53)%100}%;--d:${(i*.17).toFixed(2)}s;--s:${(.7+(i%5)*.12).toFixed(2)}">${i%3?'♥':'✚'}</i>`).join('');o.append(L);setTimeout(()=>L.remove(),4200)}else if(!on)o.classList.remove('cx-heal')}).observe(m,{attributes:true,attributeFilter:['class']})}).observe(D.body,{childList:true});
 })();
 
 })();</script>
