@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v57.3</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v57.4</div>
 </section>
 
 <section id="team" class="scr">
@@ -8662,7 +8662,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'57.3',t:'Juego en inglés',s:'cur',l:[
+ {v:'57.4',t:'Shedinja con 1 PS',s:'cur',l:[
+  '👻 Shedinja ahora tiene siempre 1 PS, como en los juegos: gracias a Superguarda solo le dañan los ataques supereficaces, pero cualquiera de ellos (o el veneno, la quemadura, el clima…) lo debilita. Los Shedinja que ya tenías también pasan a 1 PS'
+ ]},
+ {v:'57.3',t:'Juego en inglés',s:'prev',l:[
   '🌐 Nuevo ajuste «Idioma / Language»: elige 🇬🇧 English y todo el juego pasa al inglés (menús, combates, tienda, mochila, casa, biomas, multijugador, avisos y el registro de novedades)',
   '📖 Los nombres de movimientos, habilidades y naturalezas usan los nombres oficiales en inglés',
   '⚡ La traducción solo se descarga si eliges inglés, así que en español el juego pesa lo mismo'
@@ -27407,6 +27410,14 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
   new MutationObserver(rs=>{for(const r of rs){if(r.type==='characterData')q.add(r.target);else if(r.type==='attributes')q.add(r.target);else r.addedNodes.forEach(n=>q.add(n))}if(q.size&&!raf)raf=requestAnimationFrame(flush)}).observe(D.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:ATT});
   window.__tr=s=>tr(s)||s}
  const s=D.createElement('script');s.src='i18n_en.js?v='+((D.getElementById('ver')||{}).textContent||'');s.onload=start;s.onerror=()=>console.warn('i18n: no se pudo cargar el inglés');D.head.append(s);
+})();
+
+/* ---------- v57.4: Shedinja siempre tiene 1 PS, como en los juegos (con Superguarda solo le dañan los supereficaces) ---------- */
+(()=>{const SH=m=>m&&(m.id===292||m.id==='292');
+ const fix=m=>{if(!SH(m))return;if(m.max!==1)m.max=1;if(m.hp>1)m.hp=1;if(m.bx)m.bx=0;if(m.sbx)m.sbx=0};
+ const _st=window.stats;if(typeof _st==='function'){window.stats=function(m){const r=_st.apply(this,arguments);try{fix(m)}catch(e){}return r}}
+ const sweep=()=>{try{if(typeof R!=='object'||!R)return;(R.team||[]).forEach(fix);(R.box||[]).forEach(fix)}catch(e){}};
+ setInterval(sweep,1500);sweep();
 })();
 
 })();</script>
