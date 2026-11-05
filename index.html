@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v57.1</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v57.2</div>
 </section>
 
 <section id="team" class="scr">
@@ -8660,7 +8660,14 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'57.1',t:'Mercado renovado y adiós al modo claro',s:'cur',l:[
+ {v:'57.2',t:'PokéCasino renovado',s:'cur',l:[
+  '🎰 Vestíbulo del PokéCasino renovado: cartel luminoso con bombillas que parpadean y los juegos ordenados en «Máquinas» y «Mesas»',
+  '📊 Marcador del casino: lo que llevas ganado o perdido en esta visita, tu mayor premio (y en qué juego), tus jugadas totales y tu balance',
+  '⭐ Cada juego muestra cuántas veces lo has jugado y tu juego favorito lleva una insignia',
+  '🎁 Ficha diaria gratis: una vez al día giras una ruleta de regalo que da entre 100 y 5.000 Pokémonedas',
+  '🎉 Grandes premios celebrados: al ganar mucho de golpe sale un cartel de «¡GRAN PREMIO!» con lluvia de monedas'
+ ]},
+ {v:'57.1',t:'Mercado renovado y adiós al modo claro',s:'prev',l:[
   '🧺 Mercado entre amigos renovado con 4 pestañas: 🏪 Mi puesto, 👥 Amigos, 📦 Pedidos y 📊 Ventas, con toldo de mercado y un diseño más claro',
   '👥 Pestaña Amigos: todos tus amigos con su estado (conectado o no), cuántos artículos tienen en su puesto y desde cuándo; tócalo para entrar y vuelve con ←',
   '📦 Pestaña Pedidos: tus compras y reservas con su estado (procesando, reservado, recibido o reembolsado)',
@@ -15131,12 +15138,21 @@ const rnd=Math.random,ri=n=>rnd()*n|0,sleep=ms=>new Promise(r=>setTimeout(r,ms))
 const bp=(f,d,t)=>{try{beep(f,d||.08,t||'triangle')}catch(e){}};
 const live=()=>{try{return typeof R=='object'&&R&&R.team&&R.team.length}catch(e){return false}};
 const fem=()=>{try{return S.gender==='f'}catch(e){return false}};
+const esc2=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const HOOD=`<svg viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="hdG" cx=".5" cy=".55" r=".5"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#111827"/></radialGradient></defs><path d="M6 62c0-16 8-27 26-27s26 11 26 27z" fill="#3f3f46"/><path d="M12 40C10 20 18 5 32 4s22 16 20 36c-3 6-10 9-20 9s-17-3-20-9z" fill="#52525b" stroke="#18181b" stroke-width="2"/><path d="M18 38c0-13 6-23 14-23s14 10 14 23c-3 5-8 7-14 7s-11-2-14-7z" fill="url(#hdG)"/><ellipse cx="26" cy="31" rx="3" ry="1.6" fill="#fde047"/><ellipse cx="38" cy="31" rx="3" ry="1.6" fill="#fde047"/><path d="M27 39q5 3 10 0" stroke="#fde04799" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M22 52l-6 10M42 52l6 10" stroke="#27272a" stroke-width="3"/><circle cx="44" cy="54" r="5" fill="#f5c84c" stroke="#78350f" stroke-width="1.5"/><text x="44" y="57" font-size="7" text-anchor="middle" font-weight="900" fill="#78350f">$</text></svg>`;
 /* ---------- dinero ---------- */
 let el=null,view='lobby',bet=100;
 function money(){return live()?R.money|0:0}
-function pay(n,why){if(!live())return false;if(n>R.money){toast('No tienes suficientes Pokémonedas');return false}R.money-=n;sync(-1);return true}
-function win(n){if(!live()||n<=0)return;R.money+=Math.round(n);sync(1);}
+/* v57.2: estadísticas del casino (sesión, récords, jugadas por juego) y celebración de grandes premios */
+const CK='pa_casst',CS=()=>{try{const o=JSON.parse(localStorage.getItem(CK)||'{}');o.pl=o.pl||{};return o}catch(e){return{pl:{}}}},CSput=o=>{try{localStorage.setItem(CK,JSON.stringify(o))}catch(e){}};let SESS=0,LASTB=0;
+function pay(n,why){if(!live())return false;if(n>R.money){toast('No tienes suficientes Pokémonedas');return false}R.money-=n;sync(-1);try{const o=CS();o.w=(o.w||0)+n;o.pl[view]=(o.pl[view]|0)+1;o.n=(o.n|0)+1;CSput(o);SESS-=n;LASTB=n}catch(_){}return true}
+function win(n){if(!live()||n<=0)return;n=Math.round(n);R.money+=n;sync(1);if(view==='lobby')return;try{const o=CS();o.g=(o.g||0)+n;if(!o.big||n>o.big.n)o.big={n,v:view,t:Date.now()};CSput(o);SESS+=n;if(n>=Math.max(2500,LASTB*8))bigWin(n)}catch(_){}}
+async function daily(){const o=CS(),d=new Date(),day=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();if(o.fd===day||busy||!live())return;busy=true;o.fd=day;CSput(o);
+ const P=[100,200,300,500,750,1000,2500,5000],W=[22,22,18,14,10,8,4,2];let t=rnd()*W.reduce((a,b)=>a+b,0),k=0;for(;k<P.length;k++){if((t-=W[k])<0)break}k=Math.min(k,P.length-1);
+ const ov=D.createElement('div');ov.className='kdw';ov.innerHTML=`<div class="kdwb"><b>🎁 Ficha diaria</b><div class="kdwh"><div class="kdwr" style="--n:${P.length}">${P.map((v,i)=>`<span style="--i:${i}"><i>${v>=1000?v/1000+'K':v}</i></span>`).join('')}</div><em>▼</em></div><p class="kdwp">Girando…</p></div>`;el.append(ov);
+ const r=ov.querySelector('.kdwr'),deg=360*5+(360-(k+.5)*360/P.length);requestAnimationFrame(()=>{r.style.transform=`rotate(${deg}deg)`});for(let i=0;i<14;i++)setTimeout(()=>bp(600+i*30,.03,'square'),i*170);
+ await sleep(3300);win(P[k]);ov.querySelector('.kdwp').innerHTML=`¡Has ganado <b>${coin()} ${fmt(P[k])}</b>!`;bp(1175,.15);setTimeout(()=>bp(1568,.2),120);await sleep(1600);ov.remove();busy=false;render()}
+function bigWin(n){try{const o=D.createElement('div');o.className='kbig';o.innerHTML=`<div class="kbw"><b>¡GRAN PREMIO!</b><span>+${coin()} ${fmt(n)}</span></div>${Array.from({length:34},(_,i)=>`<i style="--x:${(i*29)%100}%;--d:${((i*.07)%1.4).toFixed(2)}s;--s:${(.7+(i%5)*.15).toFixed(2)}">${coin()}</i>`).join('')}`;(el||D.body).append(o);[784,988,1175,1568,1976].forEach((f,i)=>setTimeout(()=>bp(f,.12),i*90));setTimeout(()=>o.remove(),3200)}catch(e){}}
 function sync(d){try{saveRun()}catch(e){}const m=el&&el.querySelector('.kcm');if(m){m.innerHTML=coin()+' '+fmt(money());m.classList.remove('kup','kdn');void m.offsetWidth;m.classList.add(d>0?'kup':'kdn')}try{Q('#mn').innerHTML=coin()+' '+nf(R.money)}catch(e){}const w=Q('#mod .wn');if(w)w.textContent=nf(R.money)}
 /* v27.7: en el Póker caribeño la subida cuesta el doble del ante, así que el ante máximo es un tercio de tu dinero */
 const betCap=()=>view==='cps'?Math.floor(money()/3):money();
@@ -15165,7 +15181,11 @@ const GAMES=[['slots','🎰','Tragaperras','Tres rodillos. ¡Tres 7 pagan ×800!
 function head(t){return`<div class="kch"><button class="cx" data-a="${view==='lobby'?'close':'lobby'}" aria-label="${view==='lobby'?'Salir':'Volver'}">${view==='lobby'?'✕':'←'}</button><h2>${t}</h2>${view!=='atm'?`<button class="khp" data-a="help" aria-label="Cómo se juega" title="Cómo se juega">?</button>`:''}<span class="kcm">${coin()} ${fmt(money())}</span></div>`}
 function betUI(lock){clampBet();return`<div class="bet"><div class="bv"><span class="klbl">${view==='cps'?'Ante':'Apuesta'}</span><b>${coin()} ${fmt(bet)}</b></div>${view==='cps'?`<small style="text-align:center;opacity:.8;font-size:12px">Para poder subir necesitas guardar el doble del ante, por eso el ante máximo es un tercio de tu dinero.</small>`:''}${lock?'':`<div class="chips">${[[50,'#64748b'],[100,'#2563eb'],[500,'#16a34a'],[1000,'#dc2626'],[5000,'#7c3aed'],[25000,'#b45309']].map(([v,c])=>`<button class="kchip" style="--c:${c}" data-bet="${v}">${v>=1000?v/1000+'K':v}</button>`).join('')}<button class="kchip x" data-bet="0">↺</button><button class="kchip x" data-bet="max">MÁX</button></div>`}</div>`}
 function render(){if(!el)return;const g=GAMES.find(x=>x[0]===view);
- if(view==='lobby'){el.innerHTML=head('POKÉCASINO')+`<div class="kcb"><div class="wel">${HOOD}<p><b style="color:#fde68a">Bienvenid${fem()?'a':'o'} al PokéCasino.</b><br>Juegas contra nuestros crupieres bot con tus Pokémonedas. Recuerda: la casa siempre tiene un poquito de ventaja… ¡juega con cabeza!</p></div><button class="atmb" data-g="atm"><i>🏧</i><span><b>Cajero automático</b><small>Saca dinero de tu Banco Pokémon · Saldo: ${coin()} ${fmt(bankBal())}</small></span><em>›</em></button><div class="lob">${GAMES.map(x=>`<button class="gm" data-g="${x[0]}" style="--c:${x[4]}"><i>${x[1]}</i><b>${x[2]}</b><small>${x[3]}</small></button>`).join('')}</div></div>`;return}
+ if(view==='lobby'){const ST0=CS(),day=(()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()})(),free=ST0.fd!==day,top=Object.entries(ST0.pl).sort((a,b)=>b[1]-a[1])[0],GN=k=>(GAMES.find(x=>x[0]===k)||[])[2]||k,MACH=['slots','wheel','keno','vp'],card=x=>`<button class="gm" data-g="${x[0]}" style="--c:${x[4]}">${top&&top[0]===x[0]?'<em class="kfav">⭐ Tu favorito</em>':''}<i>${x[1]}</i><b>${x[2]}</b><small>${x[3]}</small>${ST0.pl[x[0]]?`<u>${ST0.pl[x[0]]} jugada${ST0.pl[x[0]]>1?'s':''}</u>`:''}</button>`;
+  el.innerHTML=head('POKÉCASINO')+`<div class="kcb"><div class="kmq"><div class="kbulbs">${'<i></i>'.repeat(22)}</div><b>✦ POKÉCASINO ✦</b><small>Abierto día y noche</small><div class="kbulbs b">${'<i></i>'.repeat(22)}</div></div>
+  <div class="kst"><div><small>Esta visita</small><b class="${SESS>0?'up':SESS<0?'dn':''}">${SESS>0?'+':''}${fmt(SESS)}</b></div><div><small>Mayor premio</small><b>${ST0.big?fmt(ST0.big.n):'—'}</b><em>${ST0.big?esc2(GN(ST0.big.v)):''}</em></div><div><small>Jugadas</small><b>${fmt(ST0.n||0)}</b><em>${ST0.w?'Balance '+((ST0.g||0)-(ST0.w||0)>=0?'+':'')+fmt((ST0.g||0)-(ST0.w||0)):''}</em></div></div>
+  <button class="kdaily${free?'':' off'}" data-a="daily" ${free?'':'disabled'}><i>🎁</i><span><b>${free?'Ficha diaria gratis':'Ficha diaria recogida'}</b><small>${free?'Gira la ruleta de regalo una vez al día':'Vuelve mañana a por otra'}</small></span><em>${free?'¡Gira!':'✓'}</em></button>
+  <div class="wel">${HOOD}<p><b style="color:#fde68a">Bienvenid${fem()?'a':'o'} al PokéCasino.</b><br>Juegas contra nuestros crupieres bot con tus Pokémonedas. Recuerda: la casa siempre tiene un poquito de ventaja… ¡juega con cabeza!</p></div><button class="atmb" data-g="atm"><i>🏧</i><span><b>Cajero automático</b><small>Saca dinero de tu Banco Pokémon · Saldo: ${coin()} ${fmt(bankBal())}</small></span><em>›</em></button><h3 class="ksec">🎰 Máquinas</h3><div class="lob">${GAMES.filter(x=>MACH.includes(x[0])).map(card).join('')}</div><h3 class="ksec">🃏 Mesas</h3><div class="lob">${GAMES.filter(x=>!MACH.includes(x[0])).map(card).join('')}</div><p class="kresp">🧠 Juega con cabeza: la casa siempre tiene un poco de ventaja.</p></div>`;return}
  if(view==='atm'){el.innerHTML=head('CAJERO')+`<div class="kcb" id="csb"></div>`;atm(el.querySelector('#csb'));return}
  el.innerHTML=head(g[2].toUpperCase())+`<div class="kcb" id="csb"></div>`;G[view].init(el.querySelector('#csb'))}
 function chipClick(v){if(busy)return;if(AUTO){toast('Para cambiar la apuesta, detén las tiradas automáticas');return}if(v==='max')bet=Math.max(50,betCap());else if(+v===0)bet=50;else bet=(bet===50&&+v>50?0:bet)+(+v);clampBet();const b=el.querySelector('.bet .bv b');if(b)b.innerHTML=coin()+' '+fmt(bet);bp(700,.04)}
@@ -15338,7 +15358,7 @@ function close(){if(!el)return;AUTO=false;el.classList.remove('kon');busy=false;
 function bind(e){e.addEventListener('click',ev=>{const t=ev.target.closest('[data-a],[data-g],[data-atm],[data-bet],[data-ro],[data-bo],[data-wo],[data-kn],[data-hold]');if(!t||t.disabled)return;
  if(t.dataset.g){view=t.dataset.g;busy=false;return render()}if(t.dataset.atm!=null)return atmKey(t.dataset.atm);if(t.dataset.a==='atmgo'){if(!busy)atmGo();return}if(t.dataset.bet!=null)return chipClick(t.dataset.bet);
  if(t.dataset.ro)return G.roul.opt(t.dataset.ro);if(t.dataset.bo)return G.bac.opt(t.dataset.bo);if(t.dataset.wo)return G.wheel.opt(t.dataset.wo);if(t.dataset.kn)return G.keno.pick(+t.dataset.kn);if(t.dataset.hold!=null)return G.vp.hold(+t.dataset.hold);
- const a=t.dataset.a;if(a==='help')return help();if(a==='hclose'){const g=el.querySelector('.kgd');if(g)g.remove();return}if(a==='close')return close();if(a==='lobby'){AUTO=false;if(busy)return;view='lobby';BJ=CP=VP=HL=null;return render()}const g=G[view];if(g&&g.act)g.act(a)});
+ const a=t.dataset.a;if(a==='daily')return daily();if(a==='help')return help();if(a==='hclose'){const g=el.querySelector('.kgd');if(g)g.remove();return}if(a==='close')return close();if(a==='lobby'){AUTO=false;if(busy)return;view='lobby';BJ=CP=VP=HL=null;return render()}const g=G[view];if(g&&g.act)g.act(a)});
  D.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&el.classList.contains('kon')){ev.stopImmediatePropagation();{const g=el.querySelector('.kgd');if(g){g.remove();return}}AUTO=false;if(busy)return;view==='lobby'?close():(view='lobby',render())}},true)}
 const HELP={
  lobby:['🎰','Cómo funciona el PokéCasino',['Elige un juego tocando su tarjeta.','En cada juego, toca las fichas para subir tu apuesta: ↺ la deja en 50 y MÁX apuesta todo lo que llevas.','Si ganas, el premio se suma a tus Pokémonedas al momento; si pierdes, la casa se queda la apuesta.','¿Sin dinero? El cajero saca Pokémonedas de tu Banco Pokémon.','Toca el botón ? de cada juego para ver cómo se juega.'],'La casa siempre tiene una pequeña ventaja. ¡Apuesta con cabeza!'],
@@ -22417,6 +22437,50 @@ html.lt ::selection{background:#93c5fd;color:#111}
 #mktov .mk-hist small{opacity:.6}
 #mktov .mk-h4{margin:6px 2px 4px;font:900 13px system-ui;color:#92400e}
 #mktov .mk-row.sh .mk-t b{color:#854d0e}
+/* v57.2: PokéCasino renovado */
+#pcas .kmq{position:relative;display:flex;flex-direction:column;align-items:center;padding:16px 10px 14px;border-radius:20px;background:radial-gradient(120% 120% at 50% 0%,#7f1d1d,#2a0707 70%);border:3px solid #f5c84c;box-shadow:0 0 30px #f5c84c55,inset 0 0 24px #0008;overflow:hidden}
+#pcas .kmq b{font:900 26px Georgia,serif;letter-spacing:.12em;color:#fde68a;text-shadow:0 0 8px #f59e0b,0 0 22px #f59e0b,0 3px 0 #7c2d12;animation:kNeon 2.2s ease-in-out infinite alternate}
+#pcas .kmq small{font:700 11px system-ui;letter-spacing:.3em;text-transform:uppercase;color:#fca5a5;margin-top:2px}
+@keyframes kNeon{to{text-shadow:0 0 12px #fde047,0 0 34px #f59e0b,0 3px 0 #7c2d12}}
+#pcas .kbulbs{position:absolute;left:8px;right:8px;top:5px;display:flex;justify-content:space-between}
+#pcas .kbulbs.b{top:auto;bottom:5px}
+#pcas .kbulbs i{width:6px;height:6px;border-radius:50%;background:#fde68a;box-shadow:0 0 6px #fde047;animation:kBulb 1s steps(1) infinite}
+#pcas .kbulbs i:nth-child(odd){animation-delay:.5s}
+@keyframes kBulb{50%{background:#7c2d12;box-shadow:none}}
+#pcas .kst{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#pcas .kst div{display:flex;flex-direction:column;align-items:center;padding:8px 4px;border-radius:14px;background:#ffffff0d;border:1px solid #f5c84c33;text-align:center;min-width:0}
+#pcas .kst small{font:700 10px system-ui;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+#pcas .kst b{font:900 16px system-ui;color:#fde68a;font-variant-numeric:tabular-nums}
+#pcas .kst b.up{color:#4ade80}#pcas .kst b.dn{color:#f87171}
+#pcas .kst em{font:600 10px system-ui;font-style:normal;opacity:.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#pcas .kdaily{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:18px;border:2px solid #f5c84c;background:linear-gradient(90deg,#78350f,#451a03);color:#fff;text-align:left;cursor:pointer;box-shadow:0 0 18px #f5c84c44;animation:kDly 1.8s ease-in-out infinite alternate}
+#pcas .kdaily i{font-style:normal;font-size:32px}#pcas .kdaily span{flex:1;display:flex;flex-direction:column;gap:2px}#pcas .kdaily b{font:900 15px Georgia,serif;color:#fde68a}#pcas .kdaily small{font-size:12px;opacity:.85}
+#pcas .kdaily em{font-style:normal;padding:6px 12px;border-radius:999px;background:linear-gradient(#fde047,#f59e0b);color:#451a03;font:900 13px system-ui}
+#pcas .kdaily.off{animation:none;opacity:.55;border-color:#78716c;box-shadow:none}#pcas .kdaily.off em{background:#57534e;color:#e7e5e4}
+@keyframes kDly{to{box-shadow:0 0 30px #f5c84c88}}
+#pcas .ksec{margin:6px 2px 0;font:900 14px Georgia,serif;letter-spacing:.06em;color:#fde68a}
+#pcas .gm .kfav{position:absolute;top:-8px;left:50%;transform:translateX(-50%);padding:2px 8px;border-radius:999px;background:linear-gradient(#fde047,#f59e0b);color:#451a03;font:900 9.5px system-ui;font-style:normal;white-space:nowrap;box-shadow:0 2px 6px #0008}
+#pcas .gm u{text-decoration:none;font:800 10px system-ui;padding:2px 7px;border-radius:999px;background:#0006;color:#fde68a}
+#pcas .gm{overflow:visible!important;transition:transform .15s,border-color .15s,box-shadow .15s}
+#pcas .gm:hover,#pcas .gm:focus-visible{box-shadow:0 0 20px color-mix(in srgb,var(--c) 60%,transparent)}
+#pcas .kresp{text-align:center;font-size:11.5px;opacity:.6;margin:6px 0 0}
+#pcas .kbig{position:absolute;inset:0;z-index:50;pointer-events:none;overflow:hidden}
+#pcas .kbig .kbw{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;padding:16px 26px;border-radius:22px;background:radial-gradient(circle,#7c2d12,#2a0707);border:3px solid #fde047;box-shadow:0 0 50px #fde047aa;animation:kBig 3.2s ease-out forwards}
+#pcas .kbig .kbw b{font:900 28px Georgia,serif;color:#fde047;text-shadow:0 0 16px #f59e0b;letter-spacing:.06em}
+#pcas .kbig .kbw span{font:900 22px system-ui;color:#fff;margin-top:4px}
+@keyframes kBig{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}12%{transform:translate(-50%,-50%) scale(1.12);opacity:1}20%{transform:translate(-50%,-50%) scale(1)}85%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%) scale(.95)}}
+#pcas .kbig>i{position:absolute;top:-40px;left:var(--x);width:28px;height:28px;font-style:normal;animation:kCoin calc(1.8s*var(--s)) ease-in forwards;animation-delay:var(--d)}
+#pcas .kbig>i svg{width:100%;height:100%}
+@keyframes kCoin{to{transform:translateY(110vh) rotate(720deg)}}
+#pcas .kdw{position:absolute;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:#000a;animation:fdin .2s}
+#pcas .kdwb{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 20px;border-radius:22px;background:radial-gradient(circle at 50% 0,#7f1d1d,#1c0505);border:3px solid #f5c84c;box-shadow:0 0 40px #f5c84c66}
+#pcas .kdwb>b{font:900 20px Georgia,serif;color:#fde68a}
+#pcas .kdwh{position:relative;width:230px;height:230px}
+#pcas .kdwh em{position:absolute;left:50%;top:-14px;transform:translateX(-50%);font-style:normal;font-size:26px;color:#fde047;text-shadow:0 2px 0 #000;z-index:2}
+#pcas .kdwr{position:absolute;inset:0;border-radius:50%;border:6px solid #f5c84c;background:repeating-conic-gradient(#dc2626 0 calc(360deg/var(--n)),#111827 0 calc(720deg/var(--n)));transition:transform 3.2s cubic-bezier(.15,.85,.25,1);box-shadow:0 0 24px #000a,inset 0 0 20px #0008}
+#pcas .kdwr span{position:absolute;inset:0;transform:rotate(calc((var(--i) + .5) * 360deg / var(--n)))}
+#pcas .kdwr span i{position:absolute;left:50%;top:12px;transform:translateX(-50%);font:900 15px system-ui;font-style:normal;color:#fde68a;text-shadow:0 1px 0 #000}
+#pcas .kdwp{margin:0;font:800 15px system-ui}
 </style>
 <script id="v37js">
 (()=>{
