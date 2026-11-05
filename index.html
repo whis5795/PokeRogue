@@ -312,7 +312,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.6</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v56.7</div>
 </section>
 
 <section id="team" class="scr">
@@ -8656,7 +8656,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'56.6',t:'Indicador del clima bien colocado',s:'cur',l:[
+ {v:'56.7',t:'Nueva pantalla de selección de cartas',s:'cur',l:[
+  '🃏 Pantalla de selección de cartas rediseñada: cartas grandes con el color de su tipo (entrenador, salvaje, tienda, evento, gimnasio, jefe, Centro Pokémon), brillo holográfico, fondo animado y el entrenador flotando',
+  '📊 Cada carta muestra de un vistazo su dificultad (Fácil / Normal / Difícil), estrellas, nivel, cuántos Pokémon lleva el rival y sus recompensas (Pokémonedas, experiencia y probabilidad de objeto)',
+  '🎯 Consejo de nivel en cada combate: «A tu nivel», «Por debajo de tu nivel» o «Por encima de tu nivel» según la media de tu equipo',
+  '✨ Las cartas se reparten con animación, se levantan al pasar el dedo o el ratón, y al elegir una brilla mientras las demás se apagan; gimnasios y jefes finales destacan con un brillo dorado'
+ ]},
+ {v:'56.6',t:'Indicador del clima bien colocado',s:'prev',l:[
   '🌦️ El indicador del clima del bioma se coloca siempre justo debajo del narrador o de los botones de arriba (con «Botones del bioma arriba» activado), sin tapar nunca «← Isla» ni la información'
  ]},
  {v:'56.5',t:'Clima en los biomas',s:'prev',l:[
@@ -22196,6 +22202,56 @@ html.mpsv #svl .v-pk .v-ring{animation:none}
 #bzv .bzw-chip.on{border-color:#fde047;background:linear-gradient(180deg,#312e81ee,#1e1b4bee);animation:bzwChip 2s ease-in-out infinite alternate}
 #bzv .bzw-chip.on small{color:#fde68a;font-variant-numeric:tabular-nums}
 @keyframes bzwChip{to{box-shadow:0 4px 16px #fde04777}}
+/* v56.7: pantalla de selección de cartas */
+#cards:has(>.cx2){display:flex!important;flex-wrap:wrap;justify-content:center;gap:14px;max-width:900px!important;margin:18px auto 0!important;padding:0 14px!important;perspective:1200px;overflow:visible!important}
+#cards:has(>.cx2)::before{content:"🃏 Elige tu próximo desafío";flex:0 0 100%;text-align:center;font:900 18px system-ui;color:#fde68a;text-shadow:0 2px 0 #0008,0 0 18px #fbbf2455;letter-spacing:.3px;margin-bottom:-4px}
+#cards .ca.cx2{all:unset;box-sizing:border-box;position:relative;display:flex;flex-direction:column;align-items:stretch;flex:0 1 calc(50% - 7px);max-width:215px;min-width:0;padding:8px 8px 10px;border-radius:20px;cursor:pointer;color:#fff;text-align:center;
+ background:linear-gradient(165deg,color-mix(in srgb,var(--k) 55%,#1e1b4b) 0%,var(--kd) 70%,#0b0718 100%);border:2.5px solid color-mix(in srgb,var(--k) 70%,#fff);box-shadow:0 14px 28px #000a,inset 0 0 0 2px #ffffff14,0 0 22px color-mix(in srgb,var(--k) 35%,transparent);
+ overflow:hidden;transform-style:preserve-3d;animation:cxDeal .55s cubic-bezier(.2,1.3,.4,1) both;animation-delay:var(--d);transition:transform .22s cubic-bezier(.2,1.4,.4,1),box-shadow .22s,filter .25s,opacity .25s;-webkit-tap-highlight-color:transparent}
+@keyframes cxDeal{from{opacity:0;transform:translateY(60px) rotateY(-80deg) scale(.8)}}
+@media (min-width:720px){#cards .ca.cx2{flex:0 1 200px}}
+#cards .ca.cx2:hover,#cards .ca.cx2:focus-visible{transform:translateY(-8px) scale(1.03)!important;box-shadow:0 22px 36px #000c,inset 0 0 0 2px #ffffff22,0 0 34px color-mix(in srgb,var(--k) 60%,transparent)}
+#cards .ca.cx2:active{transform:scale(.97)!important}
+#cards .ca.cx2.cx-pick{transform:translateY(-12px) scale(1.07)!important;box-shadow:0 0 0 4px #fde047,0 0 50px #fde047aa!important;z-index:5}
+#cards .ca.cx2.cx-dim{opacity:.35;filter:grayscale(.6) blur(.5px);transform:scale(.94)!important}
+#cards .ca.cx2 .cx-holo{position:absolute;inset:-40%;background:linear-gradient(115deg,transparent 40%,#ffffff2e 47%,#ffffff55 50%,#ffffff2e 53%,transparent 60%);animation:cxHolo 4.5s ease-in-out infinite;animation-delay:calc(var(--d) * 3);pointer-events:none;z-index:4;mix-blend-mode:overlay}
+@keyframes cxHolo{0%,55%{transform:translateX(-60%)}100%{transform:translateX(60%)}}
+#cards .ca.cx2 .cx-top{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-bottom:6px;position:relative;z-index:2}
+#cards .ca.cx2 .cx-kind{font:900 10.5px system-ui;letter-spacing:.4px;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:#0006;border:1px solid #ffffff33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#cards .ca.cx2 .cx-df{flex:none;font:900 10px system-ui;padding:3px 7px;border-radius:999px;background:var(--dc);color:#111;box-shadow:0 0 10px color-mix(in srgb,var(--dc) 60%,transparent)}
+#cards .ca.cx2 .cx-art{position:relative;display:grid;place-items:center;height:118px;border-radius:14px;overflow:hidden;background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--k) 45%,#fff3) 0,transparent 65%),linear-gradient(#ffffff10,#0004);border:1px solid #ffffff22}
+#cards .ca.cx2 .cx-bg{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 120%,#ffffff0d 0 6deg,transparent 6deg 14deg);animation:cxRot 30s linear infinite}
+@keyframes cxRot{to{transform:rotate(360deg)}}
+#cards .ca.cx2 .cx-ped{position:absolute;left:50%;bottom:10px;width:64%;height:16px;margin-left:-32%;border-radius:50%;background:radial-gradient(#0009,transparent 70%)}
+#cards .ca.cx2 .cx-art img{position:relative;z-index:1;max-width:92%;max-height:108px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 6px 6px #0009);animation:cxBob 2.6s ease-in-out infinite;animation-delay:var(--d)}
+#cards .ca.cx2 .cx-art svg{width:64px;height:64px;position:relative;z-index:1;filter:drop-shadow(0 6px 8px #0009);animation:cxBob 2.6s ease-in-out infinite}
+@keyframes cxBob{50%{transform:translateY(-5px)}}
+#cards .ca.cx2 .cx-em{position:relative;z-index:1;font-size:58px;line-height:1;display:grid;place-items:center;animation:cxBob 2.6s ease-in-out infinite}
+#cards .ca.cx2 .cx-em svg{width:66px;height:66px}
+#cards .ca.cx2 .cx-q{width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#a5f3fc,#0891b2);border:3px solid #ecfeff;color:#fff;font:900 44px system-ui;text-shadow:0 2px 0 #0e7490;box-shadow:0 0 26px #22d3ee}
+#cards .ca.cx2 .cx-np{position:absolute;right:6px;top:6px;z-index:2;display:flex;gap:2px}
+#cards .ca.cx2 .cx-np i{width:9px;height:9px;border-radius:50%;background:linear-gradient(#ef4444 0 45%,#111 45% 55%,#fff 55%);box-shadow:0 0 0 1px #111}
+#cards .ca.cx2 .cx-name{display:block;margin:8px 0 2px;font:900 14.5px system-ui;line-height:1.15;text-shadow:0 2px 0 #0009;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+#cards .ca.cx2 .cx-meta{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;font:800 12px system-ui;min-height:18px}
+#cards .ca.cx2 .cx-meta small{font:700 11px system-ui;color:#e0e7ff;opacity:.85}
+#cards .ca.cx2 .cx-st{display:inline-flex;gap:0}#cards .ca.cx2 .cx-st i{font-style:normal;color:#ffffff33;font-size:13px}#cards .ca.cx2 .cx-st i.on{color:#fde047;text-shadow:0 0 6px #f59e0b}
+#cards .ca.cx2 .cx-rw{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:7px}
+#cards .ca.cx2 .cx-rw span{display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border-radius:9px;background:#0007;border:1px solid #ffffff1f;font:800 10.5px system-ui;white-space:nowrap}
+#cards .ca.cx2 .cx-rw span svg{width:13px;height:13px}
+#cards .ca.cx2 .cx-h{display:block;margin-top:7px;padding:4px 6px;border-radius:9px;font:800 10.5px system-ui}
+#cards .ca.cx2 .cx-h.hot{background:#7f1d1d99;color:#fecaca;border:1px solid #f8717166}
+#cards .ca.cx2 .cx-h.ok{background:#14532d99;color:#bbf7d0;border:1px solid #4ade8066}
+#cards .ca.cx2 .cx-h.mid{background:#1e3a8a88;color:#bfdbfe;border:1px solid #60a5fa55}
+#cards .ca.cx2.cx-big{border-color:#fde047;box-shadow:0 14px 30px #000b,0 0 34px #fde04777;animation:cxDeal .55s cubic-bezier(.2,1.3,.4,1) both,cxBigG 2.2s ease-in-out infinite alternate}
+@keyframes cxBigG{to{box-shadow:0 14px 30px #000b,0 0 50px #fde047aa}}
+#cards .ca.cx2.k-ev .cx-art{background:radial-gradient(circle,#22d3ee33,transparent 70%),linear-gradient(#ffffff10,#0004)}
+#cards .ca.cx2:only-child,#cards .ca.cx2.cx-big:only-of-type{flex-basis:min(260px,80%);max-width:260px}
+@media (prefers-reduced-motion:reduce){#cards .ca.cx2,#cards .ca.cx2 *{animation:none!important}}
+#cards .ca.cx2{flex:0 1 calc(50% - 7px)!important;max-width:215px!important;margin:0!important;padding:8px 8px 10px!important;width:auto!important;min-height:0!important;height:auto!important}
+@media (min-width:720px){#cards .ca.cx2{flex:0 1 200px!important}}
+#cards:has(>.cx2) .ca.cx2:only-of-type{flex-basis:min(260px,80%)!important}
+#cards .ca.cx2 .cx-top{justify-content:center}
+#cards .ca.cx2 .cx-art .cx-df{position:absolute;left:6px;top:6px;z-index:2}
 </style>
 <script id="v37js">
 (()=>{
@@ -26979,6 +27035,33 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
  /* combates lanzados desde el bioma: empiezan con el clima del bioma */
  const _m=window.menu;if(typeof _m==='function')window.menu=function(){try{if(typeof B=='object'&&B&&B.c&&B.c.herd&&!B._bzw&&!B.over){B._bzw=1;const k=curK||(Date.now()-lastT<120000?lastK:''),e=k&&now(k),X=e&&WD[e.k];if(X&&X.bw&&!B.wx){B.wx={k:X.bw,t:99,perm:true};try{wxHud()}catch(_){}setTimeout(()=>{try{toast(`${X.e} ${X.n}: el clima del bioma sigue en el combate`)}catch(_){}},400)}}}catch(e){}return _m.apply(this,arguments)};
  window.__bzw={now,next,ep,WD};
+})();
+
+/* ---------- v56.7: pantalla de selección de cartas rediseñada (cartas grandes, holográficas, con dificultad, recompensas y consejo de nivel) ---------- */
+(()=>{const D=document;if(typeof window.cardHTML!=='function')return;const _old=window.cardHTML;
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const K={tr:['⚔️','Entrenador','#e11d48','#4c0519'],wild:['🌿','Salvaje','#16a34a','#052e16'],shop:['🛒','Tienda','#f59e0b','#451a03'],ev:['❓','Evento','#06b6d4','#083344'],boss:['👑','Jefe final','#eab308','#422006'],gym:['🏅','Gimnasio','#8b5cf6','#2e1065'],cen:['💗','Centro Pokémon','#f43f5e','#4c0519']};
+ const DFC=['#22c55e','#f59e0b','#ef4444'],DFN=['Fácil','Normal','Difícil'];
+ const avg=()=>{try{const T=(R.team||[]).filter(m=>m&&m.lvl);return T.length?Math.round(T.reduce((a,m)=>a+m.lvl,0)/T.length):1}catch(e){return 1}};
+ const ic=k=>{try{return IC[k]||''}catch(e){return''}};
+ window.cardHTML=function(c,i,n){try{
+  const k=K[c.k];if(!k)return _old(c,i,n);let [e,lbl,col,dk]=k;
+  if(c.k==='gym'&&c.ty){try{col=COL[c.ty]||col}catch(_){}lbl='Gimnasio · '+((typeof ES=='object'&&ES[c.ty])||c.ty)}
+  if(c.k==='wild'&&c.bio)lbl='Salvaje';
+  let art='';try{art=c.k==='tr'||c.k==='boss'||c.k==='gym'?imh(c.sp||['ace'],c.k==='tr'?'ball':'boss'):c.k==='shop'?imh(['clerk'],'shop'):c.k==='cen'?`<div class="cx-em">${ic('cen')||'💗'}</div>`:c.k==='ev'?'<div class="cx-em cx-q">?</div>':`<div class="cx-em">${ic(((typeof KD=='object'&&KD[c.k])||[])[0])||'🌿'}</div>`}catch(_){art=`<div class="cx-em">${e}</div>`}
+  const lv=c.lv|0,dd=c.k==='gym'||c.k==='boss'?2:Math.max(0,Math.min(2,c.d|0)),fight=!!lv;
+  const st=c.k==='gym'?5:c.k==='boss'?5:dd+1,stars=fight?`<span class="cx-st">${Array.from({length:c.k==='gym'||c.k==='boss'?5:3},(_,j)=>`<i class="${j<st?'on':''}">★</i>`).join('')}</span>`:'';
+  let hint='';if(fight){const df=lv-avg();hint=df>=4?`<span class="cx-h hot">🔥 Por encima de tu nivel (+${df})</span>`:df<=-4?`<span class="cx-h ok">😌 Por debajo de tu nivel</span>`:`<span class="cx-h mid">⚖️ A tu nivel</span>`}
+  const pips=c.np>1||c.k==='boss'?`<span class="cx-np">${Array.from({length:c.k==='boss'?6:Math.min(6,c.np|0)},()=>'<i></i>').join('')}</span>`:'';
+  let rw='';if(fight){const g=(()=>{try{return gR(c)}catch(_){return''}})();rw=`${c.g?`<span>${ic('coin')} ${typeof nf=='function'&&!String(g).includes('-')?nf(g):g}</span>`:''}${c.xm?`<span>${ic('xp')||'✨'} ×${(+c.xm).toFixed(c.xm%1?2:0).replace(/\.?0+$/,'')}</span>`:''}${c.dp?`<span>${ic('gift')||'🎁'} ${Math.round(c.dp*100)}%</span>`:''}${c.k==='gym'?'<span>🏅 Medalla</span>':''}`}
+  else if(c.k==='shop')rw='<span>🧪 Objetos</span><span>💿 MT</span><span>💎 Reliquias</span>';
+  else if(c.k==='ev')rw='<span>🎲 Sorpresa</span><span>🎁 ¿Botín?</span>';
+  else if(c.k==='cen')rw='<span>❤️ PS</span><span>🔋 PP</span><span>✨ Estados</span>';
+  const tag=fight?`<span class="cx-df" style="--dc:${DFC[dd]}">${c.k==='boss'?'Jefe':c.k==='gym'?'Líder':DFN[dd]}</span>`:'';
+  const big=c.k==='boss'||c.k==='gym';
+  return`<button type="button" class="ca cx2 k-${c.k}${big?' cx-big':''}" style="--k:${col};--kd:${dk};--d:${(i*.09).toFixed(2)}s" aria-label="${esc(lbl+': '+(c.n||''))}"><span class="cx-holo"></span><span class="cx-top"><span class="cx-kind">${e} ${esc(lbl)}</span></span><span class="cx-art"><span class="cx-bg"></span><span class="cx-ped"></span>${art}${tag}${pips}</span><span class="cx-name">${esc(c.n||lbl)}</span>${fight?`<span class="cx-meta">${stars}<b>Nv.${lv}</b>${c.np>1?`<small>· ${c.np} Pokémon</small>`:''}</span>`:`<span class="cx-meta"><small>${c.k==='shop'?'Compra antes del próximo combate':c.k==='ev'?'Algo inesperado te espera…':c.k==='cen'?'Cura gratis a todo tu equipo':''}</small></span>`}<span class="cx-rw">${rw}</span>${hint}</button>`}catch(err){console.error(err);return _old(c,i,n)}};
+ /* al elegir: la carta elegida brilla y las demás se apagan */
+ D.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#cards .ca.cx2');if(!b||(typeof R=='object'&&R&&R.lock))return;b.classList.add('cx-pick');b.parentNode.querySelectorAll('.ca.cx2').forEach(x=>{if(x!==b)x.classList.add('cx-dim')});setTimeout(()=>{b.classList.remove('cx-pick');b.parentNode&&b.parentNode.querySelectorAll('.cx-dim').forEach(x=>x.classList.remove('cx-dim'))},1600)},true);
 })();
 
 })();</script>
