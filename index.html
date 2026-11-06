@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.3</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.4</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.3',t:'Piedras desbloqueables',s:'cur',l:[
+ {v:'58.4',t:'Centro de datos',s:'cur',l:[
+  '💾 Centro de datos nuevo en Ajustes → Datos: tu archivo de guardado, resumen del progreso (aventura con tu equipo, Pokédex, logros, dinero y ranuras) y aviso si hace más de una semana que no haces copia de seguridad, con botón para hacerla al momento',
+  '📦 Almacenamiento: cuánto ocupa cada cosa (aventura, ranuras, Pokédex, casa, multijugador, cachés…) y botón «🧹 Liberar espacio» que borra las cachés de descargas sin tocar tu progreso',
+  '📸 Puntos de restauración automáticos de la aventura cada 10 minutos (se guardan los 3 últimos) con «↩ Restaurar» y «📸 Crear un punto ahora»',
+  '🎨 Las tarjetas de copia de seguridad, ranuras y borrado tienen un diseño nuevo'
+ ]},
+ {v:'58.3',t:'Piedras desbloqueables',s:'prev',l:[
   '🔓 Cuando consigues una piedra evolutiva con un logro, queda desbloqueada para siempre en la tienda (pestaña Piedras) y puedes comprarla cuando quieras, en todas tus partidas de ese archivo. Las de los logros que ya habías reclamado también se desbloquean'
  ]},
  {v:'58.2',t:'Baúl del Tesoro y clima nuevo',s:'prev',l:[
@@ -27667,6 +27673,62 @@ button,.act,.cd,.pxc,.zqcd,.bzp,.sg>*,[data-i],[data-f],[data-ev]{touch-action:m
 .c2fly img{max-width:100%;max-height:100%}
 @media(max-width:620px){#ch2 .c2da{flex:1 1 100%;justify-content:flex-end}#ch2 .c2seg{display:flex}#ch2 .c2panes{grid-template-columns:1fr}#ch2 .c2p[data-p="bag"]{display:none}#ch2.sbag .c2p[data-p="bag"]{display:flex}#ch2.sbag .c2p[data-p="chest"]{display:none}#ch2 .c2g{max-height:min(38vh,300px)}#ch2 .c2t b{font-size:17px}}
 @media(prefers-reduced-motion:reduce){#ch2 .c2lid,#ch2 .c2b{transition:none}#ch2 .c2glow,#ch2 .c2s.r-leg::after{animation:none}}
+/* v58.4: 💾 Centro de datos */
+#setx .sp.on{animation-play-state:running!important}
+#dc58{display:flex;flex-direction:column;gap:10px;margin:4px 0 12px}
+#dc58 .dch{display:flex;flex-direction:column;gap:10px}
+#dc58 .dcf,#dc58 .dcw{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:16px;background:linear-gradient(135deg,#4c1d95,#1e1b4b);border:2px solid #a78bfa88;box-shadow:0 6px 18px #0006}
+#dc58 .dcf>span,#dc58 .dcw>span{font-size:26px}
+#dc58 .dcf>div,#dc58 .dcw>div{flex:1;min-width:0}
+#dc58 .dcf small{display:block;font:700 10.5px system-ui;opacity:.75;letter-spacing:.05em;text-transform:uppercase}
+#dc58 .dcf b{display:block;font:900 17px system-ui;color:#fde68a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#dc58 button{padding:8px 12px;border-radius:11px;border:2px solid #ffffff44;background:#ffffff18;color:#fff;font:800 12.5px system-ui;flex:none;touch-action:manipulation}
+#dc58 button:disabled{opacity:.45}
+#dc58 .dcw{background:linear-gradient(135deg,#7c2d12,#451a03);border-color:#fb923caa}
+#dc58 .dcw.ok{background:linear-gradient(135deg,#14532d,#052e16);border-color:#4ade8088}
+#dc58 .dcw b{display:block;font:800 13px system-ui}
+#dc58 .dcw small{display:block;font:600 11px/1.3 system-ui;opacity:.85}
+#dc58 .dcw button{background:linear-gradient(180deg,#f59e0b,#b45309);border-color:#fde68a}
+#dc58 .dcg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+#dc58 .dcc{position:relative;overflow:hidden;padding:10px 11px 12px;border-radius:14px;background:#ffffff0d;border:1.5px solid #ffffff22}
+#dc58 .dcc.wide{grid-column:1/-1}
+#dc58 .dcc small{display:block;font:800 11px system-ui;opacity:.8}
+#dc58 .dcc b{display:block;font:900 18px system-ui;margin-top:2px}
+#dc58 .dcc em{display:block;font:600 10.5px system-ui;font-style:normal;opacity:.7}
+#dc58 .dcc i{position:absolute;left:0;bottom:0;height:4px;width:var(--p);background:linear-gradient(90deg,#4ade80,#fde047)}
+#dc58 .dct{background:none;padding:0;border:0;display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+#dc58 .dct img{width:40px;height:40px;border-radius:10px;background:#0004;image-rendering:pixelated}
+#dc58 .dct.sm img{width:30px;height:30px}
+#dc58 .dcs{padding:11px 12px;border-radius:16px;background:#0b0720cc;border:1.5px solid #ffffff22}
+#dc58 .dcsh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:7px}
+#dc58 .dcsh b{font:900 13.5px system-ui}
+#dc58 .dcsh small{font:700 11px system-ui;opacity:.7}
+#dc58 .dcbar{height:10px;border-radius:6px;background:#000a;overflow:hidden;margin-bottom:9px}
+#dc58 .dcbar i{display:block;height:100%;background:linear-gradient(90deg,#38bdf8,#a78bfa)}
+#dc58 .dcbar i.hi{background:linear-gradient(90deg,#f97316,#dc2626)}
+#dc58 .dcl{display:flex;flex-direction:column;gap:5px}
+#dc58 .dcl div{display:grid;grid-template-columns:minmax(0,1.3fr) 1fr auto;gap:8px;align-items:center;font:700 11.5px system-ui}
+#dc58 .dcl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#dc58 .dcl u{display:block;height:6px;border-radius:4px;background:#ffffff12;overflow:hidden}
+#dc58 .dcl u i{display:block;height:100%;background:#a78bfa}
+#dc58 .dcl em{font-style:normal;opacity:.75;font-size:10.5px}
+#dc58 .dcb{display:flex;gap:6px;margin-top:9px}
+#dc58 .dcb button{flex:1}
+#dc58 .dcr{display:flex;align-items:center;gap:8px;padding:7px 8px;margin-bottom:6px;border-radius:12px;background:#ffffff0a;border:1px solid #ffffff1c}
+#dc58 .dcm{display:flex;gap:2px;flex:none}#dc58 .dcm img{width:28px;height:28px;image-rendering:pixelated}
+#dc58 .dcrt{flex:1;min-width:0}
+#dc58 .dcrt b{display:block;font:800 12.5px system-ui}
+#dc58 .dcrt small{display:block;font:600 10.5px system-ui;opacity:.75}
+#dc58 .dce{display:block;opacity:.7;font:600 11.5px system-ui}
+#set .sp[data-c="data"] .bkp,#set .sp[data-c="data"] #slotbox{padding:11px 12px;border-radius:16px;background:#0b0720cc;border:1.5px solid #ffffff22;margin-bottom:10px}
+#set .sp[data-c="data"] .bkp .bh{font:900 13.5px system-ui;margin-bottom:4px}
+#set .sp[data-c="data"] .bkp .bb{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+#set .sp[data-c="data"] .bkp .bb button{padding:9px 8px;border-radius:11px;font:800 12px system-ui}
+#set .sp[data-c="data"] .bkp .ex{background:linear-gradient(180deg,#2563eb,#1e3a8a);border:2px solid #93c5fd66;color:#fff}
+#set .sp[data-c="data"] .bkp .im{background:linear-gradient(180deg,#7c3aed,#4c1d95);border:2px solid #c4b5fd66;color:#fff}
+#set .sp[data-c="data"] .row{border-radius:12px;background:#7f1d1d33;border:1px solid #f8717144;padding:8px 10px;margin-bottom:6px}
+#set .sp[data-c="data"] #slotbox .sl3{border-radius:12px;background:#ffffff0a;border:1px solid #ffffff1c;padding:8px 10px;margin-top:6px}
+@media(min-width:620px){#dc58 .dcg{grid-template-columns:repeat(4,1fr)}#dc58 .dcc.wide{grid-column:1/-1}}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Hisui nuevas (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -27901,6 +27963,62 @@ button,.act,.cd,.pxc,.zqcd,.bzp,.sg>*,[data-i],[data-f],[data-ev]{touch-action:m
  const scan=()=>{try{if(typeof R!=='object'||!R||!R.ach||!R.ach.r||typeof ACH==='undefined')return;const L=[];ACH.forEach(a=>{if(a&&R.ach.r[a.id]&&a.r&&a.r.it)for(const k in a.r.it)if(/^st_/.test(k))L.push(k)});add(L,false)}catch(e){}};
  scan();setTimeout(scan,3000);setInterval(scan,30000);
  const _g=window.achGive;if(typeof _g==='function')window.achGive=function(a){const x=_g.apply(this,arguments);try{if(a&&a.r&&a.r.it)add(Object.keys(a.r.it),true)}catch(e){}return x};
+})();
+
+/* ---------- v58.4: 💾 CENTRO DE DATOS en Ajustes → Datos: archivo, progreso, almacenamiento, puntos de restauración, aviso de copia y limpieza ---------- */
+(()=>{const D=document,PR=window.__PROF;
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const nf=n=>Number(n||0).toLocaleString('es');const kb=b=>b>=1048576?(b/1048576).toFixed(2)+' MB':b>=1024?Math.round(b/1024)+' KB':b+' B';
+ const LIM=5*1048576,RPK='pa_rp',RPN=3,RPT=10*6e4;
+ const CATS=[['adv','🗺️ Aventura',/^pa_run$/],['slot','💾 Ranuras',/^pa_slot_/],['rp','📸 Puntos de restauración',/^pa_rp$/],['dex','📕 Pokédex y guías',/^(pokerogue_pokedex|pa_dex|pa_bdx|pa_bio(?!_types))/],
+  ['home','🏠 Casa, colección y cartas',/^pa_(col|tcg|house|home|mg|shs|deco|cards?|pin|unown)/],['mp','👥 Amigos y multijugador',/^pa_(fr|fid|lan|mpa|cl_|coop|raid|tower|mr|net|chal|pvp)/],
+  ['cache','🧹 Cachés de descargas',/^(pa_bio_types_v1|pokerogue_names_v1|pa_stage1|pa_bkp)/],['set','⚙️ Ajustes y otros',/./]];
+ const J=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}};
+ const sizes=()=>{const o={},n=localStorage.length;let tot=0;for(let i=0;i<n;i++){const k=localStorage.key(i);if(k==null)continue;const v=localStorage.getItem(k)||'',b=(k.length+v.length)*2;tot+=b;const c=(CATS.find(x=>x[2].test(k))||CATS[CATS.length-1])[0];o[c]=(o[c]||0)+b}return{o,tot}};
+ const live=()=>{try{return typeof R==='object'&&R&&R.team&&R.team.length&&R.ach&&!R.done?R:null}catch(e){return null}};
+ const runOf=()=>live()||J('pa_run');
+ /* ---- puntos de restauración automáticos de la aventura ---- */
+ const rps=()=>{const a=J(RPK);return Array.isArray(a)?a:[]};
+ const mkRP=(manual)=>{try{const raw=localStorage.getItem('pa_run');if(!raw)return false;const r=JSON.parse(raw);if(!r||!r.team||!r.team.length||r.done)return false;
+   const a=rps(),last=a[0];if(!manual&&last&&last.round===(r.round|0)&&Date.now()-last.t<RPT)return false;
+   const pt={t:Date.now(),round:r.round|0,team:r.team.slice(0,6).map(m=>[m.id,m.sh?1:0]),lv:Math.max(...r.team.map(m=>m.lvl|0)),money:r.money|0,m:manual?1:0,run:raw};
+   let L=[pt,...a].slice(0,RPN);for(;;){try{localStorage.setItem(RPK,JSON.stringify(L));break}catch(e){if(L.length<=1){return false}L=L.slice(0,L.length-1)}}return true}catch(e){return false}};
+ setInterval(()=>{if(!D.hidden&&live())try{saveRun();mkRP(false)}catch(e){}},RPT);
+ const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<1?'ahora mismo':m<60?`hace ${m} min`:m<1440?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} días`};
+ /* ---- tarjeta ---- */
+ function html(){const r=runOf(),dex=J('pokerogue_pokedex_v1')||{},cs=Object.keys(dex.c||{}).length,ss=Object.keys(dex.s||{}).length,tot=1025+((window.__FKIDS||[]).length);
+  const achT=typeof ACH!=='undefined'?ACH.length:0,achR=r&&r.ach&&r.ach.r?Object.keys(r.ach.r).length:0;
+  const slots=[1,2,3].filter(n=>J('pa_slot_'+n)).length,last=+localStorage.getItem('pa_bkp_last')||0,old=!last||Date.now()-last>7*864e5;
+  const {o,tot:used}=sizes(),pc=Math.min(100,used/LIM*100);
+  const team=r&&r.team?r.team.slice(0,6).map(m=>`<img src="${mini(m.id,m.sh)}" alt="" loading="lazy">`).join(''):'';
+  const P=rps();
+  return`<div class="dch"><div class="dcf"><span>📂</span><div><small>Archivo en uso</small><b>${esc(PR?PR.name():'Principal')}</b></div><button type="button" data-d="prof">📁 Archivos</button></div>
+   ${old?`<div class="dcw"><span>⚠️</span><div><b>${last?'Hace más de una semana que no haces copia':'Aún no tienes ninguna copia de seguridad'}</b><small>Si el navegador borra sus datos o cambias de móvil, la copia es lo único que salva tu progreso.</small></div><button type="button" data-d="exp">📥 Copiar ahora</button></div>`:`<div class="dcw ok"><span>✅</span><div><b>Copia de seguridad al día</b><small>Última: ${new Date(last).toLocaleDateString()} · ${ago(last)}</small></div></div>`}
+   <div class="dcg"><div class="dcc wide"><small>🗺️ Aventura</small><b>${r&&r.team?`Ronda ${r.round|0}${r.max&&r.max<1e6?' / '+r.max:''}`:'Sin aventura en curso'}</b>${team?`<div class="dct">${team}</div>`:''}</div>
+    <div class="dcc"><small>📕 Pokédex</small><b>${nf(cs)}</b><em>capturados · ${nf(ss)} vistos</em><i style="--p:${Math.min(100,cs/tot*100).toFixed(1)}%"></i></div>
+    <div class="dcc"><small>🏆 Logros</small><b>${achR}/${achT}</b><em>reclamados</em><i style="--p:${achT?Math.min(100,achR/achT*100).toFixed(1):0}%"></i></div>
+    <div class="dcc"><small>💰 Pokémonedas</small><b>${nf(r&&r.money)}</b><em>en esta aventura</em></div>
+    <div class="dcc"><small>💾 Ranuras</small><b>${slots}/3</b><em>ocupadas</em></div></div>
+   <div class="dcs"><div class="dcsh"><b>📦 Almacenamiento de este archivo</b><small>${kb(used)} de ~${kb(LIM)}</small></div><div class="dcbar"><i class="${pc>85?'hi':''}" style="width:${pc.toFixed(1)}%"></i></div>
+    <div class="dcl">${CATS.filter(c=>o[c[0]]).sort((a,b)=>o[b[0]]-o[a[0]]).map(c=>`<div><span>${c[1]}</span><u><i style="width:${Math.max(2,o[c[0]]/used*100).toFixed(1)}%"></i></u><em>${kb(o[c[0]])}</em></div>`).join('')}</div>
+    <div class="dcb"><button type="button" data-d="clean">🧹 Liberar espacio</button></div></div>
+   <div class="dcs"><div class="dcsh"><b>📸 Puntos de restauración</b><small>automáticos cada 10 min · se guardan ${RPN}</small></div>
+    ${P.length?P.map((x,i)=>`<div class="dcr"><div class="dcm">${(x.team||[]).slice(0,3).map(([id,sh])=>`<img src="${mini(id,sh)}" alt="" loading="lazy">`).join('')}</div><div class="dcrt"><b>Ronda ${x.round}${x.m?' · 📸 manual':''}</b><small>${ago(x.t)} · Nv. ${x.lv} · ${nf(x.money)} 💰</small></div><button type="button" data-d="rs" data-i="${i}">↩ Restaurar</button></div>`).join(''):'<small class="dce">Todavía no hay puntos. Se crean solos mientras juegas una aventura.</small>'}
+    <div class="dcb"><button type="button" data-d="snap" ${r&&r.team?'':'disabled'}>📸 Crear un punto ahora</button></div></div></div>`}
+ const mount=()=>{const pn=D.querySelector('#set .sp[data-c="data"]');if(!pn)return;let c=D.getElementById('dc58');if(!c){c=D.createElement('div');c.id='dc58';c.onclick=click;const ph=pn.querySelector('.sx-ph');if(ph)ph.after(c);else pn.prepend(c)}
+  const h=html();if(c._h!==h){c._h=h;c.innerHTML=h}const sp=D.getElementById('setprof');if(sp)sp.remove()};
+ async function click(e){const b=e.target.closest('[data-d]');if(!b)return;const a=b.dataset.d;
+  if(a==='prof'&&window.openProfiles)return openProfiles();
+  if(a==='exp'){const x=D.querySelector('#bkpcard [data-a="f"]');if(x)x.click();setTimeout(mount,1500);return}
+  if(a==='snap'){try{saveRun()}catch(_){}const ok=mkRP(true);try{toast(ok?'📸 Punto de restauración creado':'No se pudo crear (¿hay una aventura en curso y espacio libre?)')}catch(_){}return mount()}
+  if(a==='rs'){const x=rps()[+b.dataset.i];if(!x)return;const k=await ask('↩ Restaurar aventura',`<small>Tu aventura volverá a la <b>ronda ${x.round}</b> (${ago(x.t)}). Lo que hayas hecho después en la aventura se pierde; la Pokédex, la casa y lo demás no cambian.</small>`,['↩ Restaurar','Cancelar']);if(k!==0)return;
+   try{mkRP(true)}catch(_){}try{localStorage.setItem('pa_run',x.run);toast('↩ Aventura restaurada · reiniciando…');setTimeout(()=>location.reload(),700)}catch(err){toast('No se pudo restaurar: falta espacio')}return}
+  if(a==='clean'){let cb=0;try{const c=await caches.open('pr-img-v1');cb=(await c.keys()).length}catch(_){}
+   const {o}=sizes();const k=await ask('🧹 Liberar espacio',`<small>Se borran las cachés de descargas (${kb(o.cache||0)}${cb?` y ${cb} imágenes guardadas`:''}). Tu progreso no se toca; el juego volverá a descargarlas cuando haga falta.</small>`,['🧹 Liberar','Cancelar']);if(k!==0)return;
+   ['pa_bio_types_v1','pokerogue_names_v1','pa_stage1'].forEach(x=>{try{localStorage.removeItem(x)}catch(_){}});try{await caches.delete('pr-img-v1')}catch(_){}try{toast('🧹 Espacio liberado')}catch(_){}return mount()}}
+ const _rs=window.renderSet;if(typeof _rs==='function')window.renderSet=function(){const r=_rs.apply(this,arguments);try{mount()}catch(e){}return r};
+ D.addEventListener('click',e=>{if(e.target.closest('#set .tab'))setTimeout(mount,30)},true);
+ mount();setTimeout(mount,1500);setInterval(()=>{const st=D.getElementById('set');if(st&&st.classList.contains('ov')&&D.querySelector('#set .sp.on[data-c="data"]'))mount()},5000);
 })();
 </script>
 </body></html>
