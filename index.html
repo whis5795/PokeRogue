@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.1</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.2</div>
 </section>
 
 <section id="team" class="scr">
@@ -8023,8 +8023,8 @@ const sp=id=>{const i=id.indexOf(':');return[id.slice(0,i),id.slice(i+1)]};
 /* ---------- Mover: mochila → baúl (guardar) y baúl → mochila (retirar) ---------- */
 function deposit(id,qty){const c=CH();if(!c)return 0;const[t,k]=sp(id);
  if(t!='i'&&inBattle()){toast('No puedes guardar amuletos ni reliquias en pleno combate');return 0}
- if(t=='i'){const n=Math.min(qty,(R.bag[k]|0));if(n<=0)return 0;if(!(c.bag[k]>0)&&used(c)>=SLOTS){toast('El baúl está lleno');return 0}R.bag[k]-=n;c.bag[k]=(c.bag[k]||0)+n;return n}
- if(used(c)>=SLOTS){toast('El baúl está lleno');return 0}
+ if(t=='i'){const n=Math.min(qty,(R.bag[k]|0));if(n<=0)return 0;if(!(c.bag[k]>0)&&used(c)>=SLOTS+(c.up|0)*18){toast('El baúl está lleno');return 0}R.bag[k]-=n;c.bag[k]=(c.bag[k]||0)+n;return n}
+ if(used(c)>=SLOTS+(c.up|0)*18){toast('El baúl está lleno');return 0}
  if(t=='c'){const x=(R.ch||[]).indexOf(+k);if(x<0)return 0;R.ch.splice(x,1);c.ch.push(+k);return 1}
  if(t=='r'){const x=(R.rel||[]).indexOf(+k);if(x<0)return 0;R.rel.splice(x,1);c.rel.push(+k);return 1}
  if(t=='m'){const x=(R.tms||[]).findIndex(z=>z.n==k);if(x<0)return 0;c.tm.push(R.tms.splice(x,1)[0]);return 1}
@@ -8102,7 +8102,7 @@ if(mod){
    const inp=document.querySelector('#mcbq'),cl=x=>Math.max(1,Math.min(max,Math.floor(+x)||1));document.querySelectorAll('#mod .mcq2').forEach(w=>w.onclick=ev=>{const b=ev.target.closest('[data-d]');if(!b||!inp)return;inp.value=cl((+inp.value||1)+(+b.dataset.d))});
    const r=await pr;if(r!==0)return;sendFromBag(id,inp?cl(inp.value):1)}));
   else row.append(mkBtn('📦 Al baúl',()=>sendFromBag(id,1)))})}
-window.__chest={deposit,withdraw,CH,used,SLOTS,bagList,chestList};
+window.__chest={deposit,withdraw,CH,used,SLOTS,bagList,chestList,cap:c=>SLOTS+((c&&c.up)|0)*18,owned};
 })();</script>
 <style id="pcshop">
 /* ===== Tienda en modo PC: ancha, categorías como botones verticales a la izquierda y todos los items a la derecha ===== */
@@ -8709,11 +8709,18 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.1',t:'Premios solo por logros',s:'cur',l:[
+ {v:'58.2',t:'Baúl del Tesoro y clima nuevo',s:'cur',l:[
+  '📦 Baúl del Tesoro renovado: un cofre de madera que se abre al entrar, pestañas por tipo con contadores, buscador, orden por rareza/nombre/cantidad, brillo según la rareza (exclusivos dorados, reliquias moradas, amuletos azules…), favoritos ⭐ siempre arriba, animación al mover y guardar o sacar una categoría entera de golpe',
+  '🔨 El baúl se puede ampliar con Pokémonedas: 36 → 54 → 72 → 90 huecos',
+  '🌦️ Clima nuevo: cada 2 horas llega un episodio de 10-15 minutos, igual para todos los jugadores, en el mapa y en los biomas. A veces (menos probable) es especial: 🌑 Eclipse, ☄️ Lluvia de meteoritos o 🌌 Aurora. El resto del tiempo está despejado',
+  '🌿 Las formas regionales (también las evoluciones, como Decidueye de Hisui) salen sueltas en los biomas sin tener que ser el Alfa de un grupo',
+  '🏔️ Las formas nuevas de Larvitar, Abra y Gastly (y sus evoluciones) son formas de Hisui'
+ ]},
+ {v:'58.1',t:'Premios solo por logros',s:'prev',l:[
   '💎 Las piedras evolutivas ya no se venden: se consiguen con los logros (todos los de Plata y Oro dan una, también las de Alola, Galar e Hisui y la Corona/Brazal Galanuez). La Piedra Eterna sigue en la tienda',
   '🏅 Solo por logros: Lente Cristal, Colmillo Carmesí, Corona Dracónica, Égida Eterna, Lingote Real y Pluma Fénix (reliquias) y Trébol Dorado, Amuleto Renacer, Amuleto Giro, Amuleto Eclipse, Amuleto Vampiro y Amuleto Mercader (amuletos)',
   '📦 Si al reclamar un logro no te cabe una reliquia o un amuleto, va al baúl de tu casa; si no tienes baúl o está lleno, sale a la venta en la tienda hasta que lo compres (antes se cambiaba por monedas)',
-  '🏔️ Las formas nuevas de Larvitar, Abra y Gastly (y sus evoluciones) son ahora formas de Hisui. La Piedra de Hisui también las hace evolucionar'
+  '🏔️ La Piedra de Hisui también hace evolucionar a las formas nuevas de Larvitar, Abra y Gastly'
  ]},
  {v:'58.0',t:'Archivos de guardado y Paradoja nuevos',s:'prev',l:[
   '📁 Archivos de guardado: crea hasta 6 archivos independientes (Principal, Solo shinys, Hardcore…). Cada uno tiene su aventura, ranuras, Pokédex, guías de bioma, regalo de la enfermera, colección, logros, casa, amigos y nube. Tus datos de siempre son el archivo «Principal». Botón «📁 Archivo» en el menú principal y en Ajustes',
@@ -8723,9 +8730,7 @@ const CHANGELOG=[
   '❄️ Formas de Hisui nuevas: Larvitar (Hielo/Roca), Pupitar y Tyranitar (Hielo/Acero), Abra, Kadabra y Alakazam (Siniestro) y Gastly, Haunter y Gengar (Fantasma/Hielo). Salen en los biomas. Con Mega Tyranitar, Mega Alakazam (Siniestro/Lucha) y Gengar con Mega, Gigamax y Rey Invocado',
   '🧬 Evolucionar a todos (Caja): toca a los que NO quieras evolucionar, con «Todos / Ninguno», y «➕ Más» enseña a todos los que no cabían',
   '💎 Evoluciones que faltaban: Brazal Galanuez (Slowbro de Galar), Corona Galanuez (Slowking de Galar) y Piedras de Alola, Galar e Hisui (Pikachu → Raichu de Alola, Quilava → Typhlosion de Hisui, Koffing → Weezing de Galar, Abra → Kadabra de Hisui…)',
-  '🌟 Las formas regionales también siguen la regla de los biomas: sus evoluciones solo salen como Alfa del grupo',
   '🏅 Guía de cada bioma: premios al capturar el 25 %, 50 %, 75 % y 100 % de sus Pokémon, y nueva categoría «🎯 Restantes» con los que te faltan',
-  '🌦️ El clima del mapa va por tiempo real (un episodio cada 5-8 minutos), ya no por rondas. El clima extremo también',
   '🏆 Los premios de los logros dan un 35 % menos',
   '🔄 Arreglado: el aviso «Nueva versión · Toca para actualizar» salía aunque no hubiera nada nuevo',
   '💔 Arreglado: el aviso «Tu equipo está débil» (y otras ventanas) salía por debajo del bioma y no se podía tocar',
@@ -27574,6 +27579,91 @@ button,.act,.cd,.pxc,.zqcd,.bzp,.sg>*,[data-i],[data-f],[data-ev]{touch-action:m
 @keyframes bzwMet{0%{opacity:0;translate:0 0}10%{opacity:1}60%{opacity:0;translate:-260px 140px}100%{opacity:0}}
 @keyframes bzwAur{to{background-position:100% 0;filter:hue-rotate(40deg)}}
 @media(prefers-reduced-motion:reduce){.bzw.bzw-meteor i,.bzw.bzw-aurora,.bzw.bzw-eclipse i{animation:none}}
+/* v58.2: 📦 Baúl del Tesoro */
+#ch2{position:fixed;inset:0;z-index:100045;display:none;align-items:center;justify-content:center;padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom));background:radial-gradient(circle at 50% 40%,#3b2414cc,#0a0503ee);backdrop-filter:blur(3px);font-family:system-ui,sans-serif;color:#fff7e6}
+#ch2.on{display:flex}
+#ch2 .c2w{position:relative;width:min(860px,100%);max-height:100%;display:flex;flex-direction:column;perspective:1200px}
+#ch2 .c2lid{position:absolute;left:0;right:0;top:0;height:70px;z-index:3;border-radius:22px 22px 8px 8px;transform-origin:50% 0;background:repeating-linear-gradient(90deg,#00000018 0 2px,#0000 2px 34px),linear-gradient(180deg,#8b5a2b,#5c3517);border:3px solid #3a200c;box-shadow:inset 0 3px 0 #b98245,0 6px 16px #0008;transition:transform .55s cubic-bezier(.3,1.4,.5,1),opacity .4s .25s;pointer-events:none}
+#ch2 .c2band{position:absolute;top:0;bottom:0;left:16%;width:22px;background:linear-gradient(90deg,#9ca3af,#e5e7eb 40%,#6b7280);box-shadow:0 0 0 2px #374151}
+#ch2 .c2band.b2{left:auto;right:16%}
+#ch2 .c2lock{position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:linear-gradient(180deg,#fde047,#ca8a04);border:3px solid #713f12;box-shadow:0 4px 10px #0009}
+#ch2.opened .c2lid{transform:rotateX(108deg);opacity:0}
+#ch2 .c2b{position:relative;display:flex;flex-direction:column;min-height:0;max-height:calc(var(--dvh,100dvh) - 20px);overflow:hidden;border-radius:22px;padding:14px 14px 12px;background:repeating-linear-gradient(90deg,#00000014 0 2px,#0000 2px 40px),linear-gradient(180deg,#6b4423,#4a2c14 60%,#3a210f);border:4px solid #2b1608;box-shadow:inset 0 0 0 3px #a0703c,inset 0 0 40px #000a,0 24px 60px #000c;transform:translateY(14px) scale(.96);opacity:0;transition:transform .45s cubic-bezier(.2,1.3,.4,1),opacity .3s}
+#ch2.opened .c2b{transform:none;opacity:1}
+#ch2.closing .c2b{transform:translateY(10px) scale(.97);opacity:0}
+#ch2 .c2b::before,#ch2 .c2b::after{content:'';position:absolute;top:8px;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fef3c7,#a16207);box-shadow:0 0 0 2px #422006}
+#ch2 .c2b::before{left:8px}#ch2 .c2b::after{right:8px}
+#ch2 .c2glow{position:absolute;inset:-30% 10% auto;height:60%;background:radial-gradient(ellipse at 50% 0,#fde04755,#0000 70%);pointer-events:none;animation:c2Gl 3.2s ease-in-out infinite alternate}
+@keyframes c2Gl{to{opacity:.45}}
+#ch2 .c2h{display:flex;align-items:center;gap:10px;margin-bottom:8px;position:relative}
+#ch2 .c2t{flex:1;min-width:0}
+#ch2 .c2t b{display:block;font:900 20px Cinzel,Georgia,serif;letter-spacing:.04em;color:#fde68a;text-shadow:0 2px 0 #422006,0 0 14px #f59e0b66}
+#ch2 .c2t small{font:700 11.5px system-ui;opacity:.8;color:#fcd9a5}
+#ch2 .c2x{width:40px;height:40px;border-radius:12px;border:2px solid #fcd34d88;background:#2b1608aa;color:#fff;font:900 16px system-ui;flex:none}
+#ch2 .c2cap{display:flex;align-items:center;gap:10px;margin-bottom:8px;font:800 12px system-ui}
+#ch2 .c2bar{flex:1;height:10px;border-radius:6px;background:#1c0d04;border:1.5px solid #00000066;overflow:hidden}
+#ch2 .c2bar i{display:block;height:100%;background:linear-gradient(90deg,#4ade80,#a3e635);transition:width .35s}
+#ch2 .c2bar i.hi{background:linear-gradient(90deg,#facc15,#f97316)}#ch2 .c2bar i.full{background:linear-gradient(90deg,#f87171,#dc2626)}
+#ch2 .c2tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#ch2 .c2tabs::-webkit-scrollbar{display:none}
+#ch2 .c2tabs button{flex:none;display:flex;align-items:center;gap:5px;padding:7px 11px;border-radius:12px;border:2px solid #fcd34d44;background:#2b1608aa;color:#fde68a;font:800 12px system-ui;touch-action:manipulation}
+#ch2 .c2tabs button b{min-width:18px;padding:1px 5px;border-radius:8px;background:#0006;font-size:10.5px;color:#fff}
+#ch2 .c2tabs button.on{background:linear-gradient(180deg,#fde047,#f59e0b);color:#422006;border-color:#fff7}
+#ch2 .c2tools{display:flex;gap:6px;margin-bottom:8px}
+#ch2 .c2tools input,#ch2 .c2tools select{min-width:0;padding:8px 10px;border-radius:11px;border:2px solid #fcd34d44;background:#1c0d04cc;color:#fff7e6;font:700 13px system-ui}
+#ch2 .c2tools input{flex:1}
+#ch2 .c2seg{display:none;gap:6px;margin-bottom:8px}
+#ch2 .c2seg button{flex:1;padding:8px;border-radius:11px;border:2px solid #fcd34d44;background:#2b1608aa;color:#fde68a;font:800 12.5px system-ui}
+#ch2 .c2seg button.on{background:#fde68a;color:#422006}
+#ch2 .c2panes{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-height:0;flex:1;overflow:hidden}
+#ch2 .c2p{display:flex;flex-direction:column;min-height:0;border-radius:16px;padding:8px;background:linear-gradient(180deg,#1c0d04cc,#2b1608cc);border:2px solid #00000055;box-shadow:inset 0 2px 10px #0009}
+#ch2 .c2p h4{margin:0 0 6px;font:900 12.5px system-ui;letter-spacing:.03em;color:#fde68a;display:flex;justify-content:space-between}
+#ch2 .c2p h4 small{opacity:.75;color:#fcd9a5}
+#ch2 .c2g{flex:1;min-height:120px;max-height:min(40vh,330px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px;align-content:start}
+#ch2 .c2s{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 3px 5px;border-radius:12px;border:2px solid #ffffff1c;background:radial-gradient(circle at 50% 30%,#ffffff14,#0000 70%),#3a210f;color:#fff7e6;touch-action:manipulation;transition:transform .1s,box-shadow .15s;content-visibility:auto;contain-intrinsic-size:auto 84px}
+#ch2 .c2s:active{transform:scale(.94)}
+#ch2 .c2s.on{border-color:#fde047;box-shadow:0 0 0 2px #fde04788,0 0 16px #fde04766}
+#ch2 .c2s .c2i{width:40px;height:40px;display:grid;place-items:center;font-size:26px}
+#ch2 .c2s .c2i img,#ch2 .c2di img{max-width:100%;max-height:100%}
+#ch2 .c2s small{font:700 9.5px/1.15 system-ui;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.9}
+#ch2 .c2n{position:absolute;top:3px;right:4px;font:900 10px system-ui;padding:1px 5px;border-radius:7px;background:#000a;color:#fde68a}
+#ch2 .c2f{position:absolute;top:2px;left:4px;font-style:normal;font-size:10px}
+#ch2 .r-leg{border-color:#fbbf24;background:radial-gradient(circle at 50% 30%,#fde04744,#0000 70%),#4a2c14;box-shadow:inset 0 0 12px #f59e0b55}
+#ch2 .c2s.r-leg::after{content:'';position:absolute;inset:0;border-radius:10px;background:linear-gradient(115deg,#0000 30%,#fff6 45%,#0000 60%);background-size:250% 100%;animation:c2Sh 2.8s linear infinite;pointer-events:none}
+@keyframes c2Sh{from{background-position:120% 0}to{background-position:-120% 0}}
+#ch2 .r-epic{border-color:#c084fc99;box-shadow:inset 0 0 12px #a855f744}
+#ch2 .r-rare{border-color:#60a5fa99;box-shadow:inset 0 0 12px #3b82f644}
+#ch2 .r-unc{border-color:#4ade8088}
+#ch2 .r-held{border-color:#fb923c88}
+#ch2 .r-tm{border-color:color-mix(in srgb,var(--tc,#94a3b8) 70%,transparent)}
+#ch2 .c2e{grid-column:1/-1;margin:16px 6px;text-align:center;font:700 12px system-ui;opacity:.7}
+#ch2 .c2d{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px;padding:9px 11px;border-radius:14px;background:#1c0d04cc;border:2px solid #fcd34d33;min-height:46px}
+#ch2 .c2d>small{opacity:.8;font:600 12px system-ui}
+#ch2 .c2d.on{animation:c2In .2s ease-out}
+@keyframes c2In{from{transform:translateY(6px);opacity:.4}}
+#ch2 .c2di{width:52px;height:52px;flex:none;display:grid;place-items:center;font-size:34px;border-radius:12px;background:#ffffff10}
+#ch2 .c2dt{flex:1 1 180px;min-width:0}
+#ch2 .c2dt b{display:block;font:900 14px system-ui;color:#fde68a}
+#ch2 .c2dt b em{font-style:normal;color:#fff}
+#ch2 .c2dt small{display:block;font:600 11.5px/1.3 system-ui;opacity:.85}
+#ch2 .c2da{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-left:auto}
+#ch2 .c2q{display:flex;gap:3px;align-items:center}
+#ch2 .c2q button{min-width:32px;height:32px;padding:0 6px;border-radius:9px;border:1.5px solid #fcd34d55;background:#3a210f;color:#fff;font:800 12px system-ui}
+#ch2 .c2q input{width:56px;height:32px;text-align:center;border-radius:9px;border:1.5px solid #fcd34d55;background:#0006;color:#fff;font:800 13px system-ui}
+#ch2 .c2go{padding:9px 14px;border-radius:12px;border:2px solid #fff6;font:900 13px system-ui;color:#fff}
+#ch2 .c2go.up{background:linear-gradient(180deg,#22c55e,#15803d)}#ch2 .c2go.dn{background:linear-gradient(180deg,#3b82f6,#1d4ed8)}
+#ch2 .c2fav{width:38px;height:38px;border-radius:11px;border:2px solid #fcd34d66;background:#3a210f;font-size:18px;color:#fde68a}
+#ch2 .c2fav.on{background:#fde04733}
+#ch2 .c2foot{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+#ch2 .c2foot button{flex:1 1 140px;padding:9px 10px;border-radius:12px;border:2px solid #fcd34d55;background:#2b1608;color:#fde68a;font:800 12px system-ui}
+#ch2 .c2foot .c2up{background:linear-gradient(180deg,#a16207,#713f12);color:#fff7e6;border-color:#fde68a}
+#ch2 .c2max{flex:1;text-align:center;font:800 12px system-ui;opacity:.85;padding:9px}
+#ch2.upfx .c2b{animation:c2Up .7s ease-out}
+@keyframes c2Up{30%{box-shadow:inset 0 0 0 3px #fde047,inset 0 0 60px #fde04788,0 0 60px #fde04788}}
+.c2fly{position:fixed;z-index:100046;width:40px;height:40px;display:grid;place-items:center;font-size:26px;pointer-events:none}
+.c2fly img{max-width:100%;max-height:100%}
+@media(max-width:620px){#ch2 .c2da{flex:1 1 100%;justify-content:flex-end}#ch2 .c2seg{display:flex}#ch2 .c2panes{grid-template-columns:1fr}#ch2 .c2p[data-p="bag"]{display:none}#ch2.sbag .c2p[data-p="bag"]{display:flex}#ch2.sbag .c2p[data-p="chest"]{display:none}#ch2 .c2g{max-height:min(38vh,300px)}#ch2 .c2t b{font-size:17px}}
+@media(prefers-reduced-motion:reduce){#ch2 .c2lid,#ch2 .c2b{transition:none}#ch2 .c2glow,#ch2 .c2s.r-leg::after{animation:none}}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Hisui nuevas (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -27710,7 +27800,7 @@ button,.act,.cd,.pxc,.zqcd,.bzp,.sg>*,[data-i],[data-f],[data-ev]{touch-action:m
    if((a.tier|0)>=1&&ST.length&&!Object.keys(r.it||{}).some(k=>k.startsWith('st_'))){const k=ST[j++%ST.length];r.it=r.it||{};r.it[k]=1;r.l=(r.l?r.l+', ':'')+'1× '+ITEM[k].n}})};
  prep();setTimeout(prep,1600);setTimeout(prep,8500);
  const nmO=o=>o.t==='r'?'Reliquia '+REL[o.k].n:CHARM[o.k].n;
- const store=o=>{try{const h=R.house;if(!h||!h.f||!h.f.chest)return false;const C=window.__chest;const c=C&&C.CH?C.CH():null;if(!c)return false;if(C.used(c)>=(C.SLOTS||36))return false;(o.t==='r'?c.rel:c.ch).push(o.k);return true}catch(e){return false}};
+ const store=o=>{try{const h=R.house;if(!h||!h.f||!h.f.chest)return false;const C=window.__chest;const c=C&&C.CH?C.CH():null;if(!c)return false;if(C.used(c)>=(C.cap?C.cap(c):(C.SLOTS||36)))return false;(o.t==='r'?c.rel:c.ch).push(o.k);return true}catch(e){return false}};
  const _g=window.achGive;if(typeof _g!=='function')return;
  window.achGive=function(a){prep();const r=a&&a.r;if(!r)return _g.apply(this,arguments);const r2=Object.assign({},r),pend=[];R.ch=R.ch||[];
   const rf=()=>R.rel.length>=5,cf=()=>R.ch.length>=5;
@@ -27723,6 +27813,79 @@ button,.act,.cd,.pxc,.zqcd,.bzp,.sg>*,[data-i],[data-f],[data-ev]{touch-action:m
   pend.forEach(o=>{if(store(o))x+=` · ${nmO(o)} → 📦 al baúl de tu casa`;else{R.ovf=R.ovf||[];if(!R.ovf.some(z=>z.t===o.t&&z.k===o.k))R.ovf.push(o);x+=` · ${nmO(o)} → 🛒 a la venta en la tienda hasta que lo compres`}});
   if(pend.length)try{setTimeout(()=>toast('📦 '+(pend.length>1?'Algunos premios no cabían':nmO(pend[0])+' no cabía')+': mira el baúl de tu casa o la tienda'),900)}catch(e){}
   return x};
+})();
+
+/* ---------- v58.2: 📦 BAÚL DEL TESORO renovado: cofre que se abre, pestañas, buscador, orden, favoritos, rarezas, animaciones, acciones en bloque y mejoras de capacidad ---------- */
+(()=>{const D=document,C=window.__chest;if(!C)return;
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const UP=[[5000,'Baúl reforzado'],[15000,'Gran baúl'],[40000,'Cámara del tesoro']];
+ const TABS=[['all','Todo','✨'],['obj','Objetos','🧪'],['ball','Balls','⚪'],['st','Piedras','💎'],['eq','Equipables','🧤'],['ch','Amuletos','🔮'],['rel','Reliquias','🏺'],['tm','MT','💿']];
+ const catOf=d=>d.t==='c'?'ch':d.t==='r'?'rel':d.t==='m'?'tm':(typeof BALLK!=='undefined'&&BALLK.includes(d.k))||String(d.k).startsWith('bt_')?'ball':String(d.k).startsWith('st_')||d.k==='ever'?'st':String(d.k).startsWith('h_')?'eq':'obj';
+ const rar=d=>{if(d.t==='r')return REL[d.k]&&REL[d.k].ex?'leg':'epic';if(d.t==='c')return CHARM[d.k]&&CHARM[d.k].ex?'leg':'rare';const c=catOf(d);return c==='st'?'unc':c==='eq'?'held':c==='tm'?'tm':c==='ball'?'ball':''};
+ const RV={leg:5,epic:4,rare:3,held:2,unc:2,tm:1,ball:1,'':0};
+ let tab='all',q='',sort='rar',side='chest',sel=null,O=null;
+ const st=()=>{try{const v=JSON.parse(localStorage.getItem('pa_ch2')||'{}');tab=v.t||tab;sort=v.s||sort}catch(e){}};const sv=()=>{try{localStorage.setItem('pa_ch2',JSON.stringify({t:tab,s:sort}))}catch(e){}};
+ const box=()=>C.CH();const favs=()=>{const c=box();return c?(c.fav=c.fav||[]):[]};
+ const filt=L=>{const F=favs();let o=L.filter(d=>(tab==='all'||catOf(d)===tab)&&(!q||d.n.toLowerCase().includes(q)));
+  o.sort((a,b)=>{const fa=F.includes(a.id)?1:0,fb=F.includes(b.id)?1:0;if(fa!==fb)return fb-fa;if(sort==='n')return a.n.localeCompare(b.n,'es');if(sort==='c')return b.c-a.c||a.n.localeCompare(b.n,'es');return (RV[rar(b)]-RV[rar(a)])||a.n.localeCompare(b.n,'es')});return o};
+ const tmCol=d=>{try{const t=(R.tms||[]).concat(box().tm||[]).find(x=>x.n===d.k);return t&&COL[t.t]||'#94a3b8'}catch(e){return'#94a3b8'}};
+ const card=(d,sd)=>{const r=rar(d),f=favs().includes(d.id),on=sel&&sel.side===sd&&sel.id===d.id;return`<button type="button" class="c2s r-${r||'n'}${on?' on':''}" data-sd="${sd}" data-id="${esc(d.id)}" ${r==='tm'?`style="--tc:${tmCol(d)}"`:''} title="${esc(d.n)}"><span class="c2i">${d.ic}</span>${d.c>1?`<b class="c2n">${d.c>999?'999+':d.c}</b>`:''}${f?'<i class="c2f">⭐</i>':''}<small>${esc(d.n)}</small></button>`};
+ function build(){O=D.createElement('div');O.id='ch2';O.setAttribute('role','dialog');O.setAttribute('aria-label','Baúl');
+  O.innerHTML=`<div class="c2w"><div class="c2lid" aria-hidden="true"><i class="c2band"></i><i class="c2band b2"></i><span class="c2lock">🔓</span></div>
+  <div class="c2b"><div class="c2glow" aria-hidden="true"></div>
+   <div class="c2h"><div class="c2t"><b>📦 Baúl del Tesoro</b><small id="c2lv"></small></div><button type="button" class="c2x" data-a="x" aria-label="Cerrar">✕</button></div>
+   <div class="c2cap"><div class="c2bar"><i id="c2fill"></i></div><span id="c2cnt"></span></div>
+   <div class="c2tabs" id="c2tabs"></div>
+   <div class="c2tools"><input id="c2q" type="search" placeholder="Buscar…" autocomplete="off"><select id="c2so" aria-label="Ordenar"><option value="rar">Rareza</option><option value="n">Nombre</option><option value="c">Cantidad</option></select></div>
+   <div class="c2seg"><button type="button" data-side="chest">📦 Baúl</button><button type="button" data-side="bag">🎒 Mochila</button></div>
+   <div class="c2panes"><section class="c2p" data-p="chest"><h4>📦 En el baúl <small id="c2cn"></small></h4><div class="c2g" id="c2gc"></div></section><section class="c2p" data-p="bag"><h4>🎒 En tu mochila <small id="c2bn"></small></h4><div class="c2g" id="c2gb"></div></section></div>
+   <div class="c2d" id="c2d"></div>
+   <div class="c2foot" id="c2ft"></div></div></div>`;
+  D.body.append(O);
+  O.addEventListener('click',onClick);
+  O.querySelector('#c2q').oninput=e=>{q=e.target.value.trim().toLowerCase();clearTimeout(O._qt);O._qt=setTimeout(draw,120)};
+  O.querySelector('#c2so').onchange=e=>{sort=e.target.value;sv();draw()}}
+ function draw(){if(!O)return;const c=box();if(!c)return;const cap=C.cap(c),u=C.used(c),CL=C.chestList(c),BL=C.bagList();
+  O.querySelector('#c2lv').textContent=(c.up|0)?UP[(c.up|0)-1][1]:'Baúl de madera';
+  const pc=Math.min(100,u/cap*100);const fl=O.querySelector('#c2fill');fl.style.width=pc+'%';fl.className=pc>=100?'full':pc>=80?'hi':'';O.querySelector('#c2cnt').textContent=`${u} / ${cap} huecos`;
+  const cnt=k=>k==='all'?CL.length+BL.length:CL.concat(BL).filter(d=>catOf(d)===k).length;
+  O.querySelector('#c2tabs').innerHTML=TABS.map(([k,l,e])=>`<button type="button" data-tab="${k}" class="${tab===k?'on':''}">${e} ${l}<b>${cnt(k)}</b></button>`).join('');
+  O.querySelector('#c2so').value=sort;
+  const fc=filt(CL),fb=filt(BL);
+  O.querySelector('#c2gc').innerHTML=fc.length?fc.map(d=>card(d,'chest')).join(''):`<p class="c2e">${CL.length?'Nada con este filtro':'El baúl está vacío. Toca algo de tu mochila para guardarlo.'}</p>`;
+  O.querySelector('#c2gb').innerHTML=fb.length?fb.map(d=>card(d,'bag')).join(''):`<p class="c2e">${BL.length?'Nada con este filtro':'Tu mochila está vacía'}</p>`;
+  O.querySelector('#c2cn').textContent=CL.length+' tipos';O.querySelector('#c2bn').textContent=BL.length+' tipos';
+  O.classList.toggle('sbag',side==='bag');O.querySelectorAll('.c2seg [data-side]').forEach(b=>b.classList.toggle('on',b.dataset.side===side));
+  detail(CL,BL);foot(c,fc,fb)}
+ function detail(CL,BL){const el=O.querySelector('#c2d');const d=sel&&(sel.side==='chest'?CL:BL).find(x=>x.id===sel.id);if(!d){sel=null;el.className='c2d';el.innerHTML='<small>Toca un objeto para verlo y moverlo. ⭐ marca tus favoritos para tenerlos siempre arriba.</small>';return}
+  const up=sel.side==='bag',f=favs().includes(d.id),r=rar(d);el.className='c2d on r-'+(r||'n');
+  el.innerHTML=`<span class="c2di">${d.ic}</span><div class="c2dt"><b>${esc(d.n)}${d.c>1?' <em>×'+d.c+'</em>':''}</b><small>${d.d||''}</small></div>
+   <div class="c2da">${d.c>1?`<div class="c2q"><button type="button" data-qd="-10">−10</button><button type="button" data-qd="-1">−</button><input id="c2qn" type="number" inputmode="numeric" min="1" max="${d.c}" value="${Math.min(d.c,sel.n||1)}"><button type="button" data-qd="1">+</button><button type="button" data-qd="10">+10</button><button type="button" data-qd="max">Máx</button></div>`:''}
+   <button type="button" class="c2go ${up?'up':'dn'}" data-a="mv">${up?'⬆ Guardar en el baúl':'⬇ Sacar a la mochila'}</button><button type="button" class="c2fav${f?' on':''}" data-a="fav" aria-label="Favorito">${f?'⭐':'☆'}</button></div>`}
+ function foot(c,fc,fb){const ft=O.querySelector('#c2ft'),lv=c.up|0,nx=UP[lv],tl=(TABS.find(t=>t[0]===tab)||TABS[0])[1].toLowerCase();
+  ft.innerHTML=`${fb.length?`<button type="button" data-a="dep">⬆ Guardar ${tab==='all'?'todo':tl} (${fb.length})</button>`:''}${fc.length?`<button type="button" data-a="wd">⬇ Sacar ${tab==='all'?'todo':tl} (${fc.length})</button>`:''}${nx?`<button type="button" class="c2up" data-a="up">🔨 Ampliar a ${C.cap(c)+18} huecos · ${typeof IC==='object'&&IC.coin||'💰'} ${nx[0].toLocaleString('es')}</button>`:'<span class="c2max">🏆 Cámara del tesoro al máximo</span>'}`}
+ const fly=(from,toSide)=>{try{const a=from.getBoundingClientRect(),t=O.querySelector(`.c2p[data-p="${toSide}"] h4`)||O.querySelector('.c2seg'),b=t.getBoundingClientRect(),g=from.querySelector('.c2i').cloneNode(true);g.className='c2fly';g.style.cssText=`left:${a.left+a.width/2}px;top:${a.top+a.height/2}px`;D.body.append(g);
+   g.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:1},{transform:`translate(calc(-50% + ${(b.left+b.width/2)-(a.left+a.width/2)}px),calc(-50% + ${(b.top+b.height/2)-(a.top+a.height/2)}px)) scale(.4)`,opacity:.2}],{duration:420,easing:'cubic-bezier(.4,0,.2,1)'}).onfinish=()=>g.remove()}catch(e){}};
+ const move=(sd,id,n,el)=>{const got=sd==='chest'?C.withdraw(id,n):C.deposit(id,n);if(got){if(el)fly(el,sd==='chest'?'bag':'chest');try{beep(sd==='chest'?560:440,.07,'triangle')}catch(_){}try{saveRun()}catch(_){}}return got};
+ async function onClick(e){const t=e.target;if(t===O||t.closest('[data-a="x"]'))return close();
+  const tb=t.closest('[data-tab]');if(tb){tab=tb.dataset.tab;sel=null;sv();return draw()}
+  const sg=t.closest('.c2seg [data-side]');if(sg){side=sg.dataset.side;return draw()}
+  const s2=t.closest('.c2s[data-id]');if(s2){const sd=s2.dataset.sd,id=s2.dataset.id;sel=(sel&&sel.side===sd&&sel.id===id)?null:{side:sd,id};try{beep(700,.03,'sine')}catch(_){}return draw()}
+  const qd=t.closest('[data-qd]');if(qd){const i=O.querySelector('#c2qn');if(!i)return;const mx=+i.max||1,k=qd.dataset.qd;i.value=k==='max'?mx:Math.max(1,Math.min(mx,(Math.floor(+i.value)||1)+(+k)));sel.n=+i.value;return}
+  const a=t.closest('[data-a]');if(!a)return;const A=a.dataset.a,c=box();
+  if(A==='mv'&&sel){const i=O.querySelector('#c2qn'),n=i?Math.max(1,Math.min(+i.max,Math.floor(+i.value)||1)):1;const el=O.querySelector(`.c2s.on`);move(sel.side,sel.id,n,el);return draw()}
+  if(A==='fav'&&sel){const F=favs(),k=F.indexOf(sel.id);if(k>=0)F.splice(k,1);else F.push(sel.id);try{saveRun()}catch(_){}return draw()}
+  if(A==='dep'||A==='wd'){const L=filt(A==='dep'?C.bagList():C.chestList(c));const ok=await ask(A==='dep'?'⬆ Guardar en el baúl':'⬇ Sacar a la mochila',`<small>${L.length} tipo${L.length>1?'s':''} de ${(TABS.find(x=>x[0]===tab)||TABS[0])[1].toLowerCase()}${q?' que coinciden con «'+esc(q)+'»':''}. ${A==='dep'?'Se guarda hasta llenar el baúl.':'Los amuletos y reliquias solo salen si tienes ranuras libres.'}</small>`,['Sí','Cancelar']);if(ok!==0)return;
+   let m=0;for(const d of L){if(move(A==='dep'?'bag':'chest',d.id,d.c,null))m++}try{toast(`📦 ${m} tipo${m===1?'':'s'} movido${m===1?'':'s'}`)}catch(_){}sel=null;return draw()}
+  if(A==='up'){const lv=c.up|0,nx=UP[lv];if(!nx)return;if((R.money|0)<nx[0]&&!(typeof CHT==='object'&&CHT.money))return toast('No tienes suficientes Pokémonedas');
+   const ok=await ask('🔨 Ampliar el baúl',`<small>${nx[1]}: pasa de ${C.cap(c)} a ${C.cap(c)+18} huecos por ${nx[0].toLocaleString('es')} Pokémonedas.</small>`,['🔨 Ampliar','Cancelar']);if(ok!==0)return;
+   if(!(typeof CHT==='object'&&CHT.money))R.money-=nx[0];c.up=lv+1;try{saveRun()}catch(_){}O.classList.remove('upfx');void O.offsetWidth;O.classList.add('upfx');try{beep(523,.1,'triangle');setTimeout(()=>beep(784,.12,'triangle'),120);setTimeout(()=>beep(1046,.18,'triangle'),240)}catch(_){}try{toast('🔨 ¡'+nx[1]+'! Ahora caben '+C.cap(c)+' cosas')}catch(_){}return draw()}}
+ function close(){if(!O)return;O.classList.add('closing');setTimeout(()=>{if(O){O.classList.remove('on','closing')}},260);sel=null;try{saveRun()}catch(e){}}
+ const _oc=window.openChest;
+ window.openChest=function(){const hv=D.getElementById('homeov');if(!hv||!hv.classList.contains('on'))return toast('El baúl solo se puede abrir desde tu casa');if(!C.owned())return toast('Compra el baúl en la tienda de muebles');
+  if(!O)build();st();sel=null;q='';O.querySelector('#c2q').value='';side='chest';O.classList.remove('closing','opened');O.classList.add('on');draw();try{beep(330,.08,'triangle');setTimeout(()=>beep(494,.1,'triangle'),140)}catch(_){}requestAnimationFrame(()=>requestAnimationFrame(()=>O&&O.classList.add('opened')))};
+ window.closeChest=close;
+ D.addEventListener('keydown',e=>{if(e.key==='Escape'&&O&&O.classList.contains('on')){e.stopPropagation();close()}},true);
 })();
 </script>
 </body></html>
