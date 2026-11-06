@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.33</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.34</div>
 </section>
 
 <section id="team" class="scr">
@@ -4467,18 +4467,18 @@ window.openPokedex=async function(){
       const ql=q.trim().toLowerCase(),out=[];
       try{window.__regFix&&__regFix()}catch(e){}const RB=window.REGBY||{},RG=window.REGI||{},ORD=[];for(let k=1;k<=MAXID;k++){ORD.push(k);if(RB[k])ORD.push(...RB[k])}(window.__FKIDS||[]).forEach(k=>{if(!RG[k]&&!ORD.includes(k))ORD.push(k)})
       const rgN=i=>RG[i]?RG[i].dn.replace(/^./,c=>c.toUpperCase()):null,rgID=i=>RG[i]?ID(RG[i].sp)+' · '+RG[i].r:ID(i);
-      if(f==='reg')for(const i of ORD){if(!RG[i])continue;const st=state(i);if(ql){const nme=(rgN(i)||'').toLowerCase();if(!nme.includes(ql))continue}out.push(`<button type="button" class="pxc ${st} pxreg" data-id="${i}"><span class="pxn">${rgID(i)}</span><span class="pxi">${st=='u'?`<img loading="lazy" decoding="async" class="pxsil" src="${mini(i,0)}" alt="">`:`<img loading="lazy" decoding="async" src="${mini(i,DX.sh[i])}" alt="">`}</span><b>${rgN(i)}${DX.sh[i]?' ✨':''}</b></button>`)}
+      if(f==='reg')for(const i of ORD){if(!RG[i])continue;const st=state(i);if(ql){const nme=(rgN(i)||'').toLowerCase();if(!nme.includes(ql))continue}out.push(`<button type="button" class="pxc ${st} pxreg" data-id="${i}"><span class="pxn">${rgID(i)}</span><span class="pxi">${st=='u'?`<img loading="lazy" decoding="async" class="pxsil" src="${mini(i,0)}" alt="">`:`<img loading="lazy" decoding="async" src="${mini(i,0)}" alt="">`}</span><b>${rgN(i)}${DX.sh[i]?' ✨':''}</b></button>`)}
       for(const i of (f==='reg'?[]:ORD)){
         const st=state(i);if(f=='sh'){if(!DX.sh[i])continue}else if(f!='all'&&st!=f)continue;
         if(tg&&TAGS[i]!=tg)continue;
         if(ql){const nme=(rgN(i)||nameOf(i)).toLowerCase();if(!(String(i)==ql.replace('#','')||(st!='u'&&nme.includes(ql))||(RG[i]&&nme.includes(ql))))continue}
-        out.push(`<button type="button" class="pxc ${st}${RG[i]?' pxreg':''}" data-id="${i}"><span class="pxn">${rgID(i)}</span><span class="pxi">${st=='u'?(RG[i]?`<img loading="lazy" decoding="async" class="pxsil" src="${mini(i,0)}" alt="">`:'?'):`<img loading="lazy" decoding="async" src="${mini(i,DX.sh[i])}" alt="">`}</span><b>${st=='u'?(RG[i]?'??? de '+RG[i].r:'???'):(rgN(i)||nmOf(i)||'Nº '+i)+(DX.sh[i]?' ✨':'')}</b>${st!='u'&&!RG[i]?tgb(i):''}</button>`)}
+        out.push(`<button type="button" class="pxc ${st}${RG[i]?' pxreg':''}" data-id="${i}"><span class="pxn">${rgID(i)}</span><span class="pxi">${st=='u'?(RG[i]?`<img loading="lazy" decoding="async" class="pxsil" src="${mini(i,0)}" alt="">`:'?'):`<img loading="lazy" decoding="async" src="${mini(i,f==="sh"?1:0)}" alt="">`}</span><b>${st=='u'?(RG[i]?'??? de '+RG[i].r:'???'):(rgN(i)||nmOf(i)||'Nº '+i)+(DX.sh[i]?' ✨':'')}</b>${st!='u'&&!RG[i]?tgb(i):''}</button>`)}
       Z('#pxg').innerHTML=out.length?out.join(''):'<p class="pxe">No hay Pokémon con este filtro todavía.</p>'};
     const detail=async id=>{
       const st=state(id),RGd=(window.REGI||{})[id];if(st=='u'){toast(RGd?`🌍 Existe la forma de ${RGd.r} de ${RGd.n.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase())}: búscala en los biomas${(()=>{try{const b=BIO.find(x=>x.k===biomeOf(RGd.ty));return b?' (sale en '+b.n+')':''}catch(e){return''}})()}`:'Aún no has visto este Pokémon');return}
-      const box=Z('#pxd');box.innerHTML=`<div class="dp"><button class="dpx" id="dpx" aria-label="Cerrar">✕</button><div class="dpt"><img id="dpimg" src="${art(id,DX.sh[id])}" alt=""><div><h4>${RGd?RGd.dn.replace(/^./,c=>c.toUpperCase()):(nmOf(id)||'Nº '+id)}</h4><small>${RGd?ID(RGd.sp)+' · Forma de '+RGd.r:ID(id)} · ${st=='c'?'✔ Capturado':'👁 Visto'}</small><div class="dpy" id="dpy">${tgb(id)}</div><button type="button" class="act" id="dpsh" style="margin-top:6px;padding:6px 10px"></button></div></div><div class="dps" id="dps"><small style="grid-column:1/-1">Cargando datos…</small></div></div>`;
+      const box=Z('#pxd');box.innerHTML=`<div class="dp"><button class="dpx" id="dpx" aria-label="Cerrar">✕</button><div class="dpt"><img id="dpimg" src="${art(id,0)}" alt=""><div><h4>${RGd?RGd.dn.replace(/^./,c=>c.toUpperCase()):(nmOf(id)||'Nº '+id)}</h4><small>${RGd?ID(RGd.sp)+' · Forma de '+RGd.r:ID(id)} · ${st=='c'?'✔ Capturado':'👁 Visto'}</small><div class="dpy" id="dpy">${tgb(id)}</div><button type="button" class="act" id="dpsh" style="margin-top:6px;padding:6px 10px"></button></div></div><div class="dps" id="dps"><small style="grid-column:1/-1">Cargando datos…</small></div></div>`;
       Z('#dpx').onclick=()=>{box.innerHTML=''};
-      {let sh=!!DX.sh[id],md='art',bk=false;const im=Z('#dpimg'),bt=Z('#dpsh');
+      {let sh=false,md='art',bk=false;const im=Z('#dpimg'),bt=Z('#dpsh');
        /* v55.5: ver el modelo 3D animado (de frente o de espaldas) y el modelo 3D HD */
        const row=D.createElement('div');row.className='dp3';row.innerHTML='<button type="button" data-m="art" class="on">🖼️ Ilustración</button><button type="button" data-m="3d">🎮 3D</button><button type="button" data-m="hd">💎 3D HD</button><button type="button" data-m="bk" hidden>🔄 Espalda</button>';bt.after(row);
        const B=(k)=>row.querySelector('[data-m="'+k+'"]');
@@ -8709,7 +8709,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.33',t:'Visor en Megadex y Legendex',s:'cur',l:[
+ {v:'58.34',t:'Forma normal primero',s:'cur',l:[
+  '🖼️ Pokédex y visor: siempre se muestra primero la forma normal aunque tengas el shiny (en el filtro «✨ Shiny» se ven los shinys). Con el botón ✨ ves su versión shiny'
+ ]},
+ {v:'58.33',t:'Visor en Megadex y Legendex',s:'prev',l:[
   '🔍 Megadex y Legendex: toca a un Pokémon que hayas visto para verlo en grande con el visor (modos 3D, píxel, shiny, fondos y zoom). Las flechas pasan solo por los de esa lista y ese filtro',
   '🌍 Visor de la Pokédex: si estás viendo una forma regional o un Pokémon inventado (Abra de Hisui, Paradoja…), las flechas pasan solo entre las formas especiales, sin mezclar su forma normal'
  ]},
@@ -28756,7 +28759,7 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
  let lastId=0;D.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('#pdx .pxc[data-id]');if(c)lastId=+c.dataset.id},true);
  const add=()=>{const dp=D.querySelector('#pdx #pxd .dp');if(!dp||dp.querySelector('.dpbig')||!lastId)return;const row=dp.querySelector('.dp3')||dp.querySelector('#dpsh');if(!row)return;
   const b=D.createElement('button');b.type='button';b.className='dpbig';b.textContent='🔍 Ver en grande';const id=lastId;
-  b.onclick=e=>{e.stopPropagation();const sh=/Ver normal/.test((dp.querySelector('#dpsh')||{}).textContent||'');open(id,sh)};row.after(b);
+  b.onclick=e=>{e.stopPropagation();open(id,false)};/* v58.34: siempre se abre primero la forma normal */row.after(b);
   const im=dp.querySelector('#dpimg');if(im&&!im._big){im._big=1;im.style.cursor='zoom-in';im.addEventListener('click',ev=>{ev.stopPropagation();b.click()})}};
  /* Megadex y Legendex: toca la imagen de un Pokémon que hayas visto para verlo en grande (pasa solo entre los de esa lista y ese filtro) */
  const mdx=()=>{const g=D.querySelector('#mbdx .mdxg');if(!g)return;g.querySelectorAll('.mdxc:not(.unk) img[data-b]').forEach(im=>{const c=im.closest('.mdxc');if(c&&!c.classList.contains('vwz'))c.classList.add('vwz')})};
@@ -28765,7 +28768,7 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
   const cards=[...g.querySelectorAll('.mdxc:not(.unk)')].filter(x=>{const im=x.querySelector('img[data-b]');return im&&im.getAttribute('src')});
   const items=cards.map(x=>{const im=x.querySelector('img[data-b]'),u=im.getAttribute('src'),su=shOf(u),n=(x.querySelector('b')||{}).textContent||'',num=(x.querySelector('.mdxnum')||{}).textContent||'',sm=(x.querySelector('small')||{}).textContent||'';
    const id=OID(u),nu=id?u.replace('/official-artwork/shiny/','/official-artwork/'):u;return{base:sh=>sh&&su?su:nu,canSh:!!su,shy:/\/official-artwork\/shiny\//.test(u),ty:id&&id<=1025?typesOf(id):[],name:()=>n,sub:()=>[num,sm].filter(Boolean).join(' · ')}});
-  const i=cards.indexOf(c);if(i<0||!items.length)return;view(items,i,items[i].shy,SM?'👑 Legendex':'🔥 Megadex')},true);
+  const i=cards.indexOf(c);if(i<0||!items.length)return;view(items,i,false,SM?'👑 Legendex':'🔥 Megadex')},true);
  new MutationObserver(()=>{add();mdx()}).observe(D.body,{childList:true,subtree:true});
 })();
 </script>
