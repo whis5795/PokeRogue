@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.4</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.5</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,16 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.4',t:'Centro de datos',s:'cur',l:[
+ {v:'58.5',t:'Caja 2.0',s:'cur',l:[
+  '💻 Caja 2.0 del Centro Pokémon: barra de herramientas fija con resumen de la caja (Pokémon, shinys, favoritos, especiales, nivel medio y máximo), equipo y filtros plegables (el equipo queda como fila de iconos), 3, 4 o 5 Pokémon por fila y 11 fondos para elegir en cada caja',
+  '✨ En la Caja, los shinys brillan y los Legendarios, Singulares, Ultraentes, Paradoja y formas regionales tienen su propia aura',
+  '👆 Mantén pulsado un Pokémon de la Caja para ver su ficha: ilustración, tipos, XP, PS, estadísticas con barras, movimientos, habilidad y amistad',
+  '🔧 Arreglado: en algunos archivos salían todas las piedras desbloqueadas sin haber hecho los logros. Ahora solo se desbloquean al reclamar el logro que da cada piedra (se reinician los desbloqueos erróneos)',
+  '🔧 Arreglado: las Piedras de Alola, Galar e Hisui y el Brazal/Corona Galanuez no tenían icono',
+  '🔧 Arreglado: en la tienda, con pocos objetos en una pestaña las tarjetas se estiraban',
+  '🔧 Arreglado: la ficha de los objetos de la tienda (botón «i»), los botones de vender de la mochila y los avisos de premios de logros salían por debajo de la ventana'
+ ]},
+ {v:'58.4',t:'Centro de datos',s:'prev',l:[
   '💾 Centro de datos nuevo en Ajustes → Datos: tu archivo de guardado, resumen del progreso (aventura con tu equipo, Pokédex, logros, dinero y ranuras) y aviso si hace más de una semana que no haces copia de seguridad, con botón para hacerla al momento',
   '📦 Almacenamiento: cuánto ocupa cada cosa (aventura, ranuras, Pokédex, casa, multijugador, cachés…) y botón «🧹 Liberar espacio» que borra las cachés de descargas sin tocar tu progreso',
   '📸 Puntos de restauración automáticos de la aventura cada 10 minutos (se guardan los 3 últimos) con «↩ Restaurar» y «📸 Crear un punto ahora»',
@@ -27729,6 +27738,89 @@ button,.act,.cd,.pxc,.zqcd,.bzp,.sg>*,[data-i],[data-f],[data-ev]{touch-action:m
 #set .sp[data-c="data"] .row{border-radius:12px;background:#7f1d1d33;border:1px solid #f8717144;padding:8px 10px;margin-bottom:6px}
 #set .sp[data-c="data"] #slotbox .sl3{border-radius:12px;background:#ffffff0a;border:1px solid #ffffff1c;padding:8px 10px;margin-top:6px}
 @media(min-width:620px){#dc58 .dcg{grid-template-columns:repeat(4,1fr)}#dc58 .dcc.wide{grid-column:1/-1}}
+/* v58.5: 💻 Caja 2.0 */
+#pcbox #bx58{position:sticky;top:-10px;z-index:5;margin:-2px -4px 8px;padding:8px 6px 6px;border-radius:14px;background:linear-gradient(180deg,#1e1b4bf2,#1e1b4bd9);border:1.5px solid #818cf855;box-shadow:0 6px 16px #0007;backdrop-filter:blur(4px)}
+#pcbox .b58r{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+#pcbox .b58r>button,#pcbox .b58d button{padding:7px 10px;border-radius:11px;border:1.5px solid #a5b4fc55;background:#312e81;color:#e0e7ff;font:800 12px system-ui;touch-action:manipulation}
+#pcbox .b58r>button.on{background:linear-gradient(180deg,#6366f1,#4338ca);border-color:#c7d2fe}
+#pcbox .b58r>button b{display:inline-block;min-width:16px;padding:0 4px;border-radius:7px;background:#fde047;color:#422006;font-size:10.5px}
+#pcbox .b58d{display:flex;gap:3px;margin-left:auto}
+#pcbox .b58d button{padding:5px 8px;display:flex;align-items:center;gap:2px}
+#pcbox .b58d button small{font-size:10px;opacity:.8}
+#pcbox .b58d button.on{background:#fde047;color:#422006;border-color:#fff}
+#pcbox .b58s{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;font:700 11px system-ui;color:#c7d2fe}
+#pcbox .b58s span{padding:3px 8px;border-radius:9px;background:#0007;border:1px solid #ffffff1a}
+#pcbox .b58s b{color:#fde68a}
+#pcbox .b58s .b58h{background:none;border:0;opacity:.6;font-weight:600}
+#pcbox.bx-tc #bxg1{display:none!important}
+#pcbox .b58tm{display:inline-flex;gap:2px;margin-left:8px;vertical-align:middle}
+#pcbox .b58tm img{width:28px;height:28px;image-rendering:pixelated}#pcbox .b58tm img.ko{filter:grayscale(1);opacity:.5}
+#pcbox.bx-fc #bxg2 .bxf{display:none!important}
+html:not(.vm-pc) #pcbox.bx-c4 #bxg2{grid-template-columns:repeat(4,1fr)!important;gap:6px}
+html:not(.vm-pc) #pcbox.bx-c5 #bxg2{grid-template-columns:repeat(5,1fr)!important;gap:5px}
+html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxc img{height:48px!important}html:not(.vm-pc) #pcbox.bx-c5 #bxg2 .bxc img{height:38px!important}
+html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) #pcbox.bx-c5 #bxg2 .bxp{height:42px!important}
+#pcbox.bx-c4 #bxg2 .bxc b,#pcbox.bx-c5 #bxg2 .bxc b{font-size:10px!important;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#pcbox.bx-c5 #bxg2 .bxc small{font-size:9px}#pcbox.bx-c5 #bxg2 .bxy{display:none}
+#pcbox .bxs{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
+#pcbox #bxg2[class*="bxwp-"]{border-radius:18px;padding:8px;background-size:cover;background-attachment:local;transition:background .4s}
+#pcbox #bxg2.bxwp-meadow{background:radial-gradient(circle at 20% 10%,#fef9c355,#0000 35%),linear-gradient(180deg,#86efac33,#15803d66 60%,#14532d99)}
+#pcbox #bxg2.bxwp-sky{background:radial-gradient(circle at 80% 0,#fde04766,#0000 40%),linear-gradient(180deg,#fbbf2433,#92400e55 70%,#451a0388)}
+#pcbox #bxg2.bxwp-galaxy{background:radial-gradient(1px 1px at 20% 30%,#fff,#0000),radial-gradient(1px 1px at 70% 60%,#fff,#0000),radial-gradient(1.5px 1.5px at 40% 80%,#fde68a,#0000),radial-gradient(circle at 70% 20%,#a855f766,#0000 45%),linear-gradient(180deg,#1e1b4b,#0b0720)}
+#pcbox #bxg2.bxwp-ultra{background:repeating-radial-gradient(circle at 50% 40%,#22d3ee22 0 6px,#0000 6px 22px),linear-gradient(160deg,#0e7490aa,#312e81 60%,#020617)}
+#pcbox #bxg2.bxwp-neon{background:linear-gradient(90deg,#f0abfc18 1px,#0000 1px) 0 0/22px 22px,linear-gradient(#67e8f918 1px,#0000 1px) 0 0/22px 22px,linear-gradient(180deg,#4c1d95,#0b0720)}
+#pcbox #bxg2.bxwp-beach{background:linear-gradient(180deg,#7dd3fc55,#38bdf855 45%,#fde68a77 46%,#d9770666)}
+#pcbox #bxg2.bxwp-cave{background:radial-gradient(circle at 30% 20%,#fbbf2422,#0000 30%),linear-gradient(180deg,#57534e,#292524 70%,#1c1917)}
+#pcbox #bxg2.bxwp-snow{background:radial-gradient(2px 2px at 15% 25%,#fff,#0000),radial-gradient(2px 2px at 65% 45%,#fff,#0000),radial-gradient(2px 2px at 40% 75%,#fff,#0000),linear-gradient(180deg,#e0f2fe66,#7dd3fc44 60%,#0c4a6e88)}
+#pcbox #bxg2.bxwp-volcano{background:radial-gradient(circle at 50% 100%,#f9731688,#0000 55%),linear-gradient(180deg,#450a0a,#1c0a05)}
+#pcbox #bxg2.bxwp-night{background:radial-gradient(circle at 80% 15%,#fef3c7aa 0 14px,#0000 15px),radial-gradient(1px 1px at 30% 30%,#fff,#0000),linear-gradient(180deg,#1e3a8a,#020617)}
+#pcbox #bxg2.bxwp-sakura{background:radial-gradient(circle at 15% 20%,#fbcfe8aa 0 3px,#0000 4px),radial-gradient(circle at 75% 40%,#f9a8d4aa 0 3px,#0000 4px),radial-gradient(circle at 45% 80%,#fbcfe8aa 0 3px,#0000 4px),linear-gradient(180deg,#fbcfe855,#be185d55 70%,#500724aa)}
+#pcbox .bxc.b58sh::after{content:'✨';position:absolute;top:2px;left:4px;font-size:12px;animation:b58tw 1.8s ease-in-out infinite;pointer-events:none}
+#pcbox .bxc.b58sh{box-shadow:0 0 0 1.5px #fde04799,0 0 14px #fde04744}
+@keyframes b58tw{50%{opacity:.35;transform:scale(.8) rotate(20deg)}}
+#pcbox .bxc.b58t-leg{border-color:#fbbf24!important;background:radial-gradient(circle at 50% 30%,#fde04733,#0000 70%),#1e1b4b!important}
+#pcbox .bxc.b58t-mit{border-color:#f472b6!important;background:radial-gradient(circle at 50% 30%,#f472b633,#0000 70%),#1e1b4b!important}
+#pcbox .bxc.b58t-ub{border-color:#22d3ee!important;background:radial-gradient(circle at 50% 30%,#22d3ee33,#0000 70%),#1e1b4b!important}
+#pcbox .bxc.b58t-par{border-color:#a3e635!important;background:radial-gradient(circle at 50% 30%,#a3e63533,#0000 70%),#1e1b4b!important}
+#pcbox .bxc.b58t-reg{border-color:#c4b5fd!important}
+#pcbox .bxc{-webkit-touch-callout:none;user-select:none}
+#bx58s{position:fixed;inset:0;z-index:100046;display:flex;align-items:center;justify-content:center;padding:14px;background:#05030dcc;backdrop-filter:blur(3px);opacity:0;transition:opacity .18s;font-family:system-ui,sans-serif;color:#fff}
+#bx58s.on{opacity:1}
+#bx58s .b58w{position:relative;width:min(440px,100%);max-height:calc(var(--dvh,100dvh) - 28px);overflow:auto;border-radius:22px;padding:14px;background:linear-gradient(180deg,#312e81,#1e1b4b 40%,#0b0720);border:2px solid #818cf8;box-shadow:0 20px 50px #000c;transform:scale(.94);transition:transform .22s cubic-bezier(.2,1.4,.4,1)}
+#bx58s.on .b58w{transform:none}
+#bx58s .b58w.r-leg{border-color:#fbbf24}#bx58s .b58w.r-mit{border-color:#f472b6}#bx58s .b58w.r-ub{border-color:#22d3ee}#bx58s .b58w.r-par{border-color:#a3e635}
+#bx58s .b58w.sh{box-shadow:0 0 0 2px #fde04788,0 0 40px #fde04755,0 20px 50px #000c}
+#bx58s .b58x{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:2px solid #fff6;background:#0006;color:#fff;font:900 14px system-ui;z-index:2}
+#bx58s .b58a{position:relative;height:170px;display:grid;place-items:center}
+#bx58s .b58ring{position:absolute;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,#a5b4fc55,#0000 70%);animation:b58p 3s ease-in-out infinite}
+#bx58s .b58w.sh .b58ring{background:radial-gradient(circle,#fde04777,#0000 70%)}
+@keyframes b58p{50%{transform:scale(1.12);opacity:.7}}
+#bx58s .b58a img{position:relative;max-height:160px;max-width:80%;filter:drop-shadow(0 8px 10px #000a)}
+#bx58s .b58n{text-align:center}
+#bx58s .b58n b{display:block;font:900 20px system-ui}
+#bx58s .b58n>small{display:block;font:700 12px system-ui;opacity:.8}
+#bx58s .b58ty{display:flex;gap:5px;justify-content:center;margin:6px 0}
+#bx58s .b58ty i{font-style:normal;padding:3px 10px;border-radius:9px;background:var(--c);font:800 11px system-ui;text-shadow:0 1px 1px #0008}
+#bx58s .b58xp,#bx58s .b58hp{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;font:800 10.5px system-ui;margin:4px 0;text-align:left}
+#bx58s u{display:block;height:7px;border-radius:5px;background:#0008;overflow:hidden}
+#bx58s u i{display:block;height:100%;background:#60a5fa}
+#bx58s h5{margin:12px 0 6px;font:900 13px system-ui;display:flex;justify-content:space-between}
+#bx58s h5 small{opacity:.7;font-weight:700}
+#bx58s .b58st div{display:grid;grid-template-columns:68px 1fr 40px;gap:8px;align-items:center;font:700 11.5px system-ui;margin:3px 0}
+#bx58s .b58st b{text-align:right}
+#bx58s .b58mv{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#bx58s .b58mv h5{grid-column:1/-1}
+#bx58s .b58mv div{padding:6px 8px;border-radius:10px;background:color-mix(in srgb,var(--c) 30%,#0b0720);border:1.5px solid var(--c)}
+#bx58s .b58mv div b{display:block;font:800 12px system-ui}
+#bx58s .b58mv div small{font:600 10px system-ui;opacity:.85}
+#bx58s .b58ex{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+#bx58s .b58ex span{padding:4px 9px;border-radius:9px;background:#ffffff12;border:1px solid #ffffff26;font:700 11px system-ui}
+#bx58s .b58bt{display:flex;gap:8px;margin-top:12px}
+#bx58s .b58bt button{flex:1;padding:10px;border-radius:12px;border:2px solid #fff5;font:900 13px system-ui;color:#fff;background:#312e81}
+#bx58s .b58bt [data-b="sel"]{background:linear-gradient(180deg,#22c55e,#15803d)}
+@media(prefers-reduced-motion:reduce){#pcbox .bxc.b58sh::after,#bx58s .b58ring{animation:none}}
+/* v58.5: tienda con pocos objetos: las tarjetas no se estiran */
+.shop .sgrid{align-content:start;grid-auto-rows:max-content}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Hisui nuevas (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -27752,7 +27844,7 @@ button,.act,.cd,.pxc,.zqcd,.bzp,.sg>*,[data-i],[data-f],[data-ev]{touch-action:m
 
 /* ---------- v58.0: las ventanas de aviso (Tu equipo está débil, confirmaciones…) siempre salen por encima de la pantalla abierta (biomas, pueblo, ruta…) ---------- */
 (()=>{const D=document,SKIP=new Set(['mod','toast','updb','updsw','undob','svl']);
- const topZ=self=>{let mx=0;for(const e of D.body.children){if(e===self||SKIP.has(e.id))continue;const c=getComputedStyle(e);if(c.position!=='fixed'||c.display==='none'||c.visibility==='hidden'||e.offsetWidth<innerWidth*.5)continue;const z=parseInt(c.zIndex)||0;if(z>mx)mx=z}return mx};
+ /* v58.6: solo cuentan pantallas completas de verdad (biomas, etc.: z ≥ 1000, visibles y tocables); antes también contaban capas decorativas y la ventana tapaba sus propias fichas, botones y avisos */const topZ=self=>{let mx=0;for(const e of D.body.children){if(e===self||SKIP.has(e.id))continue;const c=getComputedStyle(e);if(c.position!=='fixed'||c.display==='none'||c.visibility==='hidden'||c.pointerEvents==='none'||e.offsetWidth<innerWidth*.5)continue;const z=parseInt(c.zIndex)||0;if(z>=1000&&z>mx)mx=z}return mx};
  const lift=el=>{if(!el)return;const t=D.getElementById('toast'),on=getComputedStyle(el).display!=='none';
   if(!on){if(el.dataset.lz){delete el.dataset.lz;el.style.removeProperty('z-index');if(t&&t.dataset.lz){delete t.dataset.lz;t.style.removeProperty('z-index')}}return}
   if(!el.dataset.lz)el.dataset.bz=parseInt(getComputedStyle(el).zIndex)||0;
@@ -27954,14 +28046,14 @@ button,.act,.cd,.pxc,.zqcd,.bzp,.sg>*,[data-i],[data-f],[data-ev]{touch-action:m
 })();
 
 /* ---------- v58.3: una piedra evolutiva conseguida con un logro queda desbloqueada PARA SIEMPRE en la tienda (en este archivo de guardado) ---------- */
-(()=>{const K='pa_stunl',get=()=>{try{return new Set(JSON.parse(localStorage.getItem(K)||'[]'))}catch(e){return new Set()}};
+(()=>{try{localStorage.removeItem('pa_stunl')}catch(e){}const K='pa_stunl2',get=()=>{try{return new Set(JSON.parse(localStorage.getItem(K)||'[]'))}catch(e){return new Set()}};
  let U=get();const put=()=>{try{localStorage.setItem(K,JSON.stringify([...U]))}catch(e){}};
  window.__stUnl={has:k=>U.has(k),list:()=>[...U]};
  const add=(L,say)=>{const nw=L.filter(k=>/^st_/.test(k)&&typeof ITEM==='object'&&ITEM[k]&&!U.has(k));if(!nw.length)return;nw.forEach(k=>U.add(k));put();
   if(say)setTimeout(()=>{try{toast('🔓 '+nw.map(k=>ITEM[k].n).join(', ')+(nw.length>1?' ya están':' ya está')+' a la venta en la tienda para siempre')}catch(_){}},1800)};
  /* las de logros que ya habías reclamado */
  const scan=()=>{try{if(typeof R!=='object'||!R||!R.ach||!R.ach.r||typeof ACH==='undefined')return;const L=[];ACH.forEach(a=>{if(a&&R.ach.r[a.id]&&a.r&&a.r.it)for(const k in a.r.it)if(/^st_/.test(k))L.push(k)});add(L,false)}catch(e){}};
- scan();setTimeout(scan,3000);setInterval(scan,30000);
+ /* v58.5: ya no se revisan los logros antiguos (desbloqueaba piedras que nunca recibiste) */
  const _g=window.achGive;if(typeof _g==='function')window.achGive=function(a){const x=_g.apply(this,arguments);try{if(a&&a.r&&a.r.it)add(Object.keys(a.r.it),true)}catch(e){}return x};
 })();
 
@@ -28019,6 +28111,78 @@ button,.act,.cd,.pxc,.zqcd,.bzp,.sg>*,[data-i],[data-f],[data-ev]{touch-action:m
  const _rs=window.renderSet;if(typeof _rs==='function')window.renderSet=function(){const r=_rs.apply(this,arguments);try{mount()}catch(e){}return r};
  D.addEventListener('click',e=>{if(e.target.closest('#set .tab'))setTimeout(mount,30)},true);
  mount();setTimeout(mount,1500);setInterval(()=>{const st=D.getElementById('set');if(st&&st.classList.contains('ov')&&D.querySelector('#set .sp.on[data-c="data"]'))mount()},5000);
+})();
+
+/* ---------- v58.5: 💻 CAJA 2.0 del Centro Pokémon: barra de herramientas, equipo y filtros plegables, densidad, fondos por caja, resumen, auras de rareza y ficha rápida al mantener pulsado ---------- */
+(()=>{const D=document,K='pa_bx58';
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ let ST={team:1,filt:1,cols:3,wp:{}};try{Object.assign(ST,JSON.parse(localStorage.getItem(K)||'{}'))}catch(e){}
+ const save=()=>{try{localStorage.setItem(K,JSON.stringify(ST))}catch(e){}};
+ const WP=[['auto','✨ Automático'],['meadow','🌿 Pradera'],['sky','☁️ Cielo dorado'],['galaxy','🌌 Galaxia'],['ultra','🌀 Ultraespacio'],['neon','⚡ Futuro neón'],['beach','🏖️ Playa'],['cave','🪨 Cueva'],['snow','❄️ Nieve'],['volcano','🌋 Volcán'],['night','🌙 Noche'],['sakura','🌸 Sakura']];
+ const AUTO=['meadow','sky','galaxy','ultra','neon','beach','cave','snow'];
+ const tabIx=o=>{const L=[...o.querySelectorAll('#bxtb .bxtb')];return Math.max(0,L.findIndex(b=>b.classList.contains('on')))};
+ const monOf=c=>{try{const L=c.dataset.k==='t'?R.team:R.box;return L&&L[+c.dataset.i]}catch(e){return null}};
+ const tagOf=m=>{try{return TAGS[m.id]||((window.REGI||{})[m.id]?'reg':'')}catch(e){return''}};
+ const TN={leg:'Legendario',mit:'Singular',ub:'Ultraente',par:'Paradoja',reg:'Forma regional'};
+ function deco(o){if(!o||!o.isConnected)return;const s=o.querySelector('.bxs');if(!s)return;
+  o.classList.toggle('bx-tc',!ST.team);o.classList.toggle('bx-fc',!ST.filt);['bx-c3','bx-c4','bx-c5'].forEach(c=>o.classList.remove(c));o.classList.add('bx-c'+ST.cols);
+  /* barra de herramientas */
+  let tb=o.querySelector('#bx58');if(!tb){tb=D.createElement('div');tb.id='bx58';s.prepend(tb);tb.onclick=e=>onTool(e,o)}
+  const F=window.BXF||{},nf=(F.o?1:0)+((F.t||[]).length?1:0)+(String(F.q||'').trim()?1:0);
+  const ti=tabIx(o),wp=(ST.wp[ti]&&ST.wp[ti]!=='auto')?ST.wp[ti]:AUTO[ti%AUTO.length];
+  const cards=[...o.querySelectorAll('#bxg2 .bxc[data-i]')].map(monOf).filter(Boolean);
+  const sh=cards.filter(m=>m.sh).length,fv=cards.filter(m=>m.fav).length,sp=cards.filter(m=>tagOf(m)&&tagOf(m)!=='reg').length,lv=cards.length?Math.round(cards.reduce((a,m)=>a+(m.lvl|0),0)/cards.length):0,mx=cards.length?Math.max(...cards.map(m=>m.lvl|0)):0;
+  const h=`<div class="b58r"><button type="button" data-t="team" class="${ST.team?'on':''}">👥 Equipo ${ST.team?'▾':'▸'}</button><button type="button" data-t="filt" class="${ST.filt?'on':''}">🔍 Filtros${nf?` <b>${nf}</b>`:''} ${ST.filt?'▾':'▸'}</button><span class="b58d">${[3,4,5].map(n=>`<button type="button" data-t="c${n}" class="${ST.cols==n?'on':''}" aria-label="${n} por fila">${n===3?'▦':n===4?'▩':'▤'}<small>${n}</small></button>`).join('')}</span><button type="button" data-t="wp" aria-label="Fondo de la caja">🖼️</button></div>
+   <div class="b58s"><span>📦 <b>${cards.length}</b></span>${sh?`<span>✨ <b>${sh}</b></span>`:''}${fv?`<span>⭐ <b>${fv}</b></span>`:''}${sp?`<span>👑 <b>${sp}</b></span>`:''}${cards.length?`<span>📈 Nv. medio <b>${lv}</b></span><span>🔝 <b>${mx}</b></span>`:''}<span class="b58h">Mantén pulsado un Pokémon para ver su ficha</span></div>`;
+  if(tb._h!==h){tb._h=h;tb.innerHTML=h}
+  /* equipo plegado: fila de mini iconos */
+  const t1=o.querySelector('#bxt1');if(t1){let mi=t1.querySelector('.b58tm');if(!ST.team){const hh=(R&&R.team||[]).map(m=>`<img src="${mini(m.id,m.sh)}" alt="" class="${m.hp<=0?'ko':''}">`).join('');if(!mi){mi=D.createElement('span');mi.className='b58tm';t1.append(mi)}if(mi._h!==hh){mi._h=hh;mi.innerHTML=hh}}else if(mi)mi.remove()}
+  /* fondo de la caja */
+  const g2=o.querySelector('#bxg2');if(g2){const c='bxwp-'+wp;if(!g2.classList.contains(c)){[...g2.classList].filter(x=>x.startsWith('bxwp-')).forEach(x=>g2.classList.remove(x));g2.classList.add(c)}}
+  /* auras de rareza */
+  o.querySelectorAll('.bxc[data-i]').forEach(c=>{const m=monOf(c);if(!m)return;const t=tagOf(m),want=(m.sh?' b58sh':'')+(t?' b58t-'+t:'')+(m.alpha?' b58al':'');if(c._d!==want){c._d=want;['b58sh','b58al','b58t-leg','b58t-mit','b58t-ub','b58t-par','b58t-reg'].forEach(x=>c.classList.remove(x));want.trim().split(' ').filter(Boolean).forEach(x=>c.classList.add(x))}})}
+ async function onTool(e,o){const b=e.target.closest('[data-t]');if(!b)return;const t=b.dataset.t;
+  if(t==='team')ST.team=ST.team?0:1;else if(t==='filt')ST.filt=ST.filt?0:1;else if(/^c\d$/.test(t))ST.cols=+t[1];
+  else if(t==='wp'){const ti=tabIx(o);const k=await ask('🖼️ Fondo de esta caja','<small>Elige el fondo para esta caja. «Automático» usa el de cada tipo de caja.</small>',[...WP.map(([k,n])=>n+((ST.wp[ti]||'auto')===k?' ✓':'')),'Cancelar']);if(k>=0&&k<WP.length)ST.wp[ti]=WP[k][0]}
+  save();try{beep(720,.03,'sine')}catch(_){}deco(o)}
+ /* ---- ficha rápida (mantener pulsado) ---- */
+ const STL=[['PS','max',0,'#ef4444'],['Ataque','a',1,'#f97316'],['Defensa','d',2,'#eab308'],['At. Esp.','sa',3,'#3b82f6'],['Def. Esp.','sd',4,'#22c55e'],['Velocidad','sp',5,'#ec4899']];
+ function sheet(m,card){const ov=D.createElement('div');ov.id='bx58s';const ty=(m.types||[]).map(t=>`<i style="--c:${(typeof COL!=='undefined'&&COL[t])||'#64748b'}">${esc((typeof ES!=='undefined'&&ES[t])||t)}</i>`).join('');
+  let xp='';try{const a=XPT(m.lvl),b=XPT(m.lvl+1);xp=Math.max(0,Math.min(100,(m.xp-a)/(b-a)*100))}catch(e){}
+  const tg=tagOf(m),ab=m.ab&&window.ABD&&ABD[m.ab]?ABD[m.ab]:null,fr=window.__fr?__fr.lvOf(m):null,bst=(m.b||[]).reduce((a,x)=>a+x,0);
+  const hp=m.max?Math.max(0,m.hp)/m.max*100:0;
+  ov.innerHTML=`<div class="b58w r-${tg||'n'}${m.sh?' sh':''}"><button type="button" class="b58x" aria-label="Cerrar">✕</button>
+   <div class="b58a"><div class="b58ring"></div><img src="${art(typeof sprId==='function'?sprId(m):m.id,m.sh)}" alt="" onerror="this.onerror=null;this.src='${mini(m.id,m.sh)}'"></div>
+   <div class="b58n"><b>${esc(nm(m))}</b><small>Nv. ${m.lvl}${tg?` · ${TN[tg]}`:''}${m.alpha?' · Alfa':''}</small><div class="b58ty">${ty}</div>
+    <div class="b58xp"><span>XP</span><u><i style="width:${xp||0}%"></i></u></div><div class="b58hp"><span>PS ${Math.max(0,m.hp)}/${m.max}</span><u><i style="width:${hp}%;background:${hp>50?'#22c55e':hp>20?'#eab308':'#ef4444'}"></i></u></div></div>
+   <div class="b58st"><h5>📊 Estadísticas <small>base total ${bst}</small></h5>${STL.map(([n,k,i,c])=>`<div><span>${n}</span><u><i style="width:${Math.min(100,((m.b||[])[i]||0)/255*100).toFixed(1)}%;background:${c}"></i></u><b>${m[k]|0}</b></div>`).join('')}</div>
+   <div class="b58mv"><h5>⚔️ Movimientos</h5>${(m.moves||[]).map(v=>`<div style="--c:${(typeof COL!=='undefined'&&COL[v.t])||'#64748b'}"><b>${esc(v.n)}</b><small>${esc((typeof ES!=='undefined'&&ES[v.t])||v.t)} · ${v.p?'Poder '+v.p:'Estado'} · PP ${v.cp!=null?v.cp:v.pp}/${v.mp||v.pp}</small></div>`).join('')||'<small>Sin movimientos</small>'}</div>
+   <div class="b58ex">${ab?`<span title="${esc(ab[1]||'')}">◆ ${esc(ab[0])}</span>`:''}${fr?`<span>${window.__fr.hearts(fr[1])} ${esc(fr[2])}</span>`:''}${m.fav?'<span>⭐ Favorito</span>':''}${m.sh?'<span>✨ Shiny</span>':''}</div>
+   <div class="b58bt"><button type="button" data-b="sel">✓ Seleccionar</button><button type="button" data-b="x">Cerrar</button></div></div>`;
+  D.body.append(ov);requestAnimationFrame(()=>ov.classList.add('on'));try{beep(m.sh?1175:660,.06,'triangle')}catch(_){}
+  const close=()=>{ov.classList.remove('on');setTimeout(()=>ov.remove(),200)};
+  ov.onclick=e=>{if(e.target===ov||e.target.closest('.b58x,[data-b="x"]'))return close();if(e.target.closest('[data-b="sel"]')){close();try{card.click()}catch(_){}}}}
+ let lp=null;
+ D.addEventListener('pointerdown',e=>{const c=e.target.closest('#pcbox .bxc[data-i]');if(!c)return;const x=e.clientX,y=e.clientY;clearTimeout(lp&&lp.t);
+  lp={c,x,y,t:setTimeout(()=>{const m=monOf(c);if(!m)return;lp.fired=1;try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}sheet(m,c)},480)}},true);
+ D.addEventListener('pointermove',e=>{if(lp&&!lp.fired&&Math.hypot(e.clientX-lp.x,e.clientY-lp.y)>10){clearTimeout(lp.t);lp=null}},true);
+ D.addEventListener('pointerup',()=>{if(lp&&!lp.fired){clearTimeout(lp.t);lp=null}},true);
+ D.addEventListener('pointercancel',()=>{if(lp){clearTimeout(lp.t);lp=null}},true);
+ D.addEventListener('click',e=>{if(lp&&lp.fired&&e.target.closest('#pcbox .bxc')){e.stopPropagation();e.preventDefault();lp=null}},true);
+ D.addEventListener('contextmenu',e=>{if(e.target.closest('#pcbox .bxc'))e.preventDefault()},true);
+ /* se aplica cada vez que la caja se abre o se repinta */
+ let raf=0;const kick=()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;const o=D.getElementById('pcbox');if(o)deco(o)})};
+ new MutationObserver(ms=>{for(const m of ms){if(m.target.closest&&m.target.closest('#bx58'))continue;kick();break}}).observe(D.body,{childList:true,subtree:true});
+})();
+
+/* ---------- v58.5: iconos de las piedras nuevas ---------- */
+(()=>{if(typeof IC!=='object')return;
+ const gem=(a,b,c)=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M9 4h14l7 9-14 16L2 13z" fill="${b}" stroke="#1f2937" stroke-width="1.6" stroke-linejoin="round"/><path d="M2 13h28M9 4l7 25 7-25M9 4l-2 9 9 16 9-16-2-9" fill="none" stroke="${a}" stroke-width="1.1" opacity=".8"/><path d="M11 7l-3 5h6z" fill="#fff" opacity=".7"/><circle cx="16" cy="15" r="3.2" fill="${c}" stroke="#1f2937" stroke-width="1"/></svg>`);
+ const img=(src,fb)=>`<img class="ic isp" decoding="sync" src="${src}" alt=""${fb?` onerror="this.onerror=null;this.src='${fb}'"`:''}>`;
+ const IB='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+ const G={alola:gem('#fde68a','#fb7185','#fde047'),galar:gem('#e9d5ff','#7c3aed','#f472b6'),hisui:gem('#ccfbf1','#0d9488','#e0f2fe'),cuff:gem('#bbf7d0','#16a34a','#facc15'),wreath:gem('#fef9c3','#ca8a04','#86efac')};
+ const set=()=>{IC.st_alola=img(G.alola);IC.st_galar=img(G.galar);IC.st_hisui=img(G.hisui);IC.st_gcuff=img(IB+'galarica-cuff.png',G.cuff);IC.st_gwreath=img(IB+'galarica-wreath.png',G.wreath)};
+ set();setTimeout(set,1000);
 })();
 </script>
 </body></html>
