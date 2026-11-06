@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.34</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.35</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.34',t:'Forma normal primero',s:'cur',l:[
+ {v:'58.35',t:'Megadex normal y Paradoja aparte',s:'cur',l:[
+  '🖼️ La Megadex muestra a los megajefes en su forma normal (con el visor puedes ver su versión shiny)',
+  '⚙️ Visor de la Pokédex: los Paradoja nuevos, las formas regionales y los Pokémon normales son grupos separados. Al llegar al último de un grupo vuelves al primero de ese mismo grupo (ya no salta a Pecharunt ni a Bulbasaur), y se sigue el orden y el filtro que tengas en la Pokédex'
+ ]},
+ {v:'58.34',t:'Forma normal primero',s:'prev',l:[
   '🖼️ Pokédex y visor: siempre se muestra primero la forma normal aunque tengas el shiny (en el filtro «✨ Shiny» se ven los shinys). Con el botón ✨ ves su versión shiny'
  ]},
  {v:'58.33',t:'Visor en Megadex y Legendex',s:'prev',l:[
@@ -14473,7 +14477,7 @@ async function mbOpen(kind){const SM=kind==='s',PL=SM?SPOOL:POOL;if(SM)mbBackfil
   ${SM?'<p class="mdxn">Todos los Pokémon singulares, Ultraentes y Paradoja que pueden aparecer en las <b>megaincursiones simples</b>: los que has visto, derrotado y capturado.</p>':`<p class="mdxn">Las <b>Megas exclusivas</b> ✨ (las que solo existen en las megaincursiones) solo se pueden usar en tus Pokémon cuando has <b>derrotado y capturado</b> a ese megajefe. Ejemplo: captura a Mega Houndoom X y todos tus Houndoom podrán megaevolucionar a su forma X.</p>`}
   <div class="mdxf">${[['all','Todos'],...(SM?[]:[['inv','✨ Exclusivas']]),['cap','🔴 Capturados'],['todo','⏳ Pendientes']].map(([k,t])=>`<button data-m="f:${k}" class="${F===k?'on':''}">${t}</button>`).join('')}</div>
   <div class="mdxg">${show.map(x=>{const st=x.e.cap?'cap':x.e.win?'win':x.e.seen?'seen':'unk',ex=INV.has(x.k);return`<div class="mdxc ${st}${ex?' ex':''}"><span class="mdxnum">#${String(x.i+1).padStart(SM?3:2,'0')}</span>${ex?`<span class="mdxex">${x.e.cap?'🔓':'🔒'} ✨</span>`:''}<img data-b="${x.i}" alt=""><b>${st==='unk'?'???':esc(bossName(x.b))}</b><small>${st==='cap'?'🔴 Capturado'+((x.e.cap|0)>1?' ×'+x.e.cap:''):st==='win'?'🏆 Derrotado'+((x.e.win|0)>1?' ×'+x.e.win:''):st==='seen'?'👁️ Visto':'Aún no lo has visto'}</small>${ex?`<em>${x.e.cap?'Su Mega ya es tuya':'Captúralo para usar su Mega'}</em>`:''}</div>`}).join('')||'<p class="mdxn" style="grid-column:1/-1;text-align:center">Nada por aquí todavía.</p>'}</div></div>`;
-  el.querySelectorAll('img[data-b]').forEach(im=>{const b=PL[+im.dataset.b];bossArt(b).then(u=>{im.src=u}).catch(()=>{})})};
+  el.querySelectorAll('img[data-b]').forEach(im=>{const b=PL[+im.dataset.b];/* v58.35: la Megadex muestra la forma normal (no la shiny) */(b.art&&!b.s?Promise.resolve(art(b.art,0)):bossArt(b)).then(u=>{im.src=typeof u==='string'?u.replace('/official-artwork/shiny/','/official-artwork/'):u}).catch(()=>{})})};
  el.onclick=e=>{if(e.target===el){el.remove();return}const b=e.target.closest('[data-m]');if(!b)return;const a=b.dataset.m;if(a==='x'){el.remove();return}if(a.startsWith('f:')){F=a.slice(2);draw();try{beep(660,.04,'triangle')}catch(_){}}};
  draw()}
 window.__mbOpen=mbOpen;
@@ -28704,11 +28708,16 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
  const keep=()=>{try{localStorage.setItem('pa_pxv',JSON.stringify({md:st.md,bg:st.bg,idle:st.idle}))}catch(e){}};
  /* elemento de la Pokédex */
  const special=id=>!!((window.REGI||{})[id])||id>1025;
+ /* v58.35: tres grupos que no se mezclan al pasar: normales, formas regionales y Paradoja inventados */
+ const grp=id=>(window.REGI||{})[id]?'reg':id>1025?'fk':'n';
  const dexItem=id=>({id,base:sh=>ART(id,sh),canSh:true,ty:typesOf(id),name:()=>nameOf(id),
   sub:()=>{const R=(window.REGI||{})[id],d=dex();return(R?'#'+String(R.sp).padStart(4,'0')+' · Forma de '+R.r:'#'+String(id).padStart(4,'0'))+' · '+((d.c||{})[id]?'✔ Capturado':'👁 Visto')}});
- function dexList(id){const d=dex(),s=d.s||{},sp=special(id);
-  const L=Object.keys(s).map(Number).filter(n=>n>0&&s[n]&&special(n)===sp).sort((a,b)=>{const ra=(window.REGI||{})[a],rb=(window.REGI||{})[b];return(ra?ra.sp+a/1e6:a)-(rb?rb.sp+b/1e6:b)});
-  if(!L.includes(id))L.push(id);return L}
+ function dexList(id){const d=dex(),s=d.s||{},g=grp(id);
+  /* si la Pokédex está abierta se sigue su orden y su filtro */
+  const cards=[...document.querySelectorAll('#pdx #pxg .pxc[data-id]')];let L=null;
+  if(cards.some(c=>+c.dataset.id===id))L=cards.filter(c=>!c.classList.contains('u')).map(c=>+c.dataset.id).filter(n=>grp(n)===g&&s[n]);
+  if(!L||!L.length)L=Object.keys(s).map(Number).filter(n=>n>0&&s[n]&&grp(n)===g).sort((a,b)=>{const ra=(window.REGI||{})[a],rb=(window.REGI||{})[b];return(ra?ra.sp+a/1e6:a)-(rb?rb.sp+b/1e6:b)});
+  L=[...new Set(L)];if(!L.includes(id))L.push(id);return L}
  function view(items,i0,sh0,tag){let k=Math.max(0,Math.min(items.length-1,i0|0));st.sh=!!sh0&&items[k].canSh!==false;st.bk=false;D.getElementById('pxv')?.remove();
   const v=D.createElement('div');v.id='pxv';v.setAttribute('role','dialog');v.setAttribute('aria-label','Visor');
   v.innerHTML=`<div class="vh"><button type="button" class="vb" data-a="x" aria-label="Cerrar">✕</button><div class="vt"><b></b><small></small></div><button type="button" class="vb" data-a="dl" aria-label="Abrir la imagen">⤓</button></div>
@@ -28753,7 +28762,7 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
   S.addEventListener('pointerup',up);S.addEventListener('pointercancel',up);
   S.addEventListener('wheel',e=>{e.preventDefault();z=Math.max(1,Math.min(5,z*(e.deltaY<0?1.15:1/1.15)));if(z<=1.02)reset();else tf()},{passive:false});
   draw();return v}
- function open(id0,sh0){const id=+id0,L=dexList(id);return view(L.map(dexItem),L.indexOf(id),sh0,special(id)?'🌍 Formas especiales':'')}
+ function open(id0,sh0){const id=+id0,L=dexList(id);const g=grp(id);return view(L.map(dexItem),L.indexOf(id),sh0,g==='reg'?'🌍 Formas regionales':g==='fk'?'⚙️ Paradoja nuevos':'')}
  window.__pxView=open;window.__pxViewList=view;
  /* botón «🔍 Ver en grande» en la ficha de la Pokédex */
  let lastId=0;D.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('#pdx .pxc[data-id]');if(c)lastId=+c.dataset.id},true);
