@@ -4431,7 +4431,7 @@ window.openPokedex=async function(){
     const chips=()=>{Z('#pxf').innerHTML=FLT.map(([k,l])=>`<button type="button" data-f="${k}" class="${f==k?'on':''}">${l}</button>`).join('')+BOXT.slice(1).map(([k,,l])=>`<button type="button" data-t="${k}" class="${tg==k?'on':''}">${l}</button>`).join('')};
     const grid=()=>{
       const ql=q.trim().toLowerCase(),out=[];
-      try{window.__regFix&&__regFix()}catch(e){}const RB=window.REGBY||{},RG=window.REGI||{},ORD=[];for(let k=1;k<=MAXID;k++){ORD.push(k);if(RB[k])ORD.push(...RB[k])}
+      try{window.__regFix&&__regFix()}catch(e){}const RB=window.REGBY||{},RG=window.REGI||{},ORD=[];for(let k=1;k<=MAXID;k++){ORD.push(k);if(RB[k])ORD.push(...RB[k])}(window.__FKIDS||[]).forEach(k=>{if(!RG[k]&&!ORD.includes(k))ORD.push(k)})
       const rgN=i=>RG[i]?RG[i].dn.replace(/^./,c=>c.toUpperCase()):null,rgID=i=>RG[i]?ID(RG[i].sp)+' · '+RG[i].r:ID(i);
       if(f==='reg')for(const i of ORD){if(!RG[i])continue;const st=state(i);if(ql){const nme=(rgN(i)||'').toLowerCase();if(!nme.includes(ql))continue}out.push(`<button type="button" class="pxc ${st} pxreg" data-id="${i}"><span class="pxn">${rgID(i)}</span><span class="pxi">${st=='u'?`<img loading="lazy" decoding="async" class="pxsil" src="${mini(i,0)}" alt="">`:`<img loading="lazy" decoding="async" src="${mini(i,DX.sh[i])}" alt="">`}</span><b>${rgN(i)}${DX.sh[i]?' ✨':''}</b></button>`)}
       for(const i of (f==='reg'?[]:ORD)){
@@ -4739,11 +4739,11 @@ window.learnNew=async function(m,from){
  /* v46.9: el banco ya no da intereses (eliminado para siempre) */
  /* ---- pantalla del banco ---- */
  window.openBank=function(){
-  const m=document.getElementById('mod');let mode='d';
+  const m=document.getElementById('mod');let mode='d';/* v58.0: la explicación solo sale la primera vez que entras en esta partida */const intro=!(R&&R.bkSeen);try{if(R)R.bkSeen=1;saveRun()}catch(e){}
   return new Promise(res=>{
    const msg=t=>{m.querySelector('.bkm').textContent=t||''};
    const draw=()=>{
-    m.innerHTML=`<div class="box bank"><h3>🏦 Banco Pokémon</h3><div class="bkv"><div class="bkc"><small>En el banco</small><b>${fmt(bal())}</b></div><div class="bkc"><small>En tu bolsillo</small><b>${fmt(R.money)}</b></div></div><div class="bki">Guarda aquí tus Pokémonedas para no gastarlas sin querer. El banco no da intereses.</div><div class="bkt"><button data-m="d" class="${mode=='d'?'on':''}">Depositar</button><button data-m="w" class="${mode=='w'?'on':''}">Retirar</button></div><div><input id="bka" type="number" inputmode="numeric" min="1" placeholder="Cantidad de Pokémonedas"><div class="bkp"><button data-p=".25">25%</button><button data-p=".5">50%</button><button data-p="1">Todo</button></div></div><div class="bkm"></div><button class="act" id="bkok">${mode=='d'?'Depositar':'Retirar'}</button><button class="act" id="bkx">Salir</button></div>`;
+    m.innerHTML=`<div class="box bank"><h3>🏦 Banco Pokémon</h3><div class="bkv"><div class="bkc"><small>En el banco</small><b>${fmt(bal())}</b></div><div class="bkc"><small>En tu bolsillo</small><b>${fmt(R.money)}</b></div></div>${intro?'<div class="bki">Guarda aquí tus Pokémonedas para no gastarlas sin querer. El banco no da intereses.</div>':''}<div class="bkt"><button data-m="d" class="${mode=='d'?'on':''}">Depositar</button><button data-m="w" class="${mode=='w'?'on':''}">Retirar</button></div><div><input id="bka" type="number" inputmode="numeric" min="1" placeholder="Cantidad de Pokémonedas"><div class="bkp"><button data-p=".25">25%</button><button data-p=".5">50%</button><button data-p="1">Todo</button></div></div><div class="bkm"></div><button class="act" id="bkok">${mode=='d'?'Depositar':'Retirar'}</button><button class="act" id="bkx">Salir</button></div>`;
     m.style.display='flex';
     const inp=m.querySelector('#bka'),src=()=>mode=='d'?R.money:bal();
     m.querySelectorAll('.bkt button').forEach(b=>b.onclick=()=>{mode=b.dataset.m;draw()});
@@ -12768,11 +12768,11 @@ const T=[
    if(!e)return toast(nm(m)+' no evoluciona por nivel (prueba con una piedra)');const o=m.max;if(m.lvl<e[0]){m.lvl=e[0];m.xp=XPT(m.lvl);stats(m);m.hp=Math.min(m.max,m.hp+m.max-o)}
    if(!R.team.includes(m))return;try{await checkEvo()}catch(er){}upd()})],
  ['🎖️','Maestría máxima','Sube a un Pokémon a Maestro',need('run',async()=>{const m=await pickMon('Maestría máxima');if(!m)return;m.ms=Math.max(m.ms|0,120);upd();toast(`🎖️ ${nm(m)} es Maestro`)})],
- ['🌦️','Clima del mapa','Fuerza el clima o un clima extremo durante 3 rondas',need('run',async()=>{
+ ['🌦️','Clima del mapa','Fuerza el clima o un clima extremo durante 5 minutos',need('run',async()=>{
    const O=[['clear','☀️ Despejado'],['rain','🌧️ Lluvia'],['sun','🔆 Sol intenso'],['snow','❄️ Nevada'],['sand','🏜️ Tormenta de arena'],['fog','🌫️ Niebla'],['storm','⛈️ Tormenta eléctrica'],['eclipse','🌑 Eclipse'],['meteor','☄️ Lluvia de meteoritos'],['aurora','🌌 Aurora']];
-   const j=await ask('Clima del mapa','<small>Se aplica al momento y dura 3 rondas.</small>',[...O.map(x=>x[1]),'Cancelar']);if(j>=O.length)return;const k=O[j][0];
-   if(j>=7){R.xwx={k,u:R.round+3};R.xwr=R.round;R.mwx={k:'clear',u:1e9}}else{R.xwx=null;R.mwx=k==='clear'?{k:'clear',u:1e9}:{k,u:R.round+3}}
-   R.wxN=R.round+7;upd();try{if(D.body.dataset.v==='map')showMap()}catch(e){}toast('Clima: '+O[j][1])})],
+   const j=await ask('Clima del mapa','<small>Se aplica al momento y dura 5 minutos.</small>',[...O.map(x=>x[1]),'Cancelar']);if(j>=O.length)return;const k=O[j][0];
+   const T0=Math.floor(Date.now()/60000);if(j>=7){R.xwx={k,u:T0+5};R.xwr=R.round;R.mwx={k:'clear',u:1e9}}else{R.xwx=null;R.mwx=k==='clear'?{k:'clear',u:1e9}:{k,u:T0+5}}
+   R.wxN=T0+10;upd();try{if(D.body.dataset.v==='map')showMap()}catch(e){}toast('Clima: '+O[j][1])})],
  ['⏱️','Sin esperas en casa','Reinicia las esperas de la cocina, el santuario, el huerto, el telescopio, la ruleta y la nevera',need('run',async()=>{try{const h=R.house;if(h){h.xf={};if(h.c)h.c.fr=null}}catch(e){}upd();toast('⏱️ Todo listo para usar otra vez')})],
  ['🐞','Registro de errores','Errores de la sesión, para copiar y reportar',async()=>{
    const t=ERR.length?ERR.slice().reverse().map(e=>`[${e.t}] ${e.k}: ${e.m}`).join('\n'):'Sin errores en esta sesión 🎉';
@@ -17658,7 +17658,7 @@ const dex=()=>{try{const d=JSON.parse(localStorage.getItem('pokerogue_pokedex_v1
 let F='all',QS='';
 async function open(i){const b=BIO[i];if(!b)return;try{if(window.dexSync)dexSync()}catch(e){}
  const o=D.createElement('div');o.id='bdx';const[c1,c2]=BC[b.k]||['#1e1b4b','#a78bfa'];o.style.setProperty('--c1',c1);o.style.setProperty('--c2',c2);
- o.innerHTML=`<div class="zqwd" role="dialog" aria-label="Guía de ${esc(b.n)}"><div class="zqhd"><i>${b.ic}</i><div><b>${esc(b.n)}</b><small>Pokémon que pueden aparecer · ${esc(b.d)}</small></div><button class="zqxd" aria-label="Cerrar">✕</button></div><div class="zqsd" id="bdst"></div><div class="zqfd" id="bdfl"></div><div class="zqgd" id="bdgr"><div class="zqld"><i></i>Cargando la guía del bioma…</div></div></div>`;
+ o.innerHTML=`<div class="zqwd" role="dialog" aria-label="Guía de ${esc(b.n)}"><div class="zqhd"><i>${b.ic}</i><div><b>${esc(b.n)}</b><small>Pokémon que pueden aparecer · ${esc(b.d)}</small></div><button class="zqxd" aria-label="Cerrar">✕</button></div><div class="zqsd" id="bdst"></div><div class="zqrw" id="bdrw"></div><div class="zqfd" id="bdfl"></div><div class="zqgd" id="bdgr"><div class="zqld"><i></i>Cargando la guía del bioma…</div></div></div>`;
  D.body.append(o);const close=()=>o.remove();o.querySelector('.zqxd').onclick=close;o.onclick=e=>{if(e.target===o)close()};
  try{await loadDex()}catch(e){}
  let T;try{T=await types()}catch(e){o.querySelector('#bdgr').innerHTML='<div class="zqld">No se pudo cargar la guía. Necesitas conexión a internet la primera vez.</div>';return}
@@ -17672,12 +17672,12 @@ async function open(i){const b=BIO[i];if(!b)return;try{if(window.dexSync)dexSync
  const draw=()=>{const d=dex(),S=shs(),sh=id=>!!(S[id]||d.sh[id]);
   const cn=ids.filter(id=>d.c[id]).length,sn=ids.filter(id=>d.s[id]||d.c[id]).length,hn=ids.filter(sh).length;
   const nowL=[ph&&DN.PH?DN.PH[ph].e+' '+DN.PH[ph].n:'',wxd&&wx.k!=='clear'?wxd.e+' '+wxd.n:''].filter(Boolean).join(' · ');const nB=ids.filter(boost).length;
-  o.querySelector('#bdst').innerHTML=(nowL?`<span class="bdnow">Ahora: <b>${esc(nowL)}</b>${nB?` · ${nB} más frecuentes`:''}</span>`:'')+`<span>Especies <b>${ids.length}</b></span><span>👁️ Vistos <b>${sn}</b></span><span>🔴 Capturados <b>${cn}</b></span><span>✨ Shinys vistos <b>${hn}</b></span>`;
-  const fl=[['all','Todos'],['now','⏰ Ahora'],['day','🌞 Día'],['night','🌙 Noche'],['s','Vistos'],['c','Capturados'],['u','Sin ver'],['sh','✨ Shiny']];
+  o.querySelector('#bdst').innerHTML=(nowL?`<span class="bdnow">Ahora: <b>${esc(nowL)}</b>${nB?` · ${nB} más frecuentes`:''}</span>`:'')+`<span>Especies <b>${ids.length}</b></span><span>👁️ Vistos <b>${sn}</b></span><span>🔴 Capturados <b>${cn}</b></span><span>🎯 Restantes <b>${ids.length-cn}</b></span><span>✨ Shinys vistos <b>${hn}</b></span>`;try{window.__bdxRw&&__bdxRw(b,cn,ids.length,o.querySelector('#bdrw'),draw)}catch(e){}
+  const fl=[['all','Todos'],['r','🎯 Restantes'],['now','⏰ Ahora'],['day','🌞 Día'],['night','🌙 Noche'],['s','Vistos'],['c','Capturados'],['u','Sin ver'],['sh','✨ Shiny']];
   const bf=o.querySelector('#bdfl');if(!bf.firstChild){bf.innerHTML=fl.map(([k,l])=>`<button data-f="${k}">${l}</button>`).join('')+`<input id="bdq" placeholder="Buscar por nombre…" autocomplete="off">`;
    bf.onclick=e=>{const x=e.target.closest('[data-f]');if(!x)return;F=x.dataset.f;draw()};bf.querySelector('#bdq').oninput=e=>{QS=e.target.value.trim().toLowerCase();draw()};bf.querySelector('#bdq').value=QS}
   bf.querySelectorAll('[data-f]').forEach(x=>x.classList.toggle('on',x.dataset.f===F));
-  const list=ids.filter(id=>{const st=d.c[id]?'c':d.s[id]?'s':'u';if(F==='s'&&st==='u')return false;if(F==='c'&&st!=='c')return false;if(F==='u'&&st!=='u')return false;if(F==='sh'&&!sh(id))return false;if(F==='now'&&!boost(id))return false;if(F==='day'&&!DS.has(id))return false;if(F==='night'&&!NS.has(id))return false;if(QS&&!(st!=='u'&&nm(id).toLowerCase().includes(QS))&&!String(id).startsWith(QS))return false;return true});
+  const list=ids.filter(id=>{const st=d.c[id]?'c':d.s[id]?'s':'u';if(F==='r'&&st==='c')return false;if(F==='s'&&st==='u')return false;if(F==='c'&&st!=='c')return false;if(F==='u'&&st!=='u')return false;if(F==='sh'&&!sh(id))return false;if(F==='now'&&!boost(id))return false;if(F==='day'&&!DS.has(id))return false;if(F==='night'&&!NS.has(id))return false;if(QS&&!(st!=='u'&&nm(id).toLowerCase().includes(QS))&&!String(id).startsWith(QS))return false;return true});
   o.querySelector('#bdgr').innerHTML=list.length?list.map(id=>{const st=d.c[id]?'c':d.s[id]?'s':'u',s1=sh(id);return`<div class="zqcd ${st}${boost(id)?' bst':''}"><img src="${mini(id,s1?1:0)}" alt="" loading="lazy">${s1?'<em>✨</em>':st==='c'?'<em>🔴</em>':''}<span class="bdtg">${tags(id)}</span><b>${st==='u'?'???':esc(nm(id))}</b><small>${(window.REGI||{})[id]?'#'+String(REGI[id].sp).padStart(4,'0')+' · '+REGI[id].r:'#'+String(id).padStart(4,'0')}</small><div class="ty">${st==='u'?'':T[id].filter(Boolean).map(t=>`<i style="--t:${COL[t]}" title="${ES[t]||t}"></i>`).join('')}</div></div>`}).join(''):'<div class="zqld">No hay Pokémon con este filtro.</div>'};
  draw()}
 window.openBiomeDex=open;
@@ -23815,10 +23815,10 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
 })();
 /* ---------- Deshacer: aviso con botón durante unos segundos ---------- */
 (()=>{const D=document;let cur=null;
- window.__undo=(label,fn,ms)=>{ms=ms||6000;if(cur)cur.end(false);const el=D.createElement('div');el.id='undob';el.innerHTML=`<span>${label}</span><button type="button">↩ Deshacer</button><i></i>`;D.body.append(el);
+ window.__undo=(label,fn,ms)=>{ms=ms||6000;if(cur)cur.end(false);const el=D.createElement('div');el.id='undob';el.innerHTML=`<span>${label}</span><button type="button">↩ Deshacer</button><button type="button" class="undox" aria-label="Cerrar" title="Cerrar">✕</button><i></i>`;D.body.append(el);
   const bar=el.querySelector('i');bar.animate([{transform:'scaleX(1)'},{transform:'scaleX(0)'}],{duration:ms,easing:'linear',fill:'forwards'});
   let done=false;const end=(run)=>{if(done)return;done=true;clearTimeout(t);el.classList.add('out');setTimeout(()=>el.remove(),250);if(cur&&cur.el===el)cur=null;if(run){try{fn()}catch(e){console.error(e)}try{beep(660,.1,'triangle')}catch(_){}}};
-  const t=setTimeout(()=>end(false),ms);el.querySelector('button').onclick=e=>{e.stopPropagation();end(true)};cur={el,end};};
+  const t=setTimeout(()=>end(false),ms);el.querySelector('button').onclick=e=>{e.stopPropagation();end(true)};/* v58.0: ✕ para cerrarlo sin deshacer */el.querySelector('.undox').onclick=e=>{e.stopPropagation();end(false)};cur={el,end};};
 })();
 
 /* ---------- Ficha del Pokémon: líneas extra (maestría, objeto) que sobreviven a su repintado ---------- */
@@ -23848,20 +23848,23 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const roll=()=>{let t=rnd()*W8.reduce((a,x)=>a+x[1],0);for(const [k,w] of W8){if((t-=w)<0)return k}return'clear'};
  const cur=()=>{if(!live())return null;const w=R.mwx;return w&&WX[w.k]?w:null};
  /* v43.8: el clima es ocasional: un episodio de 2-3 rondas cada 7-8 rondas; el resto del tiempo, despejado */
- const gap=()=>4+(rnd()*2|0); /* v49.2: el clima vuelve más a menudo */
- function tickWx(){if(!live())return;const r=R.round|0;let w=R.mwx,ch=false;
-  if(R.wxN==null||R.wxN-r>6){R.wxN=r+gap();if(w&&WX[w.k]&&w.k!=='clear')w.u=Math.min(w.u,r+3);ch=true}
+ /* v58.0: el clima va por TIEMPO (minutos reales), no por rondas: un episodio cada 5-8 min que dura 4-6 min */
+ const wxT=window.__wxT=()=>Math.floor(Date.now()/60000);
+ const gap=()=>5+(rnd()*4|0);
+ function tickWx(){if(!live())return;const r=wxT();let w=R.mwx,ch=false;
+  if(R.wxN!=null&&R.wxN<1e6){R.wxN=null;if(w&&w.k!=='clear'&&w.u<1e6)w.u=r+4}
+  if(R.wxN==null||R.wxN-r>12){R.wxN=r+gap();if(w&&WX[w.k]&&w.k!=='clear')w.u=Math.min(w.u,r+3);ch=true}
   if(!w||!WX[w.k]){R.mwx=w={k:'clear',u:1e9};ch=true}
   if(w.k!=='clear'&&r>=w.u){const X=WX[w.k];R.mwx=w={k:'clear',u:1e9};ch=true;setTimeout(()=>{try{toast(`☀️ ${X.n} se ha ido: vuelve a estar despejado`)}catch(_){}},700)}
-  if(w.k==='clear'&&r>=R.wxN&&r>=3){R.wxN=r+gap();ch=true;
+  if(w.k==='clear'&&r>=R.wxN){R.wxN=r+gap();ch=true;
    if(rnd()<.15&&typeof window.__xwStart==='function'&&window.__xwStart()){}
-   else{let k=roll(),g=0;while(k==='clear'&&g++<20)k=roll();if(k==='clear')k='rain';R.mwx=w={k,u:r+3+(rnd()*2|0)};const X=WX[k];setTimeout(()=>{try{toast(`${X.e} El tiempo cambia: ${X.n}`)}catch(_){}},700)}}
+   else{let k=roll(),g=0;while(k==='clear'&&g++<20)k=roll();if(k==='clear')k='rain';R.mwx=w={k,u:r+4+(rnd()*3|0)};const X=WX[k];setTimeout(()=>{try{toast(`${X.e} El tiempo cambia: ${X.n}`)}catch(_){}},700)}}
   if(ch)try{saveRun()}catch(_){}}
  function paintWx(){const w=cur(),wr=Q('#dmap .imw');let o=wr&&wr.querySelector('.mwx');if(!w||!wr||w.k==='clear'){if(o)o.remove();}
   else{if(!o){o=D.createElement('div');o.className='mwx';wr.append(o)}if(o.dataset.k!==w.k){o.dataset.k=w.k;o.className='mwx mwx-'+w.k;o.innerHTML=w.k==='sun'?'<i class="ray"></i>':Array.from({length:w.k==='fog'?3:26},(_,i)=>`<i style="--x:${(i*37)%100}%;--y:${(i*53)%95}%;--d:${(i*.23)%1.8}s;--s:${.6+(i%5)*.12}"></i>`).join('')}}
   const ch=Q('#chips');if(!ch)return;let c=Q('#wxchip');if(!w){if(c)c.remove();return}
-  if(!c){c=D.createElement('button');c.type='button';c.id='wxchip';c.className='chip';c.onclick=e=>{e.stopPropagation();const x=cur();if(!x)return;const X=WX[x.k],n=Math.max(1,x.u-R.round);ask(`${X.e} ${X.n}`,`<small>${X.d}</small><br><br><small>⏳ Durará unas ${n} ronda${n>1?'s':''} más.</small>`,['Entendido'])}}
-  if(w.k==='clear'){if(c)c.remove();return}if(!c.isConnected)ch.append(c);const n=Math.max(1,w.u-R.round);c.textContent=`${WX[w.k].e} ${WX[w.k].n} · ${n} r.`}
+  if(!c){c=D.createElement('button');c.type='button';c.id='wxchip';c.className='chip';c.onclick=e=>{e.stopPropagation();const x=cur();if(!x)return;const X=WX[x.k],n=Math.max(1,x.u-wxT());ask(`${X.e} ${X.n}`,`<small>${X.d}</small><br><br><small>⏳ Durará unos ${n} minuto${n>1?'s':''} más.</small>`,['Entendido'])}}
+  if(w.k==='clear'){if(c)c.remove();return}if(!c.isConnected)ch.append(c);const n=Math.max(1,w.u-wxT());c.textContent=`${WX[w.k].e} ${WX[w.k].n} · ${n} min`}
  /* apariciones según el clima (solo salvajes) */
  const _pe=window.pickEnemies;if(typeof _pe==='function')window.pickEnemies=pickEnemies=async function(n,w,bio){const r=await _pe.apply(this,arguments);
   try{const x=cur();if(x&&WX[x.k].sp&&bio&&Array.isArray(r))return(await __bioSwap(r,bio,WX[x.k].sp,.45,null)).map(p=>p.name?p:{id:p.id,name:nameOf(p.id)})}catch(e){}return r};
@@ -23917,6 +23920,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
    d.innerHTML=`<b>🎖️ Maestría ${l}/5 · ${MSN[l]}</b><i><i style="width:${nx?Math.min(100,((m.ms|0)-MS[l])/(nx-MS[l])*100):100}%"></i></i><small>${nx?`${m.ms|0}/${nx} puntos (2 por rival debilitado, 1 por victoria)`:'¡Maestría máxima!'}${l?` · +${l*2}% daño, −${l*2}% recibido`:''}</small>`;return d});
  /* mapa */
  const _sm=window.showMap;window.showMap=function(){const r=_sm.apply(this,arguments);try{tickWx();paintWx();paintCombos()}catch(e){console.error(e)}return r};
+ setInterval(()=>{try{if(live()&&!D.hidden){tickWx();if(D.body.dataset.v==='map')paintWx()}}catch(e){}},20000);
  window.__wx={cur,WX,COMBOS,active,msLv};
 })();
 /* ---------- Eventos festivos, misiones de NPC y ruinas misteriosas ---------- */
@@ -24513,12 +24517,12 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  /* v42.7: nunca salen legendarios, singulares, ultraentes ni paradójicos por el día/noche o el clima extremo */
  const okId=id=>{try{return !(typeof TAGS!=='undefined'&&TAGS[id])}catch(e){return true}};
  [NIGHT,DAYS,...Object.values(XW).map(x=>x.sp)].forEach(L=>{for(let i=L.length-1;i>=0;i--)if(!okId(L[i]))L.splice(i,1)});
- const xw=()=>{if(!live())return null;const x=R.xwx;return x&&XW[x.k]&&R.round<x.u?x:null};
+ const xwT=()=>Math.floor(Date.now()/60000);const xw=()=>{if(!live())return null;const x=R.xwx;if(x&&x.u<1e6)x.u=xwT()+3;return x&&XW[x.k]&&xwT()<x.u?x:null};
  function phase(){if(!live()||S.dn==='off')return null;const x=xw();if(x&&x.k==='eclipse')return'night';if(S.dn==='real'){const h=new Date().getHours();return h>=6&&h<9?'dawn':h>=9&&h<18?'day':h>=18&&h<21?'dusk':'night'}return ORD[Math.floor((R.round||1)/3)%4]}
  window.__dayPhase=phase;
- function tick(){if(!live())return;const x=R.xwx;if(x&&R.round>=x.u){R.xwx=null}}
+ function tick(){if(!live())return;const x=R.xwx;if(x&&x.u>1e6&&xwT()>=x.u){R.xwx=null}}
  /* v43.8: el clima extremo ya no sale al azar cada ronda: lo lanza el calendario del clima (a veces sustituye a un episodio normal) */
- window.__xwStart=()=>{if(!live()||R.round<4||R.xwx)return false;const k=pick(Object.keys(XW));R.xwx={k,u:R.round+1+(rnd()*2|0)};R.xwr=R.round;setTimeout(()=>{try{toast(`${XW[k].e} ¡Clima extremo: ${XW[k].n}!`);beep(330,.2,'triangle');beep(990,.3,'triangle')}catch(_){}},900);try{saveRun()}catch(_){}return true};
+ window.__xwStart=()=>{if(!live()||R.xwx)return false;const k=pick(Object.keys(XW));R.xwx={k,u:xwT()+3+(rnd()*3|0)};R.xwr=R.round;setTimeout(()=>{try{toast(`${XW[k].e} ¡Clima extremo: ${XW[k].n}!`);beep(330,.2,'triangle');beep(990,.3,'triangle')}catch(_){}},900);try{saveRun()}catch(_){}return true};
  function paint(){const wr=Q('#dmap .imw'),ph=phase(),x=xw();
   if(wr){let o=wr.querySelector(':scope>.dnx');const cls=ph&&ph!=='day'||x?`dnx dnx-${ph||'day'}${x?' mxw-'+x.k:''}`:'';
    if(!cls){if(o)o.remove()}else{if(!o){o=D.createElement('div');wr.append(o)}if(o.className!==cls){o.className=cls;o.innerHTML=(ph==='night'?Array.from({length:14},(_,i)=>`<b style="left:${(i*41)%100}%;top:${(i*23)%45}%"></b>`).join(''):'')+(x&&x.k==='meteor'?Array.from({length:5},(_,i)=>`<s style="--x:${15+i*17}%;--d:${i*1.3}s"></s>`).join(''):'')+(x&&x.k==='aurora'?'<u></u>':'')}}}
@@ -24527,7 +24531,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   if(!c){c=D.createElement('button');c.type='button';c.id='dnchip';c.className='chip';c.onclick=e=>{e.stopPropagation();info()}}if(!c.isConnected)ch.append(c);
   c.classList.toggle('rdy',!!x);c.textContent=x?`${XW[x.k].e} ${XW[x.k].n}`:`${PH[ph].e} ${PH[ph].n}`}
  function info(){const ph=phase(),x=xw();const T={day:'De día salen más Pokémon de tipo Planta, Bicho y Volador.',night:'De noche salen más Pokémon nocturnos (Fantasma, Siniestro, Psíquico) y sus ataques fantasma y siniestro pegan un 10% más.',dusk:'Al atardecer se mezclan los Pokémon de día y de noche.',dawn:'Al amanecer se mezclan los Pokémon de día y de noche.'};
-  ask(x?`${XW[x.k].e} ${XW[x.k].n}`:`${PH[ph].e} ${PH[ph].n}`,`${x?`<small>${XW[x.k].d}</small><br><small>⏳ Dura ${Math.max(1,x.u-R.round)} ronda${x.u-R.round>1?'s':''} más.</small><br><br>`:''}${ph?`<small>${PH[ph].e} <b>${PH[ph].n}</b>: ${T[ph]}</small><br><small>${S.dn==='real'?'Sigue la hora real de tu dispositivo.':'Cambia cada 3 rondas.'} Puedes cambiarlo en Ajustes → Ciclo día y noche.</small>`:''}`,['Entendido'])}
+  ask(x?`${XW[x.k].e} ${XW[x.k].n}`:`${PH[ph].e} ${PH[ph].n}`,`${x?`<small>${XW[x.k].d}</small><br><small>⏳ Dura ${Math.max(1,x.u-xwT())} minuto${x.u-xwT()>1?'s':''} más.</small><br><br>`:''}${ph?`<small>${PH[ph].e} <b>${PH[ph].n}</b>: ${T[ph]}</small><br><small>${S.dn==='real'?'Sigue la hora real de tu dispositivo.':'Cambia cada 3 rondas.'} Puedes cambiarlo en Ajustes → Ciclo día y noche.</small>`:''}`,['Entendido'])}
  const _sm=window.showMap;window.showMap=function(){try{tick()}catch(e){}const r=_sm.apply(this,arguments);try{paint()}catch(e){}return r};
  /* apariciones */
  const _pe=window.pickEnemies;window.pickEnemies=pickEnemies=async function(n,w,bio){const r=await _pe.apply(this,arguments);
@@ -26626,7 +26630,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
   ask(`${X.e} ${X.n}`,`<small>${X.d}</small><br><br><small>⏳ Durará unas ${n} ronda${n>1?'s':''} más.</small>`,['Entendido'])};
  const paint=()=>{const w=W();
   /* insignia sobre el mapa */
-  const wr=Q('#dmap.xmap .imw');if(wr){let b=Q('#dmap .wxbadge');if(!w){if(b)b.remove()}else{if(!b){b=D.createElement('button');b.type='button';b.className='wxbadge';b.onclick=e=>{e.stopPropagation();info()};wr.parentNode.insertBefore(b,wr.nextSibling)}const X=__wxs.WX[w.k],n=Math.max(1,w.u-R.round),t=`${X.e} ${X.n} · ${n} r.`;if(b.textContent!==t)b.textContent=t;const tp=(wr.offsetTop+8)+'px';if(b.style.top!==tp)b.style.top=tp}}
+  const wr=Q('#dmap.xmap .imw');if(wr){let b=Q('#dmap .wxbadge');if(!w){if(b)b.remove()}else{if(!b){b=D.createElement('button');b.type='button';b.className='wxbadge';b.onclick=e=>{e.stopPropagation();info()};wr.parentNode.insertBefore(b,wr.nextSibling)}const X=__wxs.WX[w.k],n=Math.max(1,w.u-Math.floor(Date.now()/60000)),t=`${X.e} ${X.n} · ${n} min`;if(b.textContent!==t)b.textContent=t;const tp=(wr.offsetTop+8)+'px';if(b.style.top!==tp)b.style.top=tp}}
   /* dentro del bioma */
   const bz=Q('#bzv');if(bz){let o=bz.querySelector(':scope>.mwx');if(!w){if(o)o.remove()}else if(!o||o.dataset.k!==w.k){if(o)o.remove();o=D.createElement('div');o.className='mwx mwx-'+w.k;o.dataset.k=w.k;o.innerHTML=__wxs.fx(w.k);bz.append(o);
     let b=bz.querySelector('.bzwx');if(!b){b=D.createElement('button');b.type='button';b.className='bzwx';b.onclick=e=>{e.stopPropagation();info()};const hud=bz.querySelector('.bz-hud');(hud||bz).append(b)}b.textContent=__wxs.WX[w.k].e}
@@ -27434,6 +27438,24 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
 })();
 
 })();</script>
+<style id="v58css">
+/* v58.0 */
+#undob button.undox{padding:0;width:32px;height:32px;border-radius:50%;border:1.5px solid #ffffff55;background:#ffffff1f;font-size:13px;line-height:1}
+#bdx .zqrw{padding:0 14px 8px}
+#bdx .bdrh{display:flex;justify-content:space-between;align-items:baseline;font:800 12px system-ui;margin-bottom:4px}
+#bdx .bdrh small{opacity:.8}
+#bdx .bdrb{position:relative;height:8px;border-radius:6px;background:#0007;overflow:hidden;margin-bottom:6px}
+#bdx .bdrb i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#4ade80,#fde047);border-radius:6px}
+#bdx .bdrb u{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:#fff8}
+#bdx .bdrl{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+#bdx .bdrl button{min-width:0;padding:5px 4px;border-radius:10px;border:1.5px solid #ffffff2a;background:#ffffff0d;color:#fff;font:800 11px system-ui;text-align:center;cursor:pointer}
+#bdx .bdrl button small{display:block;font:600 9px/1.2 system-ui;opacity:.75;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#bdx .bdrl button.ok{border-color:#fde047;background:#fde04722;animation:bdPulse 1.4s ease-in-out infinite}
+#bdx .bdrl button.got{opacity:.6}
+#bdx .bdrl button:disabled{cursor:default}
+@keyframes bdPulse{50%{box-shadow:0 0 0 3px #fde04755}}
+@media(prefers-reduced-motion:reduce){#bdx .bdrl button.ok{animation:none}}
+</style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Ondu (registro regional, Megas con su ilustración y tipos) ---------- */
 (()=>{const F=window.__FK||{},A=window.__FKART||{};window.CART=window.CART||{};
@@ -27452,6 +27474,46 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
  if(!add()){let n=0;const t=setInterval(()=>{if(add()||++n>30)clearInterval(t)},500)}
  /* Pokédex: que estén en la lista aunque ya estuviera cargada */
  const dex=()=>{try{if(Array.isArray(DEX)&&DEX.length)for(const s in F){const id=+s;if(!DEX.some(d=>d.id===id))DEX.push({id,name:F[s].n,reg:F[s].sp?1:0})}}catch(e){}};dex();setTimeout(dex,2000);setTimeout(dex,9000);
+})();
+
+/* ---------- v58.0: las ventanas de aviso (Tu equipo está débil, confirmaciones…) siempre salen por encima de la pantalla abierta (biomas, pueblo, ruta…) ---------- */
+(()=>{const D=document,SKIP=new Set(['mod','toast','updb','updsw','undob','svl']);
+ const topZ=self=>{let mx=0;for(const e of D.body.children){if(e===self||SKIP.has(e.id))continue;const c=getComputedStyle(e);if(c.position!=='fixed'||c.display==='none'||c.visibility==='hidden'||e.offsetWidth<innerWidth*.5)continue;const z=parseInt(c.zIndex)||0;if(z>mx)mx=z}return mx};
+ const lift=el=>{if(!el)return;const t=D.getElementById('toast'),on=getComputedStyle(el).display!=='none';
+  if(!on){if(el.dataset.lz){delete el.dataset.lz;el.style.removeProperty('z-index');if(t&&t.dataset.lz){delete t.dataset.lz;t.style.removeProperty('z-index')}}return}
+  if(!el.dataset.lz)el.dataset.bz=parseInt(getComputedStyle(el).zIndex)||0;
+  const mx=topZ(el),want=mx>=(+el.dataset.bz||0)?Math.min(mx+1,2147482000):0;
+  if(want){if(el.style.getPropertyValue('z-index')!==String(want)){el.style.setProperty('z-index',String(want),'important');el.dataset.lz=1;if(t){t.style.setProperty('z-index',String(want+1),'important');t.dataset.lz=1}}}
+  else if(el.dataset.lz){delete el.dataset.lz;el.style.removeProperty('z-index')}};
+ const watch=id=>{const el=D.getElementById(id);if(!el)return;new MutationObserver(()=>lift(el)).observe(el,{attributes:true,attributeFilter:['style','class']})};
+ watch('mod');watch('svl');
+})();
+
+/* ---------- v58.0: los premios de los logros dan un 35% menos (dinero, objetos y MT) ---------- */
+(()=>{const K=.65,f=v=>Math.max(1,Math.round(v*K));
+ const sc=r=>{if(!r||r._s58)return;r._s58=1;
+  if(r.m){const o=r.m;r.m=Math.max(1,Math.round(o*K));if(r.l)r.l=r.l.replace(new RegExp('(^|\\D)'+o+' Pokémonedas'),'$1'+r.m+' Pokémonedas')}
+  if(r.it)for(const k in r.it){const o=r.it[k],n=f(o);r.it[k]=n}
+  if(r.tm&&r.tm.n){r.tm.n=f(r.tm.n)}
+  if(r.l)r.l=r.l.replace(/(\d+)× /g,(a,n)=>f(+n)+'× ').replace(/(\d+) MT aleatoria(s?)/,(a,n)=>{const v=f(+n);return v+' MT aleatoria'+(v>1?'s':'')})};
+ const all=()=>{try{ACH.forEach(a=>sc(a&&a.r))}catch(e){}};all();setTimeout(all,1500);setTimeout(all,8000);
+ const _g=window.achGive;if(typeof _g==='function')window.achGive=function(a){try{sc(a&&a.r)}catch(e){}return _g.apply(this,arguments)};
+ const _s=window.showAch;if(typeof _s==='function')window.showAch=function(){all();return _s.apply(this,arguments)};
+})();
+
+/* ---------- v58.0: premios por completar la Pokédex de cada bioma (25 %, 50 %, 75 % y 100 % capturado) ---------- */
+(()=>{const K='pa_bdx_rw',get=()=>{try{return JSON.parse(localStorage.getItem(K)||'{}')||{}}catch(e){return{}}},put=o=>{try{localStorage.setItem(K,JSON.stringify(o))}catch(e){}};
+ const MS=[[25,{m:1500,it:{ub:5,sup:3}}],[50,{m:3000,it:{can:2,hyp:3,cxm:2}}],[75,{m:5000,it:{can:3,max:3,cxl:2}}],[100,{m:10000,it:{can:5,rvm:2,cxx:2,frs:2}}]];
+ const nmI=k=>(typeof ITEM!=='undefined'&&ITEM[k]&&ITEM[k].n)||k;
+ const lbl=r=>[r.m?r.m.toLocaleString('es')+' Pokémonedas':'',...Object.entries(r.it).map(([k,v])=>v+'× '+nmI(k))].filter(Boolean).join(', ');
+ const live=()=>{try{return typeof R==='object'&&R&&R.team&&R.team.length&&R.bag&&!R.done}catch(e){return false}};
+ window.__bdxRw=(b,cn,tot,el,redraw)=>{if(!el||!b||!tot)return;const g=get(),done=g[b.k]||{},pc=Math.floor(cn/tot*100);
+  el.innerHTML=`<div class="bdrh"><b>🏅 Premios del bioma</b><small>${pc}% capturado</small></div><div class="bdrb"><i style="width:${Math.min(100,pc)}%"></i>${MS.map(([p])=>`<u style="left:${p}%"></u>`).join('')}</div><div class="bdrl">${MS.map(([p,r])=>{const ok=pc>=p,got=done[p];return`<button type="button" data-p="${p}" class="${got?'got':ok?'ok':''}" ${ok&&!got?'':'disabled'} title="${lbl(r)}"><b>${got?'✅':ok?'🎁':'🔒'} ${p}%</b><small>${got?'Reclamado':lbl(r)}</small></button>`}).join('')}</div>`;
+  el.onclick=e=>{const x=e.target.closest('[data-p]');if(!x||x.disabled)return;const p=+x.dataset.p,r=(MS.find(m=>m[0]===p)||[])[1];if(!r)return;
+   if(!live()){try{toast('🎒 Empieza o continúa una aventura para reclamar el premio')}catch(_){}return}
+   const g2=get();g2[b.k]=g2[b.k]||{};if(g2[b.k][p])return;g2[b.k][p]=1;put(g2);
+   R.money=(R.money||0)+r.m;for(const k in r.it)R.bag[k]=(R.bag[k]||0)+r.it[k];try{saveRun()}catch(_){}
+   try{beep(880,.15,'triangle');beep(1175,.2,'triangle')}catch(_){}try{toast(`🏅 ${b.n} ${p}%: recibes ${lbl(r)}`)}catch(_){}if(redraw)redraw()}};
 })();
 </script>
 </body></html>
