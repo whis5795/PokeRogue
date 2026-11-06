@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.17</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.18</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.17',t:'Iron Abyss mejor recortado',s:'cur',l:[
+ {v:'58.18',t:'Equipo compartido en el 2c2',s:'cur',l:[
+  '🔄 Combates dobles de la ruta: tus dos Pokémon comparten todo tu equipo, así que puedes cambiar o sacar de relevo a cualquiera de los tuyos (antes cada uno solo tenía su mitad del equipo)'
+ ]},
+ {v:'58.17',t:'Iron Abyss mejor recortado',s:'prev',l:[
   '✂️ Iron Abyss tiene un recorte nuevo, sin restos del fondo blanco entre las garras ni alrededor (también su versión shiny)'
  ]},
  {v:'58.16',t:'Combate doble más limpio',s:'prev',l:[
@@ -22762,15 +22765,18 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const hSend=ev=>{const s=H.S;X().send({t:'cxst',s,ev});UI.load(JSON.parse(JSON.stringify(s)),ev)};
  const teamOf=(s,w)=>s.tm[w]||[],alive=t=>t.filter(m=>!m.ko);
  async function hStart(){const L=H.lob,s={gid:Math.random().toString(36).slice(2,8),rd:1,turn:0,ph:'load',tm:{h:L.h.map(live),g:L.g.map(live)},al:[null,null],fo:[],need:{},ch:{},tera:{h:0,g:0},bag:(()=>{const hb=cleanBag(L.hb);/* v58.0: en el combate doble de la aventura tus dos Pokémon comparten tu mochila */return{h:hb,g:L.mode==='adv'?hb:cleanBag(L.gb)}})(),used:{h:{},g:{}},sts:{h:{dmg:0,ko:0},g:{dmg:0,ko:0}},pn:{h:L.hn||'Anfitrión',g:L.gn||'Invitado'},over:0,mode:L.mode||'free'};
-  s.tm.h.forEach((m,i)=>{m.w='h';m.ti=i});s.tm.g.forEach((m,i)=>{m.w='g';m.ti=i});
-  if(s.mode==='adv')['h','g'].forEach(w=>s.tm[w].forEach(x=>{if(x.hp0!=null){x.hp=Math.max(0,Math.min(x.max,x.hp0|0));if(x.hp<=0)x.ko=1}if(Array.isArray(x.cp0))x.moves.forEach((v,j)=>{if(x.cp0[j]!=null)v.cp=Math.max(0,Math.min(v.pp,x.cp0[j]|0))});delete x.hp0;delete x.cp0}));s.al=[s.tm.h[0],s.tm.g[0]];H.S=s;H.acts={};hSend([]);
+  s.tm.h.forEach((m,i)=>{m.w='h';m.ti=i;m.ow='h';m.oi=i});s.tm.g.forEach((m,i)=>{m.w='g';m.ti=i;m.ow='g';m.oi=i});
+  if(s.mode==='adv')['h','g'].forEach(w=>s.tm[w].forEach(x=>{if(x.hp0!=null){x.hp=Math.max(0,Math.min(x.max,x.hp0|0));if(x.hp<=0)x.ko=1}if(Array.isArray(x.cp0))x.moves.forEach((v,j)=>{if(x.cp0[j]!=null)v.cp=Math.max(0,Math.min(v.pp,x.cp0[j]|0))});delete x.hp0;delete x.cp0}));s.al=[s.tm.h[0],s.tm.g[0]];
+  /* v58.18: en la aventura tus dos Pokémon comparten todo tu equipo: cualquiera puede cambiar a cualquiera de los tuyos */
+  if(s.mode==='adv'){const A=[],a=s.tm.h,b=s.tm.g;for(let i=0;i<Math.max(a.length,b.length);i++){if(a[i])A.push(a[i]);if(b[i])A.push(b[i])}A.forEach((m,i)=>m.ti=i);s.tm.h=A;s.tm.g=A;s.shared=1}
+  H.S=s;H.acts={};hSend([]);
   const ref=Math.round([...s.tm.h,...s.tm.g].reduce((a,b)=>a+b.lvl,0)/(s.tm.h.length+s.tm.g.length));
   const fo=await mkBots(1,ref,s.mode);if(!UI.on()||H.S!==s)return;if(fo.length<2){s.ph='err';hSend([{k:'msg',t:'No se pudieron cargar los rivales. Revisad la conexión a internet.'}]);return}
   s.fo=fo;s.ph='ch';const e6=[{k:'rd',rd:1,t:`¡${s.mode==='free'?'Ronda':'Piso'} 1! Aparecen ${fo[0].n} y ${fo[1].n}.`}];s.al.forEach(m=>entry6(s,m,e6));hSend(e6)}
  const slotOf=w=>w==='h'?0:1;
  function hAct(w,a){const s=H.S;if(!s||H.busy)return;
   if(a&&a.k==='undo'){if(s.ph==='ch'&&H.acts[w]){delete H.acts[w];delete s.ch[w];hSend([])}return}
-  if(s.ph==='sw'){if(!a||a.k!=='rep'||!s.need[w])return;const T=teamOf(s,w),m=T[a.j|0];if(!m||m.ko||m===s.al[slotOf(w)])return;H.acts['rep_'+w]=a.j|0;s.ch[w]=1;
+  if(s.ph==='sw'){if(!a||a.k!=='rep'||!s.need[w])return;const T=teamOf(s,w),m=T[a.j|0];if(!m||m.ko||s.al.includes(m)||Object.keys(H.acts).some(k=>k.startsWith('rep_')&&k!=='rep_'+w&&H.acts[k]===(a.j|0)))return;H.acts['rep_'+w]=a.j|0;s.ch[w]=1;
    if(Object.keys(s.need).every(k=>H.acts['rep_'+k]!=null))hReplace();else hSend([]);return}
   if(s.ph!=='ch'||!a)return;const m=s.al[slotOf(w)];if(!m||m.ko)return;
   if(a.k==='mv'){const i=cl(a.i|0,0,m.moves.length-1,0);H.acts[w]={k:'mv',i,tg:cl(a.tg|0,0,3,0),tera:a.tera&&!s.tera[w]&&m.lvl>=30?1:0}}
@@ -22778,7 +22784,9 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   else if(a.k==='it'){const it=String(a.it||'');if(!BAGK.includes(it)||!(s.bag[w][it]>0))return;const T=teamOf(s,w);if(!T[a.j|0])return;/* v58.0: en la aventura, usar un objeto no gasta el turno (como en los combates normales) */if(s.mode==='adv'){const ev=[];doItem(s,w,{it,j:a.j|0},ev);hSend(ev);return}H.acts[w]={k:'it',it,j:a.j|0}}
   else return;
   s.ch[w]=1;const need=['h','g'].filter(k=>{const x=s.al[slotOf(k)];return x&&!x.ko});if(need.every(k=>H.acts[k]))hTurn();else hSend([])}
- function hReplace(){const s=H.S,ev=[];Object.keys(s.need).forEach(w=>{const j=H.acts['rep_'+w];delete H.acts['rep_'+w];if(j!=null)doSwitch(s,w,j,ev,1)});s.need={};s.ch={};s.ph='ch';hSend(ev)}
+ function hReplace(){const s=H.S,ev=[];Object.keys(s.need).forEach(w=>{const j=H.acts['rep_'+w];delete H.acts['rep_'+w];if(j!=null)doSwitch(s,w,j,ev,1)});
+  /* v58.18: si con el equipo compartido queda un hueco y aún hay reserva, se pide otro relevo */
+  if(s.shared){const nd={};['h','g'].forEach(w=>{const m=s.al[slotOf(w)];if(m&&m.ko&&alive(teamOf(s,w)).filter(x=>!s.al.includes(x)).length)nd[w]=1});if(Object.keys(nd).length){s.need=nd;s.ch={};s.ph='sw';hSend(ev);return}}s.need={};s.ch={};s.ph='ch';hSend(ev)}
  const spd=m=>m.sp*stM(m.stg.sp)*(m.st==='par'?.5:1);
  const defT=m=>m.tOn?[m.tera]:m.types;
  function stage(s,m,side,slot,list,ev,src){list.forEach(([k,d])=>{if(!STN[k]||!d)return;const o=m.stg[k]|0,n=Math.max(-6,Math.min(6,o+d));if(n===o){ev.push({k:'msg',t:`¡${(k==='d'||k==='sd'||k==='sp'||k==='ac'||k==='ev')?'La':'El'} ${STN[k]} de ${m.n} no puede ${d>0?'subir':'bajar'} más!`});return}m.stg[k]=n;
@@ -22797,7 +22805,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   if(by&&!by.ko&&s.al.includes(by)&&side==='f'&&(by.rb|0)>=8){const g=Math.min(by.max-by.hp,Math.max(1,Math.round(by.max*.2)));const bi=s.al.indexOf(by);if(g>0){by.hp+=g;ev.push({k:'heal',s:'a',i:bi,v:g,hp:by.hp,t:`⭐8 Supernova: ${by.n} recupera ${g} PS.`})}const k=['a','sa','sp','d','sd'].reduce((b,x)=>(by[x]||0)>(by[b]||0)?x:b,'a');stage(s,by,'a',bi,[[k,1]],ev)}}
  /* ⭐6 Presencia estelar: al entrar, los rivales pierden Ataque y At. Esp. */
  function entry6(s,m,ev){if(!m||m.ko||(m.rb|0)<6)return;const fs=s.fo.filter(f=>f&&!f.ko);if(!fs.length)return;ev.push({k:'msg',t:`⭐6 ¡La presencia estelar de ${m.n} intimida a los rivales!`});fs.forEach(f=>stage(s,f,'f',s.fo.indexOf(f),[['a',-1],['sa',-1]],ev))}
- function doSwitch(s,w,j,ev,forced){const slot=slotOf(w),T=teamOf(s,w),n=T[j],o=s.al[slot];if(!n||n.ko||n===o)return;
+ function doSwitch(s,w,j,ev,forced){const slot=slotOf(w),T=teamOf(s,w),n=T[j],o=s.al[slot];if(!n||n.ko||n===o||s.al.includes(n))return;
   if(o&&!o.ko){o.stg={a:0,d:0,sa:0,sd:0,sp:0,ac:0,ev:0};o.cnf=0;o.fli=0;o.prot=0;o.pc=0}
   s.al[slot]=n;ev.push({k:'sw',s:'a',i:slot,m:JSON.parse(JSON.stringify(n)),t:forced?`${s.pn[w]}: ¡Adelante, ${n.n}!`:`${s.pn[w]} retira a ${o?o.n:'su Pokémon'}. ¡Adelante, ${n.n}!`});entry6(s,n,ev)}
  function doItem(s,w,a,ev){const i0=ev.length,T=teamOf(s,w),m=T[a.j],it=a.it;if(!m||!(s.bag[w][it]>0))return;const slot=s.al.indexOf(m),nmI=(ITEM[it]||{}).n||it;let ok=false;const side='a';
@@ -22882,7 +22890,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
    const ref=Math.round([...s.tm.h,...s.tm.g].reduce((a,b)=>a+b.lvl,0)/(s.tm.h.length+s.tm.g.length));const nb=await mkBots(s.rd,ref,s.mode);if(!UI.on()||H.S!==s)return;
    if(nb.length<2){s.ph='err';H.busy=false;hSend([{k:'msg',t:'No se pudieron cargar los rivales. Revisad la conexión a internet.'}]);return}
    s.fo=nb;s.ph='ch';H.busy=false;const e6=[{k:'rd',rd:s.rd,boss:nb[0]&&nb[0].boss?1:0,t:nb[0]&&nb[0].boss?`👑 ¡El jefe de la torre! ${nb[0].n} y ${nb[1].n} os cierran el paso.`:`¡${s.mode==='free'?'Ronda':'Piso'} ${s.rd}! Aparecen ${nb[0].n} y ${nb[1].n}.`}];s.al.forEach(m=>entry6(s,m,e6));hSend(e6);return}
-  s.need={};['h','g'].forEach(w=>{const m=s.al[slotOf(w)];if(m&&m.ko&&alive(teamOf(s,w)).length)s.need[w]=1});
+  s.need={};['h','g'].forEach(w=>{const m=s.al[slotOf(w)];if(m&&m.ko&&alive(teamOf(s,w)).filter(x=>!s.al.includes(x)).length&&!(s.shared&&w==='g'&&s.need.h&&alive(teamOf(s,w)).filter(x=>!s.al.includes(x)).length<2))s.need[w]=1});
   if(['h','g'].every(w=>!alive(teamOf(s,w)).length)){s.ph='over';s.over=1;ev.push({k:'over',t:s.mode==='adv'?'¡Tus Pokémon han sido derrotados!':`¡Habéis caído en ${s.mode==='free'?'la ronda':'el piso'} ${s.rd}!`});H.busy=false;hSend(ev);return}
   s.ph=Object.keys(s.need).length?'sw':'ch';H.busy=false;hSend(ev)}
  /* ===================== INTERFAZ (los dos jugadores) ===================== */
@@ -23004,7 +23012,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   else if(s.ch&&s.ch[me]){h=`<div class="cbp-wait">${chip}<span>✔ Elegido</span><button type="button" class="cbp-undo" data-x="undo">↩ Cambiar</button></div>`}
   else if(pend&&pend.ally){const v=m.moves[pend.i],pt=s.al[me==='h'?1:0];h=`<div class="cbp-h"><b>${esc(v.n)}: ¿en quién?</b><button type="button" class="cbp-undo" data-x="back">↩</button></div><div class="cbp-tgs cbp-al"><button type="button" data-x="ga:2">${miniI(m.id,m.sh)}<b>${esc(m.n)}</b><small>Tú</small></button>${pt&&!pt.ko?`<button type="button" data-x="ga:3">${miniI(pt.id,pt.sh)}<b>${esc(pt.n)}</b><small>Compañero</small></button>`:''}</div>`}
   else if(pend){const v=m.moves[pend.i],F=s.fo;h=`<div class="cbp-h"><b>${esc(v.n)}: ¿a quién?</b><button type="button" class="cbp-undo" data-x="back">↩</button></div><div class="cbp-tgs">${F.map((f,i)=>f.ko?'':`<button type="button" data-x="go:${i}">${miniI(f.id,f.sh)}<b>${esc(f.n)}</b><small>${v.p?(effLab(effT(v.t,f.tOn?[f.tera]:f.types))||'×1'):'Estado'}</small></button>`).join('')}</div>`}
-  else{const canT=!s.tera[me]&&m.lvl>=30&&!m.tOn,bag=s.bag&&s.bag[me]||{},nb=BAGK.reduce((a,k)=>a+(bag[k]>0?1:0),0),bench=myTeam().filter(x=>!x.ko&&x.ti!==m.ti).length;
+  else{const canT=!s.tera[me]&&m.lvl>=30&&!m.tOn,bag=s.bag&&s.bag[me]||{},nb=BAGK.reduce((a,k)=>a+(bag[k]>0?1:0),0),bench=myTeam().filter(x=>!x.ko&&x.ti!==m.ti&&!(s.shared&&s.al.some(a=>a&&a.ti===x.ti))).length;
    const tabs=`<div class="cbp-tabs"><button type="button" class="${tab==='mv'?'on':''}" data-x="tab:mv">⚔️ Luchar</button><button type="button" class="${tab==='tm'?'on':''}" data-x="tab:tm" ${myTeam().length>1?'':'disabled'}>🔄 Equipo${bench?` <em>${bench}</em>`:''}</button><button type="button" class="${tab==='bg'?'on':''}" data-x="tab:bg">🎒 Mochila${nb?` <em>${nb}</em>`:''}</button></div>`;
    let c='';
    if(tab==='mv'){const F=s.fo.filter(f=>!f.ko);c=`<div class="cbp-mv">${m.moves.map((v,i)=>{const es=v.p?F.map(f=>effLab(effT(v.t,f.tOn?[f.tera]:f.types))).filter(Boolean):[];const ty=teraOn&&v.t===m.tera?' mvtb':'';
@@ -23019,7 +23027,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const itemOk=(it,x,act)=>{if(it==='rev'||it==='rvm')return!!x.ko;if(x.ko)return false;if(IHP[it]||it==='max')return x.hp<x.max;if(it==='frs')return x.hp<x.max||!!x.st||!!x.cnf;if(it==='cut')return!!x.st||!!x.cnf;
   if(it==='ant')return/psn|tox/.test(x.st);if(it==='apa')return x.st==='par';if(it==='aqu')return x.st==='brn';if(it==='ahi')return x.st==='frz';if(it==='des')return x.st==='slp';if(it==='acf')return!!x.cnf;
   if(it==='eth'||it==='emx')return x.moves.some(v=>v.cp<v.pp);if(it==='xdf')return act&&x.stg.d<6;if(it==='xsd')return act&&x.stg.sd<6;return true};
- function teamBtns(forced){const T=myTeam(),m=myMon();return T.map((x,j)=>{const act=x===m||(m&&x.ti===m.ti),dis=itPick?!itemOk(itPick,x,act):(x.ko||act),q=x.hp/x.max;return`<button type="button" data-x="${itPick?'iu:'+j:(forced?'rep:':'sw:')+j}" ${dis?'disabled':''} class="${x.ko?'ko':''}">${miniI(x.id,x.sh)}<b>${esc(x.n)}</b><small>${itPick&&dis?'No tendría efecto':act?'En combate':x.ko?'Debilitado':'Nv.'+x.lvl+' · '+x.hp+'/'+x.max+' PS'}</small><span class="tm-hp"><i style="width:${(q*100).toFixed(0)}%;background:${q>.5?'#22c55e':q>.2?'#eab308':'#ef4444'}"></i></span>${x.st?`<span class="cc-st" style="--c:${ST_C[x.st]}">${ST_N[x.st]}</span>`:''}</button>`}).join('')}
+ function teamBtns(forced){const T=myTeam(),m=myMon();return T.map((x,j)=>{const act=x===m||(m&&x.ti===m.ti)||!!(ST&&ST.shared&&ST.al.some(a=>a&&a.ti===x.ti)),dis=itPick?!itemOk(itPick,x,act):(x.ko||act),q=x.hp/x.max;return`<button type="button" data-x="${itPick?'iu:'+j:(forced?'rep:':'sw:')+j}" ${dis?'disabled':''} class="${x.ko?'ko':''}">${miniI(x.id,x.sh)}<b>${esc(x.n)}</b><small>${itPick&&dis?'No tendría efecto':act?'En combate':x.ko?'Debilitado':'Nv.'+x.lvl+' · '+x.hp+'/'+x.max+' PS'}</small><span class="tm-hp"><i style="width:${(q*100).toFixed(0)}%;background:${q>.5?'#22c55e':q>.2?'#eab308':'#ef4444'}"></i></span>${x.st?`<span class="cc-st" style="--c:${ST_C[x.st]}">${ST_N[x.st]}</span>`:''}</button>`}).join('')}
  function send(a){if(LOC){hAct(me,a);seat();return}if(me==='h')hAct('h',a);else X().send(Object.assign({t:'cxact'},a))}
  function seat(){if(!LOC||!ST)return;const s=ST,pick=w=>s.ph==='ch'?(s.al[w==='h'?0:1]&&!s.al[w==='h'?0:1].ko&&!(s.ch&&s.ch[w])):s.ph==='sw'?(s.need&&s.need[w]&&!(s.ch&&s.ch[w])):false;const w=['h','g'].find(pick);if(w&&w!==me){me=w;pend=null;tab='mv';itPick=null;teraOn=false}try{panel();['a0','a1'].forEach(k=>{const el=O&&O.querySelector(`.cb-mon[data-s="${k}"]`);if(el)el.classList.toggle('mine',+k[1]===(me==='h'?0:1))})}catch(e){}}
  function logView(){const o=D.createElement('div');o.className='cb-log';o.innerHTML=`<div><div class="cbl-h"><b>📜 Registro del combate</b><button type="button" class="cx-x">✕</button></div><div class="cbl-l">${LOG.slice().reverse().map(t=>`<p>${esc(t)}</p>`).join('')||'<p>Aún no ha pasado nada.</p>'}</div></div>`;o.onclick=e=>{if(e.target===o||e.target.closest('.cx-x'))o.remove()};O.append(o)}
@@ -24542,7 +24550,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   const s=await window.__COOP_local({h:toEng(H.h),g:toEng(H.g)},{h:bag,g:{}},fo,c.n||'Entrenador');
   /* volcar el resultado en tu equipo */
   const win=!!(s&&s.win);
-  try{['h','g'].forEach(w=>(s.tm[w]||[]).forEach((x,i)=>{const m=H[w][i];if(!m)return;m.hp=x.ko?0:Math.max(0,Math.min(m.max,x.hp|0));m.s=x.st==='tox'?'psn':(['brn','par','psn','slp','frz'].includes(x.st)?x.st:0);if(x.st==='tox')m.tox=1;m.cf=0;
+  try{const seen58=new Set();['h','g'].forEach(w=>(s.tm[w]||[]).forEach((x,i)=>{const kk=x.ow!=null?x.ow+x.oi:w+i;if(seen58.has(kk))return;seen58.add(kk);const m=x.ow!=null?H[x.ow][x.oi]:H[w][i];if(!m)return;m.hp=x.ko?0:Math.max(0,Math.min(m.max,x.hp|0));m.s=x.st==='tox'?'psn':(['brn','par','psn','slp','frz'].includes(x.st)?x.st:0);if(x.st==='tox')m.tox=1;m.cf=0;
      (x.moves||[]).forEach((v,j)=>{if(m.moves[j])m.moves[j].cp=Math.max(0,Math.min(m.moves[j].mp,v.cp|0))})}));
    const used={};['h','g'].forEach(w=>{const u=s.used&&s.used[w]||{};for(const k in u)used[k]=(used[k]|0)+(u[k]|0)});for(const k in used)R.bag[k]=Math.max(0,(R.bag[k]|0)-used[k]);
    /* experiencia por cada rival debilitado */
