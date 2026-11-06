@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.10</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.11</div>
 </section>
 
 <section id="team" class="scr">
@@ -990,7 +990,7 @@ wild:sv('<path d="M4 20C4 9 10 4 20 4c0 10-5 16-14 16z" fill="#4ade80" stroke="#
 const KD={tr:['ball','Entrenador','#be123c'],wild:['wild','Salvaje','#15803d'],shop:['shop','Tienda','#b45309'],ev:['ev','Evento','#0e7490'],boss:['boss','Jefe final','#a16207']},DF=['Fácil','Normal','Difícil'];
 Object.assign(IC,{hyp:bt('#f472b6'),max:bt('#fbbf24'),eth:bt('#22d3ee'),pb:IC.ball,gb:IC.ball,ub:IC.ball,tm:IC.relic});
 /* v58.0: si una ventana se abre justo después de cerrar otra (menús de varios pasos), se cambia el contenido sin cerrar ni volver a animar: adiós al parpadeo */
-let __askHide=0;function ask(h,b,o){return new Promise(r=>{const m=$('#mod'),keep=!!__askHide&&m.style.display!=='none';clearTimeout(__askHide);__askHide=0;m.innerHTML=`<div class="box"><h3>${h}</h3><div>${b}</div>${o.map((x,i)=>`<button class="act" data-i="${i}" ${x.off?'disabled':''}>${x.t||x}</button>`).join('')}</div>`;m.classList.toggle('nofx',keep);m.classList.remove('closing');m.style.display='flex';const bx=m.firstElementChild;let dn=0;$$('#mod [data-i]').forEach(b=>b.onclick=()=>{if(dn)return;dn=1;m.classList.add('closing');__askHide=setTimeout(()=>{__askHide=0;m.classList.remove('closing','nofx');if(m.firstElementChild===bx)m.style.display='none'},200);r(+b.dataset.i)})})}
+let __askHide=0;function ask(h,b,o){return new Promise(r=>{const m=$('#mod'),keep=!!__askHide&&m.style.display!=='none';clearTimeout(__askHide);__askHide=0;m.innerHTML=`<div class="box"><h3>${h}</h3><div>${b}</div>${o.map((x,i)=>`<button class="act" data-i="${i}" ${x.off?'disabled':''}>${x.t||x}</button>`).join('')}</div>`;m.classList.toggle('nofx',keep);m.classList.remove('closing');m.style.display='flex';const bx=m.firstElementChild;let dn=0;$$('#mod [data-i]').forEach(b=>b.onclick=()=>{if(dn)return;dn=1;m.classList.add('closing');const hide=()=>{if(window.__askHold>0){__askHide=setTimeout(hide,120);return}__askHide=0;m.classList.remove('closing','nofx');if(m.firstElementChild===bx)m.style.display='none'};__askHide=setTimeout(hide,200);r(+b.dataset.i)})})}
 const STARTERS=[['Gen 1 · Kanto',[1,4,7]],['Gen 2 · Johto',[152,155,158]],['Gen 3 · Hoenn',[252,255,258]],['Gen 4 · Sinnoh',[387,390,393]],['Gen 5 · Teselia',[495,498,501]],['Gen 6 · Kalos',[650,653,656]],['Gen 7 · Alola',[722,725,728]],['Gen 8 · Galar',[810,813,816]],['Gen 9 · Paldea',[906,909,912]]];
 async function startAdv(){cheatsOff();
   try{await loadDex()}catch(e){toast('Necesitas conexión a internet');return}
@@ -8709,7 +8709,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.10',t:'Caja más ordenada',s:'cur',l:[
+ {v:'58.11',t:'Sin destellos del Centro',s:'cur',l:[
+  '🎓 Arreglado: al elegir un movimiento en el entrenador de movimientos (o al aprender uno al subir de nivel) se veía el Centro Pokémon unos instantes entre una ventana y otra'
+ ]},
+ {v:'58.10',t:'Caja más ordenada',s:'prev',l:[
   '⭐ Caja: mantén pulsado un Pokémon y en su ficha toca el botón ⭐ para marcarlo o quitarlo de favoritos',
   '📊 Ficha del Pokémon renovada: fondo de su tipo, ilustración flotante, gráfico de estadísticas en hexágono, total base con categoría, cada estadística con su valor base, real y rango (S/A/B/C/D), su mejor y peor estadística, movimientos con categoría, poder, precisión y PP, y una pestaña «Más» con su evolución, habilidad, amistad, maestría, estrellas, objeto y Mega',
   '🧹 Caja: los botones flotantes de Tipos, Ordenar y Evolucionar ya no tapan nada: Tipos y Evolucionar están en la barra de arriba y Ordenar dentro de Filtros',
@@ -28335,5 +28338,9 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
 (()=>{const D=document;let last=0;const hook=()=>{const e=D.getElementById('bagsign');if(!e||e._q)return!!e;e._q=1;
  new MutationObserver(()=>{const on=e.classList.contains('on');if(!on){if(e.classList.contains('bsq'))e.classList.remove('bsq');last=0;return}if(last&&!e.classList.contains('bsq'))e.classList.add('bsq');last=Date.now()}).observe(e,{attributes:true,attributeFilter:['class']});return true};
  if(!hook()){const t=setInterval(()=>{if(hook())clearInterval(t)},800)}})();
+
+/* ---------- v58.11: en las secuencias de varias ventanas (entrenador de movimientos, aprender movimientos) la ventana no se cierra mientras se cargan los datos: ya no se ve el Centro Pokémon por debajo ---------- */
+(()=>{window.__askHold=0;const hold=n=>{const f=window[n];if(typeof f!=='function'||f._h)return;const w=async function(){window.__askHold++;try{return await f.apply(this,arguments)}finally{window.__askHold=Math.max(0,window.__askHold-1)}};w._h=1;window[n]=w;try{if(n==='learnNew')learnNew=w}catch(e){}};
+ hold('__relearn');hold('learnNew');setTimeout(()=>{hold('__relearn');hold('learnNew')},2000)})();
 </script>
 </body></html>
