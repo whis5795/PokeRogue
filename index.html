@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.35</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.36</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,12 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.35',t:'Megadex normal y Paradoja aparte',s:'cur',l:[
+ {v:'58.36',t:'Descripciones de la Pokédex',s:'cur',l:[
+  '📖 Pokédex: cada Pokémon tiene su descripción con su categoría, altura y peso. Los oficiales usan la entrada de la Pokédex (las formas regionales, la de sus juegos)',
+  '✍️ Los 21 Paradoja nuevos y las formas nuevas de Hisui (Larvitar, Abra, Gastly y sus evoluciones) tienen su propia historia',
+  '🔍 En el visor en grande, el botón 📖 muestra la descripción encima del Pokémon (también en la Legendex)'
+ ]},
+ {v:'58.35',t:'Megadex normal y Paradoja aparte',s:'prev',l:[
   '🖼️ La Megadex muestra a los megajefes en su forma normal (con el visor puedes ver su versión shiny)',
   '⚙️ Visor de la Pokédex: los Paradoja nuevos, las formas regionales y los Pokémon normales son grupos separados. Al llegar al último de un grupo vuelves al primero de ese mismo grupo (ya no salta a Pecharunt ni a Bulbasaur), y se sigue el orden y el filtro que tengas en la Pokédex'
  ]},
@@ -28182,6 +28187,15 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
 #mbdx .mdxc.vwz img{cursor:zoom-in}
 #mbdx .mdxc.vwz{position:relative}
 #mbdx .mdxc.vwz::after{content:"🔍";position:absolute;right:6px;bottom:6px;font-size:13px;opacity:.7;pointer-events:none}
+/* v58.36: descripción (lore) */
+#pdx .dplore{margin:8px 0 10px;padding:10px 12px;border-radius:14px;background:linear-gradient(180deg,#ffffff12,#ffffff06);border:1px solid #ffffff22;font:500 13px/1.45 system-ui,sans-serif;color:#e5e7eb}
+#pdx .dplore .lrg,#pxv .vlore .lrg{display:block;font:800 13px system-ui,sans-serif;color:#fde68a}
+#pdx .dplore .lrm,#pxv .vlore .lrm{display:block;margin-top:2px;font:600 11.5px system-ui,sans-serif;opacity:.75}
+#pdx .dplore p,#pxv .vlore p{margin:6px 0 0}
+#pxv .vlore{position:absolute;z-index:3;left:12px;right:12px;bottom:10px;max-height:42%;overflow:auto;padding:12px 14px;border-radius:16px;background:#0b0820e6;border:1px solid #ffffff2e;box-shadow:0 10px 30px #0009;color:#f1f5f9;font:500 14px/1.5 system-ui,sans-serif;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:pxvIn .2s ease-out both}
+#pxv .vlore[hidden]{display:none}
+#pxv .vb.on{background:linear-gradient(180deg,#f59e0b,#b45309);border-color:#fde68a;color:#fff}
+#pxv .vb:disabled{opacity:.3}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Hisui nuevas (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -28705,12 +28719,12 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
  const MODES=[['art','🖼️','Ilustración'],['hd','💎','3D HD'],['a3','🎮','3D animado'],['px','👾','Píxel'],['pxa','🕹️','Píxel animado']];
  const BGS=['night','day','type','check'],BGN={night:'🌌 Noche',day:'☀️ Día',type:'🎨 Tipo',check:'🏁 Cuadros'};
  let st={md:'art',sh:false,bk:false,bg:'night',idle:true};try{Object.assign(st,JSON.parse(localStorage.getItem('pa_pxv')||'{}'));st.sh=false;st.bk=false}catch(e){}
- const keep=()=>{try{localStorage.setItem('pa_pxv',JSON.stringify({md:st.md,bg:st.bg,idle:st.idle}))}catch(e){}};
+ const keep=()=>{try{localStorage.setItem('pa_pxv',JSON.stringify({md:st.md,bg:st.bg,idle:st.idle,lore:!!st.lore}))}catch(e){}};
  /* elemento de la Pokédex */
  const special=id=>!!((window.REGI||{})[id])||id>1025;
  /* v58.35: tres grupos que no se mezclan al pasar: normales, formas regionales y Paradoja inventados */
  const grp=id=>(window.REGI||{})[id]?'reg':id>1025?'fk':'n';
- const dexItem=id=>({id,base:sh=>ART(id,sh),canSh:true,ty:typesOf(id),name:()=>nameOf(id),
+ const dexItem=id=>({id,lid:id,base:sh=>ART(id,sh),canSh:true,ty:typesOf(id),name:()=>nameOf(id),
   sub:()=>{const R=(window.REGI||{})[id],d=dex();return(R?'#'+String(R.sp).padStart(4,'0')+' · Forma de '+R.r:'#'+String(id).padStart(4,'0'))+' · '+((d.c||{})[id]?'✔ Capturado':'👁 Visto')}});
  function dexList(id){const d=dex(),s=d.s||{},g=grp(id);
   /* si la Pokédex está abierta se sigue su orden y su filtro */
@@ -28720,8 +28734,8 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
   L=[...new Set(L)];if(!L.includes(id))L.push(id);return L}
  function view(items,i0,sh0,tag){let k=Math.max(0,Math.min(items.length-1,i0|0));st.sh=!!sh0&&items[k].canSh!==false;st.bk=false;D.getElementById('pxv')?.remove();
   const v=D.createElement('div');v.id='pxv';v.setAttribute('role','dialog');v.setAttribute('aria-label','Visor');
-  v.innerHTML=`<div class="vh"><button type="button" class="vb" data-a="x" aria-label="Cerrar">✕</button><div class="vt"><b></b><small></small></div><button type="button" class="vb" data-a="dl" aria-label="Abrir la imagen">⤓</button></div>
-   <div class="vs"><button type="button" class="vb vnav l" data-a="prev" aria-label="Anterior">‹</button><img alt="" draggable="false"><button type="button" class="vb vnav r" data-a="next" aria-label="Siguiente">›</button><div class="vmsg"></div></div>
+  v.innerHTML=`<div class="vh"><button type="button" class="vb" data-a="x" aria-label="Cerrar">✕</button><div class="vt"><b></b><small></small></div><button type="button" class="vb" data-a="lore" aria-label="Descripción">📖</button><button type="button" class="vb" data-a="dl" aria-label="Abrir la imagen">⤓</button></div>
+   <div class="vs"><button type="button" class="vb vnav l" data-a="prev" aria-label="Anterior">‹</button><img alt="" draggable="false"><button type="button" class="vb vnav r" data-a="next" aria-label="Siguiente">›</button><div class="vmsg"></div><div class="vlore" hidden></div></div>
    <div class="vc"><div class="vm">${MODES.slice(0,4).map(([m,i,n])=>`<button type="button" data-m="${m}"><i>${i}</i>${n}</button>`).join('')}</div>
    <div class="vo"><button type="button" data-m="pxa"><i>🕹️</i>Píxel anim.</button><button type="button" data-a="sh"><i>✨</i>Shiny</button><button type="button" data-a="bk"><i>🔄</i>Espalda</button><button type="button" data-a="bg"><i>🌌</i>Fondo</button><button type="button" data-a="idle"><i>🎈</i>Flotar</button></div></div>`;
   D.body.append(v);const img=v.querySelector('.vs img'),msg=v.querySelector('.vmsg');let mt=0;
@@ -28739,6 +28753,8 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
    img.onload=()=>{img.classList.remove('ld')};
    img.onerror=()=>{img.onerror=null;const n=MODES.find(m=>m[0]===st.md);if(st.bk){st.bk=false;say('No tiene imagen de espaldas en '+n[2]);draw();return}
     if(st.md!=='art'){say('Este Pokémon no tiene '+n[2]);st.md='art';draw();return}if(st.sh){st.sh=false;say('No tiene versión shiny');draw();return}img.classList.remove('ld')};
+   const lb=q('lore'),lp=v.querySelector('.vlore');lb.disabled=!it.lid;lb.classList.toggle('on',!!st.lore&&!!it.lid);lp.hidden=!(st.lore&&it.lid);
+   if(st.lore&&it.lid&&window.__lore){const want=it.lid;lp.innerHTML='<small>📖 Cargando descripción…</small>';__lore(want).then(o=>{if(cur().lid===want)lp.innerHTML=__loreCard(o)}).catch(()=>{if(cur().lid===want)lp.innerHTML=__loreCard(null)})}
    img.src=u;v.querySelector('.vnav.l').disabled=items.length<2;v.querySelector('.vnav.r').disabled=items.length<2}
   const go=dir=>{if(items.length<2)return;k=(k+dir+items.length)%items.length;reset();draw();try{beep(dir>0?700:600,.04,'triangle')}catch(_){}};
   const close=()=>{v.remove();D.removeEventListener('keydown',key)};
@@ -28747,7 +28763,7 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
    if(m){st.md=m;reset();keep();draw();return}
    if(a==='x')return close();if(a==='prev')return go(-1);if(a==='next')return go(1);
    if(a==='sh'){st.sh=!st.sh;draw()}else if(a==='bk'){st.bk=!st.bk;draw()}else if(a==='bg'){st.bg=BGS[(BGS.indexOf(st.bg)+1)%BGS.length];keep();draw();say('Fondo: '+BGN[st.bg])}
-   else if(a==='idle'){st.idle=!st.idle;keep();draw()}else if(a==='dl'){try{window.open(img.currentSrc||img.src,'_blank')}catch(_){}}
+   else if(a==='idle'){st.idle=!st.idle;keep();draw()}else if(a==='lore'){st.lore=!st.lore;keep();draw()}else if(a==='dl'){try{window.open(img.currentSrc||img.src,'_blank')}catch(_){}}
    try{beep(660,.04,'triangle')}catch(_){}});
   /* zoom: pellizcar, rueda o doble toque; arrastrar para mover; deslizar a los lados para cambiar de Pokémon */
   const S=v.querySelector('.vs'),P=new Map();let d0=0,z0=1,sx=0,sy=0,x0=0,y0=0,moved=false,lt=0;
@@ -28776,9 +28792,69 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
   const g=c.closest('.mdxg'),SM=!!D.querySelector('#mbdx.mdxs');
   const cards=[...g.querySelectorAll('.mdxc:not(.unk)')].filter(x=>{const im=x.querySelector('img[data-b]');return im&&im.getAttribute('src')});
   const items=cards.map(x=>{const im=x.querySelector('img[data-b]'),u=im.getAttribute('src'),su=shOf(u),n=(x.querySelector('b')||{}).textContent||'',num=(x.querySelector('.mdxnum')||{}).textContent||'',sm=(x.querySelector('small')||{}).textContent||'';
-   const id=OID(u),nu=id?u.replace('/official-artwork/shiny/','/official-artwork/'):u;return{base:sh=>sh&&su?su:nu,canSh:!!su,shy:/\/official-artwork\/shiny\//.test(u),ty:id&&id<=1025?typesOf(id):[],name:()=>n,sub:()=>[num,sm].filter(Boolean).join(' · ')}});
+   const id=OID(u),nu=id?u.replace('/official-artwork/shiny/','/official-artwork/'):u;return{lid:SM?id:0,base:sh=>sh&&su?su:nu,canSh:!!su,shy:/\/official-artwork\/shiny\//.test(u),ty:id&&id<=1025?typesOf(id):[],name:()=>n,sub:()=>[num,sm].filter(Boolean).join(' · ')}});
   const i=cards.indexOf(c);if(i<0||!items.length)return;view(items,i,false,SM?'👑 Legendex':'🔥 Megadex')},true);
  new MutationObserver(()=>{add();mdx()}).observe(D.body,{childList:true,subtree:true});
+})();
+/* ---------- v58.36: 📖 descripción (lore) de cada Pokémon en la Pokédex y en el visor ---------- */
+/* Pokémon oficiales: la entrada de la Pokédex de PokeAPI (las formas regionales, la de sus juegos). Paradoja nuevos y formas nuevas de Hisui: escritas para el juego */
+(()=>{const D=document;
+ /* id: [categoría, categoría (en), altura m, peso kg, descripción, descripción (en)] */
+ const L={
+ 20001:['Pokémon Paradoja','Paradox Pokémon',1.7,182.5,'Sus cuatro brazos de aleación pueden levantar un camión sin esfuerzo. Un viejo libro de exploración lo describe como un luchador que llegó del futuro para buscar rivales dignos.','Its four alloy arms can lift a truck with no effort. An old exploration book describes it as a fighter that came from the future in search of worthy rivals.'],
+ 20002:['Pokémon Paradoja','Paradox Pokémon',1.5,61.0,'Proyecta barreras de plasma ardiente que se endurecen al instante. Imita los gestos de quien tiene delante para estudiar sus movimientos.','It projects barriers of burning plasma that harden in an instant. It mimics the gestures of whoever stands in front of it to study their moves.'],
+ 20003:['Pokémon Paradoja','Paradox Pokémon',1.8,125.0,'Defiende a los Pokémon débiles con una fe ciega en sus propias normas. Cuando juzga que alguien obra mal, activa su Modo Combate y su armadura se abre en placas de luz rosada.','It defends weak Pokémon with blind faith in its own rules. When it judges that someone does wrong, it activates its Combat Mode and its armor opens into plates of pink light.'],
+ 20004:['Pokémon Paradoja','Paradox Pokémon',2.0,240.0,'En su pecho arde un núcleo de plasma a miles de grados. El calor que desprende funde la roca bajo sus pies, dejando un rastro de metal fundido.','A plasma core burning at thousands of degrees blazes in its chest. The heat it gives off melts the rock under its feet, leaving a trail of molten metal.'],
+ 20005:['Pokémon Paradoja','Paradox Pokémon',1.6,155.0,'Sus pinzas son guanteletes capaces de triturar el acero. Las alas, demasiado pesadas para volar, vibran para enfriar su cuerpo durante el combate.','Its pincers are gauntlets able to crush steel. Its wings, too heavy for flight, vibrate to cool its body during battle.'],
+ 20006:['Pokémon Paradoja','Paradox Pokémon',1.4,58.0,'Las suelas de sus pies expulsan llamas como propulsores. Sus patadas llegan antes de que el rival vea moverse su pierna.','The soles of its feet expel flames like thrusters. Its kicks land before the foe even sees its leg move.'],
+ 20007:['Pokémon Paradoja','Paradox Pokémon',2.3,320.0,'Dicen que surgió de una fosa marina tan profunda que la luz nunca la ha alcanzado. Absorbe la oscuridad a su alrededor y la usa como escudo.','It is said to have emerged from an ocean trench so deep that light has never reached it. It absorbs the darkness around it and uses it as a shield.'],
+ 20008:['Pokémon Paradoja','Paradox Pokémon',1.9,140.0,'Su cuerpo es una coraza de escamas metálicas al rojo vivo. Cuando abre las alas, las placas se separan y disparan llamaradas de energía draconiana.','Its body is a shell of red-hot metal scales. When it spreads its wings, the plates part and fire blasts of draconic energy.'],
+ 20009:['Pokémon Paradoja','Paradox Pokémon',1.2,48.0,'Emite una voz que no procede de ningún lugar. Quien la escucha por la noche jura oír su propio nombre repetido una y otra vez.','It gives off a voice that comes from nowhere. Anyone who hears it at night swears they hear their own name repeated over and over.'],
+ 20010:['Pokémon Paradoja','Paradox Pokémon',1.6,190.0,'Los cañones de su caparazón disparan agua cargada de electricidad. Un solo chorro basta para dejar sin luz una ciudad entera.','The cannons on its shell shoot water charged with electricity. A single jet is enough to black out an entire city.'],
+ 20011:['Pokémon Paradoja','Paradox Pokémon',1.8,98.0,'Sigue a su presa durante días sin descansar. Sus sensores detectan el calor de un corazón a varios kilómetros de distancia.','It follows its prey for days without rest. Its sensors detect the heat of a heartbeat several kilometers away.'],
+ 20012:['Pokémon Paradoja','Paradox Pokémon',2.4,480.0,'Nada lo detiene cuando empieza a cargar. Ha derribado montañas enteras abriéndose paso hacia la superficie desde lo más hondo de la Zona Cero.','Nothing stops it once it starts charging. It has knocked down entire mountains carving its way to the surface from the depths of Area Zero.'],
+ 20013:['Pokémon Paradoja','Paradox Pokémon',1.5,72.0,'Viaja por los cables eléctricos convertido en una corriente de energía. Cuando aparece, todas las máquinas cercanas se encienden solas.','It travels through power lines as a stream of energy. When it appears, every nearby machine turns on by itself.'],
+ 20014:['Pokémon Paradoja','Paradox Pokémon',2.2,210.0,'Su caparazón de cristal refleja la luz en arcoíris helados. Canta melodías mecánicas que congelan el mar a su paso.','Its crystal shell reflects light into icy rainbows. It sings mechanical melodies that freeze the sea in its wake.'],
+ 20015:['Pokémon Paradoja','Paradox Pokémon',1.9,135.0,'Sus alas de piedra y metal cortan el viento como cuchillas. Se lanza en picado desde las nubes a una velocidad que rompe la barrera del sonido.','Its wings of stone and metal cut the wind like blades. It dives from the clouds at a speed that breaks the sound barrier.'],
+ 20016:['Pokémon Paradoja','Paradox Pokémon',1.6,52.0,'Combate como si bailara. Cada giro de su cuerpo es un golpe calculado al milímetro por su mente psíquica.','It battles as if it were dancing. Every spin of its body is a strike calculated to the millimeter by its psychic mind.'],
+ 20017:['Pokémon Paradoja','Paradox Pokémon',1.3,44.0,'Teje redes de hilos electrificados entre las ruinas. Las presas que las tocan quedan paralizadas mientras se acerca sin hacer ruido.','It weaves webs of electrified threads among ruins. Prey that touch them are paralyzed while it creeps closer without a sound.'],
+ 20018:['Pokémon Paradoja','Paradox Pokémon',1.5,88.0,'Su cuerpo es una colmena mecánica. Cientos de pequeños drones salen de su interior para recoger energía y proteger a su reina.','Its body is a mechanical hive. Hundreds of tiny drones fly out from inside it to gather energy and protect their queen.'],
+ 20019:['Pokémon Paradoja','Paradox Pokémon',1.4,150.0,'Sus enormes mandíbulas de acero generan descargas al cerrarse. Puede morder una viga de metal y partirla en dos.','Its huge steel jaws release shocks when they snap shut. It can bite a metal girder and snap it in two.'],
+ 20020:['Pokémon Paradoja','Paradox Pokémon',1.8,62.0,'Se dice que es la copia futurista de un Pokémon legendario, creada a partir de un fragmento de su código genético. Su larga cola guarda los recuerdos del original.','It is said to be a futuristic copy of a legendary Pokémon, made from a fragment of its genetic code. Its long tail stores the memories of the original.'],
+ 20021:['Pokémon Paradoja','Paradox Pokémon',1.7,66.0,'Se vuelve invisible disolviéndose en el agua. Solo se le descubre por el leve olor a veneno que deja al desaparecer.','It turns invisible by dissolving into water. It is only found by the faint smell of poison it leaves behind as it vanishes.'],
+ 20101:['Pokémon Piel Hielo','Ice Skin Pokémon',0.6,74.0,'Nace en lo más profundo de los glaciares de Hisui y se alimenta de hielo y roca. Su cuerpo está tan frío que la nieve no se derrite sobre él.','It is born deep inside the glaciers of Hisui and feeds on ice and rock. Its body is so cold that snow never melts on it.'],
+ 20102:['Pokémon Coraza Gélida','Frozen Shell Pokémon',1.2,160.0,'Su caparazón de hielo se endurece hasta volverse como el acero. Duerme bajo la nieve y, al despertar, desata avalanchas con su energía.','Its shell of ice hardens until it becomes like steel. It sleeps under the snow and, when it wakes, unleashes avalanches with its energy.'],
+ 20103:['Pokémon Armadura','Armor Pokémon',2.1,230.0,'En la antigua Hisui era temido como el señor de las cumbres heladas. Cuando ruge, desata ventiscas que pueden durar días.','In ancient Hisui it was feared as the lord of the frozen peaks. When it roars, it unleashes blizzards that can last for days.'],
+ 20104:['Pokémon Sombra','Shadow Pokémon',0.9,19.0,'En Hisui vivía en los bosques más oscuros. Duerme casi todo el día y, cuando presiente peligro, se funde con las sombras.','In Hisui it lived in the darkest forests. It sleeps most of the day and, when it senses danger, it melts into the shadows.'],
+ 20105:['Pokémon Sombra','Shadow Pokémon',1.3,56.0,'Absorbe la luz a su alrededor para volverse más fuerte. Las cucharas que sostiene se oxidan y se vuelven negras como el carbón.','It absorbs the light around it to grow stronger. The spoons it holds rust and turn as black as coal.'],
+ 20106:['Pokémon Sombra','Shadow Pokémon',1.5,48.0,'Con su mente puede apagar la luz de la luna. Los antiguos habitantes de Hisui creían que robaba los sueños de quienes dormían.','With its mind it can blot out the moonlight. The ancient people of Hisui believed it stole the dreams of those who slept.'],
+ 20107:['Pokémon Niebla Helada','Frost Mist Pokémon',1.3,0.1,'Su cuerpo de gas helado cubre de escarcha todo lo que toca. Aparece en las noches más frías flotando sobre los lagos congelados.','Its body of frozen gas covers everything it touches in frost. It appears on the coldest nights, floating over frozen lakes.'],
+ 20108:['Pokémon Niebla Helada','Frost Mist Pokémon',1.6,0.1,'Se esconde en las grietas del hielo. Si toca a alguien con su lengua gélida, le provoca un escalofrío que dura toda la noche.','It hides in cracks in the ice. If it touches someone with its icy tongue, it gives them a chill that lasts all night.'],
+ 20109:['Pokémon Sombra Gélida','Frozen Shadow Pokémon',1.5,40.5,'Se oculta en la sombra de las montañas nevadas. Dicen que quienes se pierden en una ventisca de Hisui fueron guiados por su risa helada.','It hides in the shadow of snowy mountains. It is said that those who get lost in a Hisuian blizzard were led astray by its icy laughter.']};
+ window.__LORE=L;
+ const isEn=()=>{try{return typeof S=='object'&&S&&S.lang==='en'}catch(e){return false}};
+ const VER={Alola:['ultra-moon','ultra-sun','moon','sun'],Galar:['shield','sword'],Hisui:['legends-arceus'],Paldea:['violet','scarlet']};
+ const CK='pa_lore1';let C={};try{C=JSON.parse(localStorage.getItem(CK)||'{}')||{}}catch(e){}
+ const save=()=>{try{localStorage.setItem(CK,JSON.stringify(C))}catch(e){}};const pend={};
+ window.__lore=id=>{id=+id;const en=isEn(),k=id+(en?'e':'s');
+  if(L[id]){const x=L[id];return Promise.resolve({g:en?x[1]:x[0],h:x[2],w:x[3],f:en?x[5]:x[4]})}
+  if(C[k])return Promise.resolve(C[k]);if(pend[k])return pend[k];
+  return pend[k]=(async()=>{const R=(window.REGI||{})[id],sp=R?R.sp:id,lg=en?'en':'es';
+   const J=u=>fetch('https://pokeapi.co/api/v2/'+u).then(r=>{if(!r.ok)throw 0;return r.json()});
+   const [s,p]=await Promise.all([J('pokemon-species/'+sp),J('pokemon/'+id).catch(()=>null)]);
+   const E=(s.flavor_text_entries||[]).filter(x=>x.language&&x.language.name===lg);let e=null;
+   if(R&&VER[R.r])for(const v of VER[R.r]){e=E.find(x=>x.version&&x.version.name===v);if(e)break}
+   if(!e)e=E[E.length-1];const g=((s.genera||[]).find(x=>x.language&&x.language.name===lg)||{}).genus||'';
+   const o={g,h:p?p.height/10:0,w:p?p.weight/10:0,f:e?e.flavor_text.replace(/[\f\n\r­]+/g,' ').replace(/\s+/g,' ').trim():''};C[k]=o;save();return o})().finally(()=>{delete pend[k]})};
+ const fmt=n=>String(Math.round(n*10)/10).replace('.',isEn()?'.':',');
+ const card=o=>o?`${o.g?`<b class="lrg">${o.g}</b>`:''}${o.h||o.w?`<span class="lrm">${o.h?`📏 ${fmt(o.h)} m`:''}${o.w?` · ⚖️ ${fmt(o.w)} kg`:''}</span>`:''}<p>${o.f||'—'}</p>`:'<p>No se pudo cargar la descripción.</p>';
+ window.__loreCard=card;
+ /* ficha de la Pokédex */
+ let lastId=0;D.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('#pdx .pxc[data-id]');if(c)lastId=+c.dataset.id},true);
+ const add=()=>{const dp=D.querySelector('#pdx #pxd .dp');if(!dp||dp.querySelector('.dplore')||!lastId)return;const ps=dp.querySelector('#dps');if(!ps)return;
+  const id=lastId,b=D.createElement('div');b.className='dplore';b.innerHTML='<small>📖 Cargando descripción…</small>';ps.before(b);
+  __lore(id).then(o=>{if(b.isConnected)b.innerHTML=card(o)}).catch(()=>{if(b.isConnected)b.innerHTML=card(null)})};
+ new MutationObserver(add).observe(D.body,{childList:true,subtree:true});
 })();
 </script>
 </body></html>
