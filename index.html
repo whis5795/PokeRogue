@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.6</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.7</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.6',t:'Recientes en la Caja',s:'cur',l:[
+ {v:'58.7',t:'Shinys nuevos',s:'cur',l:[
+  '✨ Los 21 Paradoja nuevos, las formas nuevas de Hisui (Larvitar, Abra, Gastly y sus evoluciones) y sus Megas tienen ahora su propia versión shiny con otros colores'
+ ]},
+ {v:'58.6',t:'Recientes en la Caja',s:'prev',l:[
   '🆕 Caja: nuevo orden «Recientes» que muestra primero los Pokémon capturados más recientemente'
  ]},
  {v:'58.5',t:'Caja 2.0',s:'prev',l:[
@@ -28186,6 +28189,12 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
  const G={alola:gem('#fde68a','#fb7185','#fde047'),galar:gem('#e9d5ff','#7c3aed','#f472b6'),hisui:gem('#ccfbf1','#0d9488','#e0f2fe'),cuff:gem('#bbf7d0','#16a34a','#facc15'),wreath:gem('#fef9c3','#ca8a04','#86efac')};
  const set=()=>{IC.st_alola=img(G.alola);IC.st_galar=img(G.galar);IC.st_hisui=img(G.hisui);IC.st_gcuff=img(IB+'galarica-cuff.png',G.cuff);IC.st_gwreath=img(IB+'galarica-wreath.png',G.wreath)};
  set();setTimeout(set,1000);
+})();
+
+/* ---------- v58.7: versiones shiny de los Paradoja nuevos, las formas nuevas de Hisui y sus Megas ---------- */
+(()=>{const SH={"ironabyss":"assets/ccb33dd3f87c.webp","ironarmor":"assets/b59a0adc2a31.webp","ironarms":"assets/5bcc487f8df2.webp","ironblaster":"assets/7a129ad700ff.webp","ironclone":"assets/57c5a34c8a0a.webp","ironcrystal":"assets/7c102cb589e4.webp","ironcurrent":"assets/b7b8bf828e5d.webp","irondancer":"assets/d5d0bdada385.webp","ironforce":"assets/742b8055603a.webp","irongauntlet":"assets/1aff554dfb2a.webp","ironhive":"assets/a3beb0c67f25.webp","ironhunter":"assets/9586b9f72b0c.webp","ironjaws":"assets/5bf50d44baf9.webp","ironjuggernaut":"assets/97730930bf4d.webp","ironjustice":"assets/e7e9ac42efca.webp","ironjusticeb":"assets/92e511e24dff.webp","ironkicker":"assets/ac52a461d9d0.webp","ironplasma":"assets/b31e16a3b6aa.webp","ironscreens":"assets/2670678bf02f.webp","irontrapper":"assets/9dbc7b8396be.webp","ironvanish":"assets/fd63a3f617e1.webp","ironvoice":"assets/30417ba5b8f3.webp","mironjugulis":"assets/70e72f172e89.webp","moalakazam":"assets/b3eaad9ceca7.webp","mogengar":"assets/124fd9fec663.webp","motyranitar":"assets/767fc81181f8.webp","oabra":"assets/78b4b61435bc.webp","oalakazam":"assets/dee7796267f3.webp","ogastly":"assets/5871bd6f545f.webp","ogengar":"assets/e008faa9bb7d.webp","ogengarg":"assets/09dd739fa78d.webp","ogengark":"assets/fa31a79c07f1.webp","ohaunter":"assets/715c750a2d77.webp","okadabra":"assets/aa7800626cd2.webp","olarvitar":"assets/f0bca40f6196.webp","opupitar":"assets/83068efb2f89.webp","otyranitar":"assets/d1d1203d69fc.webp"},F=window.__FK||{};window.CART=window.CART||{};
+ for(const id in F){const k=F[id].k;if(SH[k])CART[id+'_s']=SH[k]}
+ ['mironjugulis','ironjusticeb','motyranitar','moalakazam','mogengar','ogengarg','ogengark'].forEach(k=>{if(SH[k])CART[k+'_s']=SH[k]});
 })();
 </script>
 </body></html>
