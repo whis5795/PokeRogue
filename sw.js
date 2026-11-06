@@ -7,11 +7,12 @@ self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;c
  /* la página: primero la red (así siempre ves la última versión) y, si no hay conexión, la copia guardada */
  if(r.mode==='navigate'||(u.origin===location.origin&&/\/(index\.html)?$/.test(u.pathname))){
   /* si la red tarda, se muestra la copia guardada pero la descarga sigue: al terminar se guarda y se avisa a la página de que hay versión nueva (antes se cancelaba y en conexiones lentas, como en algunos iPhone, se quedaba una versión vieja para siempre) */
-  const net=fetch(r,{cache:'no-cache'}).then(async n=>{if(n.ok){const c=await caches.open(V);await c.put('index.html',n.clone())}return n});
+  const vOf=async x=>{try{const m=(await x.clone().text()).match(/id="ver">\s*(v[\d.]+)/);return m?m[1]:''}catch(_){return''}};
+  const net=fetch(r,{cache:'no-cache'}).then(async n=>{if(n.ok){const c=await caches.open(V),o=await c.match('index.html'),ov=o?await vOf(o):'',nv=await vOf(n);n._nv=nv;n._chg=!!(nv&&ov&&nv!==ov);await c.put('index.html',n.clone())}return n});
   e.respondWith((async()=>{let late=false;const tm=new Promise(res=>setTimeout(()=>res('t'),6000));const w=await Promise.race([net.catch(()=>'e'),tm]);
    if(w!=='t'&&w!=='e'&&w.ok)return w;
    const h=(await caches.match('index.html'))||(await caches.match('./'));if(!h){try{return await net}catch(_){return Response.error()}}
-   if(w==='t'){late=true;e.waitUntil(net.then(async n=>{if(n.ok){const cs=await self.clients.matchAll({type:'window'});cs.forEach(c=>c.postMessage({t:'upd'}))}}).catch(()=>{}))}
+   if(w==='t'){late=true;e.waitUntil(net.then(async n=>{if(n.ok&&n._chg){const cs=await self.clients.matchAll({type:'window'});cs.forEach(c=>c.postMessage({t:'upd',v:n._nv}))}}).catch(()=>{}))}
    return h})());return}
  /* archivos propios: caché primero */
  if(u.origin===location.origin){e.respondWith(caches.match(r).then(h=>h||fetch(r).then(n=>{if(n.ok){const cl=n.clone();caches.open(V).then(c=>c.put(r,cl))}return n})));return}
