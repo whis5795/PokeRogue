@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.12</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.13</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.12',t:'Pokédex al instante',s:'cur',l:[
+ {v:'58.13',t:'Inglés al día',s:'cur',l:[
+  '🌐 En inglés ya está traducido todo lo nuevo: archivos de guardado, Centro de datos, Baúl del Tesoro, Caja 2.0 y su ficha, evolucionar a los elegidos, premios de los biomas, clima, piedras regionales, avisos de logros, nombres de las formas regionales («Hisuian Gengar»…), las MT («TM …») y las novedades'
+ ]},
+ {v:'58.12',t:'Pokédex al instante',s:'prev',l:[
   '📖 El cartel «Cargando Pokédex…» sale en cuanto tocas el botón de la Pokédex'
  ]},
  {v:'58.11',t:'Sin destellos del Centro',s:'prev',l:[
@@ -25636,7 +25639,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
    if(!L.length){toast('🧬 Ningún Pokémon de la Caja puede evolucionar ahora mismo');return}
    /* v58.0: eliges quién evoluciona (toca para quitar/poner) y «➕ Más» enseña a todos los que no caben */
    const sel=new Set(L.map((_,i)=>i)),chip=(m,i)=>`<button type="button" class="evc on${i>=30?' evx':''}" data-ev="${i}"${i>=30?' hidden':''}><img src="${mini(m.id,m.sh)}" alt="" loading="lazy">${nm(m)}<em>✓</em></button>`;
-   if(p)p.style.visibility='hidden';let k;try{const pr=ask('🧬 Evolucionar',`<small>${L.length} Pokémon de la Caja pueden evolucionar por nivel. Toca a los que <b>no</b> quieras evolucionar. Los que lleven Piedra Eterna no se tocan.</small><div class="evtl"><button type="button" data-es="all">✅ Todos</button><button type="button" data-es="none">⬜ Ninguno</button><span class="evn">${L.length} elegidos</span></div><div class="evall evsel">${L.map(chip).join('')}${L.length>30?`<button type="button" class="evmore">➕ Más (${L.length-30})</button>`:''}</div>`,['🧬 Evolucionar a los elegidos','Cancelar']);
+   if(p)p.style.visibility='hidden';let k;try{const pr=ask('🧬 Evolucionar',`<small>${L.length} Pokémon de la Caja pueden evolucionar por nivel.</small><br><small>Toca a los que no quieras evolucionar. Los que lleven Piedra Eterna no se tocan.</small><div class="evtl"><button type="button" data-es="all">✅ Todos</button><button type="button" data-es="none">⬜ Ninguno</button><span class="evn">${L.length} elegidos</span></div><div class="evall evsel">${L.map(chip).join('')}${L.length>30?`<button type="button" class="evmore">➕ Más (${L.length-30})</button>`:''}</div>`,['🧬 Evolucionar a los elegidos','Cancelar']);
     const MD=D.getElementById('mod'),cnt=()=>{const n=MD.querySelector('.evn');if(n)n.textContent=sel.size+' elegido'+(sel.size==1?'':'s');const g=MD.querySelector('[data-i="0"]');if(g)g.disabled=!sel.size};
     const box2=MD.querySelector('.evsel');if(box2)box2.onclick=e=>{const mo=e.target.closest('.evmore');if(mo){box2.querySelectorAll('.evx').forEach(x=>x.hidden=false);mo.remove();box2.classList.add('evopen');return}const c=e.target.closest('[data-ev]');if(!c)return;const i=+c.dataset.ev;if(sel.has(i))sel.delete(i);else sel.add(i);c.classList.toggle('on',sel.has(i));cnt()};
     const tl=MD.querySelector('.evtl');if(tl)tl.onclick=e=>{const x=e.target.closest('[data-es]');if(!x)return;const all=x.dataset.es==='all';sel.clear();if(all)L.forEach((_,i)=>sel.add(i));MD.querySelectorAll('[data-ev]').forEach(c=>c.classList.toggle('on',all));cnt()};
@@ -27522,6 +27525,8 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
  function tr(s,depth){if(!s)return null;const n=norm(s);if(n.length<2)return null;if(CACHE.has(n))return CACHE.get(n);let out=DICT.get(n)||null;
   const d=depth|0;
   if(!out){for(const [re,to] of FIX){if(re.test(n)){out=n.replace(re,to);break}}}
+  if(!out&&d<3&&/^✨ ./.test(n)){const t=tr(n.slice(2),d+1);if(t)out='✨ '+t}
+  if(!out&&d<3){const mt=n.match(/^MT (.+?)( info)?$/);if(mt){const t=tr(mt[1],d+1);out='TM '+(t||mt[1])+(mt[2]||'')}}
   if(!out&&d<3){for(const [re,v,key,suf] of PATS){if(key&&!n.includes(key))continue;const m=re.exec(n);if(!m)continue;let i=0;out=v.replace(/\{-?\}/g,tk=>{const k=i++,c=m[k+1]||'';if(tk==='{-}')return '';
      if(suf[k]&&/^[a-zñ]{1,2}$/.test(c))return /s$/.test(c)?'s':'';
      const t=c.trim()&&/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]{2}/.test(c)?tr(c,d+1):null;return t||c});break}}
@@ -28039,7 +28044,7 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
    if(i===0){await rename();continue}i--;
    if(L.length>1){if(i===0){await remove();continue}i--}
    return}}
- const prompt2=(t,def)=>new Promise(res=>{const v=window.prompt(t,def||'');res(v==null?null:String(v).trim().slice(0,24))});
+ const prompt2=(t,def)=>new Promise(res=>{const v=window.prompt(window.__tr?__tr(t):t,def||'');res(v==null?null:String(v).trim().slice(0,24))});
  async function create(){const L=PR.list();const used=new Set(L.map(x=>x.n));const sug=PRESET.filter(n=>!used.has(n));
   const j=await ask('➕ Nuevo archivo','<small>Elige un nombre. Empezarás desde cero en ese archivo (tus otros archivos no se tocan).</small>',[...sug.slice(0,4),'✏️ Otro nombre…','Cancelar']);
   let n=null;if(j>=0&&j<Math.min(4,sug.length))n=sug[j];else if(j===Math.min(4,sug.length))n=await prompt2('Nombre del archivo nuevo','Archivo '+(L.length+1));if(!n)return;
@@ -28128,7 +28133,7 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
   const fc=filt(CL),fb=filt(BL);
   O.querySelector('#c2gc').innerHTML=fc.length?fc.map(d=>card(d,'chest')).join(''):`<p class="c2e">${CL.length?'Nada con este filtro':'El baúl está vacío. Toca algo de tu mochila para guardarlo.'}</p>`;
   O.querySelector('#c2gb').innerHTML=fb.length?fb.map(d=>card(d,'bag')).join(''):`<p class="c2e">${BL.length?'Nada con este filtro':'Tu mochila está vacía'}</p>`;
-  O.querySelector('#c2cn').textContent=CL.length+' tipos';O.querySelector('#c2bn').textContent=BL.length+' tipos';
+  O.querySelector('#c2cn').textContent=CL.length+(CL.length===1?' tipo':' tipos');O.querySelector('#c2bn').textContent=BL.length+(BL.length===1?' tipo':' tipos');
   O.classList.toggle('sbag',side==='bag');O.querySelectorAll('.c2seg [data-side]').forEach(b=>b.classList.toggle('on',b.dataset.side===side));
   detail(CL,BL);foot(c,fc,fb)}
  function detail(CL,BL){const el=O.querySelector('#c2d');const d=sel&&(sel.side==='chest'?CL:BL).find(x=>x.id===sel.id);if(!d){sel=null;el.className='c2d';el.innerHTML='<small>Toca un objeto para verlo y moverlo. ⭐ marca tus favoritos para tenerlos siempre arriba.</small>';return}
@@ -28149,10 +28154,10 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
   const a=t.closest('[data-a]');if(!a)return;const A=a.dataset.a,c=box();
   if(A==='mv'&&sel){const i=O.querySelector('#c2qn'),n=i?Math.max(1,Math.min(+i.max,Math.floor(+i.value)||1)):1;const el=O.querySelector(`.c2s.on`);move(sel.side,sel.id,n,el);return draw()}
   if(A==='fav'&&sel){const F=favs(),k=F.indexOf(sel.id);if(k>=0)F.splice(k,1);else F.push(sel.id);try{saveRun()}catch(_){}return draw()}
-  if(A==='dep'||A==='wd'){const L=filt(A==='dep'?C.bagList():C.chestList(c));const ok=await ask(A==='dep'?'⬆ Guardar en el baúl':'⬇ Sacar a la mochila',`<small>${L.length} tipo${L.length>1?'s':''} de ${(TABS.find(x=>x[0]===tab)||TABS[0])[1].toLowerCase()}${q?' que coinciden con «'+esc(q)+'»':''}. ${A==='dep'?'Se guarda hasta llenar el baúl.':'Los amuletos y reliquias solo salen si tienes ranuras libres.'}</small>`,['Sí','Cancelar']);if(ok!==0)return;
+  if(A==='dep'||A==='wd'){const L=filt(A==='dep'?C.bagList():C.chestList(c));const ok=await ask(A==='dep'?'⬆ Guardar en el baúl':'⬇ Sacar a la mochila',`<small>📦 ${L.length} × ${(TABS.find(x=>x[0]===tab)||TABS[0])[1]}${q?' · 🔍 «'+esc(q)+'»':''}</small><br><small>${A==='dep'?'Se guarda hasta llenar el baúl.':'Los amuletos y reliquias solo salen si tienes ranuras libres.'}</small>`,['Sí','Cancelar']);if(ok!==0)return;
    let m=0;for(const d of L){if(move(A==='dep'?'bag':'chest',d.id,d.c,null))m++}try{toast(`📦 ${m} tipo${m===1?'':'s'} movido${m===1?'':'s'}`)}catch(_){}sel=null;return draw()}
   if(A==='up'){const lv=c.up|0,nx=UP[lv];if(!nx)return;if((R.money|0)<nx[0]&&!(typeof CHT==='object'&&CHT.money))return toast('No tienes suficientes Pokémonedas');
-   const ok=await ask('🔨 Ampliar el baúl',`<small>${nx[1]}: pasa de ${C.cap(c)} a ${C.cap(c)+18} huecos por ${nx[0].toLocaleString('es')} Pokémonedas.</small>`,['🔨 Ampliar','Cancelar']);if(ok!==0)return;
+   const ok=await ask('🔨 Ampliar el baúl',`<small>${nx[1]}</small><br><small>${C.cap(c)} → ${C.cap(c)+18} · ${typeof IC==='object'&&IC.coin||'💰'} ${nx[0].toLocaleString('es')}</small>`,['🔨 Ampliar','Cancelar']);if(ok!==0)return;
    if(!(typeof CHT==='object'&&CHT.money))R.money-=nx[0];c.up=lv+1;try{saveRun()}catch(_){}O.classList.remove('upfx');void O.offsetWidth;O.classList.add('upfx');try{beep(523,.1,'triangle');setTimeout(()=>beep(784,.12,'triangle'),120);setTimeout(()=>beep(1046,.18,'triangle'),240)}catch(_){}try{toast('🔨 ¡'+nx[1]+'! Ahora caben '+C.cap(c)+' cosas')}catch(_){}return draw()}}
  function close(){if(!O)return;O.classList.add('closing');setTimeout(()=>{if(O){O.classList.remove('on','closing')}},260);sel=null;try{saveRun()}catch(e){}}
  const _oc=window.openChest;
@@ -28208,7 +28213,7 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
     <div class="dcc"><small>🏆 Logros</small><b>${achR}/${achT}</b><em>reclamados</em><i style="--p:${achT?Math.min(100,achR/achT*100).toFixed(1):0}%"></i></div>
     <div class="dcc"><small>💰 Pokémonedas</small><b>${nf(r&&r.money)}</b><em>en esta aventura</em></div>
     <div class="dcc"><small>💾 Ranuras</small><b>${slots}/3</b><em>ocupadas</em></div></div>
-   <div class="dcs"><div class="dcsh"><b>📦 Almacenamiento de este archivo</b><small>${kb(used)} de ~${kb(LIM)}</small></div><div class="dcbar"><i class="${pc>85?'hi':''}" style="width:${pc.toFixed(1)}%"></i></div>
+   <div class="dcs"><div class="dcsh"><b>📦 Almacenamiento de este archivo</b><small>${kb(used)} / ~${kb(LIM)}</small></div><div class="dcbar"><i class="${pc>85?'hi':''}" style="width:${pc.toFixed(1)}%"></i></div>
     <div class="dcl">${CATS.filter(c=>o[c[0]]).sort((a,b)=>o[b[0]]-o[a[0]]).map(c=>`<div><span>${c[1]}</span><u><i style="width:${Math.max(2,o[c[0]]/used*100).toFixed(1)}%"></i></u><em>${kb(o[c[0]])}</em></div>`).join('')}</div>
     <div class="dcb"><button type="button" data-d="clean">🧹 Liberar espacio</button></div></div>
    <div class="dcs"><div class="dcsh"><b>📸 Puntos de restauración</b><small>automáticos cada 10 min · se guardan ${RPN}</small></div>
@@ -28220,10 +28225,10 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
   if(a==='prof'&&window.openProfiles)return openProfiles();
   if(a==='exp'){const x=D.querySelector('#bkpcard [data-a="f"]');if(x)x.click();setTimeout(mount,1500);return}
   if(a==='snap'){try{saveRun()}catch(_){}const ok=mkRP(true);try{toast(ok?'📸 Punto de restauración creado':'No se pudo crear (¿hay una aventura en curso y espacio libre?)')}catch(_){}return mount()}
-  if(a==='rs'){const x=rps()[+b.dataset.i];if(!x)return;const k=await ask('↩ Restaurar aventura',`<small>Tu aventura volverá a la <b>ronda ${x.round}</b> (${ago(x.t)}). Lo que hayas hecho después en la aventura se pierde; la Pokédex, la casa y lo demás no cambian.</small>`,['↩ Restaurar','Cancelar']);if(k!==0)return;
+  if(a==='rs'){const x=rps()[+b.dataset.i];if(!x)return;const k=await ask('↩ Restaurar aventura',`<small>↩ Ronda ${x.round} · ${ago(x.t)}</small><br><small>Lo que hayas hecho después en la aventura se pierde; la Pokédex, la casa y lo demás no cambian.</small>`,['↩ Restaurar','Cancelar']);if(k!==0)return;
    try{mkRP(true)}catch(_){}try{localStorage.setItem('pa_run',x.run);toast('↩ Aventura restaurada · reiniciando…');setTimeout(()=>location.reload(),700)}catch(err){toast('No se pudo restaurar: falta espacio')}return}
   if(a==='clean'){let cb=0;try{const c=await caches.open('pr-img-v1');cb=(await c.keys()).length}catch(_){}
-   const {o}=sizes();const k=await ask('🧹 Liberar espacio',`<small>Se borran las cachés de descargas (${kb(o.cache||0)}${cb?` y ${cb} imágenes guardadas`:''}). Tu progreso no se toca; el juego volverá a descargarlas cuando haga falta.</small>`,['🧹 Liberar','Cancelar']);if(k!==0)return;
+   const {o}=sizes();const k=await ask('🧹 Liberar espacio',`<small>🧹 ${kb(o.cache||0)}${cb?` · 🖼️ ${cb}`:''}</small><br><small>Se borran las cachés de descargas. Tu progreso no se toca; el juego volverá a descargarlas cuando haga falta.</small>`,['🧹 Liberar','Cancelar']);if(k!==0)return;
    ['pa_bio_types_v1','pokerogue_names_v1','pa_stage1'].forEach(x=>{try{localStorage.removeItem(x)}catch(_){}});try{await caches.delete('pr-img-v1')}catch(_){}try{toast('🧹 Espacio liberado')}catch(_){}return mount()}}
  const _rs=window.renderSet;if(typeof _rs==='function')window.renderSet=function(){const r=_rs.apply(this,arguments);try{mount()}catch(e){}return r};
  D.addEventListener('click',e=>{if(e.target.closest('#set .tab'))setTimeout(mount,30)},true);
