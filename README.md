@@ -1,3 +1,3 @@
 # PokeRogue
 
-Juego web (versión v58.28). Se juega en https://whis5795.github.io/PokeRogue/
+Juego web (versión v58.29). Se juega en https://whis5795.github.io/PokeRogue/

@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.28</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.29</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.28',t:'Acciones compactas',s:'cur',l:[
+ {v:'58.29',t:'Truco de Pokédex completa',s:'cur',l:[
+  '📖 Nuevo truco «Pokédex completa» en el Panel de trucos (Depuración y pruebas): marca todos los Pokémon como vistos y capturados, también con su shiny si quieres. Tocándolo otra vez vuelves a tu Pokédex de antes'
+ ]},
+ {v:'58.28',t:'Acciones compactas',s:'prev',l:[
   '🧩 Caja: el menú «Acciones» ocupa menos: sus botones son más pequeños y van en filas de 3'
  ]},
  {v:'58.27',t:'Formas nuevas en las guías',s:'prev',l:[
@@ -12940,7 +12943,20 @@ const T=[
    if(i==0){try{await navigator.clipboard.writeText(t);toast('Copiado')}catch(e){toast('No se pudo copiar')}}else if(i==1){ERR.length=0;toast('Registro vacío')}}],
  ['📋','Copiar partida y versión','Copia la versión, el navegador y tu partida en JSON',async()=>{
    const v=(Q('#ver')||{}).textContent||'?';const t=JSON.stringify({version:v,navegador:navigator.userAgent,pantalla:innerWidth+'×'+innerHeight,ajustes:S,partida:live()?R:null,errores:ERR.slice(-15)});
-   try{await navigator.clipboard.writeText(t);toast(`Copiado (${(t.length/1024).toFixed(0)} KB)`)}catch(e){await ask('Copia manual',`<textarea readonly style="width:100%;height:200px;font:10px monospace">${esc(t)}</textarea>`,['Cerrar'])}}]];
+   try{await navigator.clipboard.writeText(t);toast(`Copiado (${(t.length/1024).toFixed(0)} KB)`)}catch(e){await ask('Copia manual',`<textarea readonly style="width:100%;height:200px;font:10px monospace">${esc(t)}</textarea>`,['Cerrar'])}}],
+ ['📖','Pokédex completa','Marca todos los Pokémon como vistos y capturados (otra vez para devolver tu Pokédex de antes)',async()=>{
+   const K='pokerogue_pokedex_v1',BK='pa_dex_cheat_bak';let bak=null;try{bak=localStorage.getItem(BK)}catch(e){}
+   if(bak!=null){const i=await ask('Pokédex completa','<small>La Pokédex ya está completa con el truco. ¿Quieres volver a tu Pokédex de antes? (Lo que capturaste mientras tanto también se quita.)</small>',['↩ Devolver mi Pokédex','Dejarla completa']);
+    if(i!==0)return;try{localStorage.setItem(K,bak);localStorage.removeItem(BK)}catch(e){}toast('📖 Pokédex devuelta. Recargando…');setTimeout(()=>location.reload(),600);return}
+   const i=await ask('Pokédex completa','<small>Se marcarán todos los Pokémon de la Pokédex (formas regionales y Paradoja incluidos) como vistos y capturados en este archivo. Puedes deshacerlo tocando otra vez este truco.</small>',['📖 Todos capturados','✨ Todos capturados y shiny','Cancelar']);
+   if(i!==0&&i!==1)return;
+   try{if((!DEX||!DEX.length)&&typeof loadDex=='function')await loadDex()}catch(e){}
+   try{window.__regFix&&__regFix()}catch(e){}
+   const ids=new Set();for(let n=1;n<=1025;n++)ids.add(n);(DEX||[]).forEach(d=>{if(d&&d.id>0)ids.add(+d.id)});(window.REG||[]).forEach(x=>ids.add(+x.id));
+   try{localStorage.setItem(BK,localStorage.getItem(K)||'{}')}catch(e){}
+   try{if(typeof dexSync=='function')dexSync()}catch(e){}
+   ids.forEach(id=>{try{dexMark({id,sh:i===1?1:0})}catch(e){}});
+   toast(`📖 Pokédex completa: ${ids.size} Pokémon${i===1?' (también shiny)':''}`)},()=>{try{return localStorage.getItem('pa_dex_cheat_bak')!=null}catch(e){return false}}]];
 /* ---- movimientos personalizados del «Rival a medida» ---- */
 const _mk=window.mk;
 window.mk=async function(e,L){const m=await _mk.apply(this,arguments);try{if(window.__dbgMoves&&R&&!R.team.includes(m)){m.moves=window.__dbgMoves.map(k=>cm(MX.mkMove(k)));window.__dbgMoves=null}}catch(er){}return m};
