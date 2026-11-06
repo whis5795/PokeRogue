@@ -57,6 +57,33 @@
   D.querySelectorAll('style').forEach(fixStyle)}
 })();
 </script>
+<script id="v58prof">
+/* ===== v58.0: ARCHIVOS DE GUARDADO individuales =====
+   Cada archivo (Principal, Solo shinys, Hardcore…) guarda TODO por separado: partida, ranuras, Pokédex, guías de bioma,
+   regalo de la enfermera, colección, logros, casa, amigos, nube… El archivo 1 usa las claves de siempre (no se pierde nada);
+   los demás guardan con el prefijo «pfN:». Solo se comparten los ajustes y las cachés de descargas. */
+(function(){var W=window,L;try{L=W.localStorage}catch(e){return}if(!L||W.__memStorage||typeof Storage=='undefined'||!(L instanceof Storage))return;
+ var P=Storage.prototype,G=P.getItem,S=P.setItem,RM=P.removeItem,K=P.key,LD=Object.getOwnPropertyDescriptor(P,'length'),CL=P.clear;if(!LD||!LD.get)return;
+ var raw={get:function(k){return G.call(L,k)},set:function(k,v){return S.call(L,k,v)},del:function(k){return RM.call(L,k)},len:function(){return LD.get.call(L)},key:function(i){return K.call(L,i)}};
+ var cur=parseInt(raw.get('pa_prof'),10)||1;if(cur<1||cur>9)cur=1;
+ var SHARED=/^(pa_prof|pa_profs|pa_s|pa_bio_types_v1|pokerogue_names_v1|pa_stage1|__t\d+)$/,OTHER=/^pf\d+:/,PF='pf'+cur+':';
+ var map=function(k){k=String(k);return(cur===1||SHARED.test(k))?k:PF+k};
+ var vis=function(){var o=[],n=raw.len(),i,k;for(i=0;i<n;i++){k=raw.key(i);if(k==null)continue;if(cur===1){if(!OTHER.test(k))o.push(k)}else if(k.indexOf(PF)===0)o.push(k.slice(PF.length));else if(SHARED.test(k))o.push(k)}return o};
+ P.getItem=function(k){return this===L?G.call(L,map(k)):G.apply(this,arguments)};
+ P.setItem=function(k,v){return this===L?S.call(L,map(k),v):S.apply(this,arguments)};
+ P.removeItem=function(k){return this===L?RM.call(L,map(k)):RM.apply(this,arguments)};
+ P.key=function(i){if(this!==L)return K.apply(this,arguments);var v=vis();return i>=0&&i<v.length?v[i]:null};
+ try{Object.defineProperty(P,'length',{configurable:true,enumerable:true,get:function(){return this===L?vis().length:LD.get.call(this)}})}catch(e){}
+ P.clear=function(){if(this!==L)return CL.apply(this,arguments);vis().forEach(function(k){RM.call(L,map(k))})};
+ /* lista de archivos */
+ var list=function(){var a;try{a=JSON.parse(raw.get('pa_profs')||'null')}catch(e){a=null}if(!a||!a.length)a=[{id:1,n:'Principal'}];if(!a.some(function(x){return x.id===1}))a.unshift({id:1,n:'Principal'});return a};
+ /* lee una clave de OTRO archivo sin cambiar de archivo */
+ var rawOf=function(id,k){return raw.get((id===1||SHARED.test(k))?k:'pf'+id+':'+k)};
+ W.__PROF={cur:cur,list:list,save:function(a){raw.set('pa_profs',JSON.stringify(a))},rawOf:rawOf,
+  keysOf:function(id){var o=[],n=raw.len(),i,k;for(i=0;i<n;i++){k=raw.key(i);if(k==null)continue;if(id===1){if(!OTHER.test(k)&&!SHARED.test(k))o.push(k)}else if(k.indexOf('pf'+id+':')===0)o.push(k)}return o},
+  del:function(k){raw.del(k)},use:function(id){raw.set('pa_prof',String(id))},name:function(){var a=list(),i;for(i=0;i<a.length;i++)if(a[i].id===cur)return a[i].n;return'Archivo '+cur}};
+})();
+</script>
 <script id="iosboot">
 /* Arranque seguro en iPhone/Safari: aviso si algo falla al cargar + audio y gestos */
 (function(){var errs=window.__errs=[],booted=false;window.__booted=function(){booted=true;var b=document.getElementById("bootErr");if(b)b.remove()};
@@ -312,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v57.4</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.0</div>
 </section>
 
 <section id="team" class="scr">
@@ -592,7 +619,7 @@ function setMon(s){
   const m=act(s);
   $('#'+s+'P').innerHTML=`<b>${nm(m)}</b>${tgb(m.id)}<small> Nv.${m.lvl}</small><span class="sb" id="${s}St"></span><div class="ty">${m.types.map(t=>`<i style="background:${COL[t]}">${ES[t]}</i>`).join('')}${m.teraOn?`<i class="tc">${TCI}${ES[m.tera]}</i>`:''}${m.megaOn?`<i class="tc">⚡MEGA</i>`:''}</div><div class="hb"><div id="${s}B"></div></div><small id="${s}H"></small>${s=='e'&&B.tr&&B.c&&B.c.n?`<div class="tb" id="eTb"><span class="bls">${Array.from({length:6},()=>`<i class="bl n">${BALL}</i>`).join('')}</span><em>${B.c.n}</em></div>`:''}`;
   if(s=='e'&&m.sh&&!m._shs){m._shs=1;try{ach('shs')}catch(e){}}
-  bar(s);const i=$('#'+s+'S img');const u=s=='p'?back(m):front(m);i.className=/\/showdown\//.test(u)?'sd3':/\/other\/home\//.test(u)?(s=='p'?'sdh sdb':'sdh'):'';i.style.width='';const fit3=()=>{if(!i.classList.contains('sd3')||!i.naturalWidth)return;i.style.width='';const W=parseFloat(getComputedStyle(i).width)||160;/* los modelos tienen su tamaño real: un Pikachu se ve más pequeño que un Charizard */i.style.width=Math.round(Math.max(W*.45,Math.min(W*1.5,i.naturalWidth*W/105)))+'px'};i.onload=fit3;i.onerror=()=>{i.onerror=null;i.src=art(sprId(m),m.sh);i.className='art'};i.src=u;if(i.complete)fit3();setTimeout(fit3,60);
+  bar(s);const i=$('#'+s+'S img');const u=s=='p'?back(m):front(m);/* v58.0: si es la misma imagen no se vuelve a cargar ni a redimensionar (quitaba parpadeos en cada turno) */if(i.dataset.want===u&&i.getAttribute('src')){el(s).classList.toggle('tera',m.teraOn);el(s).classList.toggle('idle',S.anim);return}i.dataset.want=u;i.className=/\/showdown\//.test(u)?'sd3':/\/other\/home\//.test(u)?(s=='p'?'sdh sdb':'sdh'):'';i.style.width='';const fit3=()=>{if(!i.classList.contains('sd3')||!i.naturalWidth)return;i.style.width='';const W=parseFloat(getComputedStyle(i).width)||160;/* los modelos tienen su tamaño real: un Pikachu se ve más pequeño que un Charizard */i.style.width=Math.round(Math.max(W*.45,Math.min(W*1.5,i.naturalWidth*W/105)))+'px'};i.onload=fit3;i.onerror=()=>{i.onerror=null;i.src=art(sprId(m),m.sh);i.className='art'};i.src=u;if(i.complete)fit3();setTimeout(fit3,60);
   el(s).classList.toggle('tera',m.teraOn);el(s).classList.toggle('idle',S.anim)}
 function bar(s){stb(s);if(s=='e')updBalls();const m=act(s),p=m.hp/m.max*100,b=$('#'+s+'B');b.style.width=p+'%';b.style.background=p>50?'#4ade80':p>20?'#facc15':'#ef4444';$('#'+s+'H').textContent=m.hp+'/'+m.max}
 function ctr(e){const a=arena.getBoundingClientRect(),r=e.getBoundingClientRect();return[r.left-a.left+r.width/2,r.top-a.top+r.height/2]}
@@ -8676,7 +8703,29 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'57.4',t:'Shedinja con 1 PS',s:'cur',l:[
+ {v:'58.0',t:'Archivos de guardado y Paradoja nuevos',s:'cur',l:[
+  '📁 Archivos de guardado: crea hasta 6 archivos independientes (Principal, Solo shinys, Hardcore…). Cada uno tiene su aventura, ranuras, Pokédex, guías de bioma, regalo de la enfermera, colección, logros, casa, amigos y nube. Tus datos de siempre son el archivo «Principal». Botón «📁 Archivo» en el menú principal y en Ajustes',
+  '👥 Amigos: abajo ves con qué archivo estás jugando e interactuando; tócalo para cambiar de archivo',
+  '⚙️ 21 Pokémon Paradoja nuevos: Iron Arms, Iron Screens, Iron Justice (con su Modo Combate), Iron Plasma, Iron Gauntlet, Iron Kicker, Iron Abyss, Iron Armor, Iron Voice, Iron Blaster, Iron Hunter, Iron Juggernaut, Iron Current, Iron Crystal, Iron Force, Iron Dancer, Iron Trapper, Iron Hive, Iron Jaws, Iron Clone e Iron Vanish. Salen en las incursiones y están en la Pokédex',
+  '⚡ Mega Iron Jugulis',
+  '❄️ Formas de Ondu: Larvitar (Hielo/Roca), Pupitar y Tyranitar (Hielo/Acero), Abra, Kadabra y Alakazam (Siniestro) y Gastly, Haunter y Gengar (Fantasma/Hielo). Salen en los biomas. Con Mega Tyranitar de Ondu, Mega Alakazam de Ondu (Siniestro/Lucha) y Gengar de Ondu con Mega, Gigamax y Rey Invocado',
+  '🎨 Ilustraciones de @im_Zzzeldo (Onduregion) y @_goldmills_, recortadas y sin textos',
+  '🧬 Evolucionar a todos (Caja): toca a los que NO quieras evolucionar, con «Todos / Ninguno», y «➕ Más» enseña a todos los que no cabían',
+  '💎 Evoluciones que faltaban: Brazal Galanuez (Slowbro de Galar), Corona Galanuez (Slowking de Galar) y Piedras de Alola, Galar, Hisui y Ondu (Pikachu → Raichu de Alola, Quilava → Typhlosion de Hisui, Koffing → Weezing de Galar, Abra → Kadabra de Ondu…)',
+  '🌟 Las formas regionales también siguen la regla de los biomas: sus evoluciones solo salen como Alfa del grupo',
+  '🏅 Guía de cada bioma: premios al capturar el 25 %, 50 %, 75 % y 100 % de sus Pokémon, y nueva categoría «🎯 Restantes» con los que te faltan',
+  '🌦️ El clima del mapa va por tiempo real (un episodio cada 5-8 minutos), ya no por rondas. El clima extremo también',
+  '🏆 Los premios de los logros dan un 35 % menos',
+  '🔄 Arreglado: el aviso «Nueva versión · Toca para actualizar» salía aunque no hubiera nada nuevo',
+  '💔 Arreglado: el aviso «Tu equipo está débil» (y otras ventanas) salía por debajo del bioma y no se podía tocar',
+  '✕ El aviso para deshacer una liberación o una venta tiene su ✕ para cerrarlo',
+  '🏦 Banco: la explicación solo sale la primera vez que entras en cada partida',
+  '✨ Menos parpadeos: las ventanas de varios pasos (recordar movimientos, aprender/olvidar movimientos…) ya no se cierran y abren entre paso y paso, y el Pokémon en combate no se recarga en cada turno',
+  '⚔️⚔️ Combate doble de la ruta: tus dos Pokémon comparten la mochila, usar un objeto ya no gasta el turno y los objetos ya no se descontaban dos veces',
+  '🗺️ Transición suave al cambiar entre Biomas, Pueblo y Ruta y al salir de un bioma',
+  '👆 Toques más fluidos en la mochila, los biomas y la Pokédex (arrastrar el bioma, buscar sin tirones, sin retraso al tocar)'
+ ]},
+ {v:'57.4',t:'Shedinja con 1 PS',s:'prev',l:[
   '👻 Shedinja ahora tiene siempre 1 PS, como en los juegos: gracias a Superguarda solo le dañan los ataques supereficaces, pero cualquiera de ellos (o el veneno, la quemadura, el clima…) lo debilita. Los Shedinja que ya tenías también pasan a 1 PS'
  ]},
  {v:'57.3',t:'Juego en inglés',s:'prev',l:[
@@ -27491,6 +27540,19 @@ button,.act,.cd,.pxc,.zqcd,.bzp,.sg>*,[data-i],[data-f],[data-ev]{touch-action:m
 #bzv .bz-vp{touch-action:none}
 #bzv .bz-w{will-change:transform}
 #pdx .pxc:active,#bdx .zqcd:active,.bgw .sg>*:active{transform:scale(.96);transition:transform .08s}
+#profBtn{font-size:13px!important;letter-spacing:.5px}
+#profBtn b{color:#fde68a}
+#mod .pf-l{display:flex;flex-direction:column;gap:6px;margin:10px 0 4px;text-align:left}
+#mod .pf-r{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:#ffffff0d;border:1.5px solid #ffffff22}
+#mod .pf-r.on{border-color:#fde047;background:#fde04714}
+#mod .pf-i{font-size:22px}
+#mod .pf-t{flex:1;min-width:0}
+#mod .pf-t b{display:block;font:800 14px system-ui}
+#mod .pf-t small{display:block;font:600 11px system-ui;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#mod .pf-r em{font-style:normal;font:900 10px system-ui;padding:3px 7px;border-radius:8px;background:#fde047;color:#422006}
+#frprof{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:2147482500;padding:9px 14px;border-radius:999px;border:2px solid #fde68a;background:#2e1065f2;color:#fff;font:800 12.5px system-ui;box-shadow:0 8px 22px #000a;max-width:calc(100vw - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#frprof b{color:#fde68a}
+#setprof{width:100%;margin:0 0 8px}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Ondu (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -27575,5 +27637,46 @@ button,.act,.cd,.pxc,.zqcd,.bzp,.sg>*,[data-i],[data-f],[data-ev]{touch-action:m
  if(!wrap()){let n=0;const t=setInterval(()=>{if(wrap()||++n>40)clearInterval(t)},500)}
 })();
 
+
+/* ---------- v58.0: ventana de ARCHIVOS DE GUARDADO (menú principal, Ajustes y Amigos) ---------- */
+(()=>{const D=document,PR=window.__PROF;if(!PR)return;const MAX=6;
+ const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const J=(id,k)=>{try{return JSON.parse(PR.rawOf(id,k)||'null')}catch(e){return null}};
+ const sum=id=>{const r=J(id,'pa_run'),d=J(id,'pokerogue_pokedex_v1'),c=d&&d.c?Object.keys(d.c).length:0;
+  const run=r&&r.team&&r.team.length&&!r.done?`🗺️ Ronda ${r.round|0} · ${r.team.length} en el equipo`:'Sin aventura en curso';return`${run} · 🔴 ${c} capturados`};
+ const PRESET=['Principal','Solo shinys','Hardcore','Monotipo','Nuzlocke','Pruebas'];
+ const sw=id=>{if(id===PR.cur)return;try{if(typeof saveRun==='function')saveRun()}catch(e){}PR.use(id);try{toast('📁 Cambiando de archivo…')}catch(e){}setTimeout(()=>location.reload(),250)};
+ async function open(){for(;;){const L=PR.list();
+   const rows=L.map(x=>`<div class="pf-r${x.id===PR.cur?' on':''}"><div class="pf-i">${x.id===PR.cur?'📂':'📁'}</div><div class="pf-t"><b>${esc(x.n)}</b><small>${esc(sum(x.id))}</small></div>${x.id===PR.cur?'<em>En uso</em>':''}</div>`).join('');
+   const opts=[...L.filter(x=>x.id!==PR.cur).map(x=>'▶️ Jugar con «'+esc(x.n)+'»'),...(L.length<MAX?['➕ Nuevo archivo']:[]),'✏️ Renombrar «'+esc(PR.name())+'»',...(L.length>1?['🗑️ Borrar un archivo']:[]),'Cerrar'];
+   const others=L.filter(x=>x.id!==PR.cur);
+   const k=await ask('📁 Archivos de guardado',`<small>Cada archivo es independiente: su aventura, ranuras, Pokédex, guías de bioma, regalos, colección, logros, casa y amigos. Los ajustes se comparten.</small><div class="pf-l">${rows}</div>`,opts);
+   let i=k;if(i<0)return;
+   if(i<others.length){sw(others[i].id);return}i-=others.length;
+   if(L.length<MAX){if(i===0){await create();continue}i--}
+   if(i===0){await rename();continue}i--;
+   if(L.length>1){if(i===0){await remove();continue}i--}
+   return}}
+ const prompt2=(t,def)=>new Promise(res=>{const v=window.prompt(t,def||'');res(v==null?null:String(v).trim().slice(0,24))});
+ async function create(){const L=PR.list();const used=new Set(L.map(x=>x.n));const sug=PRESET.filter(n=>!used.has(n));
+  const j=await ask('➕ Nuevo archivo','<small>Elige un nombre. Empezarás desde cero en ese archivo (tus otros archivos no se tocan).</small>',[...sug.slice(0,4),'✏️ Otro nombre…','Cancelar']);
+  let n=null;if(j>=0&&j<Math.min(4,sug.length))n=sug[j];else if(j===Math.min(4,sug.length))n=await prompt2('Nombre del archivo nuevo','Archivo '+(L.length+1));if(!n)return;
+  let id=2;while(L.some(x=>x.id===id))id++;if(id>9)return toast('No caben más archivos');L.push({id,n,t:Date.now()});PR.save(L);
+  const g=await ask('📁 Archivo creado',`<small>«${esc(n)}» está listo.</small>`,['▶️ Jugar con él ahora','Más tarde']);if(g===0)sw(id)}
+ async function rename(){const L=PR.list(),x=L.find(y=>y.id===PR.cur);if(!x)return;const n=await prompt2('Nuevo nombre para este archivo',x.n);if(!n)return;x.n=n;PR.save(L);paint()}
+ async function remove(){const L=PR.list().filter(x=>x.id!==PR.cur&&x.id!==1);if(!L.length){await ask('🗑️ Borrar archivo','<small>El archivo Principal no se puede borrar, y el que estás usando tampoco: cambia a otro primero.</small>',['Vale']);return}
+  const j=await ask('🗑️ ¿Qué archivo borras?','<small>Se borra todo lo de ese archivo y no se puede deshacer.</small>',[...L.map(x=>'🗑️ '+esc(x.n)),'Cancelar']);if(j<0||j>=L.length)return;const x=L[j];
+  const c=await ask('⚠️ Borrar «'+esc(x.n)+'»',`<small>${esc(sum(x.id))}</small><br><small>¿Seguro? Esto no se puede deshacer.</small>`,['🗑️ Sí, borrar','Cancelar']);if(c!==0)return;
+  PR.keysOf(x.id).forEach(k=>PR.del(k));PR.save(PR.list().filter(y=>y.id!==x.id));try{toast('🗑️ Archivo borrado')}catch(e){}}
+ window.openProfiles=open;
+ /* botón en el menú principal */
+ const paint=()=>{const mb=D.querySelector('#menu .mb');if(!mb)return;let b=D.getElementById('profBtn');if(!b){b=D.createElement('button');b.id='profBtn';b.type='button';b.onclick=open;mb.append(b)}const t=`📁 <span>Archivo: <b>${esc(PR.name())}</b></span>`;if(b.innerHTML!==t)b.innerHTML=t};paint();setTimeout(paint,1500);
+ /* en Amigos: con qué archivo juegas e interactúas */
+ const frChip=()=>{const p=D.getElementById('frp'),on=!!(p&&p.classList.contains('on'));let c=D.getElementById('frprof');
+  if(!on){if(c)c.remove();return}if(!c){c=D.createElement('button');c.id='frprof';c.type='button';c.onclick=e=>{e.stopPropagation();open()};D.body.append(c)}const t=`📁 Jugando con: <b>${esc(PR.name())}</b> ▾`;if(c.innerHTML!==t)c.innerHTML=t};
+ new MutationObserver(frChip).observe(D.body,{childList:true});setInterval(frChip,700);
+ /* en Ajustes */
+ const setRow=()=>{const st=D.getElementById('set');if(!st||D.getElementById('setprof'))return;const b=D.createElement('button');b.id='setprof';b.type='button';b.className='act';b.innerHTML='📁 Archivos de guardado';b.onclick=open;const box=st.querySelector('.box,.sbox,.sw,div');(box||st).prepend(b)};setRow();setTimeout(setRow,2000);
+})();
 </script>
 </body></html>
