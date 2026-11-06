@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.23</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.24</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.23',t:'Absorber vida proporcional',s:'cur',l:[
+ {v:'58.24',t:'Purity Update',s:'cur',l:[
+  '💠 Nuevo cartel bajo el logo: «Purity Update», con una Poké Ball de cristal con halo, destellos y tonos perla, hielo y plata'
+ ]},
+ {v:'58.23',t:'Absorber vida proporcional',s:'prev',l:[
   '💚 Megaincursiones: los movimientos que absorben vida (Gigadrenado, Puño Drenaje, Beso Drenaje…) curan según el daño que causan: un golpe normal cura un 12% de tus PS, uno supereficaz o crítico más y uno poco eficaz menos (hasta un 40%). Beso Drenaje y Ala Mortífera absorben un 50% más'
  ]},
  {v:'58.22',t:'Multiplicadores en megaincursiones',s:'prev',l:[
@@ -14975,15 +14978,16 @@ if(h&&!h.querySelector('.ptw')){const w=document.createElement('div');w.classNam
  w.innerHTML=`<span class="w1">P<span class="ob"><svg viewBox="0 0 40 40"><defs><linearGradient id="ptR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6b6b"/><stop offset="1" stop-color="#e11d48"/></linearGradient></defs><circle cx="20" cy="20" r="17" fill="#f8fafc"/><path d="M3 20a17 17 0 0 1 34 0z" fill="url(#ptR)"/><circle cx="20" cy="20" r="17" fill="none" stroke="#1a1238" stroke-width="3.4"/><path d="M3 20h12.6M24.4 20H37" stroke="#1a1238" stroke-width="3.4"/><circle cx="20" cy="20" r="4.4" fill="#f8fafc" stroke="#1a1238" stroke-width="3"/><path d="M9 12.5c2.4-3 5.6-4.6 9-5" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="2.4" stroke-linecap="round"/></svg></span>KE</span><span class="w2">ROGUE</span>`;
   const sub=h.querySelector('span.tgu');h.insertBefore(w,sub||h.firstChild)}
 const s=document.querySelector('#menu h1 span.tgu,#menu h1>span');if(!s)return;
-s.className='tgu tgl';s.setAttribute('aria-label','Lively Update');
-/* v47.6: «Lively Update» · Poké Ball que brota con hojas, destellos y colores de la isla */
-s.innerHTML=`<svg class="tgi" viewBox="0 0 56 44" aria-hidden="true"><defs><linearGradient id="lvB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cf5c4"/><stop offset="1" stop-color="#10a37f"/></linearGradient><linearGradient id="lvL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9f99d"/><stop offset="1" stop-color="#16a34a"/></linearGradient></defs>
-<g class="lvlf"><path d="M28 14C27 7 31 2.5 39 1.5c.6 7.4-3.6 12.2-11 12.5z" fill="url(#lvL)" stroke="#0b2a1f" stroke-width="2" stroke-linejoin="round"/><path d="M29 13c2.6-3.4 5-5.6 8.2-8.6" fill="none" stroke="#0b2a1f" stroke-width="1.4" stroke-linecap="round"/>
-<path d="M27 14.5C24.6 9 20.2 6.6 14.6 7.4c.4 5.8 4.6 8.6 12.4 7.1z" fill="url(#lvL)" stroke="#0b2a1f" stroke-width="2" stroke-linejoin="round"/></g>
-<circle cx="28" cy="28" r="14" fill="#f8fafc" stroke="#0b2a1f" stroke-width="2.4"/><path d="M14 28a14 14 0 0 1 28 0z" fill="url(#lvB)" stroke="#0b2a1f" stroke-width="2.4" stroke-linejoin="round"/>
-<path d="M14.2 28h27.6" stroke="#0b2a1f" stroke-width="2.6"/><circle cx="28" cy="28" r="4.6" fill="#fff" stroke="#0b2a1f" stroke-width="2.2"/><circle cx="28" cy="28" r="1.8" fill="#34d399"/>
-<path d="M19 21.5c1.4-2.2 3.4-3.4 5.6-3.8" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/>
-<path class="lvs a" d="M50 8l1.1 2.6 2.6 1.1-2.6 1.1L50 15.4l-1.1-2.6-2.6-1.1 2.6-1.1z" fill="#fde047"/><path class="lvs b" d="M7 30l.8 1.8 1.8.8-1.8.8L7 35.2l-.8-1.8-1.8-.8 1.8-.8z" fill="#a5f3fc"/><path class="lvs c" d="M47 34l.7 1.5 1.5.7-1.5.7-.7 1.5-.7-1.5-1.5-.7 1.5-.7z" fill="#fbcfe8"/></svg><span class="tgt"><b>LIVELY</b><i>UPDATE</i></span>`;
+s.className='tgu tgl tgp';s.setAttribute('aria-label','Purity Update');
+/* v58.24: «Purity Update» · Poké Ball de cristal con halo y destellos, tonos perla y hielo */
+s.innerHTML=`<svg class="tgi" viewBox="0 0 56 44" aria-hidden="true"><defs><linearGradient id="puT" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#c7e9ff"/><stop offset="1" stop-color="#8fb8ff"/></linearGradient><linearGradient id="puB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8fbff"/><stop offset="1" stop-color="#dbe6f5"/></linearGradient><radialGradient id="puG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#e0f2fe" stop-opacity=".7"/><stop offset="1" stop-color="#e0f2fe" stop-opacity="0"/></radialGradient></defs>
+<circle class="pug" cx="28" cy="23" r="21" fill="url(#puG)"/>
+<ellipse class="puh" cx="28" cy="23" rx="20" ry="5.2" fill="none" stroke="#e0f2fe" stroke-opacity=".55" stroke-width="1.1" transform="rotate(-14 28 23)"/>
+<circle cx="28" cy="23" r="14" fill="url(#puB)" stroke="#1e2a4a" stroke-width="2.2"/><path d="M14 23a14 14 0 0 1 28 0z" fill="url(#puT)" stroke="#1e2a4a" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M20 13.4L28 23l6.4-12.6M14.6 19.2L28 23l13-5.6" fill="none" stroke="#ffffff" stroke-opacity=".7" stroke-width="1"/>
+<path d="M14.2 23h27.6" stroke="#1e2a4a" stroke-width="2.4"/><circle cx="28" cy="23" r="4.6" fill="#fff" stroke="#1e2a4a" stroke-width="2"/><circle cx="28" cy="23" r="1.9" fill="#bae6fd"/>
+<path d="M18.6 16.8c1.5-2.3 3.6-3.6 6-4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+<path class="lvs a" d="M49 5l1.1 2.9 2.9 1.1-2.9 1.1L49 13l-1.1-2.9L45 9l2.9-1.1z" fill="#ffffff"/><path class="lvs b" d="M7 27l.8 2 2 .8-2 .8L7 32.6l-.8-2-2-.8 2-.8z" fill="#bae6fd"/><path class="lvs c" d="M47 33l.7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6-1.6-.7 1.6-.7z" fill="#ddd6fe"/></svg><span class="tgt"><b>PURITY</b><i>UPDATE</i></span>`;
 })();</script>
 
 <style id="tcgx">
@@ -28047,6 +28051,16 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
 #mrd .mr-mv .mr-eff.r2{background:#b91c1c}
 #mrd .mr-mv .mr-eff.r4{background:#7f1d1d}
 #mrd .mr-mv .mr-eff.imm{background:#334155;outline:1.5px solid #94a3b8}
+/* v58.24: cartel «Purity Update» · perla, hielo y plata */
+#menu h1 span.tgu.tgl.tgp{background:linear-gradient(110deg,#0000 38%,#ffffff40 50%,#0000 62%) 0 0/260% 100% no-repeat,radial-gradient(120% 150% at 18% 0%,#3b4f7d 0%,#1b2547 52%,#0b1026 100%);border-color:#dbeafe;box-shadow:inset 0 0 0 .05em #060a1c,inset 0 .1em 0 #ffffff33,0 0 .7em #bfdbfe66,0 0 1.6em #a5b4fc26}
+#menu h1 span.tgu.tgl.tgp .tgt b{background:linear-gradient(180deg,#ffffff 10%,#e0f2fe 48%,#a5b4fc 100%);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.2em;filter:drop-shadow(0 0 .14em #e0f2fe88)}
+#menu h1 span.tgu.tgl.tgp .tgt i{color:#cfe3ff}
+#menu h1 span.tgu.tgl.tgp .tgt i::before{background:linear-gradient(90deg,#0000,#e0f2fe)}#menu h1 span.tgu.tgl.tgp .tgt i::after{background:linear-gradient(90deg,#c4b5fd,#0000)}
+#menu h1 span.tgu.tgl.tgp .pug{transform-box:fill-box;transform-origin:center;animation:puGl 3.6s ease-in-out infinite}
+#menu h1 span.tgu.tgl.tgp .puh{animation:puHl 3.6s ease-in-out infinite}
+@keyframes puGl{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1.04)}}
+@keyframes puHl{0%,100%{stroke-opacity:.3}50%{stroke-opacity:.75}}
+@media(prefers-reduced-motion:reduce){#menu h1 span.tgu.tgl.tgp .pug,#menu h1 span.tgu.tgl.tgp .puh{animation:none}}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Hisui nuevas (registro regional, Megas con su ilustración y tipos) ---------- */
