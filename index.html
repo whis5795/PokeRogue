@@ -25536,8 +25536,14 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
    for(let q=0;q<sp.length;q+=12)await Promise.all(sp.slice(q,q+12).map(one));
    const L=[];for(const m of box){if(m.ev)continue;let e;try{e=pickEvo(m)}catch(_){e=null}if(e&&m.lvl>=e[0])L.push(m)}
    if(!L.length){toast('🧬 Ningún Pokémon de la Caja puede evolucionar ahora mismo');return}
-   if(p)p.style.visibility='hidden';let k;try{k=await ask('🧬 Evolucionar a todos',`<small>${L.length} Pokémon de la Caja pueden evolucionar por nivel. Los que lleven Piedra Eterna no se tocan.</small><div class="evall">${L.slice(0,30).map(m=>`<span><img src="${mini(m.id,m.sh)}" alt="" loading="lazy">${nm(m)}</span>`).join('')}${L.length>30?`<span>+${L.length-30} más</span>`:''}</div>`,['🧬 Evolucionar','Cancelar'])}finally{if(p)p.style.visibility=''}
-   if(k!==0)return;
+   /* v58.0: eliges quién evoluciona (toca para quitar/poner) y «➕ Más» enseña a todos los que no caben */
+   const sel=new Set(L.map((_,i)=>i)),chip=(m,i)=>`<button type="button" class="evc on${i>=30?' evx':''}" data-ev="${i}"${i>=30?' hidden':''}><img src="${mini(m.id,m.sh)}" alt="" loading="lazy">${nm(m)}<em>✓</em></button>`;
+   if(p)p.style.visibility='hidden';let k;try{const pr=ask('🧬 Evolucionar',`<small>${L.length} Pokémon de la Caja pueden evolucionar por nivel. Toca a los que <b>no</b> quieras evolucionar. Los que lleven Piedra Eterna no se tocan.</small><div class="evtl"><button type="button" data-es="all">✅ Todos</button><button type="button" data-es="none">⬜ Ninguno</button><span class="evn">${L.length} elegidos</span></div><div class="evall evsel">${L.map(chip).join('')}${L.length>30?`<button type="button" class="evmore">➕ Más (${L.length-30})</button>`:''}</div>`,['🧬 Evolucionar a los elegidos','Cancelar']);
+    const MD=D.getElementById('mod'),cnt=()=>{const n=MD.querySelector('.evn');if(n)n.textContent=sel.size+' elegido'+(sel.size==1?'':'s');const g=MD.querySelector('[data-i="0"]');if(g)g.disabled=!sel.size};
+    const box2=MD.querySelector('.evsel');if(box2)box2.onclick=e=>{const mo=e.target.closest('.evmore');if(mo){box2.querySelectorAll('.evx').forEach(x=>x.hidden=false);mo.remove();box2.classList.add('evopen');return}const c=e.target.closest('[data-ev]');if(!c)return;const i=+c.dataset.ev;if(sel.has(i))sel.delete(i);else sel.add(i);c.classList.toggle('on',sel.has(i));cnt()};
+    const tl=MD.querySelector('.evtl');if(tl)tl.onclick=e=>{const x=e.target.closest('[data-es]');if(!x)return;const all=x.dataset.es==='all';sel.clear();if(all)L.forEach((_,i)=>sel.add(i));MD.querySelectorAll('[data-ev]').forEach(c=>c.classList.toggle('on',all));cnt()};
+    k=await pr}finally{if(p)p.style.visibility=''}
+   if(k!==0)return;L.splice(0,L.length,...L.filter((_,i)=>sel.has(i)));if(!L.length)return toast('🧬 No elegiste a ninguno');
    if(btn)btn.textContent='🧬 Evolucionando…';const out=[];
    const GD={},gd=id=>GD[id]||(GD[id]=getD(id));let k2=0;
    const evo1=async m=>{const o=nm(m);let e,n=0;while((e=await can(m))&&n<3){try{gd(e[1]);await step(m,e)}catch(err){console.error(err);break}n++}if(n)out.push([o,m,n]);k2++;if(btn)btn.textContent=`🧬 ${k2}/${L.length}`};
@@ -27455,6 +27461,16 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
 #bdx .bdrl button:disabled{cursor:default}
 @keyframes bdPulse{50%{box-shadow:0 0 0 3px #fde04755}}
 @media(prefers-reduced-motion:reduce){#bdx .bdrl button.ok{animation:none}}
+#mod .evtl{display:flex;gap:6px;align-items:center;margin:8px 0 6px;flex-wrap:wrap}
+#mod .evtl button{padding:6px 10px;border-radius:10px;border:1.5px solid #ffffff33;background:#ffffff12;color:#fff;font:800 12px system-ui;cursor:pointer}
+#mod .evtl .evn{margin-left:auto;font:800 12px system-ui;opacity:.85}
+#mod .evsel{max-height:min(46vh,340px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#mod .evsel .evc{position:relative;display:inline-flex;flex-direction:column;align-items:center;gap:2px;min-width:70px;padding:4px;margin:2px;border-radius:12px;border:2px solid #ffffff22;background:#ffffff08;color:#fff;font:700 10.5px system-ui;cursor:pointer;opacity:.45;filter:grayscale(.8);transition:opacity .12s,filter .12s}
+#mod .evsel .evc.on{opacity:1;filter:none;border-color:#4ade80aa;background:#4ade8018}
+#mod .evsel .evc img{width:48px;height:48px;image-rendering:pixelated}
+#mod .evsel .evc em{position:absolute;top:2px;right:4px;font-style:normal;font-size:11px;color:#4ade80;opacity:0}
+#mod .evsel .evc.on em{opacity:1}
+#mod .evsel .evmore{display:block;width:100%;margin:6px 0 2px;padding:9px;border-radius:12px;border:1.5px dashed #fde047aa;background:#fde04714;color:#fde68a;font:900 13px system-ui;cursor:pointer}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Ondu (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -27514,6 +27530,29 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
    const g2=get();g2[b.k]=g2[b.k]||{};if(g2[b.k][p])return;g2[b.k][p]=1;put(g2);
    R.money=(R.money||0)+r.m;for(const k in r.it)R.bag[k]=(R.bag[k]||0)+r.it[k];try{saveRun()}catch(_){}
    try{beep(880,.15,'triangle');beep(1175,.2,'triangle')}catch(_){}try{toast(`🏅 ${b.n} ${p}%: recibes ${lbl(r)}`)}catch(_){}if(redraw)redraw()}};
+})();
+
+/* ---------- v58.0: métodos de evolución que faltaban (formas regionales) ---------- */
+(()=>{if(typeof ITEM!=='object'||!window.STN||!window.STONE)return;
+ const NEW=[['gcuff','Brazal Galanuez',600,'🦾','Slowpoke de Galar → Slowbro de Galar'],['gwreath','Corona Galanuez',600,'👑','Slowpoke de Galar → Slowking de Galar'],
+  ['alola','Piedra de Alola',500,'🌺','Pikachu, Exeggcute y Cubone → su evolución de Alola'],['galar','Piedra de Galar',500,'🏰','Koffing y Mime Jr. → su evolución de Galar'],
+  ['hisui','Piedra de Hisui',500,'🏔️','Quilava, Dewott, Petilil, Rufflet, Goomy, Bergmite y Dartrix → su evolución de Hisui'],['ondu','Piedra de Ondu',700,'💠','Larvitar, Pupitar, Abra, Kadabra, Gastly y Haunter → su evolución de Ondu']];
+ NEW.forEach(([e,n,p,ic,d])=>{const k='st_'+e;STN[k]=1;if(!ITEM[k])ITEM[k]={n,p,d:'Evolución regional: '+d};try{if(typeof IC==='object'&&!IC[k])IC[k]=ic}catch(_){}});
+ const X={10164:[['gcuff',10165],['gwreath',10172]],25:[['alola',10100]],102:[['alola',10114]],104:[['alola',10115]],109:[['galar',10167]],439:[['galar',10168]],
+  156:[['hisui',10233]],502:[['hisui',10236]],548:[['hisui',10237]],627:[['hisui',10240]],704:[['hisui',10241]],712:[['hisui',10243]],723:[['hisui',10244]],
+  246:[['ondu',20102]],247:[['ondu',20103]],63:[['ondu',20105]],64:[['ondu',20106]],92:[['ondu',20108]],93:[['ondu',20109]]};
+ const fix=()=>{for(const id in X){const L=(STONE[id]||[]).filter(s=>!X[id].some(([e])=>'st_'+e===s.k));X[id].forEach(([e,to])=>L.push({k:'st_'+e,to}));STONE[id]=L}};fix();
+ const _us=window.useStone;if(typeof _us==='function')window.useStone=async function(){fix();return _us.apply(this,arguments)};
+ const _ef=window.evoFill;if(typeof _ef==='function')window.evoFill=function(){const r=_ef.apply(this,arguments);Promise.resolve(r).then(fix,fix);return r};
+ const bag=()=>{try{if(typeof R==='object'&&R&&R.bag)NEW.forEach(([e])=>{if(R.bag['st_'+e]==null)R.bag['st_'+e]=0})}catch(e){}};bag();setInterval(bag,3000);
+})();
+/* ---------- v58.0: las formas regionales también siguen la regla de los biomas (sus evoluciones solo salen como Alfa del grupo) ---------- */
+(()=>{const wrap=()=>{const H=window.__herd;if(!H||H._st58)return!!H;const o=H.stage;
+  const prev=id=>{try{for(const x of (window.REG||[]))if(x.ev&&x.ev[1]===id)return x.id}catch(e){}return 0};
+  H.stage=async function(id){id=+id;const RI=window.REGI||{};if(!RI[id])return o.apply(this,arguments);let n=0,x=id;
+   for(let g=0;g<4;g++){const p=prev(x);if(p){n++;x=p;continue}const pr=(window.REGPRE||{})[x];if(pr){n++;x=pr;break}break}
+   try{return n+await o.call(this,RI[x]?RI[x].sp:x)}catch(e){return n}};H._st58=1;return true};
+ if(!wrap()){let n=0;const t=setInterval(()=>{if(wrap()||++n>40)clearInterval(t)},500)}
 })();
 </script>
 </body></html>
