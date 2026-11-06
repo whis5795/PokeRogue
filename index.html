@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.15</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.16</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.15',t:'Ditto disfrazado',s:'cur',l:[
+ {v:'58.16',t:'Combate doble más limpio',s:'cur',l:[
+  '⚔️⚔️ Combate doble de la ruta: ya no se ve la selección de cartas por detrás al hacer cualquier cosa',
+  '📐 Combate doble: los Pokémon (modelos 3D) salen a buen tamaño y centrados en su círculo; antes algunos se veían diminutos'
+ ]},
+ {v:'58.15',t:'Ditto disfrazado',s:'prev',l:[
   '🫧 Ditto se esconde en los biomas disfrazado de otro Pokémon (en 4 de cada 10 visitas). Se le reconoce porque brilla en morado y se bambolea como gelatina; al tocarlo verás «Algo raro… parece hecho de gelatina». Al combatir se descubre y puedes capturarlo'
  ]},
  {v:'58.14',t:'Arreglo urgente',s:'prev',l:[
@@ -22692,7 +22696,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
  const putRun=run=>{if(run===liveR()){try{saveRun()}catch(e){}}else try{localStorage.setItem('pa_run',JSON.stringify(run))}catch(e){}};
  const best=()=>{try{return+localStorage.getItem('pa_coop_best')||0}catch(e){return 0}},setBest=v=>{try{if(v>best())localStorage.setItem('pa_coop_best',String(v))}catch(e){}};
  const artOf=(id,sh)=>{let a='',m='';try{a=art(id,sh)}catch(e){}try{m=mini(id,sh)}catch(e){}return{a:a||m,m}};
- const img=(id,sh,cls,bk)=>{const s=artOf(id,sh);/* v55.4: modelos 3D (ajuste propio: no3dCoop) */let u=s.a;try{if(bk!=null&&!(typeof S=='object'&&S&&S.no3dCoop)&&window.to3d){const t=to3d(s.a,bk);if(t)u=t}}catch(e){}const d3=u!==s.a;return`<img${cls||d3?` class="${(cls||'')+(d3?' sd3':'')}"`:''} data-s="${id}_${sh?1:0}" src="${u}" alt="" draggable="false"${d3?' onload="try{fit3d(this,1.4)}catch(_){}"':''} onerror="if(this.classList.contains('sd3')){this.classList.remove('sd3');this.style.width='';this.src='${s.a}';return}this.onerror=null;this.src='${s.m}'">`};
+ const img=(id,sh,cls,bk)=>{const s=artOf(id,sh);/* v55.4: modelos 3D (ajuste propio: no3dCoop) */let u=s.a;try{if(bk!=null&&!(typeof S=='object'&&S&&S.no3dCoop)&&window.to3d){const t=to3d(s.a,bk);if(t)u=t}}catch(e){}const d3=u!==s.a;return`<img${cls||d3?` class="${(cls||'')+(d3?' sd3':'')}"`:''} data-s="${id}_${sh?1:0}" src="${u}" alt="" draggable="false"${d3?' onload="try{fitCoop(this)}catch(_){}"':''} onerror="if(this.classList.contains('sd3')){this.classList.remove('sd3');this.style.width='';this.src='${s.a}';return}this.onerror=null;this.src='${s.m}'">`};
  const miniI=(id,sh)=>{let m='';try{m=mini(id,sh)}catch(e){}return`<img data-s="m${id}_${sh?1:0}" src="${m}" alt="" draggable="false">`};
  /* v37.4: actualización en el sitio (solo cambia lo que cambia): sin parpadeos al refrescar, las barras de PS se deslizan y las imágenes no se recargan */
  function mkd(a,b){const A=a.childNodes,B=b.childNodes;for(let i=0;i<B.length;i++){const n=B[i],o=A[i];if(!o){a.appendChild(n.cloneNode(true));continue}
@@ -27960,6 +27964,10 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
 @keyframes bzJelly{0%,100%{transform:scale(1,1)}25%{transform:scale(1.07,.93)}50%{transform:scale(.95,1.06)}75%{transform:scale(1.04,.97)}}
 #bzv .bzdh{display:block;margin-top:2px;font:800 11px system-ui;color:#f0abfc}
 @media(prefers-reduced-motion:reduce){#bzv .bzp.bzditto .bzr{animation:none}}
+/* v58.16: combate doble */
+#coop.cbsh:not(.out){animation:none!important;opacity:1}
+body:has(#coop.advm:not(.out)) #run{visibility:hidden}
+#coop .cb-spr img.sd3{max-width:100%;justify-self:center;align-self:end;margin-bottom:6%}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Hisui nuevas (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -28389,6 +28397,15 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
  const wrap=()=>{const H=window.__herd;if(!H||H._d58)return!!H;const f=H.fight;H.fight=function(mon,bn){if(mon&&mon.ditto){try{toast('🫧 ¡'+(typeof nm==='function'?String(nm(mon)).replace(/^✨ /,''):'Ese Pokémon')+' era un Ditto disfrazado!');beep(330,.12,'sine');setTimeout(()=>beep(660,.15,'sine'),130)}catch(_){}
    const m2=Object.assign({},mon,{id:132,name:(typeof NAMES!=='undefined'&&NAMES[132])||'ditto'});delete m2.ditto;return f.call(this,m2,bn)}return f.apply(this,arguments)};H._d58=1;return true};
  if(!wrap()){let n=0;const t=setInterval(()=>{if(wrap()||++n>40)clearInterval(t)},500)}
+})();
+
+/* ---------- v58.16: combate doble: modelos 3D a buen tamaño y centrados, y sin ver la selección de cartas por detrás ---------- */
+(()=>{const D=document;
+ window.fitCoop=i=>{if(!i||!i.naturalWidth)return;const box=i.parentElement;const W=(box&&box.clientWidth)||parseFloat(getComputedStyle(i).width)||120;const nw=i.naturalWidth;
+  const w=Math.round(Math.max(W*.62,Math.min(W*.88,nw*W/70)));i.style.width=w+'px';i.style.height='auto';i.style.justifySelf='center'};
+ const fixAll=()=>{D.querySelectorAll('#coop .cb-spr img.sd3').forEach(i=>{if(i.complete&&i.naturalWidth&&!i._fc){i._fc=1;fitCoop(i)}})};
+ new MutationObserver(()=>{const c=D.getElementById('coop');if(!c)return;if(!c._sh){c._sh=1;setTimeout(()=>c.classList.add('cbsh'),300)}fixAll()}).observe(D.body,{childList:true,subtree:true});
+ addEventListener('resize',()=>D.querySelectorAll('#coop .cb-spr img.sd3').forEach(i=>fitCoop(i)));
 })();
 </script>
 </body></html>
