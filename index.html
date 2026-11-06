@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.9</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.10</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.9',t:'Mochila sin parpadeos',s:'cur',l:[
+ {v:'58.10',t:'Caja más ordenada',s:'cur',l:[
+  '⭐ Caja: mantén pulsado un Pokémon y en su ficha toca el botón ⭐ para marcarlo o quitarlo de favoritos',
+  '📊 Ficha del Pokémon renovada: fondo de su tipo, ilustración flotante, gráfico de estadísticas en hexágono, total base con categoría, cada estadística con su valor base, real y rango (S/A/B/C/D), su mejor y peor estadística, movimientos con categoría, poder, precisión y PP, y una pestaña «Más» con su evolución, habilidad, amistad, maestría, estrellas, objeto y Mega',
+  '🧹 Caja: los botones flotantes de Tipos, Ordenar y Evolucionar ya no tapan nada: Tipos y Evolucionar están en la barra de arriba y Ordenar dentro de Filtros',
+  '⚙️ El botón «Acciones» ya no muestra el número entre paréntesis'
+ ]},
+ {v:'58.9',t:'Mochila sin parpadeos',s:'prev',l:[
   '🎒 Mochila y «Usar objeto» de la Caja: la descripción del objeto ya no parpadea al ir tocando objetos (solo cae al abrirse) y se quitaron unos efectos táctiles que daban tirones en móvil'
  ]},
  {v:'58.8',t:'Selección limpia en la Caja',s:'prev',l:[
@@ -18573,7 +18579,7 @@ const D=document;
 function wireRow(row){if(row._am)return;row._am=1;
  const t=D.createElement('button');t.type='button';t.className='fabsell amt';row.prepend(t);
  const items=()=>[...row.children].filter(x=>x!==t);
- const upd=()=>{const n=items().length;row.classList.toggle('am',n>=2);t.style.display=n>=2?'':'none';t.textContent=`⚙️ Acciones (${n}) ${row.classList.contains('open')?'▾':'▴'}`};
+ const upd=()=>{const n=items().length;row.classList.toggle('am',n>=2);t.style.display=n>=2?'':'none';t.textContent=`⚙️ Acciones ${row.classList.contains('open')?'▾':'▴'}`};
  t.onclick=e=>{e.stopPropagation();row.classList.toggle('open');upd()};
  new MutationObserver(()=>{if(row.firstChild!==t)row.prepend(t);upd()}).observe(row,{childList:true});upd()}
 new MutationObserver(()=>{D.querySelectorAll('body>.fabrow').forEach(wireRow)}).observe(D.body,{childList:true});
@@ -18582,7 +18588,7 @@ function wireBox(){const bt=D.querySelector('#pcbox .bxbt');if(!bt||bt._am)retur
  const w=D.createElement('div');w.className='bxam';w.innerHTML='<button type="button" class="act bxamb">⚙️ Acciones ▴</button><div class="bxamm"></div>';
  const mm=w.querySelector('.bxamm'),tb=w.querySelector('.bxamb');
  ['#bxu','#bxd','#bxw','#bxr','#bxf','#bxl'].forEach(s=>{const b=bt.querySelector(s);if(b)mm.append(b)});bt.prepend(w);
- const upd=()=>{const vis=[...mm.children].filter(b=>!b.hidden);w.hidden=!vis.length;if(!vis.length)w.classList.remove('open');tb.textContent=`⚙️ Acciones${vis.length?' ('+vis.length+')':''} ${w.classList.contains('open')?'▾':'▴'}`};
+ const upd=()=>{const vis=[...mm.children].filter(b=>!b.hidden);w.hidden=!vis.length;if(!vis.length)w.classList.remove('open');tb.textContent=`⚙️ Acciones ${w.classList.contains('open')?'▾':'▴'}`};
  tb.onclick=e=>{e.stopPropagation();w.classList.toggle('open');upd()};
  mm.addEventListener('click',()=>setTimeout(()=>{w.classList.remove('open');upd()},0));
  D.querySelector('#pcbox').addEventListener('click',e=>{if(!w.contains(e.target)&&w.classList.contains('open')){w.classList.remove('open');upd()}},true);
@@ -25607,17 +25613,7 @@ window.MEGART=window.MEGART||{};MEGART['612|']='mhaxorus';
  let qt=0;
  D.addEventListener('input',e=>{const t=e.target;if(!t||t.id!=='bxq')return;window.BXF.q=t.value;clearTimeout(qt);qt=setTimeout(()=>{const p=Q('#pcbox');if(!p||!p.__rr)return;
   const a=D.activeElement===t;p.__rr();if(a){const n=Q('#bxq');if(n){n.focus();try{const L=n.value.length;n.setSelectionRange(L,L)}catch(_){}}}},160)});
- /* 2) mantener pulsado un Pokémon de la Caja para marcarlo como favorito */
- let lp=0,lx=0,ly=0,eat=0;
- D.addEventListener('pointerdown',e=>{const c=e.target.closest&&e.target.closest('#pcbox .bxc[data-k]');if(!c)return;lx=e.clientX;ly=e.clientY;clearTimeout(lp);
-  lp=setTimeout(()=>{const p=Q('#pcbox');if(!p||!c.isConnected)return;const k=c.dataset.k,i=+c.dataset.i,m=k=='t'?R.team[i]:(R.box||[])[i];if(!m)return;
-   if(m.fav)delete m.fav;else m.fav=1;eat=Date.now();try{navigator.vibrate&&navigator.vibrate(25)}catch(_){}try{beep(m.fav?880:520,.08,'triangle')}catch(_){}
-   toast(m.fav?'⭐ '+nm(m)+' marcado como favorito':'☆ '+nm(m)+' ya no es favorito');try{p.__rr()}catch(_){}},550)},true);
- const cancel=()=>clearTimeout(lp);
- D.addEventListener('pointerup',cancel,true);D.addEventListener('pointercancel',cancel,true);
- D.addEventListener('pointermove',e=>{if(Math.abs(e.clientX-lx)+Math.abs(e.clientY-ly)>12)cancel()},true);
- D.addEventListener('click',e=>{if(eat&&Date.now()-eat<700&&e.target.closest&&e.target.closest('#pcbox .bxc')){eat=0;e.stopPropagation();e.preventDefault()}},true);
- D.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('#pcbox .bxc'))e.preventDefault()},true);
+ /* 2) v58.10: favoritos desde la ficha (mantener pulsado → botón ⭐) */
  /* 3) Escape cierra la Caja */
  D.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const p=Q('#pcbox');if(!p||p.style.visibility==='hidden')return;const m=Q('#mod');if(m&&getComputedStyle(m).display!=='none')return;const x=p.querySelector('#bxx');if(x){e.stopPropagation();x.click()}},true);
 })();
@@ -27841,6 +27837,95 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
 #pcbox .bxc.b58sh .bxp{position:relative}
 /* v58.9: el letrero de la mochila solo cae al abrirse; al cambiar de objeto cambia el texto sin volver a animarse */
 #bagsign.on.bsq{animation:none!important}
+/* v58.10: Caja: sin botones flotantes de Tipos/Ordenar/Evolucionar (ahora en la barra de arriba y en Filtros) */
+#pcbox #pcTipos,#pcbox .bxbt #bxsort,#pcbox .bxbt #bxevo{display:none!important}
+#pcbox .b58r>button[data-t="evo"]{background:linear-gradient(180deg,#0e7490,#164e63);border-color:#67e8f9aa}
+#pcbox .b58so button{background:linear-gradient(180deg,#0e7490,#164e63)!important;color:#fff!important;border-color:#67e8f9aa!important}
+/* v58.10: ficha del Pokémon renovada */
+#bx58s{position:fixed;inset:0;z-index:100046;display:flex;align-items:center;justify-content:center;padding:10px;background:#05030dd9;backdrop-filter:blur(4px);opacity:0;transition:opacity .18s;font-family:system-ui,sans-serif;color:#fff}
+#bx58s.on{opacity:1}
+#bx58s .s9w{width:min(460px,100%);max-height:calc(var(--dvh,100dvh) - 20px);display:flex;flex-direction:column;border-radius:24px;overflow:hidden;background:#0f0b26;border:2px solid color-mix(in srgb,var(--c1) 70%,#fff);box-shadow:0 0 0 1px #000,0 24px 60px #000d,0 0 40px color-mix(in srgb,var(--c1) 35%,transparent);transform:translateY(12px) scale(.96);transition:transform .25s cubic-bezier(.2,1.4,.4,1)}
+#bx58s.on .s9w{transform:none}
+#bx58s .s9w.sh{border-color:#fde047;box-shadow:0 0 0 1px #000,0 24px 60px #000d,0 0 50px #fde04766}
+#bx58s .s9hero{position:relative;height:190px;flex:none;display:grid;place-items:center;overflow:hidden}
+#bx58s .s9bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 60%,color-mix(in srgb,var(--c1) 70%,#fff) 0,var(--c1) 30%,color-mix(in srgb,var(--c2) 70%,#0f0b26) 75%,#0f0b26);opacity:.95}
+#bx58s .s9bg::after{content:'';position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 62%,#ffffff12 0 8deg,#0000 8deg 20deg);animation:s9rot 40s linear infinite}
+@keyframes s9rot{to{transform:rotate(360deg)}}
+#bx58s .s9plat{position:absolute;bottom:18px;width:62%;height:26px;border-radius:50%;background:radial-gradient(ellipse,#0008,#0000 70%)}
+#bx58s .s9art{position:relative;max-height:165px;max-width:68%;filter:drop-shadow(0 10px 10px #0009);animation:s9fl 3.4s ease-in-out infinite}
+@keyframes s9fl{50%{transform:translateY(-6px)}}
+#bx58s .s9sp{position:absolute;width:10px;height:10px;left:24%;top:28%;background:#fff;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:s9tw 1.6s ease-in-out infinite;z-index:2}
+#bx58s .s9sp.b{left:72%;top:22%;animation-delay:.5s;width:14px;height:14px}#bx58s .s9sp.c{left:66%;top:70%;animation-delay:1s}
+@keyframes s9tw{50%{transform:scale(.3) rotate(45deg);opacity:.4}}
+#bx58s .s9x{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:2px solid #fff8;background:#0008;color:#fff;font:900 15px system-ui;z-index:3}
+#bx58s .s9fav{position:absolute;top:10px;left:10px;z-index:3;display:flex;align-items:center;gap:5px;padding:6px 12px 6px 8px;border-radius:999px;border:2px solid #fde68aaa;background:#0009;color:#fde68a;font:800 12px system-ui;box-shadow:0 6px 14px #0008;transition:transform .15s}
+#bx58s .s9fav span{font-size:20px;line-height:1}
+#bx58s .s9fav.on{background:linear-gradient(180deg,#fde047,#f59e0b);color:#422006;border-color:#fff;animation:s9pop .35s cubic-bezier(.2,1.6,.4,1)}
+#bx58s .s9fav:active{transform:scale(.92)}
+@keyframes s9pop{40%{transform:scale(1.18)}}
+#bx58s .s9lv{position:absolute;bottom:10px;right:12px;z-index:3;padding:4px 10px;border-radius:10px;background:#000a;font:700 11px system-ui;border:1px solid #ffffff33}
+#bx58s .s9lv b{font-size:16px;color:#fde68a}
+#bx58s .s9body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:10px 14px 14px;background:linear-gradient(180deg,color-mix(in srgb,var(--c1) 18%,#0f0b26),#0f0b26 160px)}
+#bx58s .s9nm{text-align:center}
+#bx58s .s9nm>b{display:block;font:900 22px system-ui;letter-spacing:.02em;text-shadow:0 2px 0 #0008}
+#bx58s .s9ty,#bx58s .s9bd{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+#bx58s .s9ty i{font-style:normal;padding:4px 14px;border-radius:999px;background:var(--c);font:800 12px system-ui;text-shadow:0 1px 1px #0009;box-shadow:inset 0 -2px 0 #0003}
+#bx58s .s9tg{font-style:normal;padding:3px 10px;border-radius:9px;font:800 10.5px system-ui;border:1px solid #fff4;background:#ffffff14}
+#bx58s .t-leg{background:#f59e0b33;border-color:#fbbf24}#bx58s .t-mit{background:#f472b633;border-color:#f472b6}#bx58s .t-ub{background:#22d3ee33;border-color:#22d3ee}#bx58s .t-par{background:#a3e63533;border-color:#a3e635}#bx58s .t-reg{background:#c4b5fd33;border-color:#c4b5fd}#bx58s .t-sh{background:#fde04733;border-color:#fde047}#bx58s .t-al{background:#ef444433;border-color:#ef4444}
+#bx58s .s9bars{display:flex;flex-direction:column;gap:6px;margin:12px 0 10px;padding:9px 11px;border-radius:14px;background:#00000055;border:1px solid #ffffff1a}
+#bx58s .s9bars>div{display:grid;grid-template-columns:56px 1fr auto;gap:8px;align-items:center;font:800 11px system-ui}
+#bx58s .s9bars b{font-size:11px;opacity:.9}
+#bx58s u{display:block;height:8px;border-radius:5px;background:#000a;overflow:hidden}
+#bx58s u i{display:block;height:100%;border-radius:5px}
+#bx58s u i.xp{background:linear-gradient(90deg,#38bdf8,#818cf8)}
+#bx58s .s9tabs{display:flex;gap:4px;padding:4px;border-radius:14px;background:#00000066;margin-bottom:10px;position:sticky;top:-10px;z-index:2}
+#bx58s .s9tabs button{flex:1;padding:8px 4px;border-radius:10px;border:0;background:none;color:#c7d2fe;font:800 12px system-ui}
+#bx58s .s9tabs button.on{background:linear-gradient(180deg,color-mix(in srgb,var(--c1) 80%,#fff),var(--c1));color:#fff;text-shadow:0 1px 1px #0008;box-shadow:0 3px 8px #0006}
+#bx58s section{display:none}#bx58s section.on{display:block;animation:s9in .22s ease-out}
+@keyframes s9in{from{opacity:0;transform:translateY(6px)}}
+#bx58s .s9top{display:grid;grid-template-columns:1fr 116px;gap:8px;align-items:center;margin-bottom:8px}
+#bx58s .s9rad{width:100%;max-height:190px}
+#bx58s .s9rad text{fill:#c7d2fe;font:800 10px system-ui}#bx58s .s9rad text.hi{fill:#4ade80}#bx58s .s9rad text.lo{fill:#f87171}
+#bx58s .s9poly{animation:s9gr .6s cubic-bezier(.2,1.3,.4,1);transform-origin:90px 86px}
+@keyframes s9gr{from{transform:scale(.2);opacity:0}}
+#bx58s .s9tot{text-align:center;padding:10px 6px;border-radius:16px;background:#00000066;border:2px solid var(--t)}
+#bx58s .s9tot small{display:block;font:700 10.5px system-ui;opacity:.75}
+#bx58s .s9tot b{display:block;font:900 30px system-ui;color:var(--t);line-height:1.1}
+#bx58s .s9tot em{display:inline-block;margin:3px 0 6px;font-style:normal;padding:2px 8px;border-radius:8px;background:var(--t);color:#0b0720;font:900 10.5px system-ui}
+#bx58s .s9bw{opacity:.9!important;line-height:1.5}
+#bx58s .s9rows{display:flex;flex-direction:column;gap:4px}
+#bx58s .s9row,#bx58s .s9hd{display:grid;grid-template-columns:18px 58px 1fr 28px 34px 30px;gap:6px;align-items:center;font:700 11.5px system-ui}
+#bx58s .s9hd{font-size:9.5px;opacity:.6;text-transform:uppercase;letter-spacing:.04em}#bx58s .s9hd b,#bx58s .s9hd em{font-style:normal;text-align:center}#bx58s .s9hd span:nth-child(4){text-align:right}
+#bx58s .s9row{padding:4px 6px;border-radius:10px;background:#ffffff08}
+#bx58s .s9row.best{background:#22c55e1f;box-shadow:inset 0 0 0 1px #22c55e66}#bx58s .s9row.worst{background:#ef44441a;box-shadow:inset 0 0 0 1px #ef444455}
+#bx58s .s9row u i{width:var(--w);background:linear-gradient(90deg,color-mix(in srgb,var(--g) 60%,#fff),var(--g));animation:s9bar .7s cubic-bezier(.2,1,.3,1)}
+@keyframes s9bar{from{width:0}}
+#bx58s .s9b{text-align:right;opacity:.7;font-size:10.5px}
+#bx58s .s9row>b{text-align:center;font:900 13px system-ui}
+#bx58s .s9row>em{font-style:normal;text-align:center;font:900 11px system-ui;border-radius:6px;background:var(--g);color:#0b0720;padding:1px 0}
+#bx58s .s9mvs{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#bx58s .s9mv{padding:8px 9px;border-radius:13px;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 45%,#0f0b26),#0f0b26);border:1.5px solid var(--c);box-shadow:inset 0 1px 0 #ffffff22}
+#bx58s .s9mh{display:flex;justify-content:space-between;gap:4px;align-items:flex-start}
+#bx58s .s9mh b{font:900 12.5px/1.2 system-ui}
+#bx58s .s9mh i{flex:none;font-style:normal;padding:1px 6px;border-radius:7px;background:var(--c);font:800 9.5px system-ui;text-shadow:0 1px 1px #0008}
+#bx58s .s9mm{display:flex;gap:6px;flex-wrap:wrap;margin:5px 0;font:700 10px system-ui;opacity:.9}
+#bx58s .s9pp{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
+#bx58s .s9pp u{height:5px}#bx58s .s9pp u i{background:var(--c)}
+#bx58s .s9pp small{font:800 9.5px system-ui;opacity:.85}
+#bx58s .s9evo{display:flex;align-items:center;gap:6px;padding:9px 10px;margin-bottom:8px;border-radius:14px;background:linear-gradient(90deg,#4ade8022,#00000044);border:1.5px solid #4ade8066}
+#bx58s .s9evo img{width:44px;height:44px;image-rendering:pixelated}
+#bx58s .s9evo>span{font:900 16px system-ui;color:#4ade80}
+#bx58s .s9evo b{display:block;font:900 13px system-ui}#bx58s .s9evo small{font:700 11px system-ui;opacity:.85}
+#bx58s .s9is{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#bx58s .s9i{padding:8px 10px;border-radius:13px;background:#ffffff0c;border:1px solid #ffffff1f}
+#bx58s .s9i span{display:block;font:800 10.5px system-ui;opacity:.7}
+#bx58s .s9i b{display:block;font:900 13px system-ui;margin:2px 0}
+#bx58s .s9i small{display:block;font:600 10.5px/1.3 system-ui;opacity:.8}
+#bx58s .s9e0{opacity:.7}
+#bx58s .s9bt{display:flex;gap:8px;margin-top:12px}
+#bx58s .s9bt button{flex:1;padding:11px;border-radius:13px;border:2px solid #fff5;font:900 13px system-ui;color:#fff;background:#312e81}
+#bx58s .s9bt [data-b="sel"]{background:linear-gradient(180deg,#22c55e,#15803d)}
+@media(prefers-reduced-motion:reduce){#bx58s .s9bg::after,#bx58s .s9art,#bx58s .s9sp{animation:none}}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Hisui nuevas (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -28152,9 +28237,11 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
   const ti=tabIx(o),wp=(ST.wp[ti]&&ST.wp[ti]!=='auto')?ST.wp[ti]:AUTO[ti%AUTO.length];
   const cards=[...o.querySelectorAll('#bxg2 .bxc[data-i]')].map(monOf).filter(Boolean);
   const sh=cards.filter(m=>m.sh).length,fv=cards.filter(m=>m.fav).length,sp=cards.filter(m=>tagOf(m)&&tagOf(m)!=='reg').length,lv=cards.length?Math.round(cards.reduce((a,m)=>a+(m.lvl|0),0)/cards.length):0,mx=cards.length?Math.max(...cards.map(m=>m.lvl|0)):0;
-  const h=`<div class="b58r"><button type="button" data-t="team" class="${ST.team?'on':''}">👥 Equipo ${ST.team?'▾':'▸'}</button><button type="button" data-t="filt" class="${ST.filt?'on':''}">🔍 Filtros${nf?` <b>${nf}</b>`:''} ${ST.filt?'▾':'▸'}</button><span class="b58d">${[3,4,5].map(n=>`<button type="button" data-t="c${n}" class="${ST.cols==n?'on':''}" aria-label="${n} por fila">${n===3?'▦':n===4?'▩':'▤'}<small>${n}</small></button>`).join('')}</span><button type="button" data-t="wp" aria-label="Fondo de la caja">🖼️</button></div>
-   <div class="b58s"><span>📦 <b>${cards.length}</b></span>${sh?`<span>✨ <b>${sh}</b></span>`:''}${fv?`<span>⭐ <b>${fv}</b></span>`:''}${sp?`<span>👑 <b>${sp}</b></span>`:''}${cards.length?`<span>📈 Nv. medio <b>${lv}</b></span><span>🔝 <b>${mx}</b></span>`:''}<span class="b58h">Mantén pulsado un Pokémon para ver su ficha</span></div>`;
+  const h=`<div class="b58r"><button type="button" data-t="team" class="${ST.team?'on':''}">👥 Equipo ${ST.team?'▾':'▸'}</button><button type="button" data-t="filt" class="${ST.filt?'on':''}">🔍 Filtros${nf?` <b>${nf}</b>`:''} ${ST.filt?'▾':'▸'}</button><span class="b58d">${[3,4,5].map(n=>`<button type="button" data-t="c${n}" class="${ST.cols==n?'on':''}" aria-label="${n} por fila">${n===3?'▦':n===4?'▩':'▤'}<small>${n}</small></button>`).join('')}</span><button type="button" data-t="wp" aria-label="Fondo de la caja">🖼️</button><button type="button" data-t="evo">🧬 Evolucionar</button><button type="button" data-t="ty" aria-label="Tabla de tipos">📖 Tipos</button></div>
+   <div class="b58s"><span>📦 <b>${cards.length}</b></span>${sh?`<span>✨ <b>${sh}</b></span>`:''}${fv?`<span>⭐ <b>${fv}</b></span>`:''}${sp?`<span>👑 <b>${sp}</b></span>`:''}${cards.length?`<span>📈 Nv. medio <b>${lv}</b></span><span>🔝 <b>${mx}</b></span>`:''}<span class="b58h">Mantén pulsado un Pokémon para ver su ficha y marcarlo como ⭐ favorito</span></div>`;
   if(tb._h!==h){tb._h=h;tb.innerHTML=h}
+  /* «Ordenar» dentro de los filtros */
+  const bf=o.querySelector('#bxg2 .bxf');if(bf&&!bf.querySelector('.b58so')){const r=D.createElement('div');r.className='bxfr b58so';r.innerHTML='<span>Caja</span><button type="button">↕ Ordenar la caja</button>';r.querySelector('button').onclick=e=>{e.stopPropagation();const x=D.getElementById('bxsort');if(x)x.click()};bf.prepend(r)}
   /* equipo plegado: fila de mini iconos */
   const t1=o.querySelector('#bxt1');if(t1){let mi=t1.querySelector('.b58tm');if(!ST.team){const hh=(R&&R.team||[]).map(m=>`<img src="${mini(m.id,m.sh)}" alt="" class="${m.hp<=0?'ko':''}">`).join('');if(!mi){mi=D.createElement('span');mi.className='b58tm';t1.append(mi)}if(mi._h!==hh){mi._h=hh;mi.innerHTML=hh}}else if(mi)mi.remove()}
   /* fondo de la caja */
@@ -28163,25 +28250,58 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
   o.querySelectorAll('.bxc[data-i]').forEach(c=>{const m=monOf(c);if(!m)return;const t=tagOf(m),want=(m.sh?' b58sh':'')+(t?' b58t-'+t:'')+(m.alpha?' b58al':'');if(c._d!==want){c._d=want;['b58sh','b58al','b58t-leg','b58t-mit','b58t-ub','b58t-par','b58t-reg'].forEach(x=>c.classList.remove(x));want.trim().split(' ').filter(Boolean).forEach(x=>c.classList.add(x))}})}
  async function onTool(e,o){const b=e.target.closest('[data-t]');if(!b)return;const t=b.dataset.t;
   if(t==='team')ST.team=ST.team?0:1;else if(t==='filt')ST.filt=ST.filt?0:1;else if(/^c\d$/.test(t))ST.cols=+t[1];
+  else if(t==='evo'){const x=o.querySelector('#bxevo')||D.getElementById('bxevo');if(x)x.click();return}
+  else if(t==='ty'){const x=D.getElementById('pcTipos');if(x)x.click();return}
   else if(t==='wp'){const ti=tabIx(o);const k=await ask('🖼️ Fondo de esta caja','<small>Elige el fondo para esta caja. «Automático» usa el de cada tipo de caja.</small>',[...WP.map(([k,n])=>n+((ST.wp[ti]||'auto')===k?' ✓':'')),'Cancelar']);if(k>=0&&k<WP.length)ST.wp[ti]=WP[k][0]}
   save();try{beep(720,.03,'sine')}catch(_){}deco(o)}
  /* ---- ficha rápida (mantener pulsado) ---- */
  const STL=[['PS','max',0,'#ef4444'],['Ataque','a',1,'#f97316'],['Defensa','d',2,'#eab308'],['At. Esp.','sa',3,'#3b82f6'],['Def. Esp.','sd',4,'#22c55e'],['Velocidad','sp',5,'#ec4899']];
- function sheet(m,card){const ov=D.createElement('div');ov.id='bx58s';const ty=(m.types||[]).map(t=>`<i style="--c:${(typeof COL!=='undefined'&&COL[t])||'#64748b'}">${esc((typeof ES!=='undefined'&&ES[t])||t)}</i>`).join('');
-  let xp='';try{const a=XPT(m.lvl),b=XPT(m.lvl+1);xp=Math.max(0,Math.min(100,(m.xp-a)/(b-a)*100))}catch(e){}
-  const tg=tagOf(m),ab=m.ab&&window.ABD&&ABD[m.ab]?ABD[m.ab]:null,fr=window.__fr?__fr.lvOf(m):null,bst=(m.b||[]).reduce((a,x)=>a+x,0);
-  const hp=m.max?Math.max(0,m.hp)/m.max*100:0;
-  ov.innerHTML=`<div class="b58w r-${tg||'n'}${m.sh?' sh':''}"><button type="button" class="b58x" aria-label="Cerrar">✕</button>
-   <div class="b58a"><div class="b58ring"></div><img src="${art(typeof sprId==='function'?sprId(m):m.id,m.sh)}" alt="" onerror="this.onerror=null;this.src='${mini(m.id,m.sh)}'"></div>
-   <div class="b58n"><b>${esc(nm(m))}</b><small>Nv. ${m.lvl}${tg?` · ${TN[tg]}`:''}${m.alpha?' · Alfa':''}</small><div class="b58ty">${ty}</div>
-    <div class="b58xp"><span>XP</span><u><i style="width:${xp||0}%"></i></u></div><div class="b58hp"><span>PS ${Math.max(0,m.hp)}/${m.max}</span><u><i style="width:${hp}%;background:${hp>50?'#22c55e':hp>20?'#eab308':'#ef4444'}"></i></u></div></div>
-   <div class="b58st"><h5>📊 Estadísticas <small>base total ${bst}</small></h5>${STL.map(([n,k,i,c])=>`<div><span>${n}</span><u><i style="width:${Math.min(100,((m.b||[])[i]||0)/255*100).toFixed(1)}%;background:${c}"></i></u><b>${m[k]|0}</b></div>`).join('')}</div>
-   <div class="b58mv"><h5>⚔️ Movimientos</h5>${(m.moves||[]).map(v=>`<div style="--c:${(typeof COL!=='undefined'&&COL[v.t])||'#64748b'}"><b>${esc(v.n)}</b><small>${esc((typeof ES!=='undefined'&&ES[v.t])||v.t)} · ${v.p?'Poder '+v.p:'Estado'} · PP ${v.cp!=null?v.cp:v.pp}/${v.mp||v.pp}</small></div>`).join('')||'<small>Sin movimientos</small>'}</div>
-   <div class="b58ex">${ab?`<span title="${esc(ab[1]||'')}">◆ ${esc(ab[0])}</span>`:''}${fr?`<span>${window.__fr.hearts(fr[1])} ${esc(fr[2])}</span>`:''}${m.fav?'<span>⭐ Favorito</span>':''}${m.sh?'<span>✨ Shiny</span>':''}</div>
-   <div class="b58bt"><button type="button" data-b="sel">✓ Seleccionar</button><button type="button" data-b="x">Cerrar</button></div></div>`;
+ function sheet(m,card){const ov=D.createElement('div');ov.id='bx58s';
+  const CO=t=>(typeof COL!=='undefined'&&COL[t])||'#64748b',EN=t=>(typeof ES!=='undefined'&&ES[t])||t,t0=(m.types||['normal'])[0],t1=(m.types||[])[1]||t0;
+  const B=m.b||[0,0,0,0,0,0],bst=B.reduce((a,x)=>a+x,0),tg=tagOf(m);
+  const grade=v=>v>=130?['S','#f59e0b']:v>=105?['A','#22c55e']:v>=80?['B','#38bdf8']:v>=60?['C','#a78bfa']:['D','#94a3b8'];
+  const tier=bst>=600?['Leyenda','#f59e0b']:bst>=520?['Élite','#22c55e']:bst>=450?['Fuerte','#38bdf8']:bst>=350?['Normal','#a78bfa']:['En crecimiento','#94a3b8'];
+  const best=B.indexOf(Math.max(...B)),worst=B.indexOf(Math.min(...B));
+  let xp=0,toN=0;try{const a=XPT(m.lvl),b=XPT(m.lvl+1);xp=Math.max(0,Math.min(100,(m.xp-a)/(b-a)*100));toN=Math.max(0,b-m.xp)}catch(e){}
+  const hp=m.max?Math.max(0,m.hp)/m.max*100:0,hpc=hp>50?'#22c55e':hp>20?'#eab308':'#ef4444';
+  const ab=m.ab&&window.ABD&&ABD[m.ab]?ABD[m.ab]:null,fr=window.__fr?__fr.lvOf(m):null,ms=window.__ms?__ms.lv(m):0;
+  /* radar de estadísticas base */
+  const RO=[0,1,2,5,4,3],RL=['PS','Atq','Def','Vel','DEsp','AEsp'],cx=90,cy=86,R2=62;
+  const pt=(i,v)=>{const a=-Math.PI/2+i*Math.PI/3,r=R2*Math.min(1,v/170);return[cx+Math.cos(a)*r,cy+Math.sin(a)*r]};
+  const ring=f=>RO.map((_,i)=>{const a=-Math.PI/2+i*Math.PI/3;return(cx+Math.cos(a)*R2*f).toFixed(1)+','+(cy+Math.sin(a)*R2*f).toFixed(1)}).join(' ');
+  const poly=RO.map((k,i)=>pt(i,B[k]).map(x=>x.toFixed(1)).join(',')).join(' ');
+  const radar=`<svg viewBox="0 0 180 172" class="s9rad" aria-hidden="true">${[1,.75,.5,.25].map(f=>`<polygon points="${ring(f)}" fill="none" stroke="#ffffff22" stroke-width="1"/>`).join('')}${RO.map((_,i)=>{const a=-Math.PI/2+i*Math.PI/3;return`<line x1="${cx}" y1="${cy}" x2="${(cx+Math.cos(a)*R2).toFixed(1)}" y2="${(cy+Math.sin(a)*R2).toFixed(1)}" stroke="#ffffff18"/>`}).join('')}
+   <polygon class="s9poly" points="${poly}" fill="${CO(t0)}55" stroke="${CO(t0)}" stroke-width="2.2" stroke-linejoin="round"/>${RO.map((k,i)=>{const[x,y]=pt(i,B[k]);return`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#fff" stroke="${CO(t0)}" stroke-width="1.5"/>`}).join('')}
+   ${RO.map((k,i)=>{const a=-Math.PI/2+i*Math.PI/3,x=cx+Math.cos(a)*(R2+15),y=cy+Math.sin(a)*(R2+12);return`<text x="${x.toFixed(1)}" y="${(y+3).toFixed(1)}" text-anchor="middle" class="${k===best?'hi':k===worst?'lo':''}">${RL[i]}</text>`}).join('')}</svg>`;
+  const STN=[['PS','max','❤️'],['Ataque','a','⚔️'],['Defensa','d','🛡️'],['At. Esp.','sa','✨'],['Def. Esp.','sd','🔰'],['Velocidad','sp','💨']];
+  const rows=STN.map(([n,k,e],i)=>{const g=grade(B[i]);return`<div class="s9row${i===best?' best':''}${i===worst?' worst':''}" style="--g:${g[1]}"><span class="s9e">${e}</span><span class="s9n">${n}</span><u><i style="--w:${Math.min(100,B[i]/200*100).toFixed(1)}%"></i></u><span class="s9b">${B[i]}</span><b>${m[k]|0}</b><em>${g[0]}</em></div>`}).join('');
+  const cat=v=>v.p?(v.ph?['💥','Físico']:['🌀','Especial']):['🔰','Estado'];
+  const mvs=(m.moves||[]).map(v=>{const c=cat(v),pp=v.cp!=null?v.cp:v.pp,mp=v.mp||v.pp||1;return`<div class="s9mv" style="--c:${CO(v.t)}"><div class="s9mh"><b>${esc(v.n)}</b><i>${esc(EN(v.t))}</i></div><div class="s9mm"><span title="${c[1]}">${c[0]} ${c[1]}</span><span>⚡ ${v.p||'—'}</span><span>🎯 ${v.acc||'—'}</span></div><div class="s9pp"><u><i style="width:${Math.max(0,Math.min(100,pp/mp*100))}%"></i></u><small>PP ${pp}/${mp}</small></div></div>`}).join('')||'<small class="s9e0">Sin movimientos</small>';
+  let evo='';try{const e=window.pickEvo&&pickEvo(Object.assign({},m,{lvl:999}));if(e&&e[1]&&e[1]!==m.id)evo=`<div class="s9evo"><img src="${mini(m.id,m.sh)}" alt=""><span>➜</span><img src="${mini(e[1],m.sh)}" alt=""><div><b>${esc(String((typeof NAMES!=='undefined'&&NAMES[e[1]])||'').replace(/-/g,' ').replace(/^./,c=>c.toUpperCase())||'Evolución')}</b><small>${m.lvl>=e[0]?'✅ ¡Ya puede evolucionar!':'Al nivel '+e[0]+' · faltan '+(e[0]-m.lvl)}</small></div></div>`}catch(e){}
+  const info=[ab?`<div class="s9i"><span>◆ Habilidad</span><b>${esc(ab[0])}</b><small>${esc(ab[1]||'')}</small></div>`:'',
+   fr?`<div class="s9i"><span>💕 Amistad</span><b>${window.__fr.hearts(fr[1])}</b><small>${esc(fr[2])}</small></div>`:'',
+   window.__ms?`<div class="s9i"><span>🎖️ Maestría</span><b>${esc(__ms.names[ms])}</b><small>${m.ms|0} combates</small></div>`:'',
+   (m.rb|0)>0?`<div class="s9i"><span>⭐ Estrellas</span><b>${'⭐'.repeat(Math.min(8,m.rb))}</b><small>Renacido ${m.rb} ${m.rb>1?'veces':'vez'}</small></div>`:'',
+   m.item&&typeof ITEM==='object'&&ITEM[m.item]?`<div class="s9i"><span>🧤 Objeto</span><b>${esc(ITEM[m.item].n)}</b><small>${esc(String(ITEM[m.item].d||'').replace(/^Objeto equipable · /,''))}</small></div>`:'',
+   typeof megaCapP==='function'&&megaCapP(m)?`<div class="s9i"><span>⚡ Mega</span><b>Puede megaevolucionar</b><small>Desde el nivel 100 en combate</small></div>`:''].join('');
+  const badges=[tg?`<em class="s9tg t-${tg}">${TN[tg]}</em>`:'',m.sh?'<em class="s9tg t-sh">✨ Shiny</em>':'',m.alpha?'<em class="s9tg t-al">Alfa</em>':''].join('');
+  const fav=()=>`<button type="button" class="s9fav${m.fav?' on':''}" data-b="fav" aria-label="${m.fav?'Quitar de favoritos':'Marcar como favorito'}"><span>${m.fav?'⭐':'☆'}</span><small>${m.fav?'Favorito':'Favorito'}</small></button>`;
+  ov.innerHTML=`<div class="s9w${m.sh?' sh':''}" style="--c1:${CO(t0)};--c2:${CO(t1)}"><div class="s9hero"><div class="s9bg"></div><div class="s9plat"></div>${m.sh?'<i class="s9sp"></i><i class="s9sp b"></i><i class="s9sp c"></i>':''}
+    <img class="s9art" src="${art(typeof sprId==='function'?sprId(m):m.id,m.sh)}" alt="" onerror="this.onerror=null;this.src='${mini(m.id,m.sh)}'">
+    <button type="button" class="s9x" data-b="x" aria-label="Cerrar">✕</button>${fav()}<span class="s9lv">Nv. <b>${m.lvl}</b></span></div>
+   <div class="s9body"><div class="s9nm"><b>${esc(nm(m))}</b><div class="s9ty">${(m.types||[]).map(t=>`<i style="--c:${CO(t)}">${esc(EN(t))}</i>`).join('')}</div>${badges?`<div class="s9bd">${badges}</div>`:''}</div>
+    <div class="s9bars"><div><span>❤️ PS</span><u><i style="width:${hp}%;background:${hpc}"></i></u><b>${Math.max(0,m.hp)}/${m.max}</b></div><div><span>⭐ XP</span><u><i class="xp" style="width:${xp}%"></i></u><b>${toN?'faltan '+toN.toLocaleString('es'):'MÁX'}</b></div></div>
+    <div class="s9tabs"><button type="button" data-tab="st" class="on">📊 Estadísticas</button><button type="button" data-tab="mv">⚔️ Movimientos</button><button type="button" data-tab="in">ℹ️ Más</button></div>
+    <section data-p="st" class="on"><div class="s9top"><div class="s9radw">${radar}</div><div class="s9tot" style="--t:${tier[1]}"><small>Base total</small><b>${bst}</b><em>${tier[0]}</em><small class="s9bw">💪 ${STN[best][0]}<br>🔻 ${STN[worst][0]}</small></div></div><div class="s9rows"><div class="s9hd"><span></span><span></span><span></span><span>Base</span><b>Real</b><em>Rgo.</em></div>${rows}</div></section>
+    <section data-p="mv"><div class="s9mvs">${mvs}</div></section>
+    <section data-p="in">${evo}<div class="s9is">${info||'<small class="s9e0">Nada más que mostrar</small>'}</div></section>
+    <div class="s9bt"><button type="button" data-b="sel">✓ Seleccionar</button><button type="button" data-b="x">Cerrar</button></div></div></div>`;
   D.body.append(ov);requestAnimationFrame(()=>ov.classList.add('on'));try{beep(m.sh?1175:660,.06,'triangle')}catch(_){}
   const close=()=>{ov.classList.remove('on');setTimeout(()=>ov.remove(),200)};
-  ov.onclick=e=>{if(e.target===ov||e.target.closest('.b58x,[data-b="x"]'))return close();if(e.target.closest('[data-b="sel"]')){close();try{card.click()}catch(_){}}}}
+  ov.onclick=e=>{if(e.target===ov||e.target.closest('[data-b="x"]'))return close();
+   const tb=e.target.closest('[data-tab]');if(tb){ov.querySelectorAll('.s9tabs button').forEach(b=>b.classList.toggle('on',b===tb));ov.querySelectorAll('section[data-p]').forEach(x=>x.classList.toggle('on',x.dataset.p===tb.dataset.tab));try{beep(740,.03,'sine')}catch(_){}return}
+   const fb=e.target.closest('[data-b="fav"]');if(fb){if(m.fav)delete m.fav;else m.fav=1;fb.outerHTML=fav();try{navigator.vibrate&&navigator.vibrate(20)}catch(_){}try{beep(m.fav?880:520,.08,'triangle')}catch(_){}try{toast(m.fav?'⭐ '+nm(m)+' marcado como favorito':'☆ '+nm(m)+' ya no es favorito')}catch(_){}try{saveRun()}catch(_){}try{const p=D.getElementById('pcbox');p&&p.__rr&&p.__rr()}catch(_){}return}
+   if(e.target.closest('[data-b="sel"]')){close();try{card.click()}catch(_){}}}}
  let lp=null;
  D.addEventListener('pointerdown',e=>{const c=e.target.closest('#pcbox .bxc[data-i]');if(!c)return;const x=e.clientX,y=e.clientY;clearTimeout(lp&&lp.t);
   lp={c,x,y,t:setTimeout(()=>{const m=monOf(c);if(!m)return;lp.fired=1;try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}sheet(m,c)},480)}},true);
