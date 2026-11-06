@@ -8713,7 +8713,7 @@ const CHANGELOG=[
   '👆 Ficha del Pokémon (mantener pulsado en la Caja): ya no parpadea ni se cierra al soltar el dedo',
   '🧬 La ficha muestra siempre a qué evoluciona y cómo: a qué nivel (y cuántos faltan) o con qué piedra; si tiene varias evoluciones, todas',
   '⚔️ En la ficha, toca un movimiento para ver qué hace',
-  '👑 La casilla del líder de gimnasio en la ruta brilla con un anillo dorado que gira y el cartel «LÍDER», y su carta tiene un destello dorado'
+  '👑 La casilla del líder de gimnasio en la ruta brilla con un anillo dorado que gira y el cartel «LÍDER», y su carta tiene un borde dorado que brilla con un destello'
  ]},
  {v:'58.18',t:'Equipo compartido en el 2c2',s:'prev',l:[
   '🔄 Combates dobles de la ruta: tus dos Pokémon comparten todo tu equipo, así que puedes cambiar o sacar de relevo a cualquiera de los tuyos (antes cada uno solo tenía su mitad del equipo)'
@@ -28016,7 +28016,7 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
 /* carta del líder */
 .ca.gymc{overflow:hidden;box-shadow:0 0 0 3px #fbbf24,0 0 22px #fbbf2499,0 10px 24px #0008!important;animation:gymG 2s ease-in-out infinite}
 .ca.gymc .gymshine{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(115deg,#0000 35%,#ffffff88 48%,#0000 60%);background-size:260% 100%;animation:gymS 2.6s linear infinite}
-.ca.gymc .gymtag{position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:4;font-style:normal;padding:2px 8px;border-radius:8px;background:linear-gradient(180deg,#fde047,#f59e0b);color:#422006;font:900 10px system-ui;letter-spacing:.06em;white-space:nowrap;box-shadow:0 2px 6px #0007}
+.ca.gymc .gymtag{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:4;font-style:normal;padding:2px 8px;border-radius:8px;background:linear-gradient(180deg,#fde047,#f59e0b);color:#422006;font:900 10px system-ui;letter-spacing:.06em;white-space:nowrap;box-shadow:0 2px 6px #0007}
 @keyframes gymG{50%{box-shadow:0 0 0 3px #fde047,0 0 34px #fbbf24cc,0 10px 24px #0008}}
 @keyframes gymS{from{background-position:130% 0}to{background-position:-130% 0}}
 @media(prefers-reduced-motion:reduce){#dmap.xruta .rn.rgym *,.ca.gymc,.ca.gymc .gymshine{animation:none!important}}
@@ -28480,7 +28480,7 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
    const c=g.querySelector('.rnc');g.insertBefore(glow,c);g.insertBefore(ring2,c);g.insertBefore(ring,c);
    const lb=mkE('text',{class:'rgy-lb',y:'52'});lb.textContent='LÍDER';g.append(lb);m.setAttribute('x','26');m.setAttribute('y','-22');m.classList.add('rgy-md')})};
  new MutationObserver(()=>{if(D.getElementById('dmap'))deco()}).observe(D.body,{childList:true,subtree:true});deco();
- if(typeof cardHTML==='function'){const _c=cardHTML;cardHTML=function(c){let h=_c.apply(this,arguments);try{if(c&&c.k==='gym'&&typeof h==='string')h=h.replace('<button class="ca','<button class="ca gymc').replace('<div class="cim">','<i class="gymshine"></i><em class="gymtag">👑 LÍDER</em><div class="cim">')}catch(e){}return h}}
+ if(typeof cardHTML==='function'){const _c=cardHTML;cardHTML=function(c){let h=_c.apply(this,arguments);try{if(c&&c.k==='gym'&&typeof h==='string')h=h.replace(/class="ca(\s|")/,'class="ca gymc$1').replace(/^(\s*<button[^>]*>)/,'$1<i class="gymshine"></i>')}catch(e){}return h}}
 })();
 </script>
 </body></html>
