@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.32</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.33</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.32',t:'Visor de la Pokédex',s:'cur',l:[
+ {v:'58.33',t:'Visor en Megadex y Legendex',s:'cur',l:[
+  '🔍 Megadex y Legendex: toca a un Pokémon que hayas visto para verlo en grande con el visor (modos 3D, píxel, shiny, fondos y zoom). Las flechas pasan solo por los de esa lista y ese filtro',
+  '🌍 Visor de la Pokédex: si estás viendo una forma regional o un Pokémon inventado (Abra de Hisui, Paradoja…), las flechas pasan solo entre las formas especiales, sin mezclar su forma normal'
+ ]},
+ {v:'58.32',t:'Visor de la Pokédex',s:'prev',l:[
   '🔍 Pokédex: botón «Ver en grande» en la ficha de cada Pokémon (o toca su imagen) para verlo a pantalla completa',
   '🎨 Modos de imagen: Ilustración, 3D HD, 3D animado, Píxel y Píxel animado, con su versión ✨ shiny y 🔄 de espaldas',
   '🌌 Cuatro fondos (Noche, Día, color de su tipo y cuadros), efecto de flotar y botón para abrir la imagen',
@@ -28129,7 +28133,7 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
 #pcbox .bxbt .bxam.open .bxamm{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}
 #pcbox .bxbt .bxamm .act{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;padding:6px 5px!important;border-radius:13px!important;font-size:11px!important;line-height:1.25;text-align:center;white-space:normal;word-break:normal;overflow-wrap:normal;hyphens:none;letter-spacing:0;box-shadow:0 3px 0 #0008,0 4px 10px #0006!important;border-width:1.5px!important}
 /* v58.32: visor a pantalla completa de la Pokédex */
-#pxv{position:fixed;inset:0;z-index:100000;display:flex;flex-direction:column;color:#fff;font-family:system-ui,sans-serif;background:var(--vbg);animation:pxvIn .22s ease-out both;touch-action:none;user-select:none;-webkit-user-select:none}
+#pxv{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;color:#fff;font-family:system-ui,sans-serif;background:var(--vbg);animation:pxvIn .22s ease-out both;touch-action:none;user-select:none;-webkit-user-select:none}
 #pxv[data-bg="night"]{--vbg:radial-gradient(120% 80% at 50% 38%,#2e2a6b 0%,#14112e 55%,#07060f 100%)}
 #pxv[data-bg="day"]{--vbg:radial-gradient(120% 80% at 50% 38%,#ffffff 0%,#dbeafe 60%,#93c5fd 100%);color:#0f172a}
 #pxv[data-bg="type"]{--vbg:radial-gradient(120% 80% at 50% 38%,color-mix(in srgb,var(--tc,#64748b) 70%,#fff) 0%,var(--tc,#64748b) 45%,color-mix(in srgb,var(--tc,#64748b) 35%,#000) 100%)}
@@ -28168,6 +28172,9 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
 #pxv button:disabled{opacity:.35}
 #pdx .dpbig{margin-top:6px;padding:6px 12px;border-radius:999px;border:1px solid #fde68a;background:linear-gradient(180deg,#f59e0b,#b45309);color:#fff;font:800 12px system-ui;cursor:pointer}
 @media(prefers-reduced-motion:reduce){#pxv,#pxv.idle .vs img{animation:none}}
+#mbdx .mdxc.vwz img{cursor:zoom-in}
+#mbdx .mdxc.vwz{position:relative}
+#mbdx .mdxc.vwz::after{content:"🔍";position:absolute;right:6px;bottom:6px;font-size:13px;opacity:.7;pointer-events:none}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Hisui nuevas (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -28672,47 +28679,56 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
  const w=()=>{const o=window.openBiomeDex;if(!o||o._f27)return!!o;const f=function(){fix();return o.apply(this,arguments)};f._f27=1;window.openBiomeDex=f;return true};
  if(!w()){let n=0;const t=setInterval(()=>{if(w()||++n>40)clearInterval(t)},500)}
 })();
-/* ---------- v58.32: 🔍 visor a pantalla completa en la Pokédex: Ilustración, 3D HD, 3D animado (frente y espalda), píxel y píxel animado, shiny, fondos, zoom y pasar de Pokémon ---------- */
+/* ---------- v58.32: 🔍 visor a pantalla completa (Pokédex, Megadex y Legendex): Ilustración, 3D HD, 3D animado (frente y espalda), píxel y píxel animado, shiny, fondos, zoom y pasar de Pokémon ---------- */
+/* v58.33: el visor trabaja con una lista de imágenes; en la Pokédex las formas regionales e inventadas solo pasan entre ellas */
 (()=>{const D=document,BASE='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
  const TC={normal:'#9ca3af',fire:'#f97316',water:'#3b82f6',electric:'#eab308',grass:'#22c55e',ice:'#67e8f9',fighting:'#dc2626',poison:'#a855f7',ground:'#ca8a04',flying:'#818cf8',psychic:'#ec4899',bug:'#84cc16',rock:'#a16207',ghost:'#6d28d9',dragon:'#4f46e5',dark:'#44403c',steel:'#94a3b8',fairy:'#f9a8d4'};
- const dex=()=>{try{const K='pokerogue_pokedex_v1';return JSON.parse(localStorage.getItem(K)||'{}')||{}}catch(e){return{}}};
- const nameOf=id=>{try{const R=(window.REGI||{})[id];if(R)return R.dn.replace(/^./,c=>c.toUpperCase());const n=(typeof NAMES!=='undefined'&&NAMES[id])||'';return n?n.replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()):'Nº '+id}catch(e){return'Nº '+id}};
+ const dex=()=>{try{return JSON.parse(localStorage.getItem('pokerogue_pokedex_v1')||'{}')||{}}catch(e){return{}}};
+ const cap1=t=>String(t||'').replace(/-/g,' ').replace(/^./,c=>c.toUpperCase());
+ const nameOf=id=>{try{const R=(window.REGI||{})[id];if(R)return cap1(R.dn);const n=(typeof NAMES!=='undefined'&&NAMES[id])||'';return n?cap1(n):'Nº '+id}catch(e){return'Nº '+id}};
  const typesOf=id=>{try{const R=(window.REGI||{})[id];if(R)return R.ty;const c=JSON.parse(localStorage.getItem('pa_bio_types_v1')||'null');return(c&&c.t&&c.t[id]||[]).filter(Boolean)}catch(e){return[]}};
  const ART=(id,sh)=>{try{return art(id,sh)}catch(e){return BASE+'other/official-artwork/'+(sh?'shiny/':'')+id+'.png'}};
- const OFF=u=>typeof u==='string'&&u.includes('/other/official-artwork/');
- /* para las formas con imagen propia (Paradoja y Hisui nuevos) solo hay ilustración */
- const SRC={art:(id,sh)=>ART(id,sh),hd:(id,sh)=>{const a=ART(id,sh);return OFF(a)?a.replace('/other/official-artwork/','/other/home/'):null},
-  a3:(id,sh,bk)=>{const a=ART(id,sh);return OFF(a)?a.replace('/other/official-artwork/','/other/showdown/'+(bk?'back/':'')).replace(/\.png$/,'.gif'):null},
-  px:(id,sh,bk)=>{const a=ART(id,sh);if(!OFF(a))return null;return BASE+(bk?'back/':'')+(sh?'shiny/':'')+id+'.png'},
-  pxa:(id,sh,bk)=>{const a=ART(id,sh);if(!OFF(a)||id>649)return null;return BASE+'versions/generation-v/black-white/animated/'+(bk?'back/':'')+(sh?'shiny/':'')+id+'.gif'}};
+ /* de una ilustración oficial (official-artwork/[shiny/]N.png) salen las demás versiones */
+ const OID=u=>{const m=typeof u==='string'&&u.match(/\/other\/official-artwork\/(?:shiny\/)?(\d+)\.png/);return m?+m[1]:0};
+ const shOf=u=>OID(u)?u.replace(/\/official-artwork\/(?:shiny\/)?/,'/official-artwork/shiny/'):null;
+ const SRC={art:(it,sh)=>it.base(sh),hd:(it,sh)=>{const a=it.base(sh);return OID(a)?a.replace('/other/official-artwork/','/other/home/'):null},
+  a3:(it,sh,bk)=>{const a=it.base(sh);return OID(a)?a.replace('/other/official-artwork/','/other/showdown/'+(bk?'back/':'')).replace(/\.png$/,'.gif'):null},
+  px:(it,sh,bk)=>{const n=OID(it.base(sh));return n?BASE+(bk?'back/':'')+(sh?'shiny/':'')+n+'.png':null},
+  pxa:(it,sh,bk)=>{const n=OID(it.base(sh));return n&&n<=649?BASE+'versions/generation-v/black-white/animated/'+(bk?'back/':'')+(sh?'shiny/':'')+n+'.gif':null}};
  const MODES=[['art','🖼️','Ilustración'],['hd','💎','3D HD'],['a3','🎮','3D animado'],['px','👾','Píxel'],['pxa','🕹️','Píxel animado']];
  const BGS=['night','day','type','check'],BGN={night:'🌌 Noche',day:'☀️ Día',type:'🎨 Tipo',check:'🏁 Cuadros'};
  let st={md:'art',sh:false,bk:false,bg:'night',idle:true};try{Object.assign(st,JSON.parse(localStorage.getItem('pa_pxv')||'{}'));st.sh=false;st.bk=false}catch(e){}
  const keep=()=>{try{localStorage.setItem('pa_pxv',JSON.stringify({md:st.md,bg:st.bg,idle:st.idle}))}catch(e){}};
- function list(){const d=dex(),s=d.s||{};return Object.keys(s).map(Number).filter(n=>n>0&&s[n]).sort((a,b)=>{const ra=(window.REGI||{})[a],rb=(window.REGI||{})[b];return(ra?ra.sp+.5:a)-(rb?rb.sp+.5:b)})}
- function open(id0,sh0){let id=+id0,L=list();if(!L.includes(id))L.push(id);st.sh=!!sh0;st.bk=false;D.getElementById('pxv')?.remove();
-  const v=D.createElement('div');v.id='pxv';v.setAttribute('role','dialog');v.setAttribute('aria-label','Visor de la Pokédex');
+ /* elemento de la Pokédex */
+ const special=id=>!!((window.REGI||{})[id])||id>1025;
+ const dexItem=id=>({id,base:sh=>ART(id,sh),canSh:true,ty:typesOf(id),name:()=>nameOf(id),
+  sub:()=>{const R=(window.REGI||{})[id],d=dex();return(R?'#'+String(R.sp).padStart(4,'0')+' · Forma de '+R.r:'#'+String(id).padStart(4,'0'))+' · '+((d.c||{})[id]?'✔ Capturado':'👁 Visto')}});
+ function dexList(id){const d=dex(),s=d.s||{},sp=special(id);
+  const L=Object.keys(s).map(Number).filter(n=>n>0&&s[n]&&special(n)===sp).sort((a,b)=>{const ra=(window.REGI||{})[a],rb=(window.REGI||{})[b];return(ra?ra.sp+a/1e6:a)-(rb?rb.sp+b/1e6:b)});
+  if(!L.includes(id))L.push(id);return L}
+ function view(items,i0,sh0,tag){let k=Math.max(0,Math.min(items.length-1,i0|0));st.sh=!!sh0&&items[k].canSh!==false;st.bk=false;D.getElementById('pxv')?.remove();
+  const v=D.createElement('div');v.id='pxv';v.setAttribute('role','dialog');v.setAttribute('aria-label','Visor');
   v.innerHTML=`<div class="vh"><button type="button" class="vb" data-a="x" aria-label="Cerrar">✕</button><div class="vt"><b></b><small></small></div><button type="button" class="vb" data-a="dl" aria-label="Abrir la imagen">⤓</button></div>
    <div class="vs"><button type="button" class="vb vnav l" data-a="prev" aria-label="Anterior">‹</button><img alt="" draggable="false"><button type="button" class="vb vnav r" data-a="next" aria-label="Siguiente">›</button><div class="vmsg"></div></div>
-   <div class="vc"><div class="vm">${MODES.slice(0,4).map(([k,i,n])=>`<button type="button" data-m="${k}"><i>${i}</i>${n}</button>`).join('')}</div>
+   <div class="vc"><div class="vm">${MODES.slice(0,4).map(([m,i,n])=>`<button type="button" data-m="${m}"><i>${i}</i>${n}</button>`).join('')}</div>
    <div class="vo"><button type="button" data-m="pxa"><i>🕹️</i>Píxel anim.</button><button type="button" data-a="sh"><i>✨</i>Shiny</button><button type="button" data-a="bk"><i>🔄</i>Espalda</button><button type="button" data-a="bg"><i>🌌</i>Fondo</button><button type="button" data-a="idle"><i>🎈</i>Flotar</button></div></div>`;
   D.body.append(v);const img=v.querySelector('.vs img'),msg=v.querySelector('.vmsg');let mt=0;
   const say=t=>{msg.textContent=t;msg.classList.add('on');clearTimeout(mt);mt=setTimeout(()=>msg.classList.remove('on'),1800)};
   let z=1,x=0,y=0;const tf=()=>{img.style.setProperty('--z',z);img.style.setProperty('--x',x+'px');img.style.setProperty('--y',y+'px')};const reset=()=>{z=1;x=0;y=0;tf()};
-  const avail=k=>!!SRC[k](id,st.sh,false);
-  function draw(fb){const ty=typesOf(id);v.style.setProperty('--tc',TC[ty[0]]||'#64748b');v.dataset.bg=st.bg;v.classList.toggle('idle',!!st.idle);
-   if(!avail(st.md))st.md='art';const canBk=st.md!=='art'&&st.md!=='hd';if(!canBk)st.bk=false;
-   const R=(window.REGI||{})[id],d=dex();
-   v.querySelector('.vt b').textContent=nameOf(id)+(st.sh?' ✨':'');
-   v.querySelector('.vt small').textContent=(R?'#'+String(R.sp).padStart(4,'0')+' · Forma de '+R.r:'#'+String(id).padStart(4,'0'))+' · '+((d.c||{})[id]?'✔ Capturado':'👁 Visto')+' · '+(L.indexOf(id)+1)+'/'+L.length;
+  const cur=()=>items[k];const avail=m=>!!SRC[m](cur(),false,false);
+  function draw(){const it=cur(),ty=it.ty||[];v.style.setProperty('--tc',TC[ty[0]]||'#7c3aed');v.dataset.bg=st.bg;v.classList.toggle('idle',!!st.idle);
+   if(it.canSh===false)st.sh=false;if(!avail(st.md))st.md='art';const canBk=st.md!=='art'&&st.md!=='hd';if(!canBk)st.bk=false;
+   v.querySelector('.vt b').textContent=it.name()+(st.sh?' ✨':'');
+   v.querySelector('.vt small').textContent=[it.sub&&it.sub(),items.length>1?(k+1)+'/'+items.length:''].filter(Boolean).join(' · ')+(tag?' · '+tag:'');
    v.querySelectorAll('[data-m]').forEach(b=>{b.classList.toggle('on',b.dataset.m===st.md);b.disabled=!avail(b.dataset.m)});
-   const q=k=>v.querySelector(`[data-a="${k}"]`);q('sh').classList.toggle('on',st.sh);q('bk').classList.toggle('on',st.bk);q('bk').disabled=!canBk;q('idle').classList.toggle('on',!!st.idle);
+   const q=a=>v.querySelector(`[data-a="${a}"]`);q('sh').classList.toggle('on',st.sh);q('sh').disabled=it.canSh===false;q('bk').classList.toggle('on',st.bk);q('bk').disabled=!canBk;q('idle').classList.toggle('on',!!st.idle);
    q('bg').innerHTML=`<i>${BGN[st.bg].split(' ')[0]}</i>${BGN[st.bg].split(' ')[1]}`;
-   const u=SRC[st.md](id,st.sh,st.bk);img.className='ld'+(st.md==='px'||st.md==='pxa'?' px':'');
+   const u=SRC[st.md](it,st.sh,st.bk);img.className='ld'+(st.md==='px'||st.md==='pxa'?' px':'');
    img.onload=()=>{img.classList.remove('ld')};
-   img.onerror=()=>{img.onerror=null;const n=MODES.find(m=>m[0]===st.md);if(st.bk){st.bk=false;say('No tiene imagen de espaldas en '+n[2]);draw();return}if(st.md!=='art'){say('Este Pokémon no tiene '+n[2]);st.md='art';draw();return}img.src=mini(id,st.sh)};
-   img.src=u;v.querySelector('.vnav.l').disabled=L.length<2;v.querySelector('.vnav.r').disabled=L.length<2}
-  const go=dir=>{const i=L.indexOf(id);id=L[(i+dir+L.length)%L.length];st.sh=!!(dex().sh||{})[id]&&st.sh;reset();draw();try{beep(dir>0?700:600,.04,'triangle')}catch(_){}};
+   img.onerror=()=>{img.onerror=null;const n=MODES.find(m=>m[0]===st.md);if(st.bk){st.bk=false;say('No tiene imagen de espaldas en '+n[2]);draw();return}
+    if(st.md!=='art'){say('Este Pokémon no tiene '+n[2]);st.md='art';draw();return}if(st.sh){st.sh=false;say('No tiene versión shiny');draw();return}img.classList.remove('ld')};
+   img.src=u;v.querySelector('.vnav.l').disabled=items.length<2;v.querySelector('.vnav.r').disabled=items.length<2}
+  const go=dir=>{if(items.length<2)return;k=(k+dir+items.length)%items.length;reset();draw();try{beep(dir>0?700:600,.04,'triangle')}catch(_){}};
   const close=()=>{v.remove();D.removeEventListener('keydown',key)};
   const key=e=>{if(e.key==='Escape')close();else if(e.key==='ArrowRight')go(1);else if(e.key==='ArrowLeft')go(-1)};D.addEventListener('keydown',key);
   v.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;e.stopPropagation();const a=b.dataset.a,m=b.dataset.m;
@@ -28733,15 +28749,24 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
    if(!moved){const t=Date.now();if(t-lt<320){if(z>1)reset();else{z=2.4;tf()}lt=0}else lt=t}if(z<=1.02)reset()};
   S.addEventListener('pointerup',up);S.addEventListener('pointercancel',up);
   S.addEventListener('wheel',e=>{e.preventDefault();z=Math.max(1,Math.min(5,z*(e.deltaY<0?1.15:1/1.15)));if(z<=1.02)reset();else tf()},{passive:false});
-  draw()}
- window.__pxView=open;
+  draw();return v}
+ function open(id0,sh0){const id=+id0,L=dexList(id);return view(L.map(dexItem),L.indexOf(id),sh0,special(id)?'🌍 Formas especiales':'')}
+ window.__pxView=open;window.__pxViewList=view;
  /* botón «🔍 Ver en grande» en la ficha de la Pokédex */
  let lastId=0;D.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('#pdx .pxc[data-id]');if(c)lastId=+c.dataset.id},true);
  const add=()=>{const dp=D.querySelector('#pdx #pxd .dp');if(!dp||dp.querySelector('.dpbig')||!lastId)return;const row=dp.querySelector('.dp3')||dp.querySelector('#dpsh');if(!row)return;
   const b=D.createElement('button');b.type='button';b.className='dpbig';b.textContent='🔍 Ver en grande';const id=lastId;
   b.onclick=e=>{e.stopPropagation();const sh=/Ver normal/.test((dp.querySelector('#dpsh')||{}).textContent||'');open(id,sh)};row.after(b);
   const im=dp.querySelector('#dpimg');if(im&&!im._big){im._big=1;im.style.cursor='zoom-in';im.addEventListener('click',ev=>{ev.stopPropagation();b.click()})}};
- new MutationObserver(add).observe(D.body,{childList:true,subtree:true});
+ /* Megadex y Legendex: toca la imagen de un Pokémon que hayas visto para verlo en grande (pasa solo entre los de esa lista y ese filtro) */
+ const mdx=()=>{const g=D.querySelector('#mbdx .mdxg');if(!g)return;g.querySelectorAll('.mdxc:not(.unk) img[data-b]').forEach(im=>{const c=im.closest('.mdxc');if(c&&!c.classList.contains('vwz'))c.classList.add('vwz')})};
+ D.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('#mbdx .mdxc.vwz');if(!c)return;e.stopPropagation();
+  const g=c.closest('.mdxg'),SM=!!D.querySelector('#mbdx.mdxs');
+  const cards=[...g.querySelectorAll('.mdxc:not(.unk)')].filter(x=>{const im=x.querySelector('img[data-b]');return im&&im.getAttribute('src')});
+  const items=cards.map(x=>{const im=x.querySelector('img[data-b]'),u=im.getAttribute('src'),su=shOf(u),n=(x.querySelector('b')||{}).textContent||'',num=(x.querySelector('.mdxnum')||{}).textContent||'',sm=(x.querySelector('small')||{}).textContent||'';
+   const id=OID(u),nu=id?u.replace('/official-artwork/shiny/','/official-artwork/'):u;return{base:sh=>sh&&su?su:nu,canSh:!!su,shy:/\/official-artwork\/shiny\//.test(u),ty:id&&id<=1025?typesOf(id):[],name:()=>n,sub:()=>[num,sm].filter(Boolean).join(' · ')}});
+  const i=cards.indexOf(c);if(i<0||!items.length)return;view(items,i,items[i].shy,SM?'👑 Legendex':'🔥 Megadex')},true);
+ new MutationObserver(()=>{add();mdx()}).observe(D.body,{childList:true,subtree:true});
 })();
 </script>
 </body></html>
