@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.39</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.40</div>
 </section>
 
 <section id="team" class="scr">
@@ -1822,7 +1822,8 @@ const SHT=[[SHI('<path d="M9.5 2.5h5v3.2l3.6 5.4c.5.7.7 1.5.7 2.3v6.1a2 2 0 0 1-
 [SHI('<path d="M7 3.5h10l1.8 4.2v11.8a2 2 0 0 1-2 2H7.2a2 2 0 0 1-2-2V7.7z" fill="#fbbf24" stroke="#422006" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.2 7.7h13.6" stroke="#422006" stroke-width="1.4"/><circle cx="12" cy="14" r="3.4" fill="#fef3c7" stroke="#422006" stroke-width="1.3"/><path d="M12 12.2v3.6M10.2 14h3.6" stroke="#b45309" stroke-width="1.3" stroke-linecap="round"/>'),'Equipables'],
 [SHI('<circle cx="12" cy="12" r="9.5" fill="#60a5fa" stroke="#0c2a4d" stroke-width="1.5"/><circle cx="12" cy="12" r="6.3" fill="none" stroke="#bfdbfe" stroke-width=".9" opacity=".8"/><circle cx="12" cy="12" r="2.6" fill="#0c2a4d"/><path d="M6 8.5A7 7 0 0 1 10 5" stroke="#fff" stroke-width="1.4" stroke-linecap="round" fill="none"/>'),'MT'],
 [SHI('<path d="M6 3.5h12l3.5 5.2L12 20.8 2.5 8.7z" fill="#f472b6" stroke="#3b0a24" stroke-width="1.5" stroke-linejoin="round"/><path d="M2.5 8.7h19M9 3.5l3 17.3 3-17.3" fill="none" stroke="#3b0a24" stroke-width="1" stroke-linejoin="round"/><path d="M6 3.5L9 8.7 2.5 8.7z" fill="#fbcfe8"/>'),'Reliquias'],
-[SHI('<path d="M12 2.6c2.4 0 3.8 2.5 2.4 4.6 2.3-1 4.8.6 4.4 3-.3 1.9-2.3 2.8-4.1 2.3 1.6 1.4 1.2 4.1-.9 4.7-1.4.4-2.3-.3-2.8-1.3-.5 1-1.4 1.7-2.8 1.3-2.1-.6-2.5-3.3-.9-4.7-1.8.5-3.8-.4-4.1-2.3-.4-2.4 2.1-4 4.4-3C8.2 5.1 9.6 2.6 12 2.6z" fill="#4ade80" stroke="#14532d" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 12.2v9.2" stroke="#14532d" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="10.4" r="1.4" fill="#fde047" stroke="#14532d" stroke-width=".8"/>'),'Amuletos']];
+[SHI('<path d="M12 2.6c2.4 0 3.8 2.5 2.4 4.6 2.3-1 4.8.6 4.4 3-.3 1.9-2.3 2.8-4.1 2.3 1.6 1.4 1.2 4.1-.9 4.7-1.4.4-2.3-.3-2.8-1.3-.5 1-1.4 1.7-2.8 1.3-2.1-.6-2.5-3.3-.9-4.7-1.8.5-3.8-.4-4.1-2.3-.4-2.4 2.1-4 4.4-3C8.2 5.1 9.6 2.6 12 2.6z" fill="#4ade80" stroke="#14532d" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 12.2v9.2" stroke="#14532d" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="10.4" r="1.4" fill="#fde047" stroke="#14532d" stroke-width=".8"/>'),'Amuletos'],
+[SHI('<path d="M9 3.5h6l-.6 3.2c2.8.9 4.6 3.4 4.6 6.3 0 3.9-3.1 7.5-7 7.5s-7-3.6-7-7.5c0-2.9 1.8-5.4 4.6-6.3z" fill="#fb7185" stroke="#4c0519" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.2 3.5h7.6" stroke="#4c0519" stroke-width="1.6" stroke-linecap="round"/><path d="M12 9.8v6.4M8.8 13h6.4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>'),'Potenciadores']];
 window.shop=async function(){
  const M=document.getElementById('mod'),have=n=>R.tms.some(x=>x.n==n),isB=k=>BALLK.includes(k),isS=k=>k.startsWith('st_')||k==='ever';
  if(!R.stk||!R.stk.t)R.stk={t:shuf(MTS.filter(t=>!have(t.n))).slice(0,6).sort((a,b)=>mtp(a)-mtp(b)).map(t=>t.n),r:shuf(REL.map((r,i)=>i).filter(i=>!relHas(i)&&!REL[i].ex)).slice(0,6)};
@@ -1833,6 +1834,7 @@ window.shop=async function(){
  return new Promise(res=>{
   const close=()=>{M.classList.remove('keep');M.querySelectorAll('.fclose,.fqty,.fqp,.frr').forEach(e=>e.remove());M.style.display='none';res()};
   const lists=()=>{
+   const isP=k=>/^(ppu|ppm|vhp|vat|vde|vsa|vsd|vsp)$/.test(k);/* v58.40: potenciadores (Más PP, PP Máximos y vitaminas) en su pestaña */
    const keys=Object.keys(ITEM).filter(k=>k!=='mrinv'),full=(R.ch||[]).length>=5,rfull=R.rel.length>=5;  /* la Invocación de megaincursión ya no se vende en la tienda */
    const item=k=>({cls:'',q:1,p:ITEM[k].p,t:ITEM[k].n,ic:IC[k]||'🎁',d:String(ITEM[k].d||'').replace(/^Objeto equipable · /,''),tg:k.startsWith('h_')?'🧤 Objeto equipable':isB(k)?'Poké Ball':isS(k)?'Piedra evolutiva':'Objeto',
     h:`<span class="ei">${IC[k]||'🎁'}</span><b>${ITEM[k].n}</b><small class="scnt${R.bag[k]>0?' has':''}">x${nf(R.bag[k]||0)}</small>`,
@@ -1842,7 +1844,7 @@ window.shop=async function(){
    const rl=[...ovR,...stk.r.filter(i=>!ovR.includes(i)&&!(REL[i]&&REL[i].ex))].filter(i=>!relHas(i));
    const cl=[...ovC,...stk.c.filter(i=>!ovC.includes(i)&&!(CHARM[i]&&CHARM[i].ex))].filter(i=>!chHas(i));
    return[
-    keys.filter(k=>!isB(k)&&!isS(k)&&!k.startsWith('h_')).map(item),
+    keys.filter(k=>!isB(k)&&!isS(k)&&!k.startsWith('h_')&&!isP(k)).map(item),
     keys.filter(isB).map(item),
     keys.filter(k=>k==='ever'||(window.__stUnl&&__stUnl.has(k))).map(item),/* v58.3: la Piedra Eterna y las piedras que desbloqueaste con logros */
     keys.filter(k=>k.startsWith('h_')).map(item),
@@ -1851,7 +1853,8 @@ window.shop=async function(){
     rl.map(i=>({cls:'rel',p:rlp(i),off:rfull,t:'Reliquia '+REL[i].n,ic:isImg(RSP[i],'relic'),tg:'Reliquia · efecto permanente',d:REL[i].d+(rfull?'<br><b>Cupo lleno (5/5)</b>':''),h:`<span class="ei">${isImg(RSP[i],'relic')}</span><b>Reliquia ${REL[i].n}</b>${rfull?'<small>Cupo lleno (5/5)</small>':''}`,
      buy:()=>{R.rel.push(i);R.ovf=(R.ovf||[]).filter(o=>!(o.t==='r'&&o.k===i))}})),
     [...(R.cable?[]:[cableItem()]),...cl.map(i=>({cls:'rel chm',p:CHARM[i].p,off:full,t:CHARM[i].n,ic:`<span class="cic" style="--c:${CHARM[i].c}">${CHARM[i].e}</span>`,tg:'Amuleto',d:CHARM[i].d+(full?'<br><b>Ranuras llenas (5/5)</b>':''),h:`<span class="ei"><span class="cic" style="--c:${CHARM[i].c}">${CHARM[i].e}</span></span><b>${CHARM[i].n}</b>${full?'<small>Ranuras llenas</small>':''}`,
-     buy:()=>{(R.ch=R.ch||[]).push(i);R.ovf=(R.ovf||[]).filter(o=>!(o.t==='c'&&o.k===i))}}))]]};
+     buy:()=>{(R.ch=R.ch||[]).push(i);R.ovf=(R.ovf||[]).filter(o=>!(o.t==='c'&&o.k===i))}}))],
+    keys.filter(isP).map(k=>Object.assign(item(k),{tg:'Potenciador'}))]};
    /* ---- Rerroll de ofertas (MT / Reliquias / Amuletos): de pago, o gratis con el Amuleto Giro (1 por pestaña, se recarga con 2 combates ganados) ---- */
    const RRN={4:'MT',5:'Reliquias',6:'Amuletos'},RRP={4:300,5:300,6:300};if(R.rrU&&!R.rrU._v2){const o=R.rrU,n={_v2:1};[3,4,5].forEach(k=>{if(o[k]!=null)n[k+1]=o[k]});R.rrU=n}
    const rrHas=()=>(R.ch||[]).some(i=>CHARM[i]&&CHARM[i].ab==='reroll');
@@ -8712,7 +8715,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.39',t:'Pasar turno',s:'cur',l:[
+ {v:'58.40',t:'Pestaña de potenciadores',s:'cur',l:[
+  '💪 Nueva pestaña «Potenciadores» en la tienda, la mochila y el baúl de casa: Más PP, PP Máximos y las vitaminas (Más PS, Proteína, Hierro, Calcio, Zinc y Carburante) ya no se mezclan con los objetos de curación'
+ ]},
+ {v:'58.39',t:'Pasar turno',s:'prev',l:[
   '⏭️ Nuevo botón «Pasar» en los combates: tu Pokémon no hace nada ese turno y el rival juega el suyo',
   '⚔️ Está en todos los combates por turnos: salvajes, entrenadores, gimnasios, biomas, combate doble, combates por la red (PvP y torneos), torre cooperativa y aventura multijugador. En las megaincursiones no hace falta: son en tiempo real'
  ]},
@@ -11520,8 +11526,9 @@ html.vm-pc #mod .box.bagb>.bgw,html.vm-mh #mod .box.bagb>.bgw{grid-row:2/-1}
 <script id="bagtabs_js">
 (()=>{
 const D=document,MD=D.getElementById('mod');if(!MD)return;
-const CURA=['pot','sup','hyp','ptn','max','frs','rev','rvm','ant','apa','aqu','ahi','des','acf','cut','eth','emx','ppu','ppm'];
+const CURA=['pot','sup','hyp','ptn','max','frs','rev','rvm','ant','apa','aqu','ahi','des','acf','cut','eth','emx'];
 window.bagCat=o=>{if(!o)return'other';if(o.r)return'rel';const k=String(o.k||'');
+ if(/^(ppu|ppm|vhp|vat|vde|vsa|vsd|vsp)$/.test(k))return'boost';/* v58.40 */
  if(/^tm\d+$/.test(k))return'mt';
  if((typeof BALLK!='undefined'&&BALLK.includes(k))||k.indexOf('bt_')===0)return'ball';
  if(k.indexOf('h_')===0)return'held';
@@ -11529,7 +11536,7 @@ window.bagCat=o=>{if(!o)return'other';if(o.r)return'rel';const k=String(o.k||'')
  if(k.indexOf('st_')===0||k=='ever')return'stone';
  if(CURA.includes(k))return'heal';
  return'other'};
-const TABS=[['all','Todo','🎒'],['ball','Poké Balls',null],['heal','Curación','💊'],['can','Caramelos','🍬'],['stone','Piedras','💎'],['mt','MT','💿'],['held','Equipables','🧤'],['rel','Reliquias','🏺'],['other','Otros','📦']];
+const TABS=[['all','Todo','🎒'],['ball','Poké Balls',null],['heal','Curación','💊'],['can','Caramelos','🍬'],['boost','Potenciadores','💪'],['stone','Piedras','💎'],['mt','MT','💿'],['held','Equipables','🧤'],['rel','Reliquias','🏺'],['other','Otros','📦']];
 function build(){
  const bx=MD.querySelector('.box');if(!bx||bx.querySelector('.btabs'))return;
  const h=bx.querySelector('h3');if(!h||!/Mochila/.test(h.textContent))return;
@@ -28217,6 +28224,8 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
 #coop .cbp-tabs button[data-x="pass"]{background:#ffffff08;border-style:dashed}
 #opts .g:has(> #bpass){grid-template-columns:repeat(5,minmax(0,1fr))!important}
 #opts .g:has(> #bpass) .act .al{font-size:min(1em,3.1vw)}
+/* v58.40: la pestaña Potenciadores de la tienda se ve justo después de Objetos */
+#mod .stabs>.stab[data-t="0"]{order:0}#mod .stabs>.stab[data-t="7"]{order:1}#mod .stabs>.stab:not([data-t="0"]):not([data-t="7"]){order:2}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Hisui nuevas (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -28372,8 +28381,8 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
 (()=>{const D=document,C=window.__chest;if(!C)return;
  const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  const UP=[[5000,'Baúl reforzado'],[15000,'Gran baúl'],[40000,'Cámara del tesoro']];
- const TABS=[['all','Todo','✨'],['obj','Objetos','🧪'],['ball','Balls','⚪'],['st','Piedras','💎'],['eq','Equipables','🧤'],['ch','Amuletos','🔮'],['rel','Reliquias','🏺'],['tm','MT','💿']];
- const catOf=d=>d.t==='c'?'ch':d.t==='r'?'rel':d.t==='m'?'tm':(typeof BALLK!=='undefined'&&BALLK.includes(d.k))||String(d.k).startsWith('bt_')?'ball':String(d.k).startsWith('st_')||d.k==='ever'?'st':String(d.k).startsWith('h_')?'eq':'obj';
+ const TABS=[['all','Todo','✨'],['obj','Objetos','🧪'],['pot','Potenciadores','💪'],['ball','Balls','⚪'],['st','Piedras','💎'],['eq','Equipables','🧤'],['ch','Amuletos','🔮'],['rel','Reliquias','🏺'],['tm','MT','💿']];
+ const catOf=d=>d.t==='c'?'ch':d.t==='r'?'rel':d.t==='m'?'tm':(typeof BALLK!=='undefined'&&BALLK.includes(d.k))||String(d.k).startsWith('bt_')?'ball':String(d.k).startsWith('st_')||d.k==='ever'?'st':String(d.k).startsWith('h_')?'eq':/^(ppu|ppm|vhp|vat|vde|vsa|vsd|vsp)$/.test(String(d.k))?'pot':'obj';
  const rar=d=>{if(d.t==='r')return REL[d.k]&&REL[d.k].ex?'leg':'epic';if(d.t==='c')return CHARM[d.k]&&CHARM[d.k].ex?'leg':'rare';const c=catOf(d);return c==='st'?'unc':c==='eq'?'held':c==='tm'?'tm':c==='ball'?'ball':''};
  const RV={leg:5,epic:4,rare:3,held:2,unc:2,tm:1,ball:1,'':0};
  let tab='all',q='',sort='rar',side='chest',sel=null,O=null;
