@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.38</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.39</div>
 </section>
 
 <section id="team" class="scr">
@@ -6379,6 +6379,7 @@ function pvResolve(ch){
     if(P.turn===1){for(const s of['p','e']){const X=xs(s),o=s==='p'?'e':'p';if(has(s,'shield'))X.shield=Math.round(actS(s).max*.3);if(has(s,'marea'))MX.stage(actS(s),'sp',1,null);if(has(s,'tormenta')&&window.__abt&&__abt.setWx){const t=actS(s).types||[],w=t.includes('fire')?'sun':t.includes('water')?'rain':(t.includes('rock')||t.includes('ground'))?'sand':t.includes('ice')?'hail':null;if(w&&!(P.B.wx&&P.B.wx.k===w)){__abt.setWx(w);const q=__abt.q6;while(q.length)say(q.shift())}}if(has(s,'chip')){const E=actS(o);MX.hurt(E,E.max*.12,`¡El Amuleto Garra hirió a ${P.ctx.lab(E)} al empezar!`,{direct:true})}}}
     for(const side of['h','g']){const c=ch[side];if(c&&c.k=='s'){const s=PS(side);if(MX.trapped(actS(s))){say(`¡${L1(actS(s))} no puede retirarse!`);continue}say(side==P.me?`¡${nm(actS(s))}, vuelve!`:`El rival retira a ${nm(actS(s))}.`);enter(s,c.i,null)}}
     for(const side of['h','g']){const c=ch[side];if(c&&c.k=='m'&&c.mg)pvMegaDo(side,c)}
+    for(const side of['h','g']){const c=ch[side];if(c&&c.k=='p'){const m=actS(PS(side));if(m&&m.hp>0)say(`${side==P.me?'':'El rival: '}${nm(m)} no hace nada y espera.`)}}
     const list=[];
     for(const side of['h','g']){const c=ch[side];if(!c||c.k!='m')continue;const s=PS(side),m=actS(s);if(m.hp<=0)continue;
       let mv=m.moves[c.i];if(!mv||mv.cp<=0||m.moves.every(x=>x.cp<=0))mv=STRUG;const lk=MX.lockMove(m);if(lk)mv=lk;
@@ -6402,6 +6403,7 @@ function pvLegal(s,c){
   if(!c||typeof c!='object')return null;const m=P.t[s][P.a[s]];
   if(P.phase=='fsw'){if(!P.need[s])return null;const i=c.i|0;return c.k=='s'&&P.t[s][i]&&P.t[s][i].hp>0&&i!==P.a[s]?{k:'s',i}:null}
   if(P.phase!='act')return null;
+  if(c.k=='p')return{k:'p'};/* v58.39: no hacer nada */
   if(c.k=='s'){const i=c.i|0;return P.t[s][i]&&P.t[s][i].hp>0&&i!==P.a[s]?{k:'s',i}:null}
   const i=c.i|0,o={k:'m',i:i>=0&&i<m.moves.length?i:0};if(c.mg&&pvMegaOk(s)){const fs=MEGAF[m.id]||[''];o.mg=1;o.mf=fs.includes(c.mf)?c.mf:fs[0]}if(c.sw!=null){const j=c.sw|0;if(P.t[s][j]&&P.t[s][j].hp>0&&j!==P.a[s])o.sw=j}return o}
 function pvSet(s,c,n){
@@ -6651,7 +6653,7 @@ function pvDock(){
     c=`<div class="pvw" style="padding:4px 8px 10px">¿Quién entrará después de ${esc(mv?mv.n:'')}?</div><div class="pvsw">${P.t[me].map((m,i)=>m.hp>0&&i!==P.a[me]?`<button type="button" class="pvb" data-pv="pivs" data-i="${i}" style="--i:${i}">${pimg(m.id,m.sh)}<span><b>${esc(nm(m))}</b><span class="mt"><span>Nv.${m.lvl}</span><span>${m.hp}/${m.max}</span></span><span class="pp"><i style="width:${m.hp/m.max*100}%"></i></span></span></button>`:'').join('')}</div><div class="pvact"><button type="button" class="pvb sm" data-pv="back">↩ Volver</button></div>`}
   else{const m=P.t[me][P.a[me]],lk=shimRO(()=>MX.lockMove(m)),trp=shimRO(()=>MX.trapped(m)),allOut=m.moves.every(v=>v.cp<=0);
     if(lk){c=w(`⏳ ${esc(nm(m))} ${shimRO(()=>MX.V(m).rech)?'debe recuperarse':'continúa con '+esc(lk.n)}`);if(P._auto!==P.turn){P._auto=P.turn;setTimeout(()=>{if(P&&!P.ch[P.me]&&!P.busy)pvChoose({k:'m',i:0})},650)}}
-    else c=`<div class="pvmv">${allOut?`<button type="button" class="pvb" data-pv="m" data-i="0" style="--c:${COL.normal}"><b>Forcejeo</b><span class="mt"><span>Normal</span><span>Pod. 50</span></span><span class="mt"><span>Sin PP en ningún movimiento</span></span></button>`:m.moves.map((v,i)=>{const why=shimRO(()=>MX.restrictWhy(m,v,1))||(v.cp<=0?'Sin PP':''),ef=(window.MX&&MX.describe(v))||'';return`<button type="button" class="pvb${why?' no':''}" data-pv="m" data-i="${i}" style="--c:${COL[v.t]||'#6366f1'};--i:${i}" ${why?`disabled title="${esc(why)}"`:''}><span class="pvi" data-pv="info" data-i="${i}" title="Información">i</span><b>${esc(v.n)}</b><span class="mt"><span>${ES[v.t]||v.t}</span><span>${v.p?'Pod. '+v.p:'Estado'}</span></span><span class="pp"><i style="width:${v.mp?v.cp/v.mp*100:0}%"></i></span><span class="mt"><span>PP ${v.cp}/${v.mp}</span><span>${why?'🚫':''}</span></span>${ef?`<span class="pvef">${esc(ef)}</span>`:''}</button>`}).join('')}</div>${pvMegaOk(me)&&megaForms(m).length?`<div class="pvmega">${megaForms(m).map(f=>`<button type="button" class="pvb sm pvmgb${P.mgSel===f?' on':''}" data-pv="mega" data-f="${esc(f)}"><span>⚡</span>${P.mgSel===f?'✔ ':''}${esc((()=>{try{return nm({...m,megaOn:true,mfs:f})}catch(_){return'Mega'}})())}</button>`).join('')}<small>${P.mgSel!=null?'Elige un ataque: megaevolucionará antes de atacar':'Una vez por batalla · ×1,5 stats y vida'}</small></div>`:P.mg[me]?'':''}<div class="pvact"><button type="button" class="pvb sm" data-pv="sw" ${P.t[me].some((x,i)=>x.hp>0&&i!==P.a[me])&&!trp?'':'disabled'}>${trp?'⛓️ Atrapado':'🔄 Cambiar'}</button><button type="button" class="pvb sm dan" data-pv="ff">🏳️ Rendirse</button></div>`}
+    else c=`<div class="pvmv">${allOut?`<button type="button" class="pvb" data-pv="m" data-i="0" style="--c:${COL.normal}"><b>Forcejeo</b><span class="mt"><span>Normal</span><span>Pod. 50</span></span><span class="mt"><span>Sin PP en ningún movimiento</span></span></button>`:m.moves.map((v,i)=>{const why=shimRO(()=>MX.restrictWhy(m,v,1))||(v.cp<=0?'Sin PP':''),ef=(window.MX&&MX.describe(v))||'';return`<button type="button" class="pvb${why?' no':''}" data-pv="m" data-i="${i}" style="--c:${COL[v.t]||'#6366f1'};--i:${i}" ${why?`disabled title="${esc(why)}"`:''}><span class="pvi" data-pv="info" data-i="${i}" title="Información">i</span><b>${esc(v.n)}</b><span class="mt"><span>${ES[v.t]||v.t}</span><span>${v.p?'Pod. '+v.p:'Estado'}</span></span><span class="pp"><i style="width:${v.mp?v.cp/v.mp*100:0}%"></i></span><span class="mt"><span>PP ${v.cp}/${v.mp}</span><span>${why?'🚫':''}</span></span>${ef?`<span class="pvef">${esc(ef)}</span>`:''}</button>`}).join('')}</div>${pvMegaOk(me)&&megaForms(m).length?`<div class="pvmega">${megaForms(m).map(f=>`<button type="button" class="pvb sm pvmgb${P.mgSel===f?' on':''}" data-pv="mega" data-f="${esc(f)}"><span>⚡</span>${P.mgSel===f?'✔ ':''}${esc((()=>{try{return nm({...m,megaOn:true,mfs:f})}catch(_){return'Mega'}})())}</button>`).join('')}<small>${P.mgSel!=null?'Elige un ataque: megaevolucionará antes de atacar':'Una vez por batalla · ×1,5 stats y vida'}</small></div>`:P.mg[me]?'':''}<div class="pvact"><button type="button" class="pvb sm" data-pv="sw" ${P.t[me].some((x,i)=>x.hp>0&&i!==P.a[me])&&!trp?'':'disabled'}>${trp?'⛓️ Atrapado':'🔄 Cambiar'}</button><button type="button" class="pvb sm" data-pv="pass" title="Tu Pokémon no actúa y cede el turno al rival">⏭️ Pasar</button><button type="button" class="pvb sm dan" data-pv="ff">🏳️ Rendirse</button></div>`}
   if(c===P._dk)return;P._dk=c;const dk=Q('#pvc');dk.className='pvdock'+cls;dk.innerHTML=c}
 function pvRes(){
   const r=Q('#pvres');if(!r)return;
@@ -6680,6 +6682,7 @@ pvO.addEventListener('click',e=>{
   else if(a=='mega'){const f=b.dataset.f||'';P.mgSel=P.mgSel===f?null:f;try{beep(P.mgSel!=null?990:520,.08,'triangle')}catch(_){}pvDraw()}
   else if(a=='sw'){P.mgSel=null;P.ui='sw';pvDraw()}
   else if(a=='back'){P.ui='main';pvDraw()}
+  else if(a=='pass'){P.mgSel=null;pvChoose({k:'p'})}
   else if(a=='ff'){P.ui='ff';pvDraw()}
   else if(a=='ffy')pvForfeit();
   else if(a=='exit'){P=null;pvHide();L.stage='hub';L.pv=null;L.pq=[];Q('#lan').style.display='flex';render()}});
@@ -8709,7 +8712,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.38',t:'Más PP y PP Máximos',s:'cur',l:[
+ {v:'58.39',t:'Pasar turno',s:'cur',l:[
+  '⏭️ Nuevo botón «Pasar» en los combates: tu Pokémon no hace nada ese turno y el rival juega el suyo',
+  '⚔️ Está en todos los combates por turnos: salvajes, entrenadores, gimnasios, biomas, combate doble, combates por la red (PvP y torneos), torre cooperativa y aventura multijugador. En las megaincursiones no hace falta: son en tiempo real'
+ ]},
+ {v:'58.38',t:'Más PP y PP Máximos',s:'prev',l:[
   '💊 Objetos nuevos en la tienda: Más PP (sube un 20 % los PP máximos de un movimiento, hasta 3 veces por movimiento) y PP Máximos (lo deja al máximo de golpe, +60 %)',
   '🎯 Al usarlos eliges el Pokémon y el movimiento, y ves cuántos Más PP lleva cada uno (▰▰▱). El aumento se mantiene al guardar y cargar la partida; si el Pokémon olvida el movimiento, el nuevo empieza sin aumento'
  ]},
@@ -17351,6 +17358,7 @@ async function act(u,inp){const m=u.m,nmA=pname(m);
   fx({k:'fl',s:u.s,i:u.i,txt:'✨',cls:'hl'});
   if(R0()<.4){const h=Math.ceil(tu.m.max*.2);tu.m.hp=Math.min(tu.m.max,tu.m.hp+h);fx({k:'fl',s:'h',i:tu.i,txt:'✨ +'+h,cls:'hl'});V.log=`✨ Deseo de vida de ${nmA}: ¡${pname(tu.m)} recupera ${h} PS!`;bp(988,.15)}
   else{V.log=`✨ ${nmA} pidió un Deseo de vida para ${pname(tu.m)}… pero no se cumplió.`;bp(330,.1)}return}
+ if(inp.i==='pass'){fx({k:'fl',s:u.s,i:u.i,txt:'⏭️',cls:'hl'});V.log=`${nmA} no hace nada y espera.`;bp(420,.06);return}/* v58.39 */
  if(inp.i==='def'){m._st.d=Math.min(6,(m._st.d||0)+1);m._st.sd=Math.min(6,(m._st.sd||0)+1);fx({k:'fl',s:u.s,i:u.i,txt:'🛡️ +DEF',cls:'hl'});V.log=`${nmA} se pone en guardia.`;bp(500,.08);return}
  const v=inp.i==='tackle'?{n:'Placaje',t:'normal',p:40,ph:true,acc:100}:(m.moves||[])[+inp.i];if(!v){V.log=`${nmA} duda…`;return}
  let tu=inp.tg&&unitOf(inp.tg)?{s:inp.tg.s,i:+inp.tg.i,m:unitOf(inp.tg)}:null;
@@ -17579,7 +17587,7 @@ function draw0(s){if(!el)return;S=s;setTimeout(()=>{try{if(S===s)mvwPaint(s)}cat
   const ms=s.seats[mySeatIx()],koMe=ms&&ms.hero&&ms.hero.hp<=0;
   if(koMe){const cd=ms.kcd||0;KOC={cd,t:now(),p:s.kpause};KOLOG=SEL==='wish'?'Toca al compañero (con aro verde) que quieres intentar curar.':s.log;KOTEAM=teamH(s);h+=`<div class="ma-who"><em style="--c:${PC[mySeatIx()]}">${esc(ms.n)}</em> ${esc(ms.hero.nm)} está debilitado · usa sus deseos cuando quieras</div><div class="ma-log" id="makolog"></div><div class="ma-kst" id="makcd"></div><div class="ma-mv ko"><button data-ko="wish" class="${SEL==='wish'?'sel':''}" style="--c:#db2777">✨ Deseo de vida<small>40%: cura un 20% de PS a un compañero</small><i class="ma-i" data-info="wish" role="button">i</i></button><button data-ko="death" style="--c:#4c1d95">💀 Deseo de muerte<small>5%: derrota de golpe a un enemigo al azar</small><i class="ma-i" data-info="death" role="button">i</i></button></div><div id="makoteam"></div>`}
   else if(myTurn){const m=ow.hero;h+=`<div class="ma-who my"><em style="--c:${PC[t.i]}">${esc(ow.n)}</em> Tu turno · ${esc(m.nm)} <span class="ma-tmr" data-tmr></span></div><div class="ma-log">${SEL!=null&&m.moves[SEL]?(m.moves[SEL].p||m.moves[SEL].tg==='e'?'Toca al Pokémon rival sobre el que usar '+esc(m.moves[SEL].n)+'.':m.moves[SEL].tg==='a'?'Toca al compañero (o a ti mismo) sobre el que usar '+esc(m.moves[SEL].n)+'.':m.moves[SEL].tg==='ko'?'Toca al compañero debilitado que quieres reanimar.':'Toca el Pokémon (de tu equipo o rival) sobre el que usar '+esc(m.moves[SEL].n)+'.'):esc(s.log)}</div>
-   <div class="ma-mv">${m.moves.map((v,i)=>`<button data-mv="${i}" class="${SEL===i?'sel':''}" style="--c:${COL[v.t]||'#6366f1'}">${esc(v.n)}<small>${ES[v.t]||v.t} · ${v.p?(v.ph?'Físico':'Especial')+' · '+v.p:'Apoyo'}</small><i class="ma-i" data-info="${i}" role="button" aria-label="Qué hace ${esc(v.n)}">i</i></button>`).join('')}</div><div class="ma-acts">${(s.ult|0)>=100?'<button class="ma-b sm ma-ultb" data-mv="ult">💥 ¡En equipo!</button>':''}<button class="ma-b sm" data-mv="def">🛡️ Defenderse</button>${myBag(s).some(x=>x.k==='pot')?`<button class="ma-b sm g" data-a="bag">🧪 Poción (${myBag(s).filter(x=>x.k==='pot').length})</button>`:''}</div>`}
+   <div class="ma-mv">${m.moves.map((v,i)=>`<button data-mv="${i}" class="${SEL===i?'sel':''}" style="--c:${COL[v.t]||'#6366f1'}">${esc(v.n)}<small>${ES[v.t]||v.t} · ${v.p?(v.ph?'Físico':'Especial')+' · '+v.p:'Apoyo'}</small><i class="ma-i" data-info="${i}" role="button" aria-label="Qué hace ${esc(v.n)}">i</i></button>`).join('')}</div><div class="ma-acts">${(s.ult|0)>=100?'<button class="ma-b sm ma-ultb" data-mv="ult">💥 ¡En equipo!</button>':''}<button class="ma-b sm" data-mv="def">🛡️ Defenderse</button><button class="ma-b sm" data-mv="pass" title="Tu Pokémon no actúa este turno">⏭️ Pasar</button>${myBag(s).some(x=>x.k==='pot')?`<button class="ma-b sm g" data-a="bag">🧪 Poción (${myBag(s).filter(x=>x.k==='pot').length})</button>`:''}</div>`}
   else h+=`<div class="ma-who">${t?(t.s==='h'?`<em style="--c:${PC[t.i]}">${esc(ow.n)}</em> ${s.wait?'está eligiendo qué hacer… <span class="ma-tmr" data-tmr></span>':''}`:'⚠️ Turno del rival'):''}</div><div class="ma-log" data-lg></div><div class="ma-tmw" data-tm></div>`}
  else if(s.ph==='load')h=`<div class="ma-load"><i></i>${esc(s.msg)}</div><div class="ma-tmw" data-tm></div>`;
  else if(s.ph==='event'&&s.ev)h=`<div class="ma-evc"><h4>${esc(s.ev.t)}</h4><p>${esc(s.ev.x)}</p>${s.ev.opts.map((o,i)=>`<button class="ma-evo" data-a="ev:${i}"><b>${esc(o.l)}</b><small>${esc(o.d)}</small>${(s.evv?Object.keys(s.evv).filter(k=>s.evv[k]===i):[]).map(k=>`<i class="ma-vtd" style="--c:${PC[k]||'#fff'}"></i>`).join('')}</button>`).join('')}<p class="ma-note">👑 Solo el líder decide; los demás podéis votar tocando una opción.</p></div>`;
@@ -22887,6 +22895,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   if(s.ph!=='ch'||!a)return;const m=s.al[slotOf(w)];if(!m||m.ko)return;
   if(a.k==='mv'){const i=cl(a.i|0,0,m.moves.length-1,0);H.acts[w]={k:'mv',i,tg:cl(a.tg|0,0,3,0),tera:a.tera&&!s.tera[w]&&m.lvl>=30?1:0}}
   else if(a.k==='sw'){const T=teamOf(s,w),n=T[a.j|0];if(!n||n.ko||n===m)return;H.acts[w]={k:'sw',j:a.j|0}}
+  else if(a.k==='ps'){H.acts[w]={k:'ps'}}/* v58.39: no hacer nada */
   else if(a.k==='it'){const it=String(a.it||'');if(!BAGK.includes(it)||!(s.bag[w][it]>0))return;const T=teamOf(s,w);if(!T[a.j|0])return;/* v58.0: en la aventura, usar un objeto no gasta el turno (como en los combates normales) */if(s.mode==='adv'){const ev=[];doItem(s,w,{it,j:a.j|0},ev);hSend(ev);return}H.acts[w]={k:'it',it,j:a.j|0}}
   else return;
   s.ch[w]=1;const need=['h','g'].filter(k=>{const x=s.al[slotOf(k)];return x&&!x.ko});if(need.every(k=>H.acts[k]))hTurn();else hSend([])}
@@ -22986,7 +22995,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   const L=[];['h','g'].forEach(w=>{const sl=slotOf(w),m=s.al[sl],a=H.acts[w];if(m&&!m.ko&&a)L.push({side:'a',w,m,a})});
   s.fo.forEach(m=>{if(!m.ko)L.push({side:'f',m,a:botAct(s,m)})});
   L.forEach(x=>{const pr=x.a.k==='sw'?7:x.a.k==='it'?6:((x.m.moves[x.a.i]||STR).pr||0);x.o=pr*100000+spd(x.m)+rnd()});L.sort((a,b)=>b.o-a.o);
-  for(const x of L){if(x.side==='a'){if(x.a.k==='sw'){doSwitch(s,x.w,x.a.j,ev);continue}if(x.a.k==='it'){doItem(s,x.w,x.a,ev);continue}if(s.al[slotOf(x.w)]!==x.m||x.m.ko)continue}else if(x.m.ko)continue;
+  for(const x of L){if(x.side==='a'){if(x.a.k==='sw'){doSwitch(s,x.w,x.a.j,ev);continue}if(x.a.k==='it'){doItem(s,x.w,x.a,ev);continue}if(x.a.k==='ps'){if(s.al[slotOf(x.w)]===x.m&&!x.m.ko)ev.push({k:'msg',t:`${x.m.n} no hace nada y espera.`});continue}if(s.al[slotOf(x.w)]!==x.m||x.m.ko)continue}else if(x.m.ko)continue;
    doMove(s,x,ev);if(s.fo.every(f=>f.ko)||s.al.every(m=>!m||m.ko))break}
   if(!s.fo.every(f=>f.ko))residual(s,ev);
   H.acts={};s.ch={};
@@ -23119,7 +23128,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   else if(pend&&pend.ally){const v=m.moves[pend.i],pt=s.al[me==='h'?1:0];h=`<div class="cbp-h"><b>${esc(v.n)}: ¿en quién?</b><button type="button" class="cbp-undo" data-x="back">↩</button></div><div class="cbp-tgs cbp-al"><button type="button" data-x="ga:2">${miniI(m.id,m.sh)}<b>${esc(m.n)}</b><small>Tú</small></button>${pt&&!pt.ko?`<button type="button" data-x="ga:3">${miniI(pt.id,pt.sh)}<b>${esc(pt.n)}</b><small>Compañero</small></button>`:''}</div>`}
   else if(pend){const v=m.moves[pend.i],F=s.fo;h=`<div class="cbp-h"><b>${esc(v.n)}: ¿a quién?</b><button type="button" class="cbp-undo" data-x="back">↩</button></div><div class="cbp-tgs">${F.map((f,i)=>f.ko?'':`<button type="button" data-x="go:${i}">${miniI(f.id,f.sh)}<b>${esc(f.n)}</b><small>${v.p?(effLab(effT(v.t,f.tOn?[f.tera]:f.types))||'×1'):'Estado'}</small></button>`).join('')}</div>`}
   else{const canT=!s.tera[me]&&m.lvl>=30&&!m.tOn,bag=s.bag&&s.bag[me]||{},nb=BAGK.reduce((a,k)=>a+(bag[k]>0?1:0),0),bench=myTeam().filter(x=>!x.ko&&x.ti!==m.ti&&!(s.shared&&s.al.some(a=>a&&a.ti===x.ti))).length;
-   const tabs=`<div class="cbp-tabs"><button type="button" class="${tab==='mv'?'on':''}" data-x="tab:mv">⚔️ Luchar</button><button type="button" class="${tab==='tm'?'on':''}" data-x="tab:tm" ${myTeam().length>1?'':'disabled'}>🔄 Equipo${bench?` <em>${bench}</em>`:''}</button><button type="button" class="${tab==='bg'?'on':''}" data-x="tab:bg">🎒 Mochila${nb?` <em>${nb}</em>`:''}</button></div>`;
+   const tabs=`<div class="cbp-tabs"><button type="button" class="${tab==='mv'?'on':''}" data-x="tab:mv">⚔️ Luchar</button><button type="button" class="${tab==='tm'?'on':''}" data-x="tab:tm" ${myTeam().length>1?'':'disabled'}>🔄 Equipo${bench?` <em>${bench}</em>`:''}</button><button type="button" class="${tab==='bg'?'on':''}" data-x="tab:bg">🎒 Mochila${nb?` <em>${nb}</em>`:''}</button><button type="button" data-x="pass" title="Tu Pokémon no actúa este turno">⏭️ Pasar</button></div>`;
    let c='';
    if(tab==='mv'){const F=s.fo.filter(f=>!f.ko);c=`<div class="cbp-mv">${m.moves.map((v,i)=>{const es=v.p?F.map(f=>effLab(effT(v.t,f.tOn?[f.tera]:f.types))).filter(Boolean):[];const ty=teraOn&&v.t===m.tera?' mvtb':'';
      return`<button type="button" data-x="mv:${i}" style="--c:${tyC(v.t)}" class="${v.cp<=0?'off':''}${ty}"><span class="mv-n">${esc(v.n)}</span><span class="mv-i" data-x="inf:${i}">i</span><span class="mv-d"><i>${esc(tyN(v.t))}</i>${v.p?(v.ph?'Físico':'Especial')+' '+v.p:'Estado'}${v.sp?' · 👥':''}</span><span class="mv-pp">PP ${v.cp}/${v.pp}${es.length?` <b class="mv-e">${es.join(' ')}</b>`:''}</span></button>`}).join('')}</div>
@@ -23152,6 +23161,7 @@ const D=document,Q=s=>D.querySelector(s),MD=D.getElementById('mod');
   if(a.startsWith('tab:')){tab=a.slice(4);itPick=null;info=null;panel();bp(600,.03);return}
   if(a==='tera'){teraOn=!teraOn;panel();bp(teraOn?990:500,.05);return}
   if(a==='undo'){send({k:'undo'});pend=null;return}
+  if(a==='pass'){const m=myMon();if(!m||ST.ph!=='ch'||ST.ch&&ST.ch[me])return;pend=null;send({k:'ps'});bp(420,.05);tab='mv';return}/* v58.39 */
   if(a==='back'){pend=null;panel();return}
   if(a.startsWith('mv:')){const m=myMon();if(!m||ST.ph!=='ch'||ST.ch&&ST.ch[me])return;const i=+a.slice(3),v=m.moves[i];if(!v)return;if(v.cp<=0&&m.moves.some(x=>x.cp>0)){try{toast('No quedan PP de ese movimiento')}catch(_){}return}
    const F=ST.fo.map((f,j)=>f.ko?-1:j).filter(j=>j>=0),single=(v.p>0||v.e&&(v.e.A||v.e.F))&&!v.sp,E=v.e||{},sup=!v.p&&!E.A&&!E.F&&!(E.SX&&E.SX.w!=='u')&&(E.S||E.H),pt=ST.al[me==='h'?1:0];
@@ -28203,6 +28213,10 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
 #pxv .vlore[hidden]{display:none}
 #pxv .vb.on{background:linear-gradient(180deg,#f59e0b,#b45309);border-color:#fde68a;color:#fff}
 #pxv .vb:disabled{opacity:.3}
+#coop .cbp-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
+#coop .cbp-tabs button[data-x="pass"]{background:#ffffff08;border-style:dashed}
+#opts .g:has(> #bpass){grid-template-columns:repeat(5,minmax(0,1fr))!important}
+#opts .g:has(> #bpass) .act .al{font-size:min(1em,3.1vw)}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Hisui nuevas (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -28896,6 +28910,17 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
   try{beep(820,.2,'triangle')}catch(e){}try{if(inB&&m===act('p')){setMon('p');stb('p')}}catch(e){}try{saveRun()}catch(e){}
   toast(`💊 Los PP máximos de ${v.n} subieron a ${v.mp} (+${add})`);return 1};
  /* que también salgan como recompensa de vez en cuando: en la tienda se venden siempre */
+})();
+/* ---------- v58.39: ⏭️ «No hacer nada» en los combates: tu Pokémon no actúa y el rival juega su turno ---------- */
+(()=>{const D=document;
+ const pass=async()=>{try{if(typeof B!=='object'||!B||B.busy||B.over)return;const p=act('p');if(!p||p.hp<=0)return;
+   B.wt=0;B.wm=0;B.wu=0;try{beep(420,.06,'triangle')}catch(_){}
+   const t=window.turn||turn;B._pass=1;B.busy=1;try{const op=D.getElementById('opts');if(op)op.innerHTML=''}catch(_){}try{await say(`${nm(p)} no hace nada y espera.`)}catch(_){}await t({})}catch(e){console.error('pasar',e)}finally{try{B._pass=0}catch(_){}}};
+ window.__passTurn=pass;
+ const add=()=>{const o=D.getElementById('opts');if(!o)return;const fl=o.querySelector('#fl')||o.querySelector('#bg');if(!fl||o.querySelector('#bpass'))return;
+  const b=D.createElement('button');b.className='act';b.id='bpass';b.type='button';b.title='Tu Pokémon no actúa este turno y cede el turno al rival';b.innerHTML='<span class="ai">⏭️</span><span class="al">Pasar</span>';b.setAttribute('aria-label','No hacer nada');
+  b.onclick=e=>{e.stopPropagation();pass()};if(fl.id==='fl')fl.before(b);else fl.after(b)};
+ const o=D.getElementById('opts');if(o)new MutationObserver(add).observe(o,{childList:true,subtree:true});add();
 })();
 </script>
 </body></html>
