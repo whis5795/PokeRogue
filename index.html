@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.11</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.12</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,10 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.11',t:'Sin destellos del Centro',s:'cur',l:[
+ {v:'58.12',t:'Pokédex al instante',s:'cur',l:[
+  '📖 El cartel «Cargando Pokédex…» sale en cuanto tocas el botón de la Pokédex'
+ ]},
+ {v:'58.11',t:'Sin destellos del Centro',s:'prev',l:[
   '🎓 Arreglado: al elegir un movimiento en el entrenador de movimientos (o al aprender uno al subir de nivel) se veía el Centro Pokémon unos instantes entre una ventana y otra'
  ]},
  {v:'58.10',t:'Caja más ordenada',s:'prev',l:[
@@ -27338,10 +27341,16 @@ setInterval(()=>{try{const h=document.documentElement,o=typeof S=='object'&&S;h.
 })();
 /* ---------- v55.8: cartel «Cargando Pokédex…» hasta que la Pokédex está abierta ---------- */
 (()=>{const D=document;const _o=window.openPokedex;if(typeof _o!=='function')return;
- window.openPokedex=function(){let ld=null;if(!D.getElementById('pdx')){ld=D.createElement('div');ld.id='pdxload';ld.innerHTML='<div><i></i><b>📖 Cargando Pokédex…</b></div>';D.body.append(ld)}
+ /* v58.12: el cartel sale en cuanto tocas el botón (antes el trabajo pesado no le dejaba pintarse) */
+ const mk=()=>{let ld=D.getElementById('pdxload');if(!ld){ld=D.createElement('div');ld.id='pdxload';ld.innerHTML='<div><i></i><b>📖 Cargando Pokédex…</b></div>';D.body.append(ld)}return ld};
+ let pre=0;
+ D.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('button,[role=button],.mbtn,#mpdx');if(!b||b.closest('#pdx')||D.getElementById('pdx'))return;if(!/pok[eé]dex/i.test((b.id==='mpdx'?'pokedex ':'')+(b.textContent||'')+' '+(b.getAttribute('aria-label')||'')))return;
+  mk();clearTimeout(pre);pre=setTimeout(()=>{if(!D.getElementById('pdx')){const l=D.getElementById('pdxload');if(l&&!l._open)l.remove()}},1500)},true);
+ window.openPokedex=function(){let ld=null;if(!D.getElementById('pdx')){ld=mk();ld._open=1}
   const done=()=>{if(ld){ld.classList.add('out');const l=ld;ld=null;setTimeout(()=>l.remove(),250)}mo.disconnect();clearTimeout(tm)};
   const mo=new MutationObserver(()=>{if(D.getElementById('pdx'))requestAnimationFrame(()=>requestAnimationFrame(done))});mo.observe(D.body,{childList:true});const tm=setTimeout(done,15000);
-  let r;try{r=_o.apply(this,arguments)}catch(e){done();throw e}if(r&&r.catch)r.catch(()=>done());return r};
+  const a=arguments,self=this;
+  return new Promise(res=>requestAnimationFrame(()=>setTimeout(()=>{let r;try{r=_o.apply(self,a)}catch(e){done();res();return}Promise.resolve(r).then(res,()=>{done();res()})},0)))};
 })();
 
 /* ---------- v55.9: buzón «Mientras no estabas» (resumen al volver) ---------- */
