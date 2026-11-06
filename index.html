@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.18</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.19</div>
 </section>
 
 <section id="team" class="scr">
@@ -8709,7 +8709,13 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.18',t:'Equipo compartido en el 2c2',s:'cur',l:[
+ {v:'58.19',t:'Ficha y líderes',s:'cur',l:[
+  '👆 Ficha del Pokémon (mantener pulsado en la Caja): ya no parpadea ni se cierra al soltar el dedo',
+  '🧬 La ficha muestra siempre a qué evoluciona y cómo: a qué nivel (y cuántos faltan) o con qué piedra; si tiene varias evoluciones, todas',
+  '⚔️ En la ficha, toca un movimiento para ver qué hace',
+  '👑 La casilla del líder de gimnasio en la ruta brilla con un anillo dorado que gira y el cartel «LÍDER», y su carta tiene un destello dorado'
+ ]},
+ {v:'58.18',t:'Equipo compartido en el 2c2',s:'prev',l:[
   '🔄 Combates dobles de la ruta: tus dos Pokémon comparten todo tu equipo, así que puedes cambiar o sacar de relevo a cualquiera de los tuyos (antes cada uno solo tenía su mitad del equipo)'
  ]},
  {v:'58.17',t:'Iron Abyss mejor recortado',s:'prev',l:[
@@ -27979,6 +27985,41 @@ html:not(.vm-pc) #pcbox.bx-c4 #bxg2 .bxp{height:52px!important}html:not(.vm-pc) 
 #coop.cbsh:not(.out){animation:none!important;opacity:1}
 body:has(#coop.advm:not(.out)) #run{visibility:hidden}
 #coop .cb-spr img.sd3{max-width:100%;justify-self:center;align-self:end;margin-bottom:6%}
+/* v58.19: ficha — evolución y movimientos */
+#bx58s .s9ev{margin:0 0 10px;padding:8px 10px;border-radius:14px;background:linear-gradient(90deg,#4ade8018,#00000044);border:1.5px solid #4ade8055}
+#bx58s .s9ev>small{font:700 11.5px system-ui;opacity:.9}
+#bx58s .s9evh{display:block;font:900 11px system-ui;color:#86efac;margin-bottom:5px;letter-spacing:.03em}
+#bx58s .s9evl{display:flex;flex-direction:column;gap:5px}
+#bx58s .s9evr{display:flex;align-items:center;gap:8px}
+#bx58s .s9evr img{width:40px;height:40px;image-rendering:pixelated;flex:none}
+#bx58s .s9evr div{flex:1;min-width:0}
+#bx58s .s9evr b{display:block;font:900 13px system-ui}
+#bx58s .s9evr small{display:block;font:700 11px system-ui;opacity:.85}
+#bx58s .s9evr.ok small{color:#86efac;opacity:1}
+#bx58s .s9evr em{font-style:normal}
+#bx58s .s9mvh{display:block;margin:0 0 7px;font:700 11px system-ui;opacity:.7}
+#bx58s .s9mv{cursor:pointer;transition:transform .1s}
+#bx58s .s9mv:active{transform:scale(.97)}
+#bx58s .s9mv.open{grid-column:1/-1}
+#bx58s .s9md{margin:7px 0 0;padding-top:6px;border-top:1px solid #ffffff2a;font:600 11.5px/1.35 system-ui;opacity:.95;animation:s9in .2s ease-out}
+/* v58.19: casilla del líder de gimnasio */
+#dmap.xruta .rn.rgym .rnc{fill:#fde68a;stroke:#b45309;stroke-width:5}
+#dmap.xruta .rn.rgym .rgy-glow{fill:#fbbf24;fill-opacity:.4;transform-box:fill-box;transform-origin:center;animation:rgyP 1.6s ease-in-out infinite;filter:blur(3px)}
+#dmap.xruta .rn.rgym .rgy-ring{fill:none;stroke:#f59e0b;stroke-width:4;stroke-dasharray:10 7;transform-box:fill-box;transform-origin:center;animation:rgyR 6s linear infinite}
+#dmap.xruta .rn.rgym .rgy-ring2{fill:none;stroke:#fde047;stroke-width:2;stroke-opacity:.7;stroke-dasharray:3 9;transform-box:fill-box;transform-origin:center;animation:rgyR 9s linear infinite reverse}
+#dmap.xruta .rn.rgym .rgy-lb{font:900 13px system-ui;fill:#fff;stroke:#92400e;stroke-width:4px;paint-order:stroke;text-anchor:middle;letter-spacing:.08em}
+#dmap.xruta .rn.rgym .rgy-md{font-size:30px;animation:rgyB 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+#dmap.xruta .rn.rgym.past .rgy-glow,#dmap.xruta .rn.rgym.past .rgy-ring,#dmap.xruta .rn.rgym.past .rgy-ring2{animation:none;opacity:.35}
+@keyframes rgyR{to{transform:rotate(360deg)}}
+@keyframes rgyP{50%{transform:scale(1.25);fill-opacity:.15}}
+@keyframes rgyB{50%{transform:translateY(-4px) scale(1.08)}}
+/* carta del líder */
+.ca.gymc{overflow:hidden;box-shadow:0 0 0 3px #fbbf24,0 0 22px #fbbf2499,0 10px 24px #0008!important;animation:gymG 2s ease-in-out infinite}
+.ca.gymc .gymshine{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(115deg,#0000 35%,#ffffff88 48%,#0000 60%);background-size:260% 100%;animation:gymS 2.6s linear infinite}
+.ca.gymc .gymtag{position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:4;font-style:normal;padding:2px 8px;border-radius:8px;background:linear-gradient(180deg,#fde047,#f59e0b);color:#422006;font:900 10px system-ui;letter-spacing:.06em;white-space:nowrap;box-shadow:0 2px 6px #0007}
+@keyframes gymG{50%{box-shadow:0 0 0 3px #fde047,0 0 34px #fbbf24cc,0 10px 24px #0008}}
+@keyframes gymS{from{background-position:130% 0}to{background-position:-130% 0}}
+@media(prefers-reduced-motion:reduce){#dmap.xruta .rn.rgym *,.ca.gymc,.ca.gymc .gymshine{animation:none!important}}
 </style>
 <script id="v58js">
 /* ---------- v58.0: Paradoja nuevos y formas de Hisui nuevas (registro regional, Megas con su ilustración y tipos) ---------- */
@@ -28329,7 +28370,8 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
   const STN=[['PS','max','❤️'],['Ataque','a','⚔️'],['Defensa','d','🛡️'],['At. Esp.','sa','✨'],['Def. Esp.','sd','🔰'],['Velocidad','sp','💨']];
   const rows=STN.map(([n,k,e],i)=>{const g=grade(B[i]);return`<div class="s9row${i===best?' best':''}${i===worst?' worst':''}" style="--g:${g[1]}"><span class="s9e">${e}</span><span class="s9n">${n}</span><u><i style="--w:${Math.min(100,B[i]/200*100).toFixed(1)}%"></i></u><span class="s9b">${B[i]}</span><b>${m[k]|0}</b><em>${g[0]}</em></div>`}).join('');
   const cat=v=>v.p?(v.ph?['💥','Físico']:['🌀','Especial']):['🔰','Estado'];
-  const mvs=(m.moves||[]).map(v=>{const c=cat(v),pp=v.cp!=null?v.cp:v.pp,mp=v.mp||v.pp||1;return`<div class="s9mv" style="--c:${CO(v.t)}"><div class="s9mh"><b>${esc(v.n)}</b><i>${esc(EN(v.t))}</i></div><div class="s9mm"><span title="${c[1]}">${c[0]} ${c[1]}</span><span>⚡ ${v.p||'—'}</span><span>🎯 ${v.acc||'—'}</span></div><div class="s9pp"><u><i style="width:${Math.max(0,Math.min(100,pp/mp*100))}%"></i></u><small>PP ${pp}/${mp}</small></div></div>`}).join('')||'<small class="s9e0">Sin movimientos</small>';
+  const dsc=v=>{let d='';try{d=(window.MX&&MX.describe&&MX.describe(v))||''}catch(e){}if(!d)d=v.ds||'';try{if(!d&&window.MXDB){const k=Object.keys(MXDB).find(k=>MXDB[k][0]===v.n);if(k)d=MXDB[k][9]||''}}catch(e){}return d||'Sin descripción'};
+  const mvs=(m.moves||[]).map(v=>{const c=cat(v),pp=v.cp!=null?v.cp:v.pp,mp=v.mp||v.pp||1;return`<div class="s9mv" role="button" tabindex="0" data-mvd="${esc(dsc(v))}" style="--c:${CO(v.t)}"><div class="s9mh"><b>${esc(v.n)}</b><i>${esc(EN(v.t))}</i></div><div class="s9mm"><span title="${c[1]}">${c[0]} ${c[1]}</span><span>⚡ ${v.p||'—'}</span><span>🎯 ${v.acc||'—'}</span></div><div class="s9pp"><u><i style="width:${Math.max(0,Math.min(100,pp/mp*100))}%"></i></u><small>PP ${pp}/${mp}</small></div></div>`}).join('')||'<small class="s9e0">Sin movimientos</small>';
   let evo='';try{const e=window.pickEvo&&pickEvo(Object.assign({},m,{lvl:999}));if(e&&e[1]&&e[1]!==m.id)evo=`<div class="s9evo"><img src="${mini(m.id,m.sh)}" alt=""><span>➜</span><img src="${mini(e[1],m.sh)}" alt=""><div><b>${esc(String((typeof NAMES!=='undefined'&&NAMES[e[1]])||'').replace(/-/g,' ').replace(/^./,c=>c.toUpperCase())||'Evolución')}</b><small>${m.lvl>=e[0]?'✅ ¡Ya puede evolucionar!':'Al nivel '+e[0]+' · faltan '+(e[0]-m.lvl)}</small></div></div>`}catch(e){}
   const info=[ab?`<div class="s9i"><span>◆ Habilidad</span><b>${esc(ab[0])}</b><small>${esc(ab[1]||'')}</small></div>`:'',
    fr?`<div class="s9i"><span>💕 Amistad</span><b>${window.__fr.hearts(fr[1])}</b><small>${esc(fr[2])}</small></div>`:'',
@@ -28344,24 +28386,35 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
     <button type="button" class="s9x" data-b="x" aria-label="Cerrar">✕</button>${fav()}<span class="s9lv">Nv. <b>${m.lvl}</b></span></div>
    <div class="s9body"><div class="s9nm"><b>${esc(nm(m))}</b><div class="s9ty">${(m.types||[]).map(t=>`<i style="--c:${CO(t)}">${esc(EN(t))}</i>`).join('')}</div>${badges?`<div class="s9bd">${badges}</div>`:''}</div>
     <div class="s9bars"><div><span>❤️ PS</span><u><i style="width:${hp}%;background:${hpc}"></i></u><b>${Math.max(0,m.hp)}/${m.max}</b></div><div><span>⭐ XP</span><u><i class="xp" style="width:${xp}%"></i></u><b>${toN?'faltan '+toN.toLocaleString('es'):'MÁX'}</b></div></div>
-    <div class="s9tabs"><button type="button" data-tab="st" class="on">📊 Estadísticas</button><button type="button" data-tab="mv">⚔️ Movimientos</button><button type="button" data-tab="in">ℹ️ Más</button></div>
+    <div class="s9ev" id="s9ev"><small>🧬 Buscando su evolución…</small></div><div class="s9tabs"><button type="button" data-tab="st" class="on">📊 Estadísticas</button><button type="button" data-tab="mv">⚔️ Movimientos</button><button type="button" data-tab="in">ℹ️ Más</button></div>
     <section data-p="st" class="on"><div class="s9top"><div class="s9radw">${radar}</div><div class="s9tot" style="--t:${tier[1]}"><small>Base total</small><b>${bst}</b><em>${tier[0]}</em><small class="s9bw">💪 ${STN[best][0]}<br>🔻 ${STN[worst][0]}</small></div></div><div class="s9rows"><div class="s9hd"><span></span><span></span><span></span><span>Base</span><b>Real</b><em>Rgo.</em></div>${rows}</div></section>
-    <section data-p="mv"><div class="s9mvs">${mvs}</div></section>
+    <section data-p="mv"><small class="s9mvh">👆 Toca un movimiento para ver qué hace</small><div class="s9mvs">${mvs}</div></section>
     <section data-p="in">${evo}<div class="s9is">${info||'<small class="s9e0">Nada más que mostrar</small>'}</div></section>
     <div class="s9bt"><button type="button" data-b="sel">✓ Seleccionar</button><button type="button" data-b="x">Cerrar</button></div></div></div>`;
   D.body.append(ov);requestAnimationFrame(()=>ov.classList.add('on'));try{beep(m.sh?1175:660,.06,'triangle')}catch(_){}
+  /* v58.19: a qué evoluciona y cómo */
+  (async()=>{const el=ov.querySelector('#s9ev');if(!el)return;try{if(window.evoFill)await Promise.race([evoFill(m),new Promise(r=>setTimeout(r,4000))])}catch(e){}if(!el.isConnected)return;
+   const nmI=id=>{const n=(typeof NAMES!=='undefined'&&NAMES[id])||'';return n?String(n).replace(/-/g,' ').replace(/^./,c=>c.toUpperCase()):'#'+id};
+   const out=[],seen=new Set();const add=(to,how,ok)=>{if(!to||seen.has(to+how))return;seen.add(to+how);out.push(`<div class="s9evr${ok?' ok':''}"><img src="${mini(to,m.sh)}" alt=""><div><b>${esc(nmI(to))}</b><small>${how}</small></div>${ok?'<em>✅</em>':''}</div>`)};
+   try{const st=(window.STONE||{})[m.id]||[];st.forEach(x=>add(x.to,'Necesita '+esc((ITEM[x.k]||{}).n||'una piedra'),(R.bag&&R.bag[x.k]>0)))}catch(e){}
+   try{const A=(window.EVOALT||{})[m.id];const L=A&&A.length?A:(EVO[m.id]?[EVO[m.id]]:[]);L.forEach(([lv,to])=>{if((((window.STONE||{})[m.id])||[]).some(x=>x.to===to))return;add(to,m.lvl>=lv?'¡Ya puede! (Nv. '+lv+')':'Al nivel '+lv+' · faltan '+(lv-m.lvl),m.lvl>=lv)})}catch(e){}
+   el.innerHTML=out.length?`<span class="s9evh">🧬 Evoluciona a</span><div class="s9evl">${out.join('')}</div>`:`<small>🧬 No evoluciona más${m.megaOn||!(typeof megaCapP==='function'&&megaCapP(m))?'':' · ⚡ puede megaevolucionar'}</small>`})();
   const close=()=>{ov.classList.remove('on');setTimeout(()=>ov.remove(),200)};
   ov.onclick=e=>{if(e.target===ov||e.target.closest('[data-b="x"]'))return close();
+   const mv=e.target.closest('.s9mv');if(mv){const op=mv.classList.toggle('open');let d=mv.querySelector('.s9md');if(op&&!d){d=D.createElement('p');d.className='s9md';d.textContent=mv.dataset.mvd;mv.append(d)}try{beep(op?700:520,.03,'sine')}catch(_){}return}
    const tb=e.target.closest('[data-tab]');if(tb){ov.querySelectorAll('.s9tabs button').forEach(b=>b.classList.toggle('on',b===tb));ov.querySelectorAll('section[data-p]').forEach(x=>x.classList.toggle('on',x.dataset.p===tb.dataset.tab));try{beep(740,.03,'sine')}catch(_){}return}
    const fb=e.target.closest('[data-b="fav"]');if(fb){if(m.fav)delete m.fav;else m.fav=1;fb.outerHTML=fav();try{navigator.vibrate&&navigator.vibrate(20)}catch(_){}try{beep(m.fav?880:520,.08,'triangle')}catch(_){}try{toast(m.fav?'⭐ '+nm(m)+' marcado como favorito':'☆ '+nm(m)+' ya no es favorito')}catch(_){}try{saveRun()}catch(_){}try{const p=D.getElementById('pcbox');p&&p.__rr&&p.__rr()}catch(_){}return}
    if(e.target.closest('[data-b="sel"]')){close();try{card.click()}catch(_){}}}}
- let lp=null;
+ let lp=null,eatT=0,armed=0;
+ const relT=()=>{if(armed){armed=0;eatT=Date.now()+450}};
+ D.addEventListener('pointerup',relT,true);D.addEventListener('pointercancel',relT,true);D.addEventListener('touchend',relT,true);
  D.addEventListener('pointerdown',e=>{const c=e.target.closest('#pcbox .bxc[data-i]');if(!c)return;const x=e.clientX,y=e.clientY;clearTimeout(lp&&lp.t);
-  lp={c,x,y,t:setTimeout(()=>{const m=monOf(c);if(!m)return;lp.fired=1;try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}sheet(m,c)},480)}},true);
+  lp={c,x,y,t:setTimeout(()=>{const m=monOf(c);if(!m)return;lp.fired=1;armed=1;eatT=Date.now()+60000;try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}sheet(m,c)},480)}},true);
  D.addEventListener('pointermove',e=>{if(lp&&!lp.fired&&Math.hypot(e.clientX-lp.x,e.clientY-lp.y)>10){clearTimeout(lp.t);lp=null}},true);
  D.addEventListener('pointerup',()=>{if(lp&&!lp.fired){clearTimeout(lp.t);lp=null}},true);
  D.addEventListener('pointercancel',()=>{if(lp){clearTimeout(lp.t);lp=null}},true);
- D.addEventListener('click',e=>{if(lp&&lp.fired&&e.target.closest('#pcbox .bxc')){e.stopPropagation();e.preventDefault();lp=null}},true);
+ D.addEventListener('click',e=>{if((lp&&lp.fired)||Date.now()<eatT){/* v58.19: el toque al soltar el dedo ya no cierra ni cambia la ficha recién abierta */e.stopPropagation();e.preventDefault();lp=null;eatT=0}},true);
+ D.addEventListener('pointerup',e=>{if(Date.now()<eatT&&e.target.closest&&e.target.closest('#bx58s'))e.stopPropagation()},true);
  D.addEventListener('contextmenu',e=>{if(e.target.closest('#pcbox .bxc'))e.preventDefault()},true);
  /* se aplica cada vez que la caja se abre o se repinta */
  let raf=0;const kick=()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;const o=D.getElementById('pcbox');if(o)deco(o)})};
@@ -28417,6 +28470,17 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
  const fixAll=()=>{D.querySelectorAll('#coop .cb-spr img.sd3').forEach(i=>{if(i.complete&&i.naturalWidth&&!i._fc){i._fc=1;fitCoop(i)}})};
  new MutationObserver(()=>{const c=D.getElementById('coop');if(!c)return;if(!c._sh){c._sh=1;setTimeout(()=>c.classList.add('cbsh'),300)}fixAll()}).observe(D.body,{childList:true,subtree:true});
  addEventListener('resize',()=>D.querySelectorAll('#coop .cb-spr img.sd3').forEach(i=>fitCoop(i)));
+})();
+
+/* ---------- v58.19: la casilla del líder de gimnasio en la ruta destaca (anillo dorado que gira, brillo y «LÍDER») y su carta también ---------- */
+(()=>{const D=document,NS='http://www.w3.org/2000/svg';
+ const mkE=(t,a)=>{const e=D.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e};
+ const deco=()=>{D.querySelectorAll('#dmap g.rn').forEach(g=>{if(g._gy)return;const m=g.querySelector('.rnm');if(!m||!/🏅/.test(m.textContent))return;g._gy=1;g.classList.add('rgym');
+   const glow=mkE('circle',{class:'rgy-glow',r:'40'}),ring=mkE('circle',{class:'rgy-ring',r:'35'}),ring2=mkE('circle',{class:'rgy-ring2',r:'44'});
+   const c=g.querySelector('.rnc');g.insertBefore(glow,c);g.insertBefore(ring2,c);g.insertBefore(ring,c);
+   const lb=mkE('text',{class:'rgy-lb',y:'52'});lb.textContent='LÍDER';g.append(lb);m.setAttribute('x','26');m.setAttribute('y','-22');m.classList.add('rgy-md')})};
+ new MutationObserver(()=>{if(D.getElementById('dmap'))deco()}).observe(D.body,{childList:true,subtree:true});deco();
+ if(typeof cardHTML==='function'){const _c=cardHTML;cardHTML=function(c){let h=_c.apply(this,arguments);try{if(c&&c.k==='gym'&&typeof h==='string')h=h.replace('<button class="ca','<button class="ca gymc').replace('<div class="cim">','<i class="gymshine"></i><em class="gymtag">👑 LÍDER</em><div class="cim">')}catch(e){}return h}}
 })();
 </script>
 </body></html>
