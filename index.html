@@ -339,7 +339,7 @@ body[data-v=battle] #ftipos{display:flex}
 <section id="menu" class="scr on">
 <h1>PokeRogue<span>Adventurer's update!</span></h1><div class="ball"></div>
 <div class="mb"><button id="rbBtn" style="display:none;font-size:13px;letter-spacing:2px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Volver a la batalla</span></button><button data-go="adv"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Modo aventura</span></button><button data-go="play"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 14v5h5"/></svg><span>Modo práctica</span></button><button data-go="team"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h6M15 12h6"/><circle cx="12" cy="12" r="2.5"/></svg><span>Equipo</span></button><button data-go="set"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span>Ajustes</span></button></div>
-<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.37</div>
+<!-- ⚠️ Sube esta versión en cada cambio: +1 si es grande, +0.1 si es pequeño, y añádela al CHANGELOG (script id="fxlogs") --><div id="ver">v58.38</div>
 </section>
 
 <section id="team" class="scr">
@@ -555,7 +555,7 @@ async function getM(n){
     cache['m'+n]=v}
   return v}
 let CHT={};const cheatsOff=()=>{CHT={}},gd=s=>CHT.god&&s=='p';
-const ppOf=p=>p<=60?20:p<=80?15:p<=100?10:5,cm=v=>{const q=v.p?ppOf(v.p):(v.pp0||10);return{...v,pp:q,mp:q,cp:q}},fixPP=v=>{[...v.team.concat(v.box||[]).flatMap(m=>m.moves),...(v.tms||[])].forEach(x=>{if(x.p){const q=ppOf(x.p);x.mp=q;x.pp=q;x.cp=Math.min(x.cp==null?q:x.cp,q)}})};
+const ppOf=p=>p<=60?20:p<=80?15:p<=100?10:5,cm=v=>{const q=v.p?ppOf(v.p):(v.pp0||10);return{...v,pp:q,mp:q,cp:q}},fixPP=v=>{[...v.team.concat(v.box||[]).flatMap(m=>m.moves),...(v.tms||[])].forEach(x=>{if(x.p){const q=Math.round(ppOf(x.p)*(1+.2*Math.min(3,x.pu|0)));/* v58.38: respeta los Más PP / PP Máximos */x.mp=q;x.pp=q;x.cp=Math.min(x.cp==null?q:x.cp,q)}})};
 const SN={par:['PAR','#facc15'],brn:['QUE','#f97316'],psn:['ENV','#a855f7'],frz:['CON','#67e8f9'],slp:['DOR','#94a3b8'],cnf:['CNF','#f472b6']};
 const SNAME={par:'Puede paralizar',brn:'Puede quemar',psn:'Puede envenenar',frz:'Puede congelar',slp:'Puede dormir',cnf:'Puede confundir'};
 const who=(m,s)=>`${s=='e'?'El rival ':''}${nm(m)}`,sp2=m=>m.sp*(m.s=='par'?.5:1);
@@ -8709,7 +8709,11 @@ html.vm-mh #menu h1 span{font-size:.27em}
   No entregues el archivo sin hacer estos dos pasos.
 */
 const CHANGELOG=[
- {v:'58.37',t:'Leyendas épicas',s:'cur',l:[
+ {v:'58.38',t:'Más PP y PP Máximos',s:'cur',l:[
+  '💊 Objetos nuevos en la tienda: Más PP (sube un 20 % los PP máximos de un movimiento, hasta 3 veces por movimiento) y PP Máximos (lo deja al máximo de golpe, +60 %)',
+  '🎯 Al usarlos eliges el Pokémon y el movimiento, y ves cuántos Más PP lleva cada uno (▰▰▱). El aumento se mantiene al guardar y cargar la partida; si el Pokémon olvida el movimiento, el nuevo empieza sin aumento'
+ ]},
+ {v:'58.37',t:'Leyendas épicas',s:'prev',l:[
   '⚔️ Las historias de los 21 Paradoja nuevos y de las formas nuevas de Hisui se han reescrito: ahora son leyendas épicas (el Señor de las Cumbres Heladas, el Devorador de Lunas, la Gran Ventisca…)'
  ]},
  {v:'58.36',t:'Descripciones de la Pokédex',s:'prev',l:[
@@ -11509,7 +11513,7 @@ html.vm-pc #mod .box.bagb>.bgw,html.vm-mh #mod .box.bagb>.bgw{grid-row:2/-1}
 <script id="bagtabs_js">
 (()=>{
 const D=document,MD=D.getElementById('mod');if(!MD)return;
-const CURA=['pot','sup','hyp','ptn','max','frs','rev','rvm','ant','apa','aqu','ahi','des','acf','cut','eth','emx'];
+const CURA=['pot','sup','hyp','ptn','max','frs','rev','rvm','ant','apa','aqu','ahi','des','acf','cut','eth','emx','ppu','ppm'];
 window.bagCat=o=>{if(!o)return'other';if(o.r)return'rel';const k=String(o.k||'');
  if(/^tm\d+$/.test(k))return'mt';
  if((typeof BALLK!='undefined'&&BALLK.includes(k))||k.indexOf('bt_')===0)return'ball';
@@ -28858,6 +28862,40 @@ body:has(#coop.advm:not(.out)) #run{visibility:hidden}
   const id=lastId,b=D.createElement('div');b.className='dplore';b.innerHTML='<small>📖 Cargando descripción…</small>';ps.before(b);
   __lore(id).then(o=>{if(b.isConnected)b.innerHTML=card(o)}).catch(()=>{if(b.isConnected)b.innerHTML=card(null)})};
  new MutationObserver(add).observe(D.body,{childList:true,subtree:true});
+})();
+/* ---------- v58.38: 💊 Más PP y PP Máximos: suben los PP máximos de un movimiento (+20 % de sus PP base por cada Más PP, hasta 3; PP Máximos lo deja al máximo de golpe) ---------- */
+(()=>{if(typeof ITEM!=='object')return;
+ const IMG=n=>{try{return isImg(n,'relic')}catch(e){return'💊'}};
+ const NEW=[['ppu',{n:'Más PP',p:220,d:'Sube los PP máximos de un movimiento (+20 % de sus PP base). Se puede usar hasta 3 veces en cada movimiento'},IMG('pp-up')],
+  ['ppm',{n:'PP Máximos',p:550,d:'Sube al máximo los PP de un movimiento de golpe (+60 % de sus PP base, como 3 Más PP)'},IMG('pp-max')]];
+ /* colocarlos justo después del Éter máximo (o del Éter) en la tienda y la mochila */
+ const NV=Object.fromEntries(NEW.map(x=>[x[0],x[1]])),after=ITEM.emx?'emx':'eth';
+ const ent=Object.entries(ITEM).filter(([k])=>!NV[k]);for(const k of Object.keys(ITEM))delete ITEM[k];
+ for(const[k,v]of ent){ITEM[k]=v;if(k===after){ITEM.ppu=NV.ppu;ITEM.ppm=NV.ppm}}if(!ITEM.ppu){ITEM.ppu=NV.ppu;ITEM.ppm=NV.ppm}
+ NEW.forEach(([k,,ic])=>{IC[k]=ic;try{const m=ic.match(/src="([^"]+)"/);if(m)new Image().src=m[1]}catch(e){}});
+ const MAXU=3;
+ const base=v=>{if(v.p)return ppOf(v.p);if(!(v.bp>0))v.bp=Math.max(1,Math.round((v.mp||v.pp||10)/(1+.2*Math.min(MAXU,v.pu|0))));return v.bp};
+ const canUp=v=>v&&(v.pu|0)<MAXU&&!(v.mp===1&&v.cp<=1&&!v.p&&!v.pp);
+ const apply=(v,n)=>{const b=base(v),old=v.mp||b,pu=Math.min(MAXU,(v.pu|0)+n);v.pu=pu;const nm=Math.round(b*(1+.2*pu));v.mp=nm;v.pp=nm;v.cp=Math.min(nm,(v.cp==null?old:v.cp)+(nm-old));return nm-old};
+ const K=new Set(['ppu','ppm']);
+ window.__itUsefulPP=k=>{try{return(R.team||[]).some(m=>(m.moves||[]).some(canUp))}catch(e){return true}};
+ const _uf=window.__itUseful;if(_uf)window.__itUseful=k=>K.has(String(k))?window.__itUsefulPP(k):_uf(k);
+ const _u=window.useItem;
+ window.useItem=async function(k){
+  if(!K.has(k))return _u.apply(this,arguments);
+  if(!(R.bag[k]>0)){toast('No te quedan');return 0}
+  const ls=R.team.filter(m=>(m.moves||[]).some(canUp));if(!ls.length){toast('Los movimientos de tu equipo ya tienen sus PP al máximo');return 0}
+  const inB=(()=>{try{return document.querySelector('#battle').classList.contains('on')}catch(e){return false}})();
+  let m=null;if(ls.length===1)m=ls[0];else{const j=await ask(ITEM[k].n,'<small>¿A qué Pokémon se lo das?</small>',[...ls.map(x=>`${nm(x)} · Nv.${x.lvl}`),'Cancelar']);if(j==null||j<0||j>=ls.length)return 0;m=ls[j]}
+  const mv=(m.moves||[]).filter(Boolean),bars=v=>'▰'.repeat(v.pu|0)+'▱'.repeat(MAXU-(v.pu|0));
+  const opts=mv.map(v=>`${v.n} · PP ${v.cp}/${v.mp} · ${bars(v)}${canUp(v)?'':' ✔ al máximo'}`);
+  const i=await ask(`${ITEM[k].n} · ${nm(m)}`,`<small>${k==='ppu'?'Elige el movimiento al que quieres subirle los PP máximos (+20 % de sus PP base). Cada movimiento admite hasta 3.':'Elige el movimiento cuyos PP quieres dejar al máximo.'}</small>`,[...opts,'Cancelar']);
+  if(i==null||i<0||i>=mv.length)return 0;const v=mv[i];if(!canUp(v)){toast(`Los PP de ${v.n} ya están al máximo`);return 0}
+  try{await itemFx('eth',m)}catch(e){}
+  const add=apply(v,k==='ppm'?MAXU:1);R.bag[k]--;try{ach('i')}catch(e){}
+  try{beep(820,.2,'triangle')}catch(e){}try{if(inB&&m===act('p')){setMon('p');stb('p')}}catch(e){}try{saveRun()}catch(e){}
+  toast(`💊 Los PP máximos de ${v.n} subieron a ${v.mp} (+${add})`);return 1};
+ /* que también salgan como recompensa de vez en cuando: en la tienda se venden siempre */
 })();
 </script>
 </body></html>
